@@ -14,7 +14,7 @@ theorem boundedAddRefines (left right : U32) (fits : sumSpec left.val right.val 
     Generated.bounded_add left right ⦃ result => result.val = sumSpec left.val right.val ⦄ := by
   unfold sumSpec at fits ⊢
   unfold Generated.bounded_add
-  step
+  step <;> assumption
 
 end Abc.Probe
 
