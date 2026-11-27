@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:argon2",
+  "record_type": "family",
+  "name": "Argon2",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc9106.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "kdf-password",
+  "description": "Memory-hard derivation with data-dependent and data-independent variants."
+}

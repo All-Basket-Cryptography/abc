@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:construction:argon2id",
+  "record_type": "construction",
+  "name": "Argon2id v1.3",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc9106.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "kdf-password",
+  "family_ref": "abc:family:argon2",
+  "catalog_state": "indexed",
+  "lifecycle": "established",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [],
+  "literature_refs": [
+    "abc:literature:rfc-9106",
+    "abc:literature:argon2-biryukov-dinu-khovratovich-2016"
+  ],
+  "standard_refs": [],
+  "finding_refs": [],
+  "use_cases": [
+    "Memory-hard password hashing and derivation with a mix of independent and dependent addressing."
+  ],
+  "limitations": [
+    "The portable profile uses serial lanes, requires a salt of at least eight bytes, and leaves workspace erasure to the caller."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified",
+  "component_refs": [
+    "abc:algorithm:blake2b"
+  ]
+}

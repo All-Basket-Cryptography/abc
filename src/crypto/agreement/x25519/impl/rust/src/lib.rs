@@ -174,15 +174,27 @@ impl Field {
         Self::reduce(self.0.map(|limb| u128::from(limb) * u128::from(factor)))
     }
 
-    fn invert(self) -> Self {
-        // The fixed exponent p - 2 is 2^255 - 21, with low byte 0xeb.
-        let mut power = Self::ONE;
-        for position in (0..255).rev() {
+    fn square_repeat(self, count: u32) -> Self {
+        let mut power = self;
+        for _ in 0..count {
             power = power.square();
-            if position >= 8 || (0xeb_u8 >> position) & 1 != 0 {
-                power = power.mul(self);
-            }
         }
         power
+    }
+
+    fn invert(self) -> Self {
+        // z_n denotes self^(2^n - 1). The final exponent is 2^255 - 21.
+        let power_2 = self.square();
+        let power_9 = power_2.square_repeat(2).mul(self);
+        let power_11 = power_9.mul(power_2);
+        let z_5 = power_11.square().mul(power_9);
+        let z_10 = z_5.square_repeat(5).mul(z_5);
+        let z_20 = z_10.square_repeat(10).mul(z_10);
+        let z_40 = z_20.square_repeat(20).mul(z_20);
+        let z_50 = z_40.square_repeat(10).mul(z_10);
+        let z_100 = z_50.square_repeat(50).mul(z_50);
+        let z_200 = z_100.square_repeat(100).mul(z_100);
+        let z_250 = z_200.square_repeat(50).mul(z_50);
+        z_250.square_repeat(5).mul(power_11)
     }
 }

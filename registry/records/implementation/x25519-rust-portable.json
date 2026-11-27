@@ -18,7 +18,7 @@
   "subject_ref": "abc:algorithm:x25519",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "ba66abfbb9bc7b3365969b67311f441f9ea2309ff4c2faae958f32f1605b7f9c",
+  "source_sha256": "94e8b90fd3645f8d3641f67c50ba2a4a0d09c15bdd359c1f68a58c670e565177",
   "path": "src/crypto/agreement/x25519/impl/rust",
   "languages": [
     "rust"

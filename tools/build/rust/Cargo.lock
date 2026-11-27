@@ -14,6 +14,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "abc-argon2id"
+version = "0.1.0"
+dependencies = [
+ "abc-blake2b",
+]
+
+[[package]]
 name = "abc-blake2b"
 version = "0.1.0"
 

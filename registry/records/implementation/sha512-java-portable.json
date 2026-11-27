@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha512-java-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHA-512 in Java",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha512/impl/java/src/org/allbasket/abc/hash/sha512/Sha512.java"
+    },
+    {
+      "path": "src/crypto/hash/sha512/impl/java/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha-512",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "9daae953eb35efb32c228f1aa20d79b1459ee14665cc0d03e4a25e373128fb7d",
+  "path": "src/crypto/hash/sha512/impl/java",
+  "languages": [
+    "java"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable java research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

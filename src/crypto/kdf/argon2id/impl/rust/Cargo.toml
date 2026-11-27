@@ -1,0 +1,11 @@
+[package]
+name = "abc-argon2id"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+description = "Portable research RFC 9106 Argon2id v1.3 with caller-owned workspace"
+workspace = "../../../../../../tools/build/rust"
+
+[dependencies]
+abc-blake2b = { path = "../../../../hash/blake2b/impl/rust" }

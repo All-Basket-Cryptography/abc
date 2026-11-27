@@ -18,3 +18,4 @@ The test target checks both PBKDF2 vectors from RFC 7914 and compares
 boundary cases against an independent reference using CryptoKit HMAC.
 Source refinement and compiled-target leakage assurance remain open.
 [RFC 7914 § 11](https://www.rfc-editor.org/rfc/rfc7914.html#section-11)
+[macOS arm64 run with two RFC vectors and 56 comparisons](https://github.com/All-Basket-Cryptography/abc/actions/runs/46073888423/job/140756987703)

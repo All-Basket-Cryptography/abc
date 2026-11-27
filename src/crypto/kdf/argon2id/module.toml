@@ -1,0 +1,23 @@
+schema_version = 1
+id = "argon2id-rust"
+owned_paths = ["src/crypto/kdf/argon2id"]
+cargo_manifests = ["src/crypto/kdf/argon2id/impl/rust/Cargo.toml"]
+lean_sources = { Argon2idBounds = "src/crypto/kdf/argon2id/spec" }
+
+[tasks.test]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "tools/build/rust/Cargo.toml", "--locked", "--offline", "-p", "abc-argon2id"]
+tools = ["cargo", "rustc", "rustup"]
+timeout_seconds = 120
+
+[tasks.differential]
+kind = "test"
+command = ["node", "src/crypto/kdf/argon2id/spec/verify.mjs"]
+tools = ["node", "cargo", "rustc", "rustup"]
+timeout_seconds = 180
+
+[tasks.proof]
+kind = "formal"
+command = ["lean", "src/crypto/kdf/argon2id/spec/Argon2idBounds.lean"]
+tools = ["lean"]
+timeout_seconds = 120

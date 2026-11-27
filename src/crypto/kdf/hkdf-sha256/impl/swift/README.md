@@ -16,3 +16,4 @@ DEVELOPER_DIR=/Applications/Xcode_16.4.app/Contents/Developer swift test \
 The test target checks RFC vectors, empty output, rejection and comparisons
 against CryptoKit HKDF up to the output limit. Source refinement and
 compiled-target leakage assurance remain open.
+[macOS arm64 run with two RFC vectors and 60 comparisons](https://github.com/All-Basket-Cryptography/abc/actions/runs/46073888423/job/140756987395)

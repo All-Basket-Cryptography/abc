@@ -13,6 +13,7 @@ members = [
     "../../../src/crypto/hash/shake256/impl/rust",
     "../../../src/crypto/mac/hmac-sha256/impl/rust",
     "../../../src/crypto/mac/poly1305/impl/rust",
+    "../../../src/crypto/kdf/argon2id/impl/rust",
     "../../../src/crypto/kdf/hkdf-sha256/impl/rust",
     "../../../src/crypto/kdf/pbkdf2-hmac-sha256/impl/rust",
     "../../../src/crypto/kdf/scrypt/impl/rust",

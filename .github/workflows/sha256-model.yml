@@ -14,8 +14,10 @@ on:
       - 'src/crypto/cipher/chacha20/spec/**'
       - 'src/crypto/kdf/pbkdf2-hmac-sha256/spec/**'
       - 'src/crypto/kdf/scrypt/spec/**'
+      - 'src/crypto/kdf/argon2id/spec/**'
       - 'src/crypto/mac/poly1305/spec/**'
       - 'src/crypto/agreement/x25519/spec/**'
+      - 'src/crypto/hash/sha512/spec/**'
       - 'src/crypto/aead/chacha20-poly1305/spec/**'
       - 'src/crypto/cipher/aes256/spec/**'
       - 'src/crypto/aead/aes256-gcm/spec/**'
@@ -93,8 +95,11 @@ jobs:
           lean src/crypto/hash/blake2b/spec/Blake2bBuffer.lean
           lean src/crypto/mac/poly1305/spec/Poly1305Reduction.lean
           lean src/crypto/agreement/x25519/spec/X25519Field.lean
+          lean src/crypto/agreement/x25519/spec/X25519CarryBounds.lean
+          lean src/crypto/hash/sha512/spec/Sha512Ring.lean
           lean src/crypto/aead/chacha20-poly1305/spec/ChaCha20Poly1305Lengths.lean
           lean src/crypto/kdf/scrypt/spec/ScryptBounds.lean
+          lean src/crypto/kdf/argon2id/spec/Argon2idBounds.lean
           lean src/crypto/cipher/aes256/spec/Aes256Byte.lean
           lean src/crypto/aead/aes256-gcm/spec/Aes256GcmBounds.lean
       - name: Check SHA-256, HMAC and HKDF refinements
