@@ -28,4 +28,15 @@ jobs:
       - name: Install pinned Rust toolchain
         run: rustup toolchain install 1.92.0 --profile minimal
       - name: Build and run the clean SwiftPM consumer
+        env:
+          ABC_TASK_OUTPUT: ${{ github.workspace }}/dist/swift
         run: python -B sdk/swift/package.py --consumer --output dist/swift
+      - name: Retain the tested package and conformance report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: abc-swift-research-macos-arm64
+          path: |
+            dist/swift/abc-swift-*.zip
+            dist/swift/swift-artifacts.json
+          if-no-files-found: error
+          retention-days: 7

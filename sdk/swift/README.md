@@ -18,5 +18,7 @@ pkg-config metadata. Extract it, add its `native/lib/pkgconfig` directory to
 `PKG_CONFIG_PATH`, and use the extracted directory as a SwiftPM dependency.
 The included separate consumer verifies the `abc` vector, streaming, reset,
 and handle closure from the unpacked archive. The macOS research workflow
-supplies runtime evidence when it completes. iOS simulator, device,
-and XCFramework verification remain open.
+passed on Apple silicon. Successful workflow runs retain the tested ZIP and
+`swift-artifacts.json` for seven days under `abc-swift-research-macos-arm64`.
+iOS simulator, device, and XCFramework verification remain open.
+[Hosted consumer evidence](EVIDENCE.md)

@@ -9,6 +9,8 @@ The initial commit is in [draft PR #1](https://github.com/All-Basket-Cryptograph
 - The Windows `.NET 10.0.404` NuGet package restored from an empty local feed with the ABC package as its sole entry. The external process loaded the `win-x64` DLL and passed the NIST vector, streaming and lifecycle checks. [NuGet package recipe](../../sdk/dotnet/README.md)
 - Wasmtime 50.0.3 executed the `wasm32-wasip2` SHA-256 command with no filesystem preopens. Eight vectors passed, including empty input, NIST `abc`, padding boundaries and multiple reads. [WASI package recipe](../../sdk/wasi/README.md)
 - Rust 1.92.0 cross-compiled `abc-sha256` for `thumbv7em-none-eabi`. The library is compile-only evidence for a no-OS Cortex-M target. Firmware linking, peripheral integrations, target execution and entropy assumptions have separate scope. [Rust target description](https://doc.rust-lang.org/rustc/platform-support/thumbv7em-none-eabi.html)
+- The Android AAR ships `arm64-v8a` and `x86_64` JNI libraries. An independent Kotlin consumer installed and passed on an isolated x86_64 API 36 emulator. The ARM64 evidence is packaging and cross-compilation. [Android evidence](../../sdk/android/EVIDENCE.md)
+- A SwiftPM consumer unpacked the built ZIP and passed on macOS 15.8.2 arm64 with Apple Swift 6.1.2. iOS simulator, device and XCFramework targets have separate qualification. [Swift evidence](../../sdk/swift/EVIDENCE.md) · [Hosted Swift job](https://github.com/All-Basket-Cryptography/abc/actions/runs/46045037458/job/140662050455)
 
 ## Formal evidence
 

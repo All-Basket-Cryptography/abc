@@ -37,6 +37,7 @@
     "ABC-034": {"status":"in_review","evidence":["runtime/research-profiles/README.md","runtime/research-profiles/src/wallet.rs"],"blockers":["The strict Ed25519 challenge profile is tested. Chain-specific signing, hardware key storage and applicable formal evidence require separate qualification."]},
     "ABC-035": {"status":"in_review","evidence":["docs/catalog/README.md","registry/README.md"],"blockers":[]},
     "ABC-036": {"status":"in_review","evidence":["docs/status/abc-036-upstream-route.md","tools/upstream_hacl_sha256.py"],"blockers":["The exact CPython C source closure built and passed 34 comparisons. Upstream lineage review and Lean correspondence are still open."]},
+    "ABC-037": {"status":"in_review","evidence":["sdk/android/EVIDENCE.md","sdk/swift/EVIDENCE.md","docs/status/pr-1-qualification.md"],"blockers":["The macOS arm64 Swift consumer and Android x86_64 emulator passed. iOS and Android ARM64 runtime coverage remains open."]},
     "ABC-038": {"status":"in_review","evidence":["sdk/dotnet/README.md","sdk/wasi/README.md","docs/status/pr-1-qualification.md"],"blockers":["The Windows x64 .NET and Wasmtime WASIp2 consumers passed. Embedded target evidence covers cross-compilation."]},
     "ABC-039": {"status":"in_review","evidence":["docs/status/abc-039-benchmark.md","benchmarks/README.md"],"blockers":[]},
     "ABC-040": {"status":"in_review","evidence":["tools/abc_research.py","tests/test_abc_research.py","governance/charter.md"],"blockers":[]}
