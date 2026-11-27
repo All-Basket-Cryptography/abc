@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "abc:evidence-result:sha3-256-shared-keccak-vectors",
+  "record_type": "evidence-result",
+  "name": "Local SHA3-256 Rust vector tests with shared Keccak",
+  "sources": [
+    {
+      "path": "docs/status/sha3-256-shared-keccak-vectors.json"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "request_ref": "abc:evidence-request:sha3-256-rust-vectors",
+  "subject_ref": "abc:implementation:sha3-256-abc-rust-portable",
+  "subject_revision": "0.1.0-research",
+  "subject_sha256": "1e4e4aa525d822a112975386f1ac5d4b35078677e08ad5a594f59f660d0693bc",
+  "claim": "test",
+  "state": "passed",
+  "scope": "SHA3-256 byte-oriented one-shot digest, local x86_64-pc-windows-msvc Rust build, NIST known answers and deterministic boundary vectors.",
+  "assumptions": [],
+  "tcb": [
+    "Rust 1.92.0",
+    "host MSVC linker and Windows x64 runtime"
+  ],
+  "observations": [
+    "nist_byte_aligned_examples",
+    "fips_202_domain_separator",
+    "independently_computed_rate_boundaries"
+  ],
+  "execution_sha256": "43ca319595087c6b6a8ff150a1102de97e669a78742f41340f7e67037cbd6ac2",
+  "artifacts": [
+    {
+      "path": "docs/status/sha3-256-shared-keccak-vectors.json",
+      "sha256": "43ca319595087c6b6a8ff150a1102de97e669a78742f41340f7e67037cbd6ac2",
+      "size_bytes": 995
+    }
+  ],
+  "trust": "local",
+  "verifier": "Cargo test harness with Rust 1.92.0",
+  "observed_at": "2026-11-27T21:20:20Z"
+}

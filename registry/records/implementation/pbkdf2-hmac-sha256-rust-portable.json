@@ -18,14 +18,15 @@
   "subject_ref": "abc:construction:pbkdf2-hmac-sha-256",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "8db56dc35d54e5c34cbc5fdd5627ff61c36230da5d3a0cadc5096f3ab5f3281b",
+  "source_sha256": "1ef9bf3f76a3a507e5a5d3a8fb900891814bf8afaf6dd57362b5ba75c52bfae9",
   "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/rust/src/lib.rs",
   "languages": [
     "rust"
   ],
   "features": [],
   "external_calls": [
-    "abc-hmac-sha256"
+    "abc-hmac-sha256",
+    "abc-sha256"
   ],
   "target_refs": [],
   "provider": "ABC portable Rust research core",

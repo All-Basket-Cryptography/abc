@@ -40,6 +40,7 @@ name = "abc-pbkdf2-hmac-sha256"
 version = "0.1.0"
 dependencies = [
  "abc-hmac-sha256",
+ "abc-sha256",
 ]
 
 [[package]]

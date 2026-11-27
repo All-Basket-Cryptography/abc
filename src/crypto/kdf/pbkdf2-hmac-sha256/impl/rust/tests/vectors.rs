@@ -37,6 +37,21 @@ fn rfc7914_pbkdf2_vectors() {
 }
 
 #[test]
+fn long_password_prehash_matches_independent_oracle() {
+    let password: Vec<u8> = (0..4096).map(|i| (i * 31 + 11) as u8).collect();
+    check(
+        &password,
+        b"public-benchmark",
+        125,
+        concat!(
+            "7faa3b1cf4a111eedcbf263ae25190941351df8e1d11ba0145ee175da00ce750bd",
+            "23b229dcae6645cbc15187dbc2e32c72f92cb3fafcf4f78c5c2ab6f41d9029bf5",
+            "2c9048e24ecb8a0",
+        ),
+    );
+}
+
+#[test]
 fn arbitrary_prefix_and_zero_output() {
     let rounds = NonZeroU32::new(2).unwrap();
     let mut full = [0; 96];

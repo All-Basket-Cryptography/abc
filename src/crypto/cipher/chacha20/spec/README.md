@@ -11,7 +11,7 @@ This module exposes the stream primitive for research composition. Target
 leakage, compiler correspondence, key lifetime and AEAD composition
 require separate evidence. [RFC 8439 § 4](https://www.rfc-editor.org/rfc/rfc8439.html#section-4)
 
-The tests exercise the RFC block vector, multiple blocks and the last
+The tests exercise the RFC block and multi-block cipher vectors and the last
 counter boundary. Lean checks block-count coverage, that every admitted
 counter index fits 32 bits, and the single-block limit at the last
 counter. Full Rust source refinement is open.

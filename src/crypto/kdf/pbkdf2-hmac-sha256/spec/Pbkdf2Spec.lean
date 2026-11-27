@@ -58,8 +58,27 @@ theorem salt_index_domain (saltLength : Nat) (allowed : byteLengthAllowed (64 + 
   rw [← Nat.add_assoc]
   exact allowed
 
+theorem long_password_normalization {password hash : Message}
+    (long : 64 < password.length) (hashed : Abc.Spec.Sha256.digest password = some hash) :
+    Abc.Spec.HmacSha256.normalizeKey hash = Abc.Spec.HmacSha256.normalizeKey password := by
+  have short : hash.length ≤ 64 := by
+    rw [Abc.Spec.HmacSha256.sha256_digest_length hashed]
+    decide
+  simp [Abc.Spec.HmacSha256.normalizeKey, short, Nat.not_le_of_gt long, hashed]
+
+theorem prehash_preserves_material {password hash : Message}
+    (long : 64 < password.length) (hashed : Abc.Spec.Sha256.digest password = some hash)
+    (salt : Message) (rounds length : Nat) :
+    material hash salt rounds length = material password salt rounds length := by
+  have tags : Abc.Spec.HmacSha256.tag hash = Abc.Spec.HmacSha256.tag password := by
+    funext input
+    unfold Abc.Spec.HmacSha256.tag Abc.Spec.HmacSha256.authenticate
+    rw [long_password_normalization long hashed]
+  simp [material, block, tags]
+
 #print axioms iterate_eq_fold
 #print axioms index_bound
 #print axioms salt_index_domain
+#print axioms prehash_preserves_material
 
 end Abc.Spec.Pbkdf2

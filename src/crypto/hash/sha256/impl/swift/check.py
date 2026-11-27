@@ -22,7 +22,8 @@ def fingerprint(path):
 def check(output):
     compiler = subprocess.check_output(["swift", "--version"], stderr=subprocess.STDOUT,
                                        text=True, timeout=15).strip()
-    if not re.search(r"^Apple Swift version 6\.1\.2\b", compiler) or "-apple-macosx" not in compiler:
+    if (not re.search(r"\bApple Swift version 6\.1\.2(?=\s|$)", compiler)
+            or not re.search(r"^Target: \S+-apple-macosx\S*$", compiler, re.MULTILINE)):
         raise ValueError(f"Expected Apple Swift 6.1.2 on macOS, found {compiler}")
 
     output.mkdir(parents=True, exist_ok=True)
