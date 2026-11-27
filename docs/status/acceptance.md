@@ -13,7 +13,7 @@ This report covers the [handoff checks](../plan/abc/ACCEPTANCE.md). The scope of
 | AC-07 | Graph fixtures allow knowledge cycles and reject executable task cycles. |
 | AC-08 | Documentation-only Git-history changes skip unrelated algorithm tasks. |
 | AC-09 | Feature and policy changes are tested. Tool identity, environment, and trust domain are bound into receipt fingerprints. |
-| AC-10–12 | Formal policy and negative fixtures exist. Extraction and Lean checks are blocked. |
+| AC-10–12 | The pinned bounded probe reproduced emitted Lean and rejected the transitive `sorry`, custom axiom, native-evaluation fixture and altered Rust result. Independent validation of the full algorithm statement and model remains open. |
 | AC-13–15 | Runner tests reject stale inputs, edited receipts, missing output bytes, and promotion to a release domain. |
 | AC-16 | Native fuzz rejected arithmetic and SHA-256 mutations. Runner timeout tests passed. Fuzz sanitizers and full OOM classification remain pending. |
 | AC-17 | SHA-256 differential results disclose RustCrypto oracle lineage. The seven SDK consumers share the ABC core. |

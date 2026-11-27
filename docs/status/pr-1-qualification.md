@@ -16,7 +16,7 @@ The clean Windows plan passed 27 of 29 tasks at commit `e4a5d232bf35f57c812b6192
 
 ## Formal evidence
 
-Lean 4.31.0 checked the independent SHA-256 model, abstract streaming laws, and SHA3-256 encoding properties. Charon emitted LLBC for the bounded probe and portable Rust SHA-256. Checked refinement of the exact Rust SHA-256 implementation remains open. [Formal evidence](formal-and-fuzz.md) · [Linux Advisory run](https://github.com/All-Basket-Cryptography/abc/actions/runs/46043199955)
+Lean 4.31.0 checked the independent SHA-256 model, abstract streaming laws, and SHA3-256 encoding properties. Charon emitted LLBC for the bounded probe and portable Rust SHA-256. The Linux advisory run proved `Abc.Probe.boundedAddRefines`, reproduced the generated Lean model and rejected the deliberately altered Rust implementation. Checked refinement of the exact Rust SHA-256 implementation remains open. [Formal evidence](formal-and-fuzz.md) · [Passing Linux advisory run](https://github.com/All-Basket-Cryptography/abc/actions/runs/46046082715)
 
 ## Upstream and research profiles
 

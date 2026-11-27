@@ -28,7 +28,7 @@ The [repository audit](repository-audit.md) records the handoff integrity check,
 
 ## Remaining acceptance
 
-- M0 and M1 have pinned local Lean and Charon evidence and hosted candidate fixtures. Full bounded-probe translation and checking and approved Git baseline review are tracked separately.
+- M0 has a passing pinned Rust-to-Lean bounded probe. M1 candidate fixtures passed on GitHub. The hosted required gate awaits an independently reviewed Git baseline.
 - M2 has checked independent SHA-256 model properties and browser WASM coverage. Full implementation refinement and separate HMAC, HKDF and SHA3-256 proof scopes remain open.
 - M3 through M5 have local research packages, a Rust/npm research replay path, and initial governance and upstream tooling. Production approval, broader platform evidence, previous-version compatibility, and backlog expansion remain open. The [acceptance review](acceptance.md) records each check.
 

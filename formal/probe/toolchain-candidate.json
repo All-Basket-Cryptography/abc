@@ -1,5 +1,6 @@
 {
-  "status": "blocked_unverified",
+  "status": "verified",
+  "scope": "Bounded-add engineering probe on the pinned Linux x86_64 toolchain",
   "aeneas": "505b6ca35217e7be5c96c3e2f8045edfbdf47291",
   "charon": "b104e24fea7d721b71e6c39fd70f26ff20bc0980",
   "rust": "nightly-2026-08-18",
