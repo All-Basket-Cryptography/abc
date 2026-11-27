@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha256-java-portable",
+  "record_type": "implementation",
+  "name": "ABC portable research SHA-256 in Java",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha256/impl/java/src/org/allbasket/abc/hash/sha256/Sha256.java",
+      "locator": "SHA-256 domain checks, streaming, padding, and compression."
+    },
+    {
+      "path": "src/crypto/hash/sha256/impl/java/README.md",
+      "locator": "Standalone Java test scope and proof obligations."
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha-256",
+  "spec_ref": "abc:specification:sha256-fips180-4-2015",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "bb6a12b1a4a0bd4e12cf3c0570ee6f23ccdbde372c58e76d62fc0691cc96c535",
+  "path": "src/crypto/hash/sha256/impl/java",
+  "languages": ["java"],
+  "features": [],
+  "external_calls": [],
+  "provider": "ABC portable Java research core",
+  "target_refs": [],
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

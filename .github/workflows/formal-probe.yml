@@ -4,10 +4,11 @@ on:
   pull_request:
     paths:
       - '.github/workflows/formal-probe.yml'
-      - 'formal/probe/**'
-      - 'foundation/lean/**'
-      - 'algorithms/hash/sha2/sha256/formal/**'
-      - 'algorithms/hash/sha3/sha3-256/formal/**'
+      - 'tools/verification/probe/**'
+      - 'src/lean/**'
+      - 'src/crypto/hash/sha256/impl/rust/formal/**'
+      - 'src/crypto/hash/sha256/spec/**'
+      - 'src/crypto/hash/sha3-256/spec/**'
   workflow_dispatch:
 
 permissions:
@@ -44,7 +45,7 @@ jobs:
           tar --zstd -xf "$archive" -C "$RUNNER_TEMP"
           printf '%s\n' "$RUNNER_TEMP/lean-4.31.0-linux/bin" >> "$GITHUB_PATH"
       - name: Check the Lean specification independently
-        run: python3 foundation/lean/check.py sha256
+        run: python3 src/lean/check.py sha256
       - name: Install the exact published Aeneas and Charon tools
         shell: bash
         run: |
@@ -69,7 +70,7 @@ jobs:
       - name: Run the positive and negative formal probe
         env:
           ABC_FORMAL_USE_MATHLIB_CACHE: '1'
-        run: node formal/probe/check.mjs
+        run: node tools/verification/probe/check.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: ${{ always() }}
         with:

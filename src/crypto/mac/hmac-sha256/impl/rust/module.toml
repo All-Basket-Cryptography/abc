@@ -1,0 +1,18 @@
+schema_version = 1
+id = "hmac-sha256"
+owned_paths = ["src/crypto/mac/hmac-sha256/impl/rust"]
+cargo_manifests = ["src/crypto/mac/hmac-sha256/impl/rust/Cargo.toml"]
+
+[lean_sources]
+HmacPadRefinement = "src/crypto/mac/hmac-sha256/impl/rust/formal"
+HmacRefinement = "src/crypto/mac/hmac-sha256/impl/rust/formal"
+HmacTrustedClaims = "src/crypto/mac/hmac-sha256/impl/rust/formal"
+
+[lean_external_imports]
+"Abc.HmacSha256.Extracted" = "tools/verification/hmac-hkdf/check.mjs"
+
+[tasks.test]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "tools/build/rust/Cargo.toml", "--locked", "-p", "abc-hmac-sha256"]
+tools = ["cargo"]
+timeout_seconds = 120

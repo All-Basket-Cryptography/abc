@@ -46,8 +46,8 @@ jobs:
           TASK: ${{ inputs.target }}
         run: |
           case "$TASK" in
-            formal-probe:native-fuzz) cargo +1.92.0 fetch --locked --manifest-path formal/probe/rust/fuzz/Cargo.toml ;;
-            sha256:differential-fuzz) cargo +1.92.0 fetch --locked --manifest-path algorithms/hash/sha2/sha256/fuzz/Cargo.toml ;;
+            formal-probe:native-fuzz) cargo +1.92.0 fetch --locked --manifest-path tools/verification/probe/rust/fuzz/Cargo.toml ;;
+            sha256:differential-fuzz) cargo +1.92.0 fetch --locked --manifest-path src/crypto/hash/sha256/impl/rust/fuzz/Cargo.toml ;;
           esac
       - name: Verify the selected task and its prerequisites
         working-directory: baseline
@@ -55,7 +55,7 @@ jobs:
           EVENT_BASE: ${{ inputs.base }}
           EVENT_HEAD: ${{ inputs.head }}
           TASK: ${{ inputs.target }}
-        run: python -m tools.abc_ci worker --repo ../candidate --base "$EVENT_BASE" --head "$EVENT_HEAD" --target "$TASK" --directory "$RUNNER_TEMP/abc/run"
+        run: python -m tools.verification.abc_ci worker --repo ../candidate --base "$EVENT_BASE" --head "$EVENT_HEAD" --target "$TASK" --directory "$RUNNER_TEMP/abc/run"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: ${{ always() }}
         with:

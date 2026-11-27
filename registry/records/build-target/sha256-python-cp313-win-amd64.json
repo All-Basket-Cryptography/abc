@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:build-target:sha256-python-cp313-win-amd64",
+  "record_type": "build-target",
+  "name": "CPython 3.13 on Windows x86-64",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha256/sdk/python/wheel.py",
+      "locator": "Package tag cp313-cp313-win_amd64 and bundled PyO3 native extension."
+    },
+    {
+      "path": "src/crypto/hash/sha256/sdk/python/tests/consumer.py",
+      "locator": "Installed consumer conformance checks."
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "triple": "x86_64-pc-windows-msvc",
+  "os": "windows",
+  "arch": "x86_64",
+  "abi": "CPython 3.13 extension ABI and ABC Python binding version 1",
+  "cpu_features": [],
+  "compiler": {
+    "name": "rustc",
+    "version": "1.92.0"
+  },
+  "flags": [
+    "--release",
+    "-C target-feature=+crt-static"
+  ],
+  "dependency_lock_sha256": "e6e38be8ea3c460625d21605ffab55f7213752b7170093eb10dca97721ed4ae8",
+  "runtime": "CPython 3.13.14 on Windows x86-64",
+  "dispatch_policy": "Load the installed PyO3 extension and check ABC Python binding version 1."
+}

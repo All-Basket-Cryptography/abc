@@ -1,0 +1,12 @@
+schema_version = 1
+id = "benchmarks"
+owner = "assurance-testing"
+owned_paths = ["tools/benchmarks"]
+cargo_manifests = ["tools/benchmarks/Cargo.toml"]
+
+[tasks.sha256]
+kind = "benchmark"
+command = ["node", "tools/benchmarks/run.mjs"]
+tools = ["node", "cargo", "rustc", "rustup"]
+target = "native-default"
+timeout_seconds = 180

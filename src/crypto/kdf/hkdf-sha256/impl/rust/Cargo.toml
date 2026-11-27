@@ -1,0 +1,13 @@
+[package]
+workspace = "../../../../../../tools/build/rust"
+name = "abc-hkdf-sha256"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+description = "All-Basket Cryptography research HKDF-SHA-256 construction"
+readme = "README.md"
+include = ["/src/lib.rs", "/tests/vectors.rs", "/README.md"]
+
+[dependencies]
+abc-hmac-sha256 = { version = "0.1.0", path = "../../../../mac/hmac-sha256/impl/rust" }

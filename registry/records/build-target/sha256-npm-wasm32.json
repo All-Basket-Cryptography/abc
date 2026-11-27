@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:build-target:sha256-npm-wasm32",
+  "record_type": "build-target",
+  "name": "SHA-256 npm WASM target",
+  "sources": [
+    {
+      "path": "tools/release/abc_package.py",
+      "locator": "Pinned Cargo WASM packaging and Node install path."
+    },
+    {
+      "path": "src/crypto/hash/sha256/sdk/npm/wasm/Cargo.toml"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "triple": "wasm32-unknown-unknown",
+  "os": "wasm-runtime",
+  "arch": "wasm32",
+  "abi": "ABC WASM exports version 1",
+  "cpu_features": [],
+  "compiler": {
+    "name": "rustc",
+    "version": "1.92.0"
+  },
+  "flags": [
+    "--release"
+  ],
+  "dependency_lock_sha256": "f08633afeeed806a3c1b3bc079452a1edef69425b8fd7949d4602a1d303c8015",
+  "runtime": "Node.js WebAssembly host with an adjacent WASM resource",
+  "dispatch_policy": "Instantiate portable WASM and verify its ABI revision."
+}

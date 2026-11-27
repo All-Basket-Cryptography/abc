@@ -8,7 +8,7 @@ import shutil
 import subprocess
 import sys
 
-from tools.abc_status import build_docs, task_board
+from tools.catalog.abc_status import build_docs, task_board
 
 
 def doctor(repo):
@@ -99,47 +99,47 @@ def main():
         if args.command == "doctor":
             output(doctor(repo))
         elif args.command == "registry":
-            from tools.abc_registry import validate
+            from tools.catalog.abc_registry import validate
             summary = validate(repo)
             output({key: item for key, item in summary.items() if key != "records"})
         elif args.command == "graph":
-            from tools.abc_graph import build_graph
+            from tools.verification.abc_graph import build_graph
             output(build_graph(repo, args.revision), args.output)
         elif args.command == "plan":
-            from tools.abc_graph import create_plan
+            from tools.verification.abc_graph import create_plan
             output(create_plan(repo, args.base, args.head, merge_base=args.merge_base), args.output)
         elif args.command == "run":
-            from tools.abc_runner import execute
+            from tools.verification.abc_runner import execute
             result = execute(repo, args.plan, args.output, args.domain, args.key_file, args.cache)
             output(result)
             return 0 if result["status"] == "passed" else 1
         elif args.command == "evidence":
-            from tools.abc_runner import verify_receipt
+            from tools.verification.abc_runner import verify_receipt
             output(verify_receipt(repo, args.plan, args.run, args.domain, args.key_file))
         elif args.command == "status":
             output(task_board(repo))
         elif args.command == "package":
             if args.sdk == "go":
-                from tools.abc_go import package_go
+                from tools.release.abc_go import package_go
                 output(package_go(repo, args.output))
             elif args.sdk == "java":
-                from tools.abc_java import package_java
+                from tools.release.abc_java import package_java
                 output(package_java(repo, args.output))
             else:
-                from tools.abc_package import package
+                from tools.release.abc_package import package
                 output(package(repo, args.sdk, args.output))
         elif args.command == "consumer-test":
             if args.sdk == "go":
-                from tools.abc_go import check_go
+                from tools.release.abc_go import check_go
                 output(check_go(repo, args.artifact))
             elif args.sdk == "java":
-                from tools.abc_java import check_java
+                from tools.release.abc_java import check_java
                 output(check_java(repo, args.artifact))
             else:
-                from tools.abc_package import consumer_test
+                from tools.release.abc_package import consumer_test
                 output(consumer_test(repo, args.sdk, args.artifact, args.browser, args.node_benchmark))
         elif args.command == "conformance":
-            from tools.abc_conformance import check_all
+            from tools.release.abc_conformance import check_all
             output(check_all(repo, args.output, args.browser))
         elif args.command == "fuzz":
             if not args.budget.endswith("s") or not args.budget[:-1].isascii() or not args.budget[:-1].isdecimal():
@@ -147,7 +147,7 @@ def main():
             seconds = int(args.budget[:-1])
             if not 1 <= seconds <= 600:
                 raise ValueError("fuzz budget must be between 1s and 600s")
-            engine = ["node", "algorithms/hash/sha2/sha256/fuzz/run.mjs"]
+            engine = ["node", "src/crypto/hash/sha256/impl/rust/fuzz/run.mjs"]
             if sys.platform == "win32":
                 engine.append("--source-coverage" if args.coverage else "--native")
             result = subprocess.run([*engine, str(seconds)], cwd=repo, timeout=seconds + 400, check=False)
@@ -155,7 +155,7 @@ def main():
         elif args.command == "docs":
             output(build_docs(repo, args.output))
         elif args.command == "release":
-            from tools.abc_release import prepare, verify
+            from tools.release.abc_release import prepare, verify
             output(prepare(repo, args.output, args.profile, args.sdk or ["rust", "npm"])
                    if args.action == "prepare" else verify(repo, args.manifest))
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:

@@ -1,5 +1,5 @@
 Observed UTC: 2026-11-27T17:34:30Z
-Command: python -B foundation/lean/check.py sha3
+Command: python -B src/lean/check.py sha3
 Exit: 0
 Lean (version 4.31.0, x86_64-w64-windows-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)
 Sha3Encoding.lean SHA-256: 165d10d6feafb552fae920d1750d504aecc462c5a35b17a759b66194c6bc3ae5

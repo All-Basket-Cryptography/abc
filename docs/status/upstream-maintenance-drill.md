@@ -3,10 +3,10 @@
 Run from the repository root.
 
 ```sh
-python -m tools.abc_upstream inventory
-python -m tools.abc_upstream compare --previous .abc/previous-upstream.json
-python -m tools.abc_upstream affected --implementation abc:implementation:sha256-golang-1-24-4 --revision go1.24.4
-python -m tools.abc_upstream drill
+python -m tools.catalog.abc_upstream inventory
+python -m tools.catalog.abc_upstream compare --previous .abc/previous-upstream.json
+python -m tools.catalog.abc_upstream affected --implementation abc:implementation:sha256-golang-1-24-4 --revision go1.24.4
+python -m tools.catalog.abc_upstream drill
 ```
 
 Save the previous inventory as JSON before updating the reviewed catalog. The
@@ -18,7 +18,7 @@ notifications remain pending.
 Query the public feed for the reviewed RustCrypto package mapping.
 
 ```sh
-python -m tools.abc_upstream osv-snapshot --implementation abc:implementation:sha256-rustcrypto-0-10-9
+python -m tools.catalog.abc_upstream osv-snapshot --implementation abc:implementation:sha256-rustcrypto-0-10-9
 ```
 
 The query records advisory IDs, the exact package version, retrieval time,
@@ -51,7 +51,7 @@ On the demonstrated Windows CPython target, run the same drill with the
 local research wheel to exercise provider compatibility.
 
 ```sh
-python -m tools.abc_upstream drill --wheel .abc/dist/python/abc_crypto_research-0.1.0-cp313-cp313-win_amd64.whl
+python -m tools.catalog.abc_upstream drill --wheel .abc/dist/python/abc_crypto_research-0.1.0-cp313-cp313-win_amd64.whl
 ```
 
 The offline external consumer compares ABC's digest bytes against

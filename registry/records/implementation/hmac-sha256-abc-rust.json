@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:hmac-sha256-abc-rust",
+  "record_type": "implementation",
+  "name": "ABC research HMAC-SHA-256",
+  "sources": [
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/rust/src/lib.rs",
+      "locator": "SHA-256 scope: this source file."
+    },
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/rust/Cargo.toml"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hmac-sha-256",
+  "spec_ref": "abc:specification:hmac-sha-256-rfc2104",
+  "origin": "first-party",
+  "revision": "0.1.0",
+  "source_sha256": "b9be56d2cc809e6b3998e76ec53edcaf4ccb98f19e3c2f643678f224a9f09425",
+  "path": "src/crypto/mac/hmac-sha256/impl/rust/src/lib.rs",
+  "languages": [
+    "rust"
+  ],
+  "features": [],
+  "external_calls": [],
+  "provider": "ABC portable research",
+  "target_refs": [],
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -2,7 +2,20 @@
 
 ABC is a research monorepo for a source-traceable cryptography catalog, portable implementations, SDKs, and verification evidence. The [master plan](docs/plan/abc/ABC-MASTER-PLAN.zh-Hant.md) defines the full scope. [Progress](docs/status/progress.md) records the implemented slices and blockers.
 
-Use Python 3.12 or newer and Git for the repository tools. The CLI lives in `tools/` and the shared Rust workspace lives in `build/rust/`. Cargo 1.92.0 builds the research SHA-256 core. The npm package also needs Node, npm, and the `wasm32-unknown-unknown` target for this Rust release.
+| Directory | Contents |
+| --- | --- |
+| `docs/` | Plans, design decisions, user guides, qualification results, governance, and security documentation. |
+| `src/crypto/` | Algorithms grouped by cryptographic class. Each algorithm keeps its shared specification, each language implementation, and each SDK entry point together. |
+| `src/lean/` and `src/runtime/` | Shared Lean definitions and application-level research profiles. |
+| `registry/` | Canonical records, JSON schemas, and machine-readable assurance policy. |
+| `tools/` | CLI, builds, verification, release engineering, compatibility consumers, benchmarks, and tool tests. |
+| `.github/` | GitHub Actions. |
+
+For example, [SHA-256](src/crypto/hash/sha256) keeps its [specification](src/crypto/hash/sha256/spec), [implementations](src/crypto/hash/sha256/impl), and [SDKs](src/crypto/hash/sha256/sdk) together. Rust users install the algorithm crate directly. The current SHA-256 SDKs use the Rust backend. Additional cores have their own test and verification scope.
+
+The [native qualification matrix](docs/plan/multi-language-qualification.md) tracks 20 algorithm profiles, their primary references, and their implementation and proof requirements.
+
+Use Python 3.12 or newer and Git for the repository tools. The CLI lives in `tools/` and the shared Rust workspace lives in `tools/build/rust/`. Cargo 1.92.0 builds the research SHA-256 core. The npm package also needs Node, npm, and the `wasm32-unknown-unknown` target for this Rust release.
 
 ```text
 python -m tools.abc_cli doctor --json
@@ -11,7 +24,7 @@ python -m tools.abc_cli status
 python -m tools.abc_cli plan --head WORKTREE --output .abc/plan.json
 python -m tools.abc_cli run --plan .abc/plan.json --output .abc/run
 python -m tools.abc_cli docs build
-cargo +1.92.0 test --manifest-path build/rust/Cargo.toml --workspace --locked --offline
+cargo +1.92.0 test --manifest-path tools/build/rust/Cargo.toml --workspace --locked --offline
 ```
 
 Use a fresh run output directory for each evidence run. `WORKTREE` supports local development before the initial Git revision. To check a committed change, run from a clean checkout and specify `--base BASE --head HEAD --merge-base`. A plan with no usable base schedules the full required scope.
@@ -25,7 +38,7 @@ python -m tools.abc_cli package --sdk npm --output dist
 python -m tools.abc_cli consumer-test --sdk npm --artifact dist/abc-cryptography-research-0.1.0.tgz
 ```
 
-Pass `--browser` with a Chromium executable to extend the npm consumer check to a browser. SDK packaging and consumer results are research evidence. The [assurance policy](security/trust-and-source-policy.md) governs formal and release claims.
+Pass `--browser` with a Chromium executable to extend the npm consumer check to a browser. SDK packaging and consumer results are research evidence. The [assurance policy](docs/security/trust-and-source-policy.md) governs formal and release claims.
 
 On Windows amd64, `python -m tools.abc_cli conformance --output dist/conformance` builds and runs all seven research consumers. Set `ABC_JAVA_HOME` to a JDK 17 directory for the JNI package. Use a fresh output directory for each run. See the [acceptance review](docs/status/acceptance.md) for current coverage and blockers.
 

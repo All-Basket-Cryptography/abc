@@ -19,8 +19,8 @@ exception translation. The local run covers Windows x64. The Linux x86-64
 packaging path remains unverified on this host.
 
 ```sh
-python sdk/c/package.py --sdk cpp --consumer --output dist/native
-python sdk/c/fuzz.py --runs 10000
+python src/crypto/hash/sha256/sdk/c/package.py --sdk cpp --consumer --output dist/native
+python src/crypto/hash/sha256/sdk/c/fuzz.py --runs 10000
 ```
 
 The native `libfuzzer-sys` 0.4.13 run completed 10,000 generated inputs with

@@ -40,7 +40,7 @@ jobs:
         working-directory: baseline
         run: |
           test "$(git rev-parse --verify HEAD)" = "$EVENT_BASE"
-          if [ "$(git cat-file -t "$EVENT_BASE:tools/abc_ci.py" 2>/dev/null)" = blob ]; then
+          if [ "$(git cat-file -t "$EVENT_BASE:tools/verification/abc_ci.py" 2>/dev/null)" = blob ]; then
             printf 'mode=baseline\n' >> "$GITHUB_OUTPUT"
           else
             printf 'mode=bootstrap\n' >> "$GITHUB_OUTPUT"
@@ -52,7 +52,7 @@ jobs:
       - id: plan
         if: steps.baseline.outputs.mode == 'baseline'
         working-directory: baseline
-        run: python -m tools.abc_ci plan --repo ../candidate --base "$EVENT_BASE" --head "$EVENT_HEAD"
+        run: python -m tools.verification.abc_ci plan --repo ../candidate --base "$EVENT_BASE" --head "$EVENT_HEAD"
 
   bootstrap-advisory:
     name: Initial candidate fixtures (advisory)
@@ -70,7 +70,7 @@ jobs:
         with:
           python-version: '3.13.14'
       - name: Run candidate registry and standalone fixtures
-        run: python -B -m tools.abc_ci bootstrap --repo . --base "$EVENT_BASE" --head "$EVENT_HEAD"
+        run: python -B -m tools.verification.abc_ci bootstrap --repo . --base "$EVENT_BASE" --head "$EVENT_HEAD"
 
   modules:
     needs: plan
@@ -125,4 +125,4 @@ jobs:
           path: receipts
       - name: Check the expected task closure and attached outputs
         working-directory: baseline
-        run: python -m tools.abc_ci gate --repo ../candidate --base "$EVENT_BASE" --head "$EVENT_HEAD" --directory ../receipts
+        run: python -m tools.verification.abc_ci gate --repo ../candidate --base "$EVENT_BASE" --head "$EVENT_HEAD" --directory ../receipts

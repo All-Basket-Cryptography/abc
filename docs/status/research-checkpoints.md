@@ -6,7 +6,7 @@ a timeout. Use task dependencies for the complete prerequisite closure.
 Choose a planner target for a focused run.
 
 ```sh
-python -m tools.abc_research propose --directory .abc/research/registry \
+python -m tools.verification.abc_research propose --directory .abc/research/registry \
   --target repository-assurance:registry --max-attempts 2 --budget-seconds 240
 ```
 
@@ -25,7 +25,7 @@ storage. The local task runner runs trusted code under the caller's account.
 
 ```sh
 ssh-keygen -Y sign -f /secure/reviewer-key -n abc-local-research .abc/research/registry/proposal.json
-python -m tools.abc_research resume --directory .abc/research/registry \
+python -m tools.verification.abc_research resume --directory .abc/research/registry \
   --signature .abc/research/registry/proposal.json.sig \
   --allowed-signers /secure/allowed_signers --reviewer reviewer \
   --receipt-key /secure/local-receipt-key

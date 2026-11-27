@@ -1,0 +1,11 @@
+schema_version = 1
+id = "sha256-java"
+owned_paths = ["src/crypto/hash/sha256/impl/java"]
+dependencies = [{ module = "sha256-spec", type = "implements" }]
+
+[tasks.jdk17-tests]
+kind = "test"
+command = ["python", "-B", "src/crypto/hash/sha256/impl/java/check.py"]
+tools = ["python", "javac", "java", "jar"]
+target = "jdk17"
+timeout_seconds = 180

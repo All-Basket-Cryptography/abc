@@ -1,0 +1,13 @@
+[package]
+workspace = "../../../../../../../tools/build/rust"
+name = "abc-sha256-wasm"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+abc-sha256 = { path = "../../../impl/rust" }

@@ -1,0 +1,10 @@
+schema_version = 1
+id = "python-sdk"
+owned_paths = ["src/crypto/hash/sha256/sdk/python"]
+cargo_manifests = ["src/crypto/hash/sha256/sdk/python/native/Cargo.toml"]
+
+[tasks.source]
+kind = "test"
+command = ["python", "src/crypto/hash/sha256/sdk/python/wheel.py", "--check-source"]
+tools = ["python"]
+timeout_seconds = 30

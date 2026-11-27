@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha256-hacl-cpython-c",
+  "record_type": "implementation",
+  "name": "HACL* SHA-256 in pinned CPython C source",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha256/impl/c/upstream/Hacl_Hash_SHA2.c",
+      "locator": "Original CPython translation unit, including SHA-256 compression and streaming."
+    },
+    {
+      "path": "src/crypto/hash/sha256/impl/c/upstream/source.json",
+      "locator": "CPython source archive, HACL* lineage, and exact file digests."
+    },
+    {
+      "path": "src/crypto/hash/sha256/impl/c/README.md",
+      "locator": "Native consumer tests, bounded adapter theorem, and remaining correspondence obligations."
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha-256",
+  "spec_ref": "abc:specification:sha256-fips180-4-2015",
+  "origin": "upstream",
+  "revision": "df793163d5821791d4e7caf88885a2c11a107986",
+  "source_sha256": "f8af382de7e29a73c726f9c70770498ddd99e2c4702489ed6e634f0b68597c95",
+  "path": "src/crypto/hash/sha256/impl/c/upstream/Hacl_Hash_SHA2.c",
+  "languages": ["c"],
+  "features": [],
+  "external_calls": ["C allocation and memory operations"],
+  "provider": "HACL* via CPython",
+  "target_refs": [],
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "MIT (HACL*), with upstream CPython notices retained"
+}

@@ -4,13 +4,13 @@ on:
   pull_request:
     paths:
       - '.github/workflows/sha256-model.yml'
-      - 'algorithms/hash/sha2/sha256/**'
-      - 'build/rust/**'
-      - 'foundation/lean/**'
-      - 'formal/probe/toolchain-candidate.json'
-      - 'formal/hmac-hkdf/**'
-      - 'constructions/mac/hmac/hmac-sha256/**'
-      - 'constructions/kdf/hkdf/hkdf-sha256/**'
+      - 'src/crypto/hash/sha256/**'
+      - 'tools/build/rust/**'
+      - 'src/lean/**'
+      - 'tools/verification/probe/toolchain-candidate.json'
+      - 'tools/verification/hmac-hkdf/**'
+      - 'src/crypto/mac/hmac-sha256/**'
+      - 'src/crypto/kdf/hkdf-sha256/**'
   workflow_dispatch:
 
 permissions:
@@ -58,10 +58,10 @@ jobs:
           printf 'ABC_AENEAS_ROOT=%s\n' "$aeneas" >> "$GITHUB_ENV"
       - name: Extract and compare the complete Rust model
         id: full
-        run: node algorithms/hash/sha2/sha256/formal/extract.mjs
+        run: node src/crypto/hash/sha256/impl/rust/formal/extract.mjs
       - name: Diagnose the compression call graph separately
         if: ${{ failure() && steps.full.outcome == 'failure' }}
-        run: node algorithms/hash/sha2/sha256/formal/extract.mjs --item crate::compress
+        run: node src/crypto/hash/sha256/impl/rust/formal/extract.mjs --item crate::compress
       - name: Install the pinned Lean release
         shell: bash
         run: |
@@ -74,7 +74,7 @@ jobs:
       - name: Check SHA-256, HMAC and HKDF refinements
         env:
           ABC_FORMAL_USE_MATHLIB_CACHE: '1'
-        run: node formal/hmac-hkdf/check.mjs .abc/sha256-extraction/run-*/result.json
+        run: node tools/verification/hmac-hkdf/check.mjs .abc/sha256-extraction/run-*/result.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: ${{ always() }}
         with:

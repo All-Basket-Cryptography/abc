@@ -3,11 +3,11 @@ name: ABC Swift research package
 on:
   pull_request:
     paths:
-      - 'sdk/swift/**'
-      - 'sdk/c/**'
-      - 'algorithms/hash/sha2/sha256/**'
+      - 'src/crypto/hash/sha256/sdk/swift/**'
+      - 'src/crypto/hash/sha256/sdk/c/**'
+      - 'src/crypto/hash/sha256/**'
       - '.github/workflows/swift-package.yml'
-      - 'build/rust/Cargo.lock'
+      - 'tools/build/rust/Cargo.lock'
   workflow_dispatch:
 
 permissions:
@@ -30,7 +30,7 @@ jobs:
       - name: Build and run the clean SwiftPM consumer
         env:
           ABC_TASK_OUTPUT: ${{ github.workspace }}/dist/swift
-        run: python -B sdk/swift/package.py --consumer --output dist/swift
+        run: python -B src/crypto/hash/sha256/sdk/swift/package.py --consumer --output dist/swift
       - name: Retain the tested package and conformance report
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

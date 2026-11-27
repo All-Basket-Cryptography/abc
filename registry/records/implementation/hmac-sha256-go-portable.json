@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:hmac-sha256-go-portable",
+  "record_type": "implementation",
+  "name": "ABC portable research HMAC-SHA-256 in Go",
+  "sources": [
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/go/hmac.go",
+      "locator": "Native Go implementation."
+    },
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/go/README.md",
+      "locator": "Test instructions, source standard, and scope."
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hmac-sha-256",
+  "spec_ref": "abc:specification:hmac-sha-256-rfc2104",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "145237e0a41853436aa178867321b5b3383ab4d0ddd8666419b258f39c7ad710",
+  "path": "src/crypto/mac/hmac-sha256/impl/go/hmac.go",
+  "languages": [
+    "go"
+  ],
+  "features": [],
+  "external_calls": [],
+  "provider": "ABC portable Go research core",
+  "target_refs": [],
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

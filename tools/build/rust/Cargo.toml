@@ -1,0 +1,11 @@
+[workspace]
+members = [
+    "../../../src/crypto/hash/sha256/impl/rust",
+    "../../../src/crypto/hash/sha3-256/impl/rust",
+    "../../../src/crypto/mac/hmac-sha256/impl/rust",
+    "../../../src/crypto/kdf/hkdf-sha256/impl/rust",
+    "../../../src/crypto/hash/sha256/sdk/c/ffi",
+    "../../../src/crypto/hash/sha256/sdk/npm/wasm",
+    "../../../src/crypto/hash/sha256/sdk/wasi",
+]
+resolver = "2"

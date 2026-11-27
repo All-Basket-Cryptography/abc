@@ -1,0 +1,11 @@
+schema_version = 1
+id = "go-sdk"
+owner = "sdk"
+owned_paths = ["src/crypto/hash/sha256/sdk/go", "tools/compatibility/consumers/go"]
+dependencies = [{ module = "c-sdk", type = "wraps" }]
+
+[tasks.source]
+kind = "test"
+command = ["python", "-m", "tools.release.abc_go"]
+tools = ["go"]
+target = "windows-amd64"

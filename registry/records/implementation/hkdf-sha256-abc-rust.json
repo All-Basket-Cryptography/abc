@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:hkdf-sha256-abc-rust",
+  "record_type": "implementation",
+  "name": "ABC research HKDF-SHA-256",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/hkdf-sha256/impl/rust/src/lib.rs",
+      "locator": "SHA-256 scope: this source file."
+    },
+    {
+      "path": "src/crypto/kdf/hkdf-sha256/impl/rust/Cargo.toml"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hkdf-sha-256",
+  "spec_ref": "abc:specification:hkdf-sha-256-rfc5869",
+  "origin": "first-party",
+  "revision": "0.1.0",
+  "source_sha256": "635284ceccfc1065a6b9b069aa104f5e407f8511c86349bcfa67fd41b380015e",
+  "path": "src/crypto/kdf/hkdf-sha256/impl/rust/src/lib.rs",
+  "languages": [
+    "rust"
+  ],
+  "features": [],
+  "external_calls": [],
+  "provider": "ABC portable research",
+  "target_refs": [],
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

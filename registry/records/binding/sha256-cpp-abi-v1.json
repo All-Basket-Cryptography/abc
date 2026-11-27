@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "abc:binding:sha256-cpp-abi-v1",
+  "record_type": "binding",
+  "name": "C++17 SHA-256 binding",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha256/sdk/cpp/include/abc/sha256.hpp"
+    },
+    {
+      "path": "docs/status/native-sdks.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "ecosystem": "cpp",
+  "language": "cpp",
+  "runtime": "Native C ABI v1",
+  "implementation_ref": "abc:implementation:sha256-abc-rust-portable",
+  "provider": "sha256-abc-rust-portable",
+  "encoding_contract": "Byte buffer and std::array<uint8_t,32>",
+  "error_contract": "abc::error retains the C ABI status code",
+  "ownership_contract": "Move-only RAII stream owns a C ABI handle. The caller owns each input buffer.",
+  "target_refs": [
+    "abc:build-target:sha256-c-abi-win64-msvc"
+  ],
+  "package_name": "ABCCryptoCpp"
+}

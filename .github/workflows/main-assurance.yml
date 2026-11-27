@@ -25,8 +25,8 @@ jobs:
         run: rustup toolchain install 1.92.0 --profile minimal --target wasm32-unknown-unknown
       - name: Fetch lockfile-pinned fuzz dependencies
         run: |
-          cargo +1.92.0 fetch --locked --manifest-path formal/probe/rust/fuzz/Cargo.toml
-          cargo +1.92.0 fetch --locked --manifest-path algorithms/hash/sha2/sha256/fuzz/Cargo.toml
+          cargo +1.92.0 fetch --locked --manifest-path tools/verification/probe/rust/fuzz/Cargo.toml
+          cargo +1.92.0 fetch --locked --manifest-path src/crypto/hash/sha256/impl/rust/fuzz/Cargo.toml
       - name: Run the complete verification plan
         run: |
           python -m tools.abc_cli plan --head HEAD --output .abc/plan.json

@@ -1,0 +1,26 @@
+schema_version = 1
+id = "formal-probe"
+owner = "formal"
+owned_paths = ["tools/verification/probe"]
+cargo_manifests = ["tools/verification/probe/rust/Cargo.toml", "tools/verification/probe/rust/fuzz/Cargo.toml"]
+lean_external_imports = { Aeneas = "tools/verification/probe/toolchain-candidate.json", "Generated.Funs" = "tools/verification/probe/check.mjs" }
+
+[tasks.native-test]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--offline", "--locked", "--manifest-path", "tools/verification/probe/rust/Cargo.toml", "--target-dir", ".abc/probe-native"]
+tools = ["cargo", "rustc", "rustup"]
+target = "native"
+
+[tasks.native-fuzz]
+kind = "fuzz"
+command = ["node", "tools/verification/probe/fuzz.mjs", "--native"]
+tools = ["node", "cargo", "rustc", "rustup"]
+target = "native"
+timeout_seconds = 360
+
+[tasks.formal-check]
+kind = "formal"
+command = ["node", "tools/verification/probe/check.mjs"]
+tools = ["node", "git", "rustup", "lake", "lean"]
+target = "lean-4.31.0"
+timeout_seconds = 1800

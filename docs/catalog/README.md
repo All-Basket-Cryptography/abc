@@ -1,6 +1,6 @@
 # Catalog snapshot review
 
-Run `python -m tools.abc_catalog` from the repository root to review the
+Run `python -m tools.catalog.abc_catalog` from the repository root to review the
 [seed snapshot](snapshots/seed-2026-11-28.json). Use `--snapshot PATH` to
 review a new export in the same versioned input format. The command
 validates proposed records with the canonical registry schema and produces

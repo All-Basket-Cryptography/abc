@@ -1,0 +1,28 @@
+schema_version = 1
+id = "repository-assurance"
+owner = "integration"
+owned_paths = [".gitattributes", ".gitignore", ".github", "README.md", "docs", "registry", "tools"]
+
+[tasks.registry]
+kind = "metadata"
+always = true
+command = ["python", "-m", "tools.abc_cli", "registry", "validate", "--strict"]
+
+[tasks.fixtures]
+kind = "test"
+command = ["python", "-m", "unittest", "discover", "-s", "tools/tests/fixtures/registry", "-p", "test_*.py"]
+
+[tasks.assurance-tests]
+kind = "test"
+command = ["python", "-m", "unittest", "discover", "-s", "tools/tests", "-p", "test_*.py"]
+tools = ["git"]
+
+[tasks.status]
+kind = "docs"
+always = true
+command = ["python", "-m", "tools.abc_cli", "status"]
+
+[tasks.compatibility]
+kind = "compatibility"
+command = ["python", "-m", "unittest", "discover", "-s", "tools/tests/fixtures/registry", "-p", "test_*.py"]
+inputs = ["src/crypto/hash/sha256/spec/vectors.json"]

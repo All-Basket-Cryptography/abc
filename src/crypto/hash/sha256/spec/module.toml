@@ -1,0 +1,14 @@
+schema_version = 1
+id = "sha256-spec"
+owned_paths = ["src/crypto/hash/sha256/spec"]
+
+[lean_sources]
+Sha256Spec = "src/crypto/hash/sha256/spec"
+CompressionRefinement = "src/crypto/hash/sha256/spec"
+StreamingRefinement = "src/crypto/hash/sha256/spec"
+
+[tasks.check]
+kind = "formal"
+command = ["python", "src/lean/check.py", "sha256"]
+tools = ["python", "lean"]
+timeout_seconds = 300

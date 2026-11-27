@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "id": "abc:evidence-request:hkdf-sha256-abc-rust-refinement",
+  "record_type": "evidence-request",
+  "name": "HKDF-SHA-256 functional refinement request",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/hkdf-sha256/spec/README.md"
+    },
+    {
+      "path": "tools/verification/probe/toolchain-candidate.json",
+      "locator": "Candidate compatibility pins. This request records no proof result."
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:implementation:hkdf-sha256-abc-rust",
+  "claim": "refinement",
+  "method": "formal",
+  "scope": "Equality of extract and expand within the accepted byte domain and output preservation on length errors.",
+  "theorems": [
+    "HkdfSha256.extract_refines",
+    "HkdfSha256.expand_refines",
+    "HkdfSha256.length_errors_preserve_output"
+  ],
+  "toolchain": [
+    {
+      "name": "Lean",
+      "version": "v4.31.0"
+    },
+    {
+      "name": "Aeneas",
+      "version": "505b6ca35217e7be5c96c3e2f8045edfbdf47291"
+    },
+    {
+      "name": "Charon",
+      "version": "b104e24fea7d721b71e6c39fd70f26ff20bc0980"
+    },
+    {
+      "name": "Rust extraction toolchain",
+      "version": "nightly-2026-08-18"
+    }
+  ],
+  "assumption_policy": "ABC proof trust policy in docs/security/trust-and-source-policy.md",
+  "output_format": "Lean checker and axiom audit logs bound to the exact extracted sources"
+}

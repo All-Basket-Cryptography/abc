@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha256-abc-rust-portable",
+  "record_type": "implementation",
+  "name": "ABC portable research SHA-256",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha256/impl/rust/src/lib.rs",
+      "locator": "SHA-256 scope: this implementation file."
+    },
+    {
+      "path": "docs/status/progress.md",
+      "locator": "Local test and proof status."
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha-256",
+  "spec_ref": "abc:specification:sha256-fips180-4-2015",
+  "origin": "first-party",
+  "revision": "0.1.0",
+  "source_sha256": "40b2cdf783ff5bfe430a3fb3717b8838570b736552152041ab17b6f5dfef621d",
+  "path": "src/crypto/hash/sha256/impl/rust",
+  "languages": [
+    "rust"
+  ],
+  "features": [],
+  "external_calls": [],
+  "provider": "ABC portable research",
+  "target_refs": [
+    "abc:build-target:sha256-go-win-amd64",
+    "abc:build-target:sha256-java-win-amd64",
+    "abc:build-target:sha256-python-cp313-win-amd64",
+    "abc:build-target:sha256-npm-wasm32"
+  ],
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}
