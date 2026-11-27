@@ -1,0 +1,11 @@
+schema_version = 1
+id = "sha3-256-cpp"
+owned_paths = ["src/crypto/hash/sha3-256/impl/cpp"]
+dependencies = [{ module = "sha3-encoding-spec", type = "implements" }, { module = "keccak-p1600-cpp", type = "imports" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "src/crypto/hash/keccak-p1600/impl/cpp/check.py", "sha3-256"]
+tools = ["python", "clang"]
+target = "portable-cpp17"
+timeout_seconds = 180

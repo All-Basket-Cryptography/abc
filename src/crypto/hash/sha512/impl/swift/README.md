@@ -14,3 +14,7 @@ The suite uses CryptoKit as an independent oracle and includes known
 answers, all splits around block and padding boundaries, and snapshot
 ownership. The direct Swift source and runtime refinement remain open.
 [Lean schedule model](../../spec/Sha512Ring.lean)
+
+Apple Swift 6.1.2 passed the Release suite on macOS arm64 with three
+known answers, 14 independent CryptoKit comparisons and 9,021 streaming
+snapshots. [Hosted run](https://github.com/All-Basket-Cryptography/abc/actions/runs/46079389105/job/140774570482)

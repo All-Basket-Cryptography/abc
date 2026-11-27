@@ -1,0 +1,10 @@
+schema_version = 1
+id = "scrypt-python-portable"
+owned_paths = ["src/crypto/kdf/scrypt/impl/python"]
+dependencies = [{ module = "pbkdf2-hmac-sha256-python-portable", type = "imports" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "-m", "unittest", "discover", "-s", "src/crypto/kdf/scrypt/impl/python", "-p", "test_scrypt.py"]
+tools = ["python"]
+timeout_seconds = 180

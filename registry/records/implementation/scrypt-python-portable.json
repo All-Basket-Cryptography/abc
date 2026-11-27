@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:scrypt-python-portable",
+  "record_type": "implementation",
+  "name": "ABC research scrypt in Python",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/scrypt/impl/python/abc_scrypt.py"
+    },
+    {
+      "path": "src/crypto/kdf/scrypt/impl/python/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:scrypt",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "41debb0a727ac0486d652dc7dd671fa321155f50328c26c0f813c6f2dc01c82f",
+  "path": "src/crypto/kdf/scrypt/impl/python",
+  "languages": [
+    "python"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Python PBKDF2-HMAC-SHA-256"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable Python research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:scrypt-go-portable",
+  "record_type": "implementation",
+  "name": "ABC research scrypt in Go",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/scrypt/impl/go/scrypt.go"
+    },
+    {
+      "path": "src/crypto/kdf/scrypt/impl/go/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:scrypt",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "deecdd7affbe473d56ebe5dde9b3f5393ce936a08157ccfc1d6e18909ebf42a1",
+  "path": "src/crypto/kdf/scrypt/impl/go",
+  "languages": [
+    "go"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Go PBKDF2-HMAC-SHA-256"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable Go research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -1,0 +1,17 @@
+schema_version = 1
+id = "scrypt-go-portable"
+owned_paths = ["src/crypto/kdf/scrypt/impl/go"]
+dependencies = [{ module = "pbkdf2-hmac-sha256-go-portable", type = "calls" }]
+shared_inputs = ["src/crypto/kdf/scrypt/spec/verify.py"]
+
+[tasks.test]
+kind = "test"
+command = ["go", "test", "-C", "src/crypto/kdf/scrypt/impl/go", "-count=1", "./..."]
+tools = ["go"]
+timeout_seconds = 180
+
+[tasks.provider-comparison]
+kind = "test"
+command = ["python", "-B", "src/crypto/kdf/scrypt/spec/verify.py", "--implementation", "go"]
+tools = ["python", "go"]
+timeout_seconds = 180

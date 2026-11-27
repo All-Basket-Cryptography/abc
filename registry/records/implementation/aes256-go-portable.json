@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-go-portable",
+  "record_type": "implementation",
+  "name": "ABC research AES-256 in Go",
+  "sources": [
+    {
+      "path": "src/crypto/cipher/aes256/impl/go/aes256.go"
+    },
+    {
+      "path": "src/crypto/cipher/aes256/impl/go/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:aes-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "34ed270b21af7ab9614557f14ca9a7970b678ee4e7883dd46d29db2a7f427fe3",
+  "path": "src/crypto/cipher/aes256/impl/go",
+  "languages": [
+    "go"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable Go research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

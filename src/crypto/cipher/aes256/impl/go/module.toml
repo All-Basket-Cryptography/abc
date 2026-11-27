@@ -1,0 +1,17 @@
+schema_version = 1
+id = "aes256-go-portable"
+owned_paths = ["src/crypto/cipher/aes256/impl/go"]
+lean_sources = { Aes256GoSquare = "src/crypto/cipher/aes256/impl/go" }
+
+[tasks.test]
+kind = "test"
+command = ["go", "test", "-C", "src/crypto/cipher/aes256/impl/go", "-count=1", "./..."]
+tools = ["go"]
+target = "portable"
+timeout_seconds = 120
+
+[tasks.square-proof]
+kind = "formal"
+command = ["lean", "src/crypto/cipher/aes256/impl/go/Aes256GoSquare.lean"]
+tools = ["lean"]
+timeout_seconds = 120

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:go-1-24-9-ml-kem-768",
+  "record_type": "implementation",
+  "name": "Go standard library ML-KEM-768",
+  "sources": [
+    {
+      "url": "https://github.com/golang/go/blob/go1.24.9/src/crypto/mlkem/mlkem.go"
+    },
+    {
+      "url": "https://github.com/golang/go/blob/go1.24.9/src/crypto/internal/fips140/mlkem/mlkem768.go"
+    },
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/go/mlkem768.go"
+    },
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/go/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-kem",
+  "origin": "upstream",
+  "revision": "go1.24.9",
+  "source_sha256": "ac5c818cc515f0c9abea22886a54945584441acddf8be58866601f8e49eb6a29",
+  "path": "src/crypto/agreement/ml-kem-768/impl/go",
+  "languages": [
+    "go"
+  ],
+  "features": [
+    "ml-kem-768"
+  ],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "Go standard library",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "BSD-3-Clause"
+}
