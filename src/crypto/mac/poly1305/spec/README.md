@@ -19,8 +19,18 @@ final-reduction threshold and a sum bound under its stated input hypotheses.
 Complete source refinement and the limb-state bounds across every update
 remain open. [RFC 8439 Appendix A.3](https://www.rfc-editor.org/rfc/rfc8439.html#appendix-A.3)
 
+The 13-bit radix model for the JavaScript and TypeScript carry equations
+proves congruence modulo `2^130 - 5`, a bound below 34 bits for propagated
+columns, and normalization after the exact three sweeps used by their
+implementations. Its hypotheses require ten input columns below `2^33`.
+The folded-term and ten-term bounds cover construction of such columns
+from digits below twice the radix and key limbs below the radix.
+The model leaves decoding, final tag serialization, source translation,
+and JavaScript runtime timing open.
+
 ```sh
 cargo +1.92.0 test --manifest-path tools/build/rust/Cargo.toml --locked --offline -p abc-poly1305
 python -B src/crypto/mac/poly1305/spec/verify.py
 lean src/crypto/mac/poly1305/spec/Poly1305Reduction.lean
+lean -DwarningAsError=true src/crypto/mac/poly1305/spec/Poly1305Radix13.lean
 ```

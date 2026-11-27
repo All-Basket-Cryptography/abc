@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:shake256-kotlin-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHAKE256 in Kotlin",
+  "sources": [
+    {
+      "path": "src/crypto/hash/shake256/impl/kotlin/src/Shake256.kt"
+    },
+    {
+      "path": "src/crypto/hash/shake256/impl/kotlin/README.md"
+    },
+    {
+      "path": "src/crypto/hash/keccak-p1600/impl/kotlin/src/KeccakSponge.kt"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:shake256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "c5487aa886d4c05b85b4faa8025b727acd83104c23e44e48d1a892f7a72d42e1",
+  "path": "src/crypto/hash/shake256/impl/kotlin",
+  "languages": [
+    "kotlin"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Kotlin Keccak-p[1600,24]"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable Kotlin research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

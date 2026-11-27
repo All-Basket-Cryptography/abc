@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:chacha20-poly1305-c-portable",
+  "record_type": "implementation",
+  "name": "ABC research ChaCha20-Poly1305 in C",
+  "sources": [
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/c/abc_chacha20_poly1305_c.c"
+    },
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/c/README.md"
+    },
+    {
+      "path": "src/crypto/cipher/chacha20/impl/c/abc_chacha20_c.c"
+    },
+    {
+      "path": "src/crypto/mac/poly1305/impl/c/abc_poly1305_c.c"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:chacha20-poly1305",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "3a5b280b1e0641d850e780c9a082cf21aba9547e985459b4dc1c0115c7075166",
+  "path": "src/crypto/aead/chacha20-poly1305/impl/c",
+  "languages": [
+    "c"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC C ChaCha20",
+    "ABC C Poly1305"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable C research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

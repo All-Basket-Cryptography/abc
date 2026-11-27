@@ -1,0 +1,10 @@
+schema_version = 1
+id = "blake2b-java-portable"
+owned_paths = ["src/crypto/hash/blake2b/impl/java"]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/hash/blake2b/impl/java/check.py"]
+tools = ["python", "java", "javac", "jar", "node"]
+target = "jvm-jdk17"
+timeout_seconds = 180

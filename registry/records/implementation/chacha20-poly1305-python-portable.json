@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:chacha20-poly1305-python-portable",
+  "record_type": "implementation",
+  "name": "ABC research ChaCha20-Poly1305 in Python",
+  "sources": [
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/python/abc_chacha20_poly1305.py"
+    },
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/python/README.md"
+    },
+    {
+      "path": "src/crypto/cipher/chacha20/impl/python/abc_chacha20.py"
+    },
+    {
+      "path": "src/crypto/mac/poly1305/impl/python/abc_poly1305.py"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:chacha20-poly1305",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "95d32a2b81d7623f6e123ae02622e1c9e6ecc2357b27554df439254f9e789fe6",
+  "path": "src/crypto/aead/chacha20-poly1305/impl/python",
+  "languages": [
+    "python"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Python ChaCha20",
+    "ABC Python Poly1305"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable Python research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

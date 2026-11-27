@@ -1,0 +1,9 @@
+schema_version = 1
+id = "chacha20-typescript-portable"
+owned_paths = ["src/crypto/cipher/chacha20/impl/typescript"]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/cipher/chacha20/impl/typescript/chacha20.test.mts"]
+tools = ["node"]
+timeout_seconds = 120

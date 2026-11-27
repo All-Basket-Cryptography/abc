@@ -1,0 +1,11 @@
+schema_version = 1
+id = "shake256-java-portable"
+owned_paths = ["src/crypto/hash/shake256/impl/java"]
+dependencies = [{ module = "keccak-p1600-java-portable", type = "imports" }, { module = "shake256-spec", type = "implements" }]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/hash/keccak-p1600/impl/java/check.py", "--language", "java", "--algorithm", "shake256"]
+tools = ["python","java","javac","jar","node"]
+target = "jvm-jdk17"
+timeout_seconds = 240

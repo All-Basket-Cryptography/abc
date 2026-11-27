@@ -1,0 +1,11 @@
+schema_version = 1
+id = "chacha20-poly1305-python-portable"
+owned_paths = ["src/crypto/aead/chacha20-poly1305/impl/python"]
+dependencies = [{ module = "chacha20-python-portable", type = "imports" }, { module = "poly1305-python-portable", type = "imports" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "-m", "unittest", "discover", "-s", "src/crypto/aead/chacha20-poly1305/impl/python", "-p", "test_chacha20_poly1305.py"]
+tools = ["python", "node"]
+target = "portable"
+timeout_seconds = 120

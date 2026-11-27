@@ -1,4 +1,4 @@
-name: ABC ChaCha20 quarter-round refinement (advisory)
+name: ABC ChaCha20 block word refinement (advisory)
 
 on:
   pull_request:

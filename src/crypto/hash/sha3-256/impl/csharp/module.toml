@@ -1,0 +1,12 @@
+schema_version = 1
+id = "sha3-256-csharp-portable"
+owned_paths = ["src/crypto/hash/sha3-256/impl/csharp"]
+shared_inputs = ["src/crypto/hash/keccak-p1600/impl/java/fixtures.mjs","src/crypto/hash/keccak-p1600/impl/java/check.py"]
+dependencies = [{ module = "keccak-p1600-csharp-portable", type = "imports" }, { module = "sha3-encoding-spec", type = "implements" }]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/hash/keccak-p1600/impl/java/check.py", "--language", "csharp", "--algorithm", "sha3-256"]
+tools = ["python","dotnet","node"]
+target = "dotnet10"
+timeout_seconds = 240

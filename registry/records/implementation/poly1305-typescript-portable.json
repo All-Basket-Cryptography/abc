@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:poly1305-typescript-portable",
+  "record_type": "implementation",
+  "name": "ABC research Poly1305 in TypeScript",
+  "sources": [
+    {
+      "path": "src/crypto/mac/poly1305/impl/typescript/poly1305.mts"
+    },
+    {
+      "path": "src/crypto/mac/poly1305/impl/typescript/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:poly1305",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "d3398819b512dd3c70460135ef63fe65c28130fb4db06b98792dc9fc20cb09b8",
+  "path": "src/crypto/mac/poly1305/impl/typescript",
+  "languages": [
+    "typescript"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable TypeScript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -19,6 +19,7 @@ node tools/verification/chacha20/check.mjs
 The report under `.abc/chacha20-extraction/` records the Rust subject,
 proof files, tool versions, binary digests, extracted file digests and
 axiom audit. The generated Lean files must match between the two runs.
+[Recorded Linux proof inputs and result](../../../docs/status/chacha20-block-words-dac1e17.json)
 
 ## Checked scope
 

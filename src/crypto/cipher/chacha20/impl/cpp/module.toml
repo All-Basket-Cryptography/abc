@@ -1,0 +1,18 @@
+schema_version = 1
+id = "chacha20-cpp-portable"
+owned_paths = ["src/crypto/cipher/chacha20/impl/cpp"]
+shared_inputs = ["src/crypto/aead/chacha20-poly1305/impl/c/check.py", "src/crypto/aead/chacha20-poly1305/impl/cpp/check_bridge.cpp", "src/crypto/cipher/chacha20/impl/c/quarter_round_proof.py", "src/crypto/cipher/chacha20/spec/ChaCha20QuarterRound.lean"]
+dependencies = [{ module = "chacha20-spec", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "src/crypto/aead/chacha20-poly1305/impl/c/check.py", "--language", "cpp", "--profile", "chacha20"]
+tools = ["python", "clang", "node"]
+target = "portable-cpp17"
+timeout_seconds = 150
+
+[tasks.quarter-proof]
+kind = "formal"
+command = ["python", "-B", "src/crypto/cipher/chacha20/impl/c/quarter_round_proof.py", "--language", "cpp"]
+tools = ["python", "lean"]
+timeout_seconds = 120

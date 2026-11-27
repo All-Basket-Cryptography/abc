@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:poly1305-c-portable",
+  "record_type": "implementation",
+  "name": "ABC research Poly1305 in C",
+  "sources": [
+    {
+      "path": "src/crypto/mac/poly1305/impl/c/abc_poly1305_c.c"
+    },
+    {
+      "path": "src/crypto/mac/poly1305/impl/c/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:poly1305",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "649ad86e9afadec88a839b8f02c52212934ee016e256c59c79bec339d8f7cf7c",
+  "path": "src/crypto/mac/poly1305/impl/c",
+  "languages": [
+    "c"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable C research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

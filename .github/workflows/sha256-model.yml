@@ -12,10 +12,12 @@ on:
       - 'src/crypto/hash/blake2b/spec/**'
       - 'src/crypto/hash/shake256/spec/**'
       - 'src/crypto/cipher/chacha20/spec/**'
+      - 'src/crypto/cipher/chacha20/impl/java/*.lean'
       - 'src/crypto/kdf/pbkdf2-hmac-sha256/spec/**'
       - 'src/crypto/kdf/scrypt/spec/**'
       - 'src/crypto/kdf/argon2id/spec/**'
       - 'src/crypto/mac/poly1305/spec/**'
+      - 'src/crypto/mac/poly1305/impl/java/*.lean'
       - 'src/crypto/agreement/x25519/spec/**'
       - 'src/crypto/hash/sha512/spec/**'
       - 'src/crypto/aead/chacha20-poly1305/spec/**'
@@ -94,6 +96,9 @@ jobs:
           done
           lean src/crypto/hash/blake2b/spec/Blake2bBuffer.lean
           lean src/crypto/mac/poly1305/spec/Poly1305Reduction.lean
+          lean -DwarningAsError=true src/crypto/mac/poly1305/spec/Poly1305Radix13.lean
+          lean -DwarningAsError=true src/crypto/cipher/chacha20/impl/java/ChaCha20StreamingBounds.lean
+          lean -DwarningAsError=true src/crypto/mac/poly1305/impl/java/Poly1305JavaWords.lean
           lean src/crypto/agreement/x25519/spec/X25519Field.lean
           lean src/crypto/agreement/x25519/spec/X25519CarryBounds.lean
           lean src/crypto/hash/sha512/spec/Sha512Ring.lean

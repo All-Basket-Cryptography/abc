@@ -1,0 +1,11 @@
+schema_version = 1
+id = "chacha20-python-portable"
+owned_paths = ["src/crypto/cipher/chacha20/impl/python"]
+dependencies = [{ module = "chacha20-spec", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "-m", "unittest", "discover", "-s", "src/crypto/cipher/chacha20/impl/python", "-p", "test_chacha20.py"]
+tools = ["python", "node"]
+target = "portable"
+timeout_seconds = 120

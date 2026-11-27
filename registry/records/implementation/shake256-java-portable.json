@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:shake256-java-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHAKE256 in Java",
+  "sources": [
+    {
+      "path": "src/crypto/hash/shake256/impl/java/src/org/allbasket/abc/hash/shake256/Shake256.java"
+    },
+    {
+      "path": "src/crypto/hash/shake256/impl/java/README.md"
+    },
+    {
+      "path": "src/crypto/hash/keccak-p1600/impl/java/src/org/allbasket/abc/hash/keccakp1600/KeccakSponge.java"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:shake256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "3f52aeae82e150173551eebefc83a882f5ea0ab6d9acc76e1bbb819ad28a25e6",
+  "path": "src/crypto/hash/shake256/impl/java",
+  "languages": [
+    "java"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Java Keccak-p[1600,24]"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable Java research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

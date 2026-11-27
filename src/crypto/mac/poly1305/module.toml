@@ -2,7 +2,7 @@ schema_version = 1
 id = "poly1305-rust"
 owned_paths = ["src/crypto/mac/poly1305"]
 cargo_manifests = ["src/crypto/mac/poly1305/impl/rust/Cargo.toml"]
-lean_sources = { Poly1305Reduction = "src/crypto/mac/poly1305/spec" }
+lean_sources = { Poly1305Reduction = "src/crypto/mac/poly1305/spec", Poly1305Radix13 = "src/crypto/mac/poly1305/spec" }
 
 [tasks.test]
 kind = "test"
@@ -19,5 +19,11 @@ timeout_seconds = 120
 [tasks.proof]
 kind = "formal"
 command = ["lean", "src/crypto/mac/poly1305/spec/Poly1305Reduction.lean"]
+tools = ["lean"]
+timeout_seconds = 120
+
+[tasks.radix13-proof]
+kind = "formal"
+command = ["lean", "src/crypto/mac/poly1305/spec/Poly1305Radix13.lean"]
 tools = ["lean"]
 timeout_seconds = 120

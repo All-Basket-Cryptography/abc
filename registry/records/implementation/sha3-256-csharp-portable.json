@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha3-256-csharp-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHA3-256 in C#",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha3-256/impl/csharp/Sha3_256.cs"
+    },
+    {
+      "path": "src/crypto/hash/sha3-256/impl/csharp/README.md"
+    },
+    {
+      "path": "src/crypto/hash/keccak-p1600/impl/csharp/KeccakSponge.cs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha3-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "c4bafc51918c91618e5be3db3df55970f1e7fad0fd43949f60bf20bb90d14600",
+  "path": "src/crypto/hash/sha3-256/impl/csharp",
+  "languages": [
+    "csharp"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC C# Keccak-p[1600,24]"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable C# research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

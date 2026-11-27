@@ -1,0 +1,12 @@
+schema_version = 1
+id = "keccak-p1600-c"
+owned_paths = ["src/crypto/hash/keccak-p1600/impl/c"]
+shared_inputs = ["src/crypto/hash/keccak-p1600/impl/cpp/check.py"]
+dependencies = [{ module = "keccak-p1600-spec", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "src/crypto/hash/keccak-p1600/impl/c/check.py", "keccak-p1600"]
+tools = ["python", "clang"]
+target = "portable-c11"
+timeout_seconds = 180

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:chacha20-poly1305-javascript-portable",
+  "record_type": "implementation",
+  "name": "ABC research ChaCha20-Poly1305 in JavaScript",
+  "sources": [
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/javascript/chacha20poly1305.mjs"
+    },
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/javascript/README.md"
+    },
+    {
+      "path": "src/crypto/cipher/chacha20/impl/javascript/chacha20.mjs"
+    },
+    {
+      "path": "src/crypto/mac/poly1305/impl/javascript/poly1305.mjs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:chacha20-poly1305",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "b1dde229acaca2c0449ec6f97d26c8a529c22ba4f29a78d270d0e6686bd966c8",
+  "path": "src/crypto/aead/chacha20-poly1305/impl/javascript",
+  "languages": [
+    "javascript"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC JavaScript ChaCha20",
+    "ABC JavaScript Poly1305"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable JavaScript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

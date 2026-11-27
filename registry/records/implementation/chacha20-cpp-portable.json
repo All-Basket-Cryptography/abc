@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:chacha20-cpp-portable",
+  "record_type": "implementation",
+  "name": "ABC research ChaCha20 in C++",
+  "sources": [
+    {
+      "path": "src/crypto/cipher/chacha20/impl/cpp/chacha20.cpp"
+    },
+    {
+      "path": "src/crypto/cipher/chacha20/impl/cpp/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:chacha20",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "7274edb69717f824c08a2cb6f0e5fb62515b5392f4c42fde36c905d0600ee48f",
+  "path": "src/crypto/cipher/chacha20/impl/cpp",
+  "languages": [
+    "cpp"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable C++ research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

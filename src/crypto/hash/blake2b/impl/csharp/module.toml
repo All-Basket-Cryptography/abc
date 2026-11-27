@@ -1,0 +1,12 @@
+schema_version = 1
+id = "blake2b-csharp-portable"
+owned_paths = ["src/crypto/hash/blake2b/impl/csharp"]
+shared_inputs = ["src/crypto/hash/blake2b/impl/cpp/check.py"]
+dependencies = [{ module = "blake2b", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "src/crypto/hash/blake2b/impl/csharp/check.py"]
+tools = ["python", "dotnet"]
+target = "net10.0"
+timeout_seconds = 180
