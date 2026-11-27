@@ -18,7 +18,7 @@
   "subject_ref": "abc:algorithm:aes-256",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "7ac46dfe10de5c76d47f7c38e172a0827b8c0f5c2211327501a118ec789efbe4",
+  "source_sha256": "d41eb0be25e3e779d6b5be5855b419ce1a516bc11cf7336fe45595ee7ed61599",
   "path": "src/crypto/cipher/aes256/impl/rust",
   "languages": [
     "rust"

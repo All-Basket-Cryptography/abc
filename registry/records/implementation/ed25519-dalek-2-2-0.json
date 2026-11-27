@@ -9,6 +9,12 @@
     },
     {
       "path": "src/runtime/research-profiles/Cargo.lock"
+    },
+    {
+      "path": "src/crypto/signature/ed25519/impl/rust/Cargo.lock"
+    },
+    {
+      "path": "src/crypto/signature/ed25519/impl/rust/README.md"
     }
   ],
   "owner": {

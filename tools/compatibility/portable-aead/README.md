@@ -20,10 +20,10 @@ These figures are local interface comparisons.
 
 | Method and input | Rust 1.92.0 median | Node 24.12.0 / OpenSSL 3.5.4 median |
 | --- | ---: | ---: |
-| AES-256-GCM, 64 bytes | 68.3 µs | 4.42 µs |
-| AES-256-GCM, 4 KiB | 2.83 ms | 5.84 µs |
-| ChaCha20-Poly1305, 64 bytes | 0.235 µs | 3.28 µs |
-| ChaCha20-Poly1305, 4 KiB | 7.17 µs | 6.70 µs |
+| AES-256-GCM, 64 bytes | 66.1 µs | 5.24 µs |
+| AES-256-GCM, 4 KiB | 2.74 ms | 6.04 µs |
+| ChaCha20-Poly1305, 64 bytes | 0.235 µs | 3.75 µs |
+| ChaCha20-Poly1305, 4 KiB | 7.17 µs | 7.06 µs |
 
 Measured on a shared Windows x64 host with an Intel Core i7-12700K.
 Compiled-code leakage and other CPUs or interfaces require separate measurements.

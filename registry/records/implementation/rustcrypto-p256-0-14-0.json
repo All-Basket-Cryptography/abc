@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:rustcrypto-p256-0-14-0",
+  "record_type": "implementation",
+  "name": "RustCrypto P-256 with ECDSA",
+  "sources": [
+    {
+      "url": "https://github.com/RustCrypto/elliptic-curves/tree/27e62fdf973ef5f1b0a81d4577bec0aa323cde5f/p256"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/rust/Cargo.lock"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/spec/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ecdsa-p256-sha256",
+  "origin": "upstream",
+  "revision": "0.14.0",
+  "source_sha256": "d2c9239b2dbc807adbbe147e8cf72ea7450c3a0aabe62cb8e75ff4ec22e1f72a",
+  "languages": [
+    "rust"
+  ],
+  "features": [
+    "ecdsa"
+  ],
+  "external_calls": [],
+  "provider": "RustCrypto p256",
+  "target_refs": [],
+  "maintenance": {
+    "state": "upstream-supported"
+  },
+  "license": "Apache-2.0 OR MIT"
+}

@@ -123,18 +123,31 @@ fn mul(mut left: u8, mut right: u8) -> u8 {
     result
 }
 
+fn square(x: u8) -> u8 {
+    // In characteristic two, squaring inserts a zero between coefficients.
+    let word = u16::from(x);
+    let split = (word | (word << 4)) & 0x0f0f;
+    let split = (split | (split << 2)) & 0x3333;
+    let spread = (split | (split << 1)) & 0x5555;
+    // Reduce first degrees 8–14, then the possible carry up to degree 10.
+    let upper = spread >> 8;
+    let folded = (spread & 0xff) ^ upper ^ (upper << 1) ^ (upper << 3) ^ (upper << 4);
+    let upper = folded >> 8;
+    (folded ^ upper ^ (upper << 1) ^ (upper << 3) ^ (upper << 4)) as u8
+}
+
 fn inverse(x: u8) -> u8 {
-    let x2 = mul(x, x);
+    let x2 = square(x);
     let x3 = mul(x2, x);
-    let x6 = mul(x3, x3);
+    let x6 = square(x3);
     let x7 = mul(x6, x);
-    let x14 = mul(x7, x7);
+    let x14 = square(x7);
     let x15 = mul(x14, x);
-    let x30 = mul(x15, x15);
-    let x60 = mul(x30, x30);
-    let x120 = mul(x60, x60);
+    let x30 = square(x15);
+    let x60 = square(x30);
+    let x120 = square(x60);
     let x127 = mul(x120, x7);
-    mul(x127, x127)
+    square(x127)
 }
 
 fn sbox(x: u8) -> u8 {
@@ -149,6 +162,13 @@ fn inverse_sbox(y: u8) -> u8 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn all_polynomial_squares_match_multiplication() {
+        for x in 0u8..=255 {
+            assert_eq!(square(x), mul(x, x));
+        }
+    }
 
     #[test]
     fn all_byte_substitutions_invert() {

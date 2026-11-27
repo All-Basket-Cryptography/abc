@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "id": "abc:algorithm:ecdsa-p256-sha256",
+  "record_type": "algorithm",
+  "name": "Deterministic ECDSA P-256 with SHA-256",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/pubs/fips/186-5/final"
+    },
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc6979.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "signature",
+  "family_ref": "abc:family:ecdsa",
+  "catalog_state": "indexed",
+  "lifecycle": "standardized",
+  "variant_refs": [],
+  "parameter_refs": [
+    "abc:parameter:secp256r1"
+  ],
+  "spec_refs": [],
+  "literature_refs": [
+    "abc:literature:rfc-6979"
+  ],
+  "standard_refs": [
+    "abc:standard:fips-186-5-2023",
+    "abc:standard:nist-sp-800-186-2023",
+    "abc:standard:fips-180-4-2015"
+  ],
+  "finding_refs": [],
+  "use_cases": [
+    "Deterministic fixed-width ECDSA signatures and verification."
+  ],
+  "limitations": [
+    "The raw profile does not impose a protocol-specific low-S encoding policy."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified"
+}
