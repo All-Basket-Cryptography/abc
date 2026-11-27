@@ -42,6 +42,11 @@ fn rfc7914_outputs() {
 
 #[test]
 fn invalid_inputs_preserve_output() {
+    let impossible_cost = 1usize << (usize::BITS - 10);
+    assert!(matches!(
+        Parameters::new(impossible_cost, 4, 1),
+        Err(Error::MemorySize)
+    ));
     assert!(matches!(
         Parameters::new(1, 1, 1),
         Err(Error::InvalidParameters)

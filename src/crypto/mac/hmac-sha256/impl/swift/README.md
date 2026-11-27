@@ -6,6 +6,7 @@ key normalization and both HMAC passes. `authenticate` returns the full
 provides tag snapshots and has value-semantic copies. [RFC 2104 § 2](https://www.rfc-editor.org/rfc/rfc2104.html#section-2)
 
 Use Apple Swift 6.1.2 from Xcode 16.4, macOS 15 and Python 3.11 or newer.
+The standalone SwiftPM package is in `AbcHmacSha256Swift/`.
 
 ```sh
 DEVELOPER_DIR=/Applications/Xcode_16.4.app/Contents/Developer \

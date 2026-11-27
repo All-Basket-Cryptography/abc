@@ -10,6 +10,12 @@ command = ["cargo", "+1.92.0", "test", "--manifest-path", "tools/build/rust/Carg
 tools = ["cargo", "rustc", "rustup"]
 timeout_seconds = 120
 
+[tasks.differential]
+kind = "test"
+command = ["python", "-B", "src/crypto/kdf/scrypt/spec/verify.py"]
+tools = ["python", "cargo", "rustc", "rustup"]
+timeout_seconds = 120
+
 [tasks.proof]
 kind = "formal"
 command = ["lean", "src/crypto/kdf/scrypt/spec/ScryptBounds.lean"]

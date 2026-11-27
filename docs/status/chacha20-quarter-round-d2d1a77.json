@@ -1,0 +1,77 @@
+{
+  "status": "quarter_round_refinement_checked",
+  "scope": "quarter_round",
+  "pins": {
+    "status": "verified",
+    "scope": "Bounded-add engineering probe on the pinned Linux x86_64 toolchain",
+    "aeneas": "505b6ca35217e7be5c96c3e2f8045edfbdf47291",
+    "charon": "b104e24fea7d721b71e6c39fd70f26ff20bc0980",
+    "rust": "nightly-2026-08-18",
+    "lean": "leanprover/lean4:v4.31.0",
+    "mathlib": "v4.31.0",
+    "mathlibRevision": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f"
+  },
+  "target": "x86_64-unknown-linux-gnu",
+  "features": [],
+  "cargo": [
+    "--locked",
+    "--offline",
+    "--lib",
+    "--no-default-features",
+    "--target",
+    "x86_64-unknown-linux-gnu"
+  ],
+  "charonArgs": [
+    "--preset=aeneas",
+    "--start-from",
+    "crate::quarter_round"
+  ],
+  "aeneasArgs": [
+    "-backend",
+    "lean",
+    "-split-files",
+    "-no-progress-bar",
+    "-subdir",
+    "Abc/ChaCha20/Extracted",
+    "-namespace",
+    "Abc.ChaCha20.Extracted"
+  ],
+  "sources": {
+    "tools/verification/probe/toolchain-candidate.json": "6953b42492bff08a40479725fec7ce922002bfdbe715afcaedf4f817f7621249",
+    "tools/build/rust/Cargo.toml": "5ec05626d8509c0ba9ac8d1c95151797800e7723bd51e8c988380ec6a1eaf588",
+    "tools/build/rust/Cargo.lock": "db89c5302a8635616cd30b7ef3a5b44f9dcaa7a9db9f619cc65c88b9c172ea89",
+    "src/crypto/cipher/chacha20/impl/rust/src/lib.rs": "6609fa40b99d655f2b7bcb0922b3df4b6c09363ffcdc1fa51ff4c4ee62e5bde4",
+    "src/crypto/cipher/chacha20/impl/rust/Cargo.toml": "96ecc9f20b1de8955dac16b0c5c01d511a771aad488b61d501d278bf0504a9bb",
+    "src/crypto/cipher/chacha20/spec/ChaCha20QuarterRound.lean": "7f3ef96aa63729efe89537801ab9374b853177e52b0210ccab32745eb91ede66",
+    "src/crypto/cipher/chacha20/impl/rust/formal/ChaCha20QuarterRoundRefinement.lean": "64cf4c6f21a1e366cbb6bdecc016b195495feee9b93d4c33d4eef7b64193419d",
+    "tools/verification/chacha20/check.mjs": "13ca05be6389cdb4cd9d6433d05e80c1c612c9bf782235d44c588be4fe0a113d"
+  },
+  "revision": "7e9e887ddf3d8e42b05f4a413f3311e31e84e26d",
+  "binaries": {
+    "aeneas": "22b326476f854e19b52ca5a2acfd953fd186da7694cd10d8d008ed5502f7c46a",
+    "charon": "2603f720f0d26a4c77ae215485e2457029d69504dbd9d318a497ed866f21d4fd"
+  },
+  "rust": "rustc 1.100.0-nightly (8fa1c96cf 2026-08-17)\nbinary: rustc\ncommit-hash: 8fa1c96cfd489e4c27654c144ae871ce2c4db6c6\ncommit-date: 2026-08-17\nhost: x86_64-unknown-linux-gnu\nrelease: 1.100.0-nightly\nLLVM version: 23.1.0",
+  "first": {
+    "llbc": "5eef6861881266f4cb34ad00542412599743069a8e5617301f3252a2dffc3d7f",
+    "files": {
+      "Abc/ChaCha20/Extracted/Funs.lean": "b117f6a84be905824d6a6d30a659303c6fa2673a2790505f70560319a184c720",
+      "Abc/ChaCha20/Extracted/Types.lean": "dd730f56ea29ae450591b59721332bda8954514343c4f3b01bdf6635836bef4a"
+    }
+  },
+  "second": {
+    "llbc": "511c98a33f7fc5223e0c82e30d6897545e584730f33971cd07d33c7a1617d251",
+    "files": {
+      "Abc/ChaCha20/Extracted/Funs.lean": "b117f6a84be905824d6a6d30a659303c6fa2673a2790505f70560319a184c720",
+      "Abc/ChaCha20/Extracted/Types.lean": "dd730f56ea29ae450591b59721332bda8954514343c4f3b01bdf6635836bef4a"
+    }
+  },
+  "lean": "Lean (version 4.31.0, x86_64-unknown-linux-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)",
+  "theorems": {
+    "Abc.Refine.ChaCha20.quarter_round_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  }
+}

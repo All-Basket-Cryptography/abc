@@ -11,12 +11,13 @@ The Rust core stores five 26-bit limbs and selects the final reduction with
 a mask. The division-free inner loop uses fixed key-independent indexing.
 The compiled leakage behavior and key lifetime require target evidence.
 
-Rust tests include the RFC example at every split point, empty input, and a
-zero multiplier. The independent Python oracle uses arbitrary-precision
-integer arithmetic at block boundaries and across 2,000 seeded random
-inputs. Lean checks high-term folding, the final-reduction threshold and
-a sum bound under its stated input hypotheses. Complete source refinement
-and the limb-state bounds across every update remain open.
+Rust tests check the RFC example and seven RFC reduction vectors at every
+split point, as well as empty input and a zero multiplier. The independent
+Python oracle uses arbitrary-precision integer arithmetic at block boundaries
+and across 2,000 seeded random inputs. Lean checks high-term folding, the
+final-reduction threshold and a sum bound under its stated input hypotheses.
+Complete source refinement and the limb-state bounds across every update
+remain open. [RFC 8439 Appendix A.3](https://www.rfc-editor.org/rfc/rfc8439.html#appendix-A.3)
 
 ```sh
 cargo +1.92.0 test --manifest-path tools/build/rust/Cargo.toml --locked --offline -p abc-poly1305

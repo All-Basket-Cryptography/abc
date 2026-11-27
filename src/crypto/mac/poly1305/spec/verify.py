@@ -26,7 +26,7 @@ def main():
     repo = Path(__file__).resolve().parents[5]
     command = ["cargo", "+1.92.0", "run", "--release", "--quiet", "--offline", "--locked",
                "--manifest-path", "tools/build/rust/Cargo.toml", "-p", "abc-poly1305",
-               "--example", "differential"]
+               "--example", "poly1305_differential"]
     vectors = "".join(f"{key.hex()}:{message.hex()}\n" for key, message in cases)
     result = subprocess.run(command, cwd=repo, input=vectors, capture_output=True, text=True, check=True, timeout=120)
     tags = result.stdout.splitlines()

@@ -70,6 +70,9 @@ impl Parameters {
             .checked_add(table_bytes)
             .and_then(|total| total.checked_add(stride))
             .ok_or(Error::MemorySize)?;
+        if workspace_bytes > isize::MAX as usize {
+            return Err(Error::MemorySize);
+        }
         Ok(Self {
             cost,
             stride,

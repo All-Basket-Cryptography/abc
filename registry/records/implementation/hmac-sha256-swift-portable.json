@@ -5,7 +5,7 @@
   "name": "ABC research HMAC-SHA-256 in Swift",
   "sources": [
     {
-      "path": "src/crypto/mac/hmac-sha256/impl/swift/Sources/AbcHmacSha256Swift/HmacSha256.swift"
+      "path": "src/crypto/mac/hmac-sha256/impl/swift/AbcHmacSha256Swift/Sources/AbcHmacSha256Swift/HmacSha256.swift"
     },
     {
       "path": "src/crypto/mac/hmac-sha256/impl/swift/README.md"

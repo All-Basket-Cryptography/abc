@@ -10,8 +10,9 @@ from tempfile import TemporaryDirectory
 
 
 HERE = Path(__file__).resolve().parent
-SOURCE = HERE / "Sources/AbcHmacSha256Swift/HmacSha256.swift"
-TEST = HERE / "Tests/AbcHmacSha256SwiftTests/HmacSha256Tests.swift"
+PACKAGE = HERE / "AbcHmacSha256Swift"
+SOURCE = PACKAGE / "Sources/AbcHmacSha256Swift/HmacSha256.swift"
+TEST = PACKAGE / "Tests/AbcHmacSha256SwiftTests/HmacSha256Tests.swift"
 SHA256 = HERE.parents[3] / "hash/sha256/impl/swift/Sources/AbcSha256Swift/Sha256.swift"
 
 
@@ -28,7 +29,7 @@ def check(output):
         raise ValueError(f"Expected Apple Swift 6.1.2 on macOS, found {toolchain}")
     output.mkdir(parents=True, exist_ok=True)
     with TemporaryDirectory(prefix="abc-hmac-sha256-swift-build-") as build:
-        command = ["swift", "test", "--package-path", str(HERE), "--scratch-path", build,
+        command = ["swift", "test", "--package-path", str(PACKAGE), "--scratch-path", build,
                    "--configuration", "release", "-Xswiftc", "-warnings-as-errors"]
         result = subprocess.run(command, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                                 timeout=180)
