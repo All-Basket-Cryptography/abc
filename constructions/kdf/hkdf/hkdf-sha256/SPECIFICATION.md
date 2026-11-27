@@ -18,8 +18,23 @@ concatenation of the generated blocks. For `L = 0`, return the empty string.
 The HMAC key and message lengths must remain inside that function's domain.
 The API rejects an invalid length before changing the caller's output buffer.
 
-The refinement targets are functional equality for extract and expand over
-the accepted byte domain, including length 0 and the 255th counter block,
-and preservation of the output buffer upon length errors. The security of
-the output depends on how the supplied keying material was generated and
-how context and salt are managed. Refinement does not settle those claims.
+## Checked refinement
+
+`HkdfSpec.lean` defines the RFC byte recurrence and the public length
+contract. Key lengths below 32 or above the HMAC limit take precedence
+over the output limit. An accepted zero-length output skips the info
+length check. Every other output reserves one counter byte and, when
+there is more than one block, the 32-byte preceding tag.
+
+`HkdfApi.lean` proves the extracted Rust `extract`, `expand`, `derive`,
+`Prk::as_bytes`, and `Prk::expand` against that specification.
+`ExpandRefinement.lean` proves that the expansion loop terminates, fills
+the requested prefix, and reaches the 255th counter block without
+wrapping. The API theorems prove exact preservation of the caller's
+output on every error, including an extraction error during `derive`.
+`HkdfClaims.lean` checks the expected statements independently of the
+implementation proof. [Extraction, toolchain and audit](../../../../formal/hmac-hkdf/README.md)
+
+This refinement covers functional behavior. Output security depends on
+the properties of the input keying material and on management of context
+and salt.

@@ -1,4 +1,4 @@
-name: ABC SHA-256 model extraction (advisory)
+name: ABC SHA-256, HMAC and HKDF model refinement (advisory)
 
 on:
   pull_request:
@@ -8,6 +8,9 @@ on:
       - 'build/rust/**'
       - 'foundation/lean/**'
       - 'formal/probe/toolchain-candidate.json'
+      - 'formal/hmac-hkdf/**'
+      - 'constructions/mac/hmac/hmac-sha256/**'
+      - 'constructions/kdf/hkdf/hkdf-sha256/**'
   workflow_dispatch:
 
 permissions:
@@ -68,10 +71,10 @@ jobs:
           printf '%s  %s\n' 07a633cc8d9151cbc08825ea4cdda50d4b02a2c9cb852c0131b13046f49cad7f "$archive" | sha256sum --check --strict
           tar --zstd -xf "$archive" -C "$RUNNER_TEMP"
           printf '%s\n' "$RUNNER_TEMP/lean-4.31.0-linux/bin" >> "$GITHUB_PATH"
-      - name: Check the generated model and its Lean correspondence
+      - name: Check SHA-256, HMAC and HKDF refinements
         env:
           ABC_FORMAL_USE_MATHLIB_CACHE: '1'
-        run: node algorithms/hash/sha2/sha256/formal/check-model.mjs .abc/sha256-extraction/run-*/result.json
+        run: node formal/hmac-hkdf/check.mjs .abc/sha256-extraction/run-*/result.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: ${{ always() }}
         with:
@@ -84,5 +87,17 @@ jobs:
             .abc/sha256-extraction/run-*/lean-*/**/*.lean
             .abc/sha256-extraction/run-*/proof-*/result.json
             .abc/sha256-extraction/run-*/proof-*/*.log
+          if-no-files-found: warn
+          retention-days: 7
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ always() }}
+        with:
+          name: hmac-hkdf-extraction-untrusted-pr
+          path: |
+            .abc/hmac-hkdf-extraction/run-*/result.json
+            .abc/hmac-hkdf-extraction/run-*/*.log
+            .abc/hmac-hkdf-extraction/run-*/*.llbc
+            .abc/hmac-hkdf-extraction/run-*/hmac-*/**/*.lean
+            .abc/hmac-hkdf-extraction/run-*/hkdf-*/**/*.lean
           if-no-files-found: warn
           retention-days: 7

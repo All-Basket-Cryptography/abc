@@ -21,7 +21,7 @@
     "ABC-018": {"status":"in_review","evidence":["docs/runtime/sha256.md"],"blockers":[]},
     "ABC-019": {"status":"in_review","evidence":["compatibility/consumers/rust/src/main.rs","docs/status/progress.md"],"blockers":[]},
     "ABC-020": {"status":"in_review","evidence":["sdk/npm/index.js","sdk/npm/index.d.ts","compatibility/consumers/npm/check-types.mts","docs/status/pr-1-qualification.md"],"blockers":[]},
-    "ABC-021": {"status":"blocked","evidence":["constructions/mac/hmac/hmac-sha256/SPECIFICATION.md","constructions/kdf/hkdf/hkdf-sha256/SPECIFICATION.md"],"blockers":["RFC vectors and dependency propagation passed. Functional refinements are pending."]},
+    "ABC-021": {"status":"in_review","evidence":["constructions/mac/hmac/hmac-sha256/SPECIFICATION.md","constructions/kdf/hkdf/hkdf-sha256/SPECIFICATION.md","formal/hmac-hkdf/README.md"],"blockers":["Lean checked the HMAC and HKDF Rust refinements. Independent review of the RFC specifications, the trusted statements, and the model bindings remains open."]},
     "ABC-022": {"status":"in_review","evidence":["docs/status/sha3-256-tests.txt","docs/status/sha3-256-lean.txt","docs/status/graph.md"],"blockers":[]},
     "ABC-023": {"status":"in_review","evidence":["docs/status/native-sdks.md","sdk/c/include/abc/abc.h"],"blockers":[]},
     "ABC-024": {"status":"in_review","evidence":["docs/status/native-sdks.md","sdk/cpp/include/abc/sha256.hpp"],"blockers":[]},

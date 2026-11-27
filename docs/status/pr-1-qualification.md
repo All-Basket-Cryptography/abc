@@ -18,6 +18,8 @@ The clean Windows plan passed 27 of 29 tasks at commit `e4a5d232bf35f57c812b6192
 
 Lean 4.31.0 checked the independent SHA-256 model, the complete refinement of the extracted portable Rust SHA-256 implementation, and the SHA3-256 encoding properties. The SHA-256 proof covers one-shot digest, initialization, update, unchanged state on length rejection, and finalization for all accepted chunk partitions. The bounded-addition probe separately reproduced its model and rejected a deliberately altered Rust implementation. [Formal evidence](formal-and-fuzz.md) · [Bounded probe run](https://github.com/All-Basket-Cryptography/abc/actions/runs/46046082715)
 
+The HMAC-SHA-256 and HKDF-SHA-256 refinements compose with the same SHA-256 proof. HMAC covers one-shot and arbitrary chunk traces, including exact state preservation on rejected updates. HKDF covers extraction, expansion, derivation, and exact preservation of caller-owned output on every error. All 14 Rust workspace tests passed on the construction revision. [Construction proof checks](../../formal/hmac-hkdf/README.md)
+
 ## Upstream and research profiles
 
 The exact pinned CPython source closure for HACL* SHA-256 built in the original C, and 34 one-shot and streaming comparisons passed. The local advisory query, source catalog import, checkpoint replay, ChaCha20-Poly1305 and Ed25519 research profiles each have bounded, independent evidence. Secret-bearing production release claims require their own correctness, leakage and review results. [Original C pilot](abc-036-upstream-route.md) · [Research profile scope](../../runtime/research-profiles/README.md)

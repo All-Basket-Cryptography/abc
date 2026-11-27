@@ -27,6 +27,18 @@ impl fmt::Display for HmacError {
 
 impl core::error::Error for HmacError {}
 
+fn xor_pads(material: &[u8]) -> ([u8; BLOCK_BYTES], [u8; BLOCK_BYTES]) {
+    let mut inner = [0x36; BLOCK_BYTES];
+    let mut outer = [0x5c; BLOCK_BYTES];
+    let mut i = 0;
+    while i < material.len() {
+        inner[i] = material[i] ^ 0x36;
+        outer[i] = material[i] ^ 0x5c;
+        i += 1;
+    }
+    (inner, outer)
+}
+
 /// Streaming tag computation with no retained references to caller buffers.
 pub struct HmacSha256 {
     inner: Sha256,
@@ -36,41 +48,45 @@ pub struct HmacSha256 {
 impl HmacSha256 {
     /// Use a zero-padded key block, hashing keys longer than one block first.
     pub fn new(key: &[u8]) -> Result<Self, HmacError> {
-        let mut key_block = [0; BLOCK_BYTES];
-        if key.len() > BLOCK_BYTES {
-            let hashed = digest(key).map_err(|_| HmacError::KeyTooLong)?;
-            key_block[..TAG_BYTES].copy_from_slice(&hashed);
+        let (inner_pad, outer_pad) = if key.len() > BLOCK_BYTES {
+            let hashed = match digest(key) {
+                Ok(hashed) => hashed,
+                Err(_) => return Err(HmacError::KeyTooLong),
+            };
+            xor_pads(&hashed)
         } else {
-            key_block[..key.len()].copy_from_slice(key);
-        }
+            xor_pads(key)
+        };
 
         let mut inner = Sha256::new();
-        let inner_pad = key_block.map(|byte| byte ^ 0x36);
-        inner
-            .update(&inner_pad)
-            .map_err(|_| HmacError::MessageTooLong)?;
+        match inner.update(&inner_pad) {
+            Ok(()) => (),
+            Err(_) => return Err(HmacError::MessageTooLong),
+        }
 
         let mut outer = Sha256::new();
-        let outer_pad = key_block.map(|byte| byte ^ 0x5c);
-        outer
-            .update(&outer_pad)
-            .map_err(|_| HmacError::MessageTooLong)?;
+        match outer.update(&outer_pad) {
+            Ok(()) => (),
+            Err(_) => return Err(HmacError::MessageTooLong),
+        }
         Ok(Self { inner, outer })
     }
 
     /// Append bytes to the authenticated message. An overflow preserves the state.
     pub fn update(&mut self, input: &[u8]) -> Result<(), HmacError> {
-        self.inner
-            .update(input)
-            .map_err(|_| HmacError::MessageTooLong)
+        match self.inner.update(input) {
+            Ok(()) => Ok(()),
+            Err(_) => Err(HmacError::MessageTooLong),
+        }
     }
 
     /// Consume this state and return the complete 32-byte tag.
     pub fn finalize(mut self) -> Result<[u8; TAG_BYTES], HmacError> {
         let inner_digest = self.inner.finalize();
-        self.outer
-            .update(&inner_digest)
-            .map_err(|_| HmacError::MessageTooLong)?;
+        match self.outer.update(&inner_digest) {
+            Ok(()) => (),
+            Err(_) => return Err(HmacError::MessageTooLong),
+        }
         Ok(self.outer.finalize())
     }
 }

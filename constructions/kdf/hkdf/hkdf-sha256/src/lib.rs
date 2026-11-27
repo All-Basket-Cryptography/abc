@@ -48,59 +48,104 @@ impl Prk {
 
     /// Expand this key into a caller-owned output buffer.
     pub fn expand(&self, info: &[u8], output: &mut [u8]) -> Result<(), HkdfError> {
-        expand(&self.0, info, output)
+        expand_from_prk(self, info, output)
     }
+}
+
+fn expand_from_prk(prk: &Prk, info: &[u8], output: &mut [u8]) -> Result<(), HkdfError> {
+    expand(&prk.0, info, output)
 }
 
 /// Extract a key from input keying material. An omitted salt uses 32 zero bytes.
 pub fn extract(salt: Option<&[u8]>, input: &[u8]) -> Result<Prk, HkdfError> {
-    let salt = salt.unwrap_or(&[0; PRK_BYTES]);
-    authenticate(salt, input)
-        .map(Prk)
-        .map_err(|error| match error {
-            HmacError::KeyTooLong => HkdfError::SaltTooLong,
-            HmacError::MessageTooLong => HkdfError::InputTooLong,
-        })
+    let tag = match salt {
+        Some(salt) => authenticate(salt, input),
+        None => authenticate(&[0; PRK_BYTES], input),
+    };
+    match tag {
+        Ok(tag) => Ok(Prk(tag)),
+        Err(HmacError::KeyTooLong) => Err(HkdfError::SaltTooLong),
+        Err(HmacError::MessageTooLong) => Err(HkdfError::InputTooLong),
+    }
 }
 
 /// Expand a pseudorandom key of at least 32 bytes. Errors preserve the output buffer.
 pub fn expand(prk: &[u8], info: &[u8], output: &mut [u8]) -> Result<(), HkdfError> {
-    if prk.len() < PRK_BYTES {
+    validate_expansion(prk.len(), info.len(), output.len())?;
+
+    let mut previous = [0; TAG_BYTES];
+    let mut offset = 0;
+    let mut counter = 1usize;
+    while offset < output.len() {
+        previous = expand_block(prk, &previous, info, counter as u8)?;
+        offset = copy_block(output, offset, &previous);
+        counter += 1;
+    }
+    Ok(())
+}
+
+fn validate_expansion(prk_len: usize, info_len: usize, output_len: usize) -> Result<(), HkdfError> {
+    if prk_len < PRK_BYTES {
         return Err(HkdfError::PrkTooShort);
     }
-    if u64::try_from(prk.len()).map_or(true, |length| length > MAX_KEY_BYTES) {
+    let key_bytes = prk_len as u64;
+    if key_bytes as usize != prk_len || key_bytes > MAX_KEY_BYTES {
         return Err(HkdfError::PrkTooLong);
     }
-    if output.len() > MAX_OUTPUT_BYTES {
+    if output_len > MAX_OUTPUT_BYTES {
         return Err(HkdfError::OutputTooLong);
     }
-    if output.is_empty() {
+    if output_len == 0 {
         return Ok(());
     }
 
-    let overhead = if output.len() > TAG_BYTES {
+    let overhead = if output_len > TAG_BYTES {
         TAG_BYTES as u64 + 1
     } else {
         1
     };
-    if u64::try_from(info.len()).map_or(true, |length| length > MAX_INPUT_BYTES - overhead) {
+    let info_bytes = info_len as u64;
+    if info_bytes as usize != info_len || info_bytes > MAX_INPUT_BYTES - overhead {
         return Err(HkdfError::InfoTooLong);
     }
-
-    // All lengths are checked before writing any output.
-    let mut previous = [0; TAG_BYTES];
-    for (block, counter) in output.chunks_mut(TAG_BYTES).zip(1..=u8::MAX) {
-        let mut hmac = HmacSha256::new(prk).map_err(|_| HkdfError::PrkTooLong)?;
-        if counter > 1 {
-            hmac.update(&previous).map_err(|_| HkdfError::InfoTooLong)?;
-        }
-        hmac.update(info).map_err(|_| HkdfError::InfoTooLong)?;
-        hmac.update(&[counter])
-            .map_err(|_| HkdfError::InfoTooLong)?;
-        previous = hmac.finalize().map_err(|_| HkdfError::InfoTooLong)?;
-        block.copy_from_slice(&previous[..block.len()]);
-    }
     Ok(())
+}
+
+fn expand_block(
+    prk: &[u8],
+    previous: &[u8; TAG_BYTES],
+    info: &[u8],
+    counter: u8,
+) -> Result<[u8; TAG_BYTES], HkdfError> {
+    let mut hmac = match HmacSha256::new(prk) {
+        Ok(hmac) => hmac,
+        Err(_) => return Err(HkdfError::PrkTooLong),
+    };
+    if counter > 1 {
+        let Ok(()) = hmac.update(previous) else {
+            return Err(HkdfError::InfoTooLong);
+        };
+    }
+    let Ok(()) = hmac.update(info) else {
+        return Err(HkdfError::InfoTooLong);
+    };
+    let Ok(()) = hmac.update(&[counter]) else {
+        return Err(HkdfError::InfoTooLong);
+    };
+    match hmac.finalize() {
+        Ok(tag) => Ok(tag),
+        Err(_) => Err(HkdfError::InfoTooLong),
+    }
+}
+
+fn copy_block(output: &mut [u8], mut offset: usize, block: &[u8; TAG_BYTES]) -> usize {
+    let mut i = 0;
+    while i < TAG_BYTES && offset < output.len() {
+        output[offset] = block[i];
+        i += 1;
+        offset += 1;
+    }
+    offset
 }
 
 /// Extract and expand with one call into a caller-owned output buffer.

@@ -86,3 +86,11 @@ The SHA-256 target uses an independent RustCrypto `sha2` 0.10.9 oracle for one-s
 The earlier implementation processed 124,052 inputs and covered 195 of 206 regions and 97 of 103 source lines in `.abc/sha256-fuzz/run-u9WCU7/`. The exact oracle and engine versions are in `algorithms/hash/sha2/sha256/fuzz/Cargo.lock`.
 
 The workspace's existing Cargo cache is read-only. For these runs the necessary registry archive and index files from the lockfile were copied into an ignored, workspace-local Cargo home before using offline mode. The Windows commands ran under the Visual Studio x64 developer environment.
+
+## ABC-021
+
+Lean 4.31.0 checked HMAC-SHA-256 against RFC 2104 and HKDF-SHA-256 against RFC 5869. The extracted HMAC model uses the verified SHA-256 state and functions. The extracted HKDF model uses the verified HMAC state and functions and translates the two HMAC error constructors into the corresponding generated enum. The bindings are checked Lean definitions. [RFC 2104](https://www.rfc-editor.org/rfc/rfc2104.html#section-2) · [RFC 5869](https://www.rfc-editor.org/rfc/rfc5869.html#section-2) · [Toolchain and model hashes](../../formal/hmac-hkdf/README.md)
+
+HMAC checks construction, length rejection, updates, finalization, one-shot tags, and arbitrary finite update traces. HKDF checks validation, each block and output write, the expansion loop, every public operation on `Prk`, and derivation. HKDF preserves the caller's original output slice on every error. The audit of seven HMAC and nine HKDF declarations accepted only `propext`, `Classical.choice`, and `Quot.sound`. Separate contract modules check the exported statements.
+
+Lean rejected isolated generated-model variants that changed the HMAC inner pad from `0x36` to `0x37` and the HKDF counter to `1` for every expansion block. These variants compiled as models and failed their corresponding refinement proofs. The HKDF diagnostic is in `.abc/hmac-hkdf-extraction/hkdf-counter-mutant/rejected.log`. All 14 Rust workspace tests passed. The seven construction tests include the RFC vectors, zero and maximum outputs, the last counter block, and unchanged output on validation errors.
