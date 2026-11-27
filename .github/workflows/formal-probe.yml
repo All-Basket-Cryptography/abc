@@ -45,20 +45,25 @@ jobs:
           printf '%s\n' "$RUNNER_TEMP/lean-4.31.0-linux/bin" >> "$GITHUB_PATH"
       - name: Check the Lean specification independently
         run: python3 foundation/lean/check.py sha256
-      - uses: cachix/install-nix-action@75c75c31ebece974e48ebc36b4ad125bd97bd97b
-      - name: Build the exact Aeneas and Charon tools
+      - name: Install the exact published Aeneas and Charon tools
         shell: bash
         run: |
           aeneas="$GITHUB_WORKSPACE/.abc/formal-tools/aeneas"
+          archive="$RUNNER_TEMP/aeneas-505b6ca-linux-x86_64.tar.gz"
+          release_dir="$RUNNER_TEMP/aeneas-505b6ca"
           test "$(git -C "$aeneas" rev-parse HEAD)" = 505b6ca35217e7be5c96c3e2f8045edfbdf47291
           test "$(git -C "$aeneas/charon" rev-parse HEAD)" = b104e24fea7d721b71e6c39fd70f26ff20bc0980
           test "$(tail -n 1 "$aeneas/charon-pin")" = b104e24fea7d721b71e6c39fd70f26ff20bc0980
-          build=$(nix build --no-write-lock-file --no-link --print-out-paths "$aeneas#default")
-          test -x "$build/bin/aeneas"
-          test -x "$build/bin/charon"
+          curl --silent --show-error --fail --location --proto '=https' --retry 2 --max-time 180 \
+            --output "$archive" https://github.com/AeneasVerif/aeneas/releases/download/nightly-2026.09.09-505b6ca/aeneas-linux-x86_64.tar.gz
+          printf '%s  %s\n' d5ba53b1370d30866bcd86de5e34abfbadf09e76b3689a7f70f458cd0c133591 "$archive" | sha256sum --check --strict
+          mkdir "$release_dir"
+          tar -xzf "$archive" -C "$release_dir"
+          "$release_dir/aeneas" -version | grep -Fx 'aeneas nightly-2026.09.09-505b6ca'
+          test "$("$release_dir/charon" toolchain-version)" = nightly-2026-08-18
           mkdir -p "$aeneas/bin" "$aeneas/charon/bin"
-          ln -s "$build/bin/aeneas" "$aeneas/bin/aeneas"
-          ln -s "$build/bin/charon" "$aeneas/charon/bin/charon"
+          ln -s "$release_dir/aeneas" "$aeneas/bin/aeneas"
+          ln -s "$release_dir/charon" "$aeneas/charon/bin/charon"
           rustup toolchain install nightly-2026-08-18 --profile minimal
           printf 'ABC_AENEAS_ROOT=%s\n' "$aeneas" >> "$GITHUB_ENV"
       - name: Run the positive and negative formal probe
