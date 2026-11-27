@@ -1,0 +1,23 @@
+schema_version = 1
+id = "x25519-rust"
+owned_paths = ["src/crypto/agreement/x25519"]
+cargo_manifests = ["src/crypto/agreement/x25519/impl/rust/Cargo.toml"]
+lean_sources = { X25519Field = "src/crypto/agreement/x25519/spec" }
+
+[tasks.test]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "tools/build/rust/Cargo.toml", "--locked", "--offline", "-p", "abc-x25519"]
+tools = ["cargo", "rustc", "rustup"]
+timeout_seconds = 120
+
+[tasks.differential]
+kind = "test"
+command = ["node", "src/crypto/agreement/x25519/spec/verify.mjs"]
+tools = ["node", "cargo", "rustc", "rustup"]
+timeout_seconds = 120
+
+[tasks.proof]
+kind = "formal"
+command = ["lean", "src/crypto/agreement/x25519/spec/X25519Field.lean"]
+tools = ["lean"]
+timeout_seconds = 120

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:pbkdf2-hmac-sha256-c-portable",
+  "record_type": "implementation",
+  "name": "ABC research PBKDF2-HMAC-SHA-256 in C",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/c/abc_pbkdf2_sha256_c.c"
+    },
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/c/README.md"
+    },
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/c/abc_pbkdf2_sha256_c.h"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:pbkdf2-hmac-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "956113e1e20307dd8e596b3b95c8acf0d85e3f5dd8eca700c84bef2bd51ef0cb",
+  "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/c",
+  "languages": [
+    "c"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC hmac-sha256 in C"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable c research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:algorithm:x25519",
+  "record_type": "algorithm",
+  "name": "X25519",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc7748.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "key-agreement-kem",
+  "family_ref": "abc:family:curve25519",
+  "catalog_state": "indexed",
+  "lifecycle": "established",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [],
+  "literature_refs": [
+    "abc:literature:rfc-7748",
+    "abc:literature:curve25519-bernstein-2006"
+  ],
+  "standard_refs": [],
+  "finding_refs": [],
+  "use_cases": [
+    "Curve25519 Diffie-Hellman key agreement."
+  ],
+  "limitations": [
+    "The calling protocol authenticates the exchange and derives keys from the shared secret."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified"
+}

@@ -1,0 +1,95 @@
+name: ABC independent Swift KDFs
+
+on:
+  pull_request:
+    paths:
+      - 'src/crypto/kdf/hkdf-sha256/impl/swift/**'
+      - 'src/crypto/kdf/pbkdf2-hmac-sha256/impl/swift/**'
+      - 'src/crypto/mac/hmac-sha256/impl/swift/**'
+      - 'src/crypto/hash/sha256/impl/swift/**'
+      - '.github/workflows/swift-kdfs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-swift:
+    name: Swift 6.1.2 macOS ${{ matrix.algorithm }}
+    runs-on: macos-15
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - algorithm: hkdf-sha256
+            package: AbcHkdfSha256Swift
+            source: HkdfSha256
+            comparisons: 60
+          - algorithm: pbkdf2-hmac-sha256
+            package: AbcPbkdf2Sha256Swift
+            source: Pbkdf2Sha256
+            comparisons: 56
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+      ABC_PACKAGE: ${{ matrix.package }}
+      ABC_ALGORITHM: ${{ matrix.algorithm }}
+      ABC_SOURCE: ${{ matrix.source }}
+      ABC_COMPARISONS: ${{ matrix.comparisons }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13.14'
+      - name: Build and verify native KDF
+        shell: bash
+        run: |
+          package_root="src/crypto/kdf/$ABC_ALGORITHM/impl/swift/$ABC_PACKAGE"
+          mkdir -p dist/swift-kdf
+          swift --version | tee dist/swift-kdf/toolchain.txt
+          grep -E 'Apple Swift version 6\.1\.2([[:space:]]|$)' dist/swift-kdf/toolchain.txt
+          grep -E '^Target: arm64-apple-macosx' dist/swift-kdf/toolchain.txt
+          swift test --package-path "$package_root" --scratch-path "$RUNNER_TEMP/$ABC_PACKAGE" \
+            --configuration release -Xswiftc -warnings-as-errors 2>&1 | tee dist/swift-kdf/swift-test.log
+          grep -E 'Executed 2 tests?, with 0 failures' dist/swift-kdf/swift-test.log
+          grep -Fx 'known_answers=2' dist/swift-kdf/swift-test.log
+          grep -Fx "provider_comparisons=$ABC_COMPARISONS" dist/swift-kdf/swift-test.log
+          python -B - "$package_root" <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import sys
+
+          package = Path(sys.argv[1])
+          name = os.environ['ABC_PACKAGE']
+          implementation = os.environ['ABC_SOURCE']
+          source = package / 'Sources' / name / f'{implementation}.swift'
+          test = package / 'Tests' / f'{name}Tests' / f'{implementation}Tests.swift'
+          hmac = Path('src/crypto/mac/hmac-sha256/impl/swift/AbcHmacSha256Swift/Sources/AbcHmacSha256Swift/HmacSha256.swift')
+          sha256 = Path('src/crypto/hash/sha256/impl/swift/Sources/AbcSha256Swift/Sha256.swift')
+          inputs = [source, test, hmac, sha256]
+          result = {
+              'status': 'passed',
+              'algorithm': os.environ['ABC_ALGORITHM'],
+              'toolchain': Path('dist/swift-kdf/toolchain.txt').read_text().strip(),
+              'target_os': subprocess.check_output(['sw_vers', '-productVersion'], text=True).strip(),
+              'known_answers': 2,
+              'provider_comparisons': int(os.environ['ABC_COMPARISONS']),
+              'sources': {str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs},
+          }
+          serialized = json.dumps(result, indent=2) + '\n'
+          Path('dist/swift-kdf/result.json').write_text(serialized, encoding='utf-8')
+          print(serialized, end='')
+          PY
+      - name: Retain native check evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ always() }}
+        with:
+          name: abc-swift-${{ matrix.algorithm }}-macos-arm64
+          path: dist/swift-kdf/
+          if-no-files-found: error
+          retention-days: 7

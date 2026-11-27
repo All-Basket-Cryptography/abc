@@ -1,0 +1,15 @@
+schema_version = 1
+id = "pbkdf2-hmac-sha256-kotlin"
+owned_paths = ["src/crypto/kdf/pbkdf2-hmac-sha256/impl/kotlin"]
+dependencies = [
+  { module = "hmac-sha256-kotlin", type = "calls" },
+  { module = "sha256-kotlin", type = "calls" },
+  { module = "pbkdf2-hmac-sha256-spec", type = "implements" },
+]
+
+[tasks.jvm-tests]
+kind = "test"
+command = ["python", "-B", "src/crypto/kdf/pbkdf2-hmac-sha256/impl/kotlin/check.py"]
+tools = ["python", "java"]
+target = "kotlin-jvm-jdk17"
+timeout_seconds = 240

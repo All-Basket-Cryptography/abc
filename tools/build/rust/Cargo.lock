@@ -108,3 +108,7 @@ version = "0.1.0"
 dependencies = [
  "abc-sha256",
 ]
+
+[[package]]
+name = "abc-x25519"
+version = "0.1.0"

@@ -2,6 +2,7 @@
 members = [
     "../../../src/crypto/aead/aes256-gcm/impl/rust",
     "../../../src/crypto/aead/chacha20-poly1305/impl/rust",
+    "../../../src/crypto/agreement/x25519/impl/rust",
     "../../../src/crypto/cipher/aes256/impl/rust",
     "../../../src/crypto/cipher/chacha20/impl/rust",
     "../../../src/crypto/hash/blake2b/impl/rust",

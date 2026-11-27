@@ -15,6 +15,7 @@ on:
       - 'src/crypto/kdf/pbkdf2-hmac-sha256/spec/**'
       - 'src/crypto/kdf/scrypt/spec/**'
       - 'src/crypto/mac/poly1305/spec/**'
+      - 'src/crypto/agreement/x25519/spec/**'
       - 'src/crypto/aead/chacha20-poly1305/spec/**'
       - 'src/crypto/cipher/aes256/spec/**'
       - 'src/crypto/aead/aes256-gcm/spec/**'
@@ -91,6 +92,7 @@ jobs:
           done
           lean src/crypto/hash/blake2b/spec/Blake2bBuffer.lean
           lean src/crypto/mac/poly1305/spec/Poly1305Reduction.lean
+          lean src/crypto/agreement/x25519/spec/X25519Field.lean
           lean src/crypto/aead/chacha20-poly1305/spec/ChaCha20Poly1305Lengths.lean
           lean src/crypto/kdf/scrypt/spec/ScryptBounds.lean
           lean src/crypto/cipher/aes256/spec/Aes256Byte.lean
