@@ -24,3 +24,5 @@ ABC_AENEAS_ROOT=/absolute/path/to/pinned/aeneas node formal/probe/check.mjs
 ```
 
 The driver checks checkout revisions and tracked modifications, re-extracts the source twice in fresh Cargo target directories, compares the generated Lean bytes, and checks the Lean axiom report. The negative fixtures exercise a transitive `sorry`, a custom axiom, native evaluation, and an altered Rust result. Each run uses a fresh directory under `.abc/formal-probe/` for commands, digests, and checker output. The local checker is for the repository's research probe. Independent proof comparison, sandboxed checking, and evidence for compiler or machine-code claims require additional work. [Lean proof validation](https://lean-lang.org/doc/reference/4.31.0/ValidatingProofs/)
+
+The advisory Linux pull-request workflow provisions the same pinned public toolchain on an isolated runner. It may use the official Mathlib build cache for the pinned checkout. Its logs and generated probe files remain candidate diagnostics. [Workflow](../../.github/workflows/formal-probe.yml)

@@ -12,6 +12,8 @@
 
 The model uses mathematical lists and bitvectors. It has no dependency on the Rust crate, extracted Rust models, or runtime buffer representation. Its memory use follows the abstract message trace. Arbitrary bit-length messages outside the byte-aligned API remain outside these definitions.
 
+The abstract stream laws `Stream.update_within_domain`, `Stream.rejects_out_of_domain`, and `Stream.finalize_after_update` were checked with Lean 4.31.0. The executable specification checks also passed. [Recorded toolchain and results](../../../../../docs/status/formal-and-fuzz.md)
+
 ## Refinement statements to check
 
 - For every byte sequence in the valid domain, Rust `digest` succeeds and produces exactly `Abc.Spec.Sha256.digest message`.

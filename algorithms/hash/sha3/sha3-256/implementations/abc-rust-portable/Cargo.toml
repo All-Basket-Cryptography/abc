@@ -1,4 +1,5 @@
 [package]
+workspace = "../../../../../../build/rust"
 name = "abc-sha3-256"
 version = "0.1.0"
 edition = "2021"

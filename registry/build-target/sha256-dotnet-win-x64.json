@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "id": "abc:build-target:sha256-dotnet-win-x64",
+  "record_type": "build-target",
+  "name": "ABC SHA-256 .NET target on Windows x64",
+  "sources": [
+    {
+      "path": "sdk/dotnet/Abc.Cryptography.Research.csproj"
+    },
+    {
+      "path": "sdk/dotnet/package.py"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "triple": "x86_64-pc-windows-msvc",
+  "os": "windows",
+  "arch": "x86_64",
+  "abi": "ABC C ABI version 1 through P/Invoke",
+  "cpu_features": [],
+  "compiler": {
+    "name": "dotnet",
+    "version": "10.0.404"
+  },
+  "flags": [
+    "--configuration Release"
+  ],
+  "dependency_lock_sha256": "bc65eef5263794460b8723777f21961e469a6ca62ab9b3527b474eae354c4a8c",
+  "runtime": ".NET 10 win-x64",
+  "dispatch_policy": "Load the packaged win-x64 native library and check C ABI version 1."
+}

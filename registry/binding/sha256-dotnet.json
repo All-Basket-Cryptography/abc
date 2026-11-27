@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "abc:binding:sha256-dotnet",
+  "record_type": "binding",
+  "name": "ABC SHA-256 .NET research binding",
+  "sources": [
+    {
+      "path": "sdk/dotnet/README.md"
+    },
+    {
+      "path": "sdk/dotnet/Sha256.cs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "ecosystem": "dotnet",
+  "language": "dotnet",
+  "runtime": ".NET 10 win-x64",
+  "implementation_ref": "abc:implementation:sha256-abc-rust-portable",
+  "provider": "ABC SHA-256 through the C ABI",
+  "encoding_contract": "ReadOnlySpan<byte> inputs and 32-byte digests.",
+  "error_contract": "Managed argument, lifecycle, and platform exceptions.",
+  "ownership_contract": "The managed safe handle owns the synchronized native context.",
+  "target_refs": [
+    "abc:build-target:sha256-dotnet-win-x64"
+  ],
+  "package_name": "Abc.Cryptography.Research"
+}

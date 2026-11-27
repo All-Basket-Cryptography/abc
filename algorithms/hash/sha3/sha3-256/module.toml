@@ -4,6 +4,6 @@ owned_paths = ["algorithms/hash/sha3/sha3-256"]
 
 [tasks.test]
 kind = "test"
-command = ["cargo", "+1.92.0", "test", "--locked", "--offline", "-p", "abc-sha3-256"]
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "build/rust/Cargo.toml", "--locked", "--offline", "-p", "abc-sha3-256"]
 tools = ["cargo", "rustc", "rustup"]
 timeout_seconds = 120

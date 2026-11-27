@@ -1,0 +1,13 @@
+schema_version = 1
+id = "android-sdk"
+owner = "sdk-mobile"
+owned_paths = ["sdk/android"]
+dependencies = [{module = "java-sdk", type = "wraps"}, {module = "c-sdk", type = "wraps"}]
+
+[tasks.consumer]
+kind = "test"
+command = ["python", "sdk/android/package.py", "--consumer"]
+tools = ["python", "cargo", "rustc", "rustup"]
+outputs = ["android-artifacts.json"]
+target = "android-api26"
+timeout_seconds = 480

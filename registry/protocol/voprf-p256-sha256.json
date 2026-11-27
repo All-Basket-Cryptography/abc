@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "id": "abc:protocol:voprf-p256-sha256",
+  "record_type": "protocol",
+  "name": "VOPRF P256-SHA256",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc9497.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "mpc-privacy",
+  "family_ref": "abc:family:prime-order-oprf",
+  "catalog_state": "indexed",
+  "lifecycle": "established",
+  "variant_refs": [],
+  "parameter_refs": [
+    "abc:parameter:secp256r1"
+  ],
+  "spec_refs": [],
+  "literature_refs": [
+    "abc:literature:rfc-9497"
+  ],
+  "standard_refs": [],
+  "finding_refs": [],
+  "use_cases": [
+    "Two-party verifiable oblivious pseudorandom evaluation"
+  ],
+  "limitations": [
+    "This entry covers the VOPRF mode of the P256-SHA256 ciphersuite."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified",
+  "component_refs": [
+    "abc:algorithm:sha-256"
+  ]
+}

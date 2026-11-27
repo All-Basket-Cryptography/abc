@@ -1,7 +1,7 @@
 schema_version = 1
 id = "python-sdk"
 owned_paths = ["sdk/python"]
-dependencies = [{ module = "c-sdk", type = "wraps" }]
+cargo_manifests = ["sdk/python/native/Cargo.toml"]
 
 [tasks.source]
 kind = "test"

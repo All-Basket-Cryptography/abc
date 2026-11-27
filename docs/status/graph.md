@@ -27,8 +27,8 @@ the changed file. A missing base or unowned changed path widens verification.
 
 ```sh
 python -m unittest discover -s tests -p 'test_abc_graph.py' -v
-python abc.py graph build --revision WORKTREE
-python abc.py plan --base BASE --head HEAD --merge-base --output .abc/plan.json
+python -m tools.abc_cli graph build --revision WORKTREE
+python -m tools.abc_cli plan --base BASE --head HEAD --merge-base --output .abc/plan.json
 ```
 
 Tests use temporary Git repositories and cover dependency paths, aliases,

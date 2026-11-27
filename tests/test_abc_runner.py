@@ -46,7 +46,7 @@ class RunnerTest(unittest.TestCase):
         subprocess.run(["git", "init", "-q"], cwd=self.repo, check=True)
         (self.repo / "tools").mkdir()
         (self.repo / "security").mkdir()
-        for path in ("abc.py", "tools/abc_graph.py", "tools/abc_runner.py", "security/assurance-policy.json"):
+        for path in ("tools/abc_cli.py", "tools/abc_graph.py", "tools/abc_runner.py", "security/assurance-policy.json"):
             (self.repo / path).write_text("fixture verifier\n", encoding="utf-8")
         (self.repo / "module.toml").write_text(MANIFEST, encoding="utf-8")
         (self.repo / "sample.py").write_text(SCRIPT, encoding="utf-8")

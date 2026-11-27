@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:algorithm:ml-dsa",
+  "record_type": "algorithm",
+  "name": "ML-DSA",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/pubs/fips/204/final"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "signature",
+  "family_ref": "abc:family:ml-dsa",
+  "catalog_state": "indexed",
+  "lifecycle": "standardized",
+  "variant_refs": [],
+  "parameter_refs": [
+    "abc:parameter:ml-dsa-44",
+    "abc:parameter:ml-dsa-65",
+    "abc:parameter:ml-dsa-87"
+  ],
+  "spec_refs": [],
+  "literature_refs": [],
+  "standard_refs": [
+    "abc:standard:fips-204-2024"
+  ],
+  "finding_refs": [],
+  "use_cases": [
+    "Digital signatures"
+  ],
+  "limitations": [
+    "Implementation availability and platform evidence require separate records."
+  ],
+  "assumptions": [],
+  "quantum_model": "post-quantum-design"
+}

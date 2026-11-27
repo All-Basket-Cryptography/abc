@@ -18,7 +18,9 @@
   "lifecycle": "standardized",
   "variant_refs": [],
   "parameter_refs": [
-    "abc:parameter:ml-kem-768"
+    "abc:parameter:ml-kem-512",
+    "abc:parameter:ml-kem-768",
+    "abc:parameter:ml-kem-1024"
   ],
   "spec_refs": [],
   "literature_refs": [],
@@ -30,7 +32,7 @@
     "Establishing shared keys for use by a separate protocol"
   ],
   "limitations": [
-    "This snapshot indexes ML-KEM-768 as one of the FIPS 203 parameter sets."
+    "This snapshot indexes the three FIPS 203 parameter sets. Platform and implementation evidence is tracked separately."
   ],
   "assumptions": [],
   "quantum_model": "post-quantum-design"

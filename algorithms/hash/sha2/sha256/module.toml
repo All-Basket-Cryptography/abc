@@ -7,7 +7,7 @@ lean_sources = { Sha256Spec = "algorithms/hash/sha2/sha256/formal" }
 
 [tasks.rust-tests]
 kind = "test"
-command = ["cargo", "+1.92.0", "test", "--locked", "--offline", "-p", "abc-sha256"]
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "build/rust/Cargo.toml", "--locked", "--offline", "-p", "abc-sha256"]
 tools = ["cargo", "rustc", "rustup"]
 target = "portable"
 

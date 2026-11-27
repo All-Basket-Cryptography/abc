@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "id": "abc:parameter:ml-dsa-65",
+  "record_type": "parameter",
+  "name": "ML-DSA-65",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/pubs/fips/204/final"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "parameter_kind": "parameter-set",
+  "description": "The ML-DSA-65 parameter set named by the cited publication.",
+  "standard_refs": [
+    "abc:standard:fips-204-2024"
+  ]
+}

@@ -1,0 +1,11 @@
+schema_version = 1
+id = "research-profiles"
+owner = "runtime"
+owned_paths = ["runtime/research-profiles"]
+
+[tasks.interop]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--locked", "--offline", "--manifest-path", "runtime/research-profiles/Cargo.toml"]
+tools = ["cargo", "rustc", "rustup"]
+target = "native"
+timeout_seconds = 180

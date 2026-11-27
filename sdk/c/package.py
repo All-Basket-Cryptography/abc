@@ -92,7 +92,7 @@ endif()
 
 def prepare_c(work, target, stage):
     target_dir = work / "cargo-target"
-    output = run(["cargo", TOOLCHAIN, "rustc", "--locked", "--offline", "--release", "-p", "abc-c-ffi",
+    output = run(["cargo", TOOLCHAIN, "rustc", "--manifest-path", ROOT / "build/rust/Cargo.toml", "--locked", "--offline", "--release", "-p", "abc-c-ffi",
                   "--target", target, "--target-dir", target_dir, "--", "--print", "native-static-libs"])
     matches = re.findall(r"native-static-libs: (.+)", output)
     if len(matches) != 1:

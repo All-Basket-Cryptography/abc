@@ -99,7 +99,7 @@ try {
     copyFileSync(join(here, file), join(mutantFuzz, file));
   }
   copyFileSync(join(build, 'README.md'), join(mutantCore, 'README.md'));
-  const manifest = readFileSync(join(build, 'Cargo.toml'), 'utf8');
+  const manifest = readFileSync(join(build, 'Cargo.toml'), 'utf8').replace(/^workspace\s*=\s*"[^"]*"\r?\n/m, '');
   writeFileSync(join(mutantCore, 'Cargo.toml'), `${manifest}\n[workspace]\n`);
   const source = readFileSync(implementationSource, 'utf8');
   const changed = source.replace(/^( {8}digest)\r?$/m, '        digest[0] ^= 1;\n$1');

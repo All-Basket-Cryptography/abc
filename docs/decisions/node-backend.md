@@ -2,7 +2,7 @@
 
 The npm research package selects WASM in Node and reports `sha256-abc-rust-portable` and `wasm32-unknown-unknown`. A single package provides the same API and binary to Node and browser consumers. The current Node requirements are byte input, one-shot hashing, streaming, and explicit context lifetime. An additional native backend would require a concrete workload, separate target evidence, and an observable selection policy.
 
-Run `python abc.py consumer-test --sdk npm --artifact dist/conformance/abc-cryptography-research-0.1.0.tgz --node-benchmark` to repeat the comparison. Node 24.12.0 on Windows x64 reported 3.052 ms WASM initialization. Five warmed samples per workload produced the following medians. Node's built-in OpenSSL 3.5.4 API is a reference baseline.
+Run `python -m tools.abc_cli consumer-test --sdk npm --artifact dist/conformance/abc-cryptography-research-0.1.0.tgz --node-benchmark` to repeat the comparison. Node 24.12.0 on Windows x64 reported 3.052 ms WASM initialization. Five warmed samples per workload produced the following medians. Node's built-in OpenSSL 3.5.4 API is a reference baseline.
 
 | Input | Batch | WASM | Node OpenSSL |
 | --- | ---: | ---: | ---: |

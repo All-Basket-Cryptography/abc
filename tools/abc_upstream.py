@@ -2,14 +2,19 @@
 
 from argparse import ArgumentParser
 from copy import deepcopy
+from datetime import datetime, timezone
+from hashlib import sha256
 import json
 from pathlib import Path
 import sys
+from urllib.request import Request, urlopen
 
 from tools.abc_registry import parse_json, validate, validate_records
 
 
 REPO = Path(__file__).resolve().parents[1]
+OSV_ENDPOINT = "https://api.osv.dev/v1/querybatch"
+OSV_SUBJECTS = {"abc:implementation:sha256-rustcrypto-0-10-9": ("sha2", "0.10.9")}
 
 
 def inventory(records):
@@ -39,6 +44,52 @@ def compare_inventory(previous, current):
             "changed": sorted(key for key in old.keys() & new.keys() if old[key] != new[key]),
         }
     return changes
+
+
+def osv_snapshot(records, implementation_id):
+    """Query advisory IDs for one registered public package and exact version."""
+    mapping = OSV_SUBJECTS.get(implementation_id)
+    implementation = next((record for record in records if record["id"] == implementation_id), None)
+    if mapping is None or implementation is None or implementation["record_type"] != "implementation":
+        raise ValueError("No reviewed OSV package mapping exists for this implementation")
+    package, version = mapping
+    if implementation["origin"] != "upstream" or implementation["revision"] != f"{package} {version}":
+        raise ValueError("Registry revision has drifted from the reviewed advisory query")
+    query = {"package": {"ecosystem": "crates.io", "name": package}, "version": version}
+    request = Request(
+        OSV_ENDPOINT,
+        data=json.dumps({"queries": [query]}).encode("utf-8"),
+        headers={"Content-Type": "application/json", "Accept": "application/json"},
+    )
+    limit = 1_048_576
+    with urlopen(request, timeout=15) as response:
+        if response.status != 200 or response.url != OSV_ENDPOINT:
+            raise ValueError("Unexpected public advisory endpoint response")
+        payload = response.read(limit + 1)
+    if len(payload) > limit:
+        raise ValueError("OSV response exceeded the snapshot byte limit")
+    data = parse_json(payload)
+    if (not isinstance(data, dict) or not isinstance(data.get("results"), list)
+            or len(data["results"]) != 1 or not isinstance(data["results"][0], dict)):
+        raise ValueError("Invalid public advisory response")
+    result = data["results"][0]
+    if result.get("next_page_token"):
+        raise ValueError("OSV response was paginated and the snapshot is incomplete")
+    entries = result.get("vulns", [])
+    if not isinstance(entries, list) or any(
+        not isinstance(entry, dict) or not isinstance(entry.get("id"), str) for entry in entries
+    ):
+        raise ValueError("Invalid OSV advisory identifiers")
+    return {
+        "schema_version": 1,
+        "feed": OSV_ENDPOINT,
+        "retrieved_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "implementation_ref": implementation_id,
+        "registry_revision": implementation["revision"],
+        "query": query,
+        "response_sha256": sha256(payload).hexdigest(),
+        "advisory_ids": sorted({entry["id"] for entry in entries}),
+    }
 
 
 def affected_releases(records, implementation_id, *, revision=None, target=None, features=(), advisory_id=None):
@@ -196,6 +247,8 @@ def main():
     commands.add_parser("inventory")
     comparison = commands.add_parser("compare")
     comparison.add_argument("--previous", required=True, type=Path)
+    feed = commands.add_parser("osv-snapshot")
+    feed.add_argument("--implementation", required=True)
     affected = commands.add_parser("affected")
     affected.add_argument("--implementation", required=True)
     affected.add_argument("--revision")
@@ -212,6 +265,8 @@ def main():
         elif arguments.command == "compare":
             previous = parse_json(arguments.previous.read_text(encoding="utf-8"))
             result = compare_inventory(previous, inventory(records))
+        elif arguments.command == "osv-snapshot":
+            result = osv_snapshot(records, arguments.implementation)
         elif arguments.command == "affected":
             result = affected_releases(
                 records, arguments.implementation, revision=arguments.revision, target=arguments.target,

@@ -14,6 +14,7 @@ from threading import Thread
 
 
 RUST_CHANNEL = "1.92.0"
+RUST_MANIFEST = "build/rust/Cargo.toml"
 NPM_NAME = "abc-cryptography-research"
 RUST_NAME = "abc-sha256"
 WASM_TARGET = "wasm32-unknown-unknown"
@@ -70,7 +71,7 @@ def package(repo, sdk, output, target_dir=None):
     output.mkdir(parents=True, exist_ok=True)
     target_dir = (target_dir or repo / "target").resolve()
     if sdk == "rust":
-        _run(["cargo", f"+{RUST_CHANNEL}", "package", "-p", RUST_NAME, "--target-dir", str(target_dir),
+        _run(["cargo", f"+{RUST_CHANNEL}", "package", "--manifest-path", RUST_MANIFEST, "-p", RUST_NAME, "--target-dir", str(target_dir),
               "--locked", "--allow-dirty", "--offline"], repo)
         source = target_dir / "package/abc-sha256-0.1.0.crate"
         _validate_artifact(sdk, source)
@@ -78,7 +79,7 @@ def package(repo, sdk, output, target_dir=None):
         shutil.copyfile(source, artifact)
     else:
         channel = _wasm_toolchain(repo)
-        _run(["cargo", f"+{channel}", "build", "-p", "abc-sha256-wasm", "--target", WASM_TARGET, "--target-dir", str(target_dir),
+        _run(["cargo", f"+{channel}", "build", "--manifest-path", RUST_MANIFEST, "-p", "abc-sha256-wasm", "--target", WASM_TARGET, "--target-dir", str(target_dir),
               "--release", "--locked", "--offline"], repo)
         npm = "npm.cmd" if os.name == "nt" else "npm"
         with TemporaryDirectory(prefix="abc-npm-build-") as location:

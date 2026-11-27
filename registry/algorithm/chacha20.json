@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:algorithm:chacha20",
+  "record_type": "algorithm",
+  "name": "ChaCha20",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc8439.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "symmetric",
+  "family_ref": "abc:family:chacha",
+  "catalog_state": "indexed",
+  "lifecycle": "established",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [],
+  "literature_refs": [
+    "abc:literature:rfc-8439"
+  ],
+  "standard_refs": [],
+  "finding_refs": [],
+  "use_cases": [
+    "ChaCha stream cipher family"
+  ],
+  "limitations": [
+    "IETF 96-bit nonce form"
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified"
+}

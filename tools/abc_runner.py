@@ -22,11 +22,11 @@ PROGRAMS = {"python", "cargo", "rustc", "rustup", "git", "node", "npm", "go", "j
 ENVIRONMENT_KEYS = {
     "PATH", "SYSTEMROOT", "WINDIR", "USERPROFILE", "HOME", "HOMEDRIVE", "HOMEPATH", "TEMP", "TMP", "TMPDIR",
     "PATHEXT", "APPDATA", "LOCALAPPDATA", "COMSPEC", "PROGRAMFILES", "PROGRAMFILES(X86)", "PROGRAMDATA",
-    "JAVA_HOME", "ABC_JAVA_HOME", "CARGO_HOME", "RUSTUP_HOME", "RUSTUP_TOOLCHAIN",
+    "JAVA_HOME", "ABC_JAVA_HOME", "ABC_DOTNET", "CARGO_HOME", "RUSTUP_HOME", "RUSTUP_TOOLCHAIN",
     "LIB", "LIBPATH", "INCLUDE", "VCTOOLSINSTALLDIR", "WINDOWSSDKDIR", "WINDOWSSDKVERSION",
     "UCRTVERSION", "UNIVERSALCRTSDKDIR", "VSCMD_ARG_TGT_ARCH", "VSCMD_ARG_HOST_ARCH",
 }
-VERIFIER_INPUTS = ("abc.py", "tools/abc_graph.py", "tools/abc_runner.py", "security/assurance-policy.json")
+VERIFIER_INPUTS = ("tools/abc_cli.py", "tools/abc_graph.py", "tools/abc_runner.py", "security/assurance-policy.json")
 
 
 def _encoded(value):
@@ -268,15 +268,15 @@ def execute(repo, plan_path, directory, domain, key_file=None, cache=None, targe
     return receipt
 
 
-def verify_receipt(repo, plan_path, directory, domain, key_file):
+def verify_receipt(repo, plan_path, directory, domain, key_file, *, target=None):
     if domain != "local":
         raise ValueError("Only independently keyed local receipts can be accepted by this verifier")
     plan = _fresh_plan(repo, plan_path)
-    fingerprints, _, _ = _fingerprints(repo, plan, domain)
+    fingerprints, _, _ = _fingerprints(repo, plan, domain, target)
     receipt = _authenticate(read_json(directory / "receipt.json"), _key(key_file))
     if (receipt["version"] != 1 or receipt["domain"] != domain or receipt["plan_digest"] != _digest(plan)
             or receipt["head_revision"] != plan["head_revision"] or receipt["status"] != "passed"
-            or receipt["inputs_unchanged"] is not True or receipt["target"] is not None or not fingerprints
+            or receipt["inputs_unchanged"] is not True or receipt["target"] != target or not fingerprints
             or receipt["results"].keys() != fingerprints.keys()):
         raise ValueError("Required evidence is missing, unsuccessful, stale, or out of trust scope")
     for name, fingerprint in fingerprints.items():

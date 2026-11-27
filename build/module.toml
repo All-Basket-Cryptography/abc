@@ -1,12 +1,12 @@
 schema_version = 1
 id = "repository-assurance"
 owner = "integration"
-owned_paths = [".gitattributes", ".gitignore", ".github", "README.md", "abc.py", "Cargo.toml", "Cargo.lock", "compatibility/sha256-vectors.json", "docs", "governance", "registry", "schemas", "security", "tools", "fixtures", "tests"]
+owned_paths = [".gitattributes", ".gitignore", ".github", "README.md", "build", "compatibility/sha256-vectors.json", "docs", "governance", "registry", "schemas", "security", "tools", "fixtures", "tests"]
 
 [tasks.registry]
 kind = "metadata"
 always = true
-command = ["python", "abc.py", "registry", "validate", "--strict"]
+command = ["python", "-m", "tools.abc_cli", "registry", "validate", "--strict"]
 
 [tasks.fixtures]
 kind = "test"
@@ -20,7 +20,7 @@ tools = ["git"]
 [tasks.status]
 kind = "docs"
 always = true
-command = ["python", "abc.py", "status"]
+command = ["python", "-m", "tools.abc_cli", "status"]
 
 [tasks.compatibility]
 kind = "compatibility"

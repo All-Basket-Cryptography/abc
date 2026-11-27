@@ -8,7 +8,7 @@ from tempfile import TemporaryDirectory
 from zipfile import ZipFile
 
 from tools.abc_go import _require_windows
-from tools.abc_package import RUST_CHANNEL, _metadata, _run
+from tools.abc_package import RUST_CHANNEL, RUST_MANIFEST, _metadata, _run
 
 
 ARTIFACT = "abc-sha256-0.1.0-windows-amd64.jar"
@@ -35,7 +35,8 @@ def package_java(repo, directory):
     output = directory.resolve()
     output.mkdir(parents=True, exist_ok=True)
     artifact = output / ARTIFACT
-    _run(["cargo", f"+{RUST_CHANNEL}", "build", "--locked", "--offline", "-p", "abc-c-ffi", "--release"], repo)
+    _run(["cargo", f"+{RUST_CHANNEL}", "build", "--manifest-path", RUST_MANIFEST, "--target-dir", "target",
+          "--locked", "--offline", "-p", "abc-c-ffi", "--release"], repo)
     with TemporaryDirectory(prefix="abc-java-") as location:
         stage = Path(location)
         classes = stage / "classes"

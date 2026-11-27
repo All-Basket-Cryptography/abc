@@ -278,7 +278,7 @@ edition = "2021"
             self.write(name, (approved / name).read_text(encoding="utf-8"))
         self.write("module.toml", """schema_version = 1
 id = "repository-assurance"
-owned_paths = ["abc.py", "check.py", "security", "tools"]
+owned_paths = ["check.py", "security", "tools"]
 
 [tasks.registry]
 kind = "metadata"

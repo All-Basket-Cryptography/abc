@@ -29,8 +29,8 @@ jobs:
           cargo +1.92.0 fetch --locked --manifest-path algorithms/hash/sha2/sha256/fuzz/Cargo.toml
       - name: Run the complete verification plan
         run: |
-          python abc.py plan --head HEAD --output .abc/plan.json
-          python abc.py run --plan .abc/plan.json --output .abc/full
+          python -m tools.abc_cli plan --head HEAD --output .abc/plan.json
+          python -m tools.abc_cli run --plan .abc/plan.json --output .abc/full
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: ${{ always() }}
         with:

@@ -1,7 +1,7 @@
 # SHA-256 differential fuzzing
 
 ```sh
-python abc.py fuzz --implementation sha256-abc-rust-portable --budget 5s
+python -m tools.abc_cli fuzz --implementation sha256-abc-rust-portable --budget 5s
 ```
 
 The harness feeds messages and in-band chunk instructions to ABC's portable Rust API. It compares one-shot, intermediate clone/finalize, and final streaming digests against RustCrypto `sha2` v0.10.9. The independent oracle and engine are confined to the fuzz workspace. The seed corpus covers padding and block boundaries through 4,096 bytes. A scratch rebuild flips the first digest bit and must fail with the expected mismatch. [RustCrypto API and source](https://docs.rs/sha2/0.10.9/sha2/)

@@ -37,3 +37,10 @@ dependencies = [
 [[package]]
 name = "abc-sha3-256"
 version = "0.1.0"
+
+[[package]]
+name = "abc-wasi-sha256"
+version = "0.1.0"
+dependencies = [
+ "abc-sha256",
+]

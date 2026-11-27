@@ -6,7 +6,7 @@
   "sources": [
     {
       "path": "sdk/python/wheel.py",
-      "locator": "Package tag cp313-none-win_amd64 and bundled native library build."
+      "locator": "Package tag cp313-cp313-win_amd64 and bundled PyO3 native extension."
     },
     {
       "path": "sdk/python/tests/consumer.py",
@@ -20,7 +20,7 @@
   "triple": "x86_64-pc-windows-msvc",
   "os": "windows",
   "arch": "x86_64",
-  "abi": "ABC native C ABI version 1",
+  "abi": "CPython 3.13 extension ABI and ABC Python binding version 1",
   "cpu_features": [],
   "compiler": {
     "name": "rustc",
@@ -30,7 +30,7 @@
     "--release",
     "-C target-feature=+crt-static"
   ],
-  "dependency_lock_sha256": "f08633afeeed806a3c1b3bc079452a1edef69425b8fd7949d4602a1d303c8015",
+  "dependency_lock_sha256": "e6e38be8ea3c460625d21605ffab55f7213752b7170093eb10dca97721ed4ae8",
   "runtime": "CPython 3.13.14 on Windows x86-64",
-  "dispatch_policy": "Use the adjacent abc_crypto.dll after checking ABI version 1."
+  "dispatch_policy": "Load the installed PyO3 extension and check ABC Python binding version 1."
 }

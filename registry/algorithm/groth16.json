@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:algorithm:groth16",
+  "record_type": "algorithm",
+  "name": "Groth16 arithmetic-circuit proof system",
+  "sources": [
+    {
+      "url": "https://eprint.iacr.org/2016/260"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "zero-knowledge",
+  "family_ref": "abc:family:groth-pairing-arguments",
+  "catalog_state": "indexed",
+  "lifecycle": "established",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [],
+  "literature_refs": [
+    "abc:literature:groth-iacr-2016-260"
+  ],
+  "standard_refs": [],
+  "finding_refs": [],
+  "use_cases": [
+    "Succinct proofs for arithmetic circuit satisfiability"
+  ],
+  "limitations": [
+    "Circuit-specific preprocessing and pairing-group assumptions are part of this scheme."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified"
+}

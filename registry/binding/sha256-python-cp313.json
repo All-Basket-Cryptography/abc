@@ -19,10 +19,10 @@
   "language": "python",
   "runtime": "CPython 3.13",
   "implementation_ref": "abc:implementation:sha256-abc-rust-portable",
-  "provider": "ABC C ABI through ctypes",
+  "provider": "ABC portable Rust SHA-256 through PyO3 0.23.5",
   "encoding_contract": "Single-byte-item buffers are accepted. SHA-256 returns immutable 32-byte digests.",
-  "error_contract": "TypeError for invalid buffers, ValueError for lifecycle errors, OverflowError for input overflow, and MemoryError for native allocation failure.",
-  "ownership_contract": "Each streaming object owns one native context, serializes calls, and frees it on close or collection.",
+  "error_contract": "TypeError for invalid buffers, ValueError for lifecycle errors, and OverflowError for input overflow.",
+  "ownership_contract": "Each streaming object owns one Rust context, serializes access, and releases it on close or collection.",
   "target_refs": [
     "abc:build-target:sha256-python-cp313-win-amd64"
   ],

@@ -7,6 +7,7 @@ from gzip import GzipFile
 from hashlib import sha256
 from io import StringIO
 import json
+import os
 from pathlib import Path
 from shutil import copyfile
 import subprocess
@@ -25,30 +26,71 @@ VERSION = "0.1.0"
 DIST_STEM = f"{DIST_NAME.replace('-', '_')}-{VERSION}"
 DIST_INFO = f"{DIST_STEM}.dist-info"
 RUST_TARGET = "x86_64-pc-windows-msvc"
-WHEEL_TAG = "cp313-none-win_amd64"
+WHEEL_TAG = "cp313-cp313-win_amd64"
 PYTHON_REQUIREMENT = ">=3.13,<3.14"
 SUMMARY = "ABC research bindings for portable SHA-256"
 METADATA = (
-    "Metadata-Version: 2.3\n"
+    "Metadata-Version: 2.4\n"
     f"Name: {DIST_NAME}\n"
     f"Version: {VERSION}\n"
     f"Summary: {SUMMARY}\n"
     f"Requires-Python: {PYTHON_REQUIREMENT}\n"
 )
 CORE = "algorithms/hash/sha2/sha256/implementations/abc-rust-portable"
+NATIVE = "sdk/python/native"
 SOURCE_FILES = (
     f"{CORE}/Cargo.toml",
     f"{CORE}/README.md",
     f"{CORE}/src/lib.rs",
     f"{CORE}/tests/vectors.rs",
-    "sdk/c/ffi/Cargo.toml",
-    "sdk/c/ffi/src/lib.rs",
-    "sdk/c/include/abc/abc.h",
+    f"{NATIVE}/Cargo.toml",
+    f"{NATIVE}/Cargo.lock",
+    f"{NATIVE}/src/lib.rs",
     "sdk/python/README.md",
     "sdk/python/wheel.py",
     "sdk/python/abc_crypto/__init__.py",
     "sdk/python/tests/consumer.py",
 )
+
+
+def _build_environment() -> dict[str, str]:
+    environment = dict(os.environ, PYO3_PYTHON=sys.executable)
+    dependency_cache = REPO / ".abc" / "pyo3-cargo"
+    if dependency_cache.is_dir() and "CARGO_HOME" not in environment:
+        environment["CARGO_HOME"] = str(dependency_cache)
+    return environment
+
+
+def _third_party_licenses() -> dict[str, bytes]:
+    metadata = subprocess.check_output(
+        [
+            "cargo", "+1.92.0", "metadata", "--locked", "--offline", "--format-version", "1",
+            "--manifest-path", f"{NATIVE}/Cargo.toml",
+        ],
+        cwd=REPO,
+        env=_build_environment(),
+    )
+    licenses = {}
+    for package in sorted(json.loads(metadata)["packages"], key=lambda item: item["id"]):
+        if package["source"] is None:
+            continue
+        directory = Path(package["manifest_path"]).parent
+        files = {
+            path for path in directory.iterdir()
+            if path.is_file() and path.name.startswith(("LICENSE", "LICENCE", "COPYING", "NOTICE"))
+        }
+        if package["license_file"] is not None:
+            files.add(directory / package["license_file"])
+        if not files:
+            raise ValueError(f"No license file found for locked dependency {package['name']}")
+        for path in sorted(files):
+            name = f"third-party-licenses/{package['name']}-{package['version']}/{path.name}"
+            licenses[name] = path.read_bytes()
+    return licenses
+
+
+def _distribution_metadata(licenses: dict[str, bytes]) -> str:
+    return METADATA + "".join(f"License-File: {path}\n" for path in licenses)
 WHEEL = (
     "Wheel-Version: 1.0\n"
     "Generator: abc-wheel\n"
@@ -67,19 +109,22 @@ def write_wheel(output: Path) -> Path:
     subprocess.run(
         [
             "cargo", "+1.92.0", "build", "--release", "--locked", "--offline",
-            "--package", "abc-c-ffi", "--target", RUST_TARGET, "--target-dir", str(build),
+            "--manifest-path", f"{NATIVE}/Cargo.toml", "--target", RUST_TARGET, "--target-dir", str(build),
             "--config", "target.x86_64-pc-windows-msvc.rustflags=['-C','target-feature=+crt-static']",
         ],
         cwd=REPO,
+        env=_build_environment(),
         stdout=sys.stderr,
         check=True,
     )
-    native = build / RUST_TARGET / "release" / "abc_crypto.dll"
+    native = build / RUST_TARGET / "release" / "_native.dll"
+    licenses = _third_party_licenses()
     files = {
         "abc_crypto/__init__.py": (HERE / "abc_crypto" / "__init__.py").read_bytes(),
-        "abc_crypto/abc_crypto.dll": native.read_bytes(),
-        f"{DIST_INFO}/METADATA": METADATA.encode("utf-8"),
+        "abc_crypto/_native.pyd": native.read_bytes(),
+        f"{DIST_INFO}/METADATA": _distribution_metadata(licenses).encode("utf-8"),
         f"{DIST_INFO}/WHEEL": WHEEL.encode("utf-8"),
+        **{f"{DIST_INFO}/licenses/{path}": content for path, content in licenses.items()},
     }
     record_name = f"{DIST_INFO}/RECORD"
     record = StringIO(newline="")
@@ -116,23 +161,34 @@ def write_sdist(output: Path) -> Path:
     output = output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     sdist = output / f"{DIST_STEM}.tar.gz"
-    with TemporaryDirectory(dir=output, prefix=".abc-sdist-") as staging:
-        staging = Path(staging)
-        source_tree = staging / DIST_STEM
+    scratch = REPO / ".abc"
+    scratch.mkdir(exist_ok=True)
+    with TemporaryDirectory(dir=scratch, prefix="s-") as staging:
+        source_tree = Path(staging) / "src"
         for relative in SOURCE_FILES:
             destination = source_tree / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
             copyfile(REPO / relative, destination)
-        (source_tree / "Cargo.toml").write_text(
-            f'[workspace]\nmembers = ["{CORE}", "sdk/c/ffi"]\nresolver = "2"\n',
+        core_workspace = source_tree / "build" / "rust" / "Cargo.toml"
+        core_workspace.parent.mkdir(parents=True)
+        core_workspace.write_text(
+            f'[workspace]\nmembers = ["../../{CORE}"]\nresolver = "2"\n',
             encoding="utf-8",
             newline="\n",
         )
         subprocess.run(
-            ["cargo", "+1.92.0", "generate-lockfile", "--offline"],
+            ["cargo", "+1.92.0", "vendor", "--locked", "--offline", "--manifest-path", f"{NATIVE}/Cargo.toml"],
             cwd=source_tree,
-            stdout=sys.stderr,
+            env=_build_environment(),
+            stdout=subprocess.DEVNULL,
             check=True,
+        )
+        config = source_tree / ".cargo" / "config.toml"
+        config.parent.mkdir()
+        config.write_text(
+            '[source.crates-io]\nreplace-with = "vendored"\n\n[source.vendored]\ndirectory = "vendor"\n',
+            encoding="utf-8",
+            newline="\n",
         )
         (source_tree / "pyproject.toml").write_text(
             '[build-system]\nrequires = []\nbuild-backend = "wheel"\nbackend-path = ["sdk/python"]\n\n'
@@ -141,12 +197,21 @@ def write_sdist(output: Path) -> Path:
             encoding="utf-8",
             newline="\n",
         )
-        (source_tree / "PKG-INFO").write_text(METADATA, encoding="utf-8", newline="\n")
-        temporary = staging / sdist.name
-        with temporary.open("wb") as target, GzipFile(filename="", fileobj=target, mode="wb", mtime=0) as compressed:
-            with open_tar(fileobj=compressed, mode="w", format=PAX_FORMAT) as archive:
-                archive.add(source_tree, arcname=DIST_STEM, filter=_normalized_tar_entry)
-        temporary.replace(sdist)
+        licenses = _third_party_licenses()
+        for relative, content in licenses.items():
+            destination = source_tree / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(content)
+        (source_tree / "PKG-INFO").write_text(_distribution_metadata(licenses), encoding="utf-8", newline="\n")
+        with NamedTemporaryFile(dir=output, prefix=".abc-sdist-", delete=False) as target:
+            temporary = Path(target.name)
+        try:
+            with temporary.open("wb") as target, GzipFile(filename="", fileobj=target, mode="wb", mtime=0) as compressed:
+                with open_tar(fileobj=compressed, mode="w", format=PAX_FORMAT) as archive:
+                    archive.add(source_tree, arcname=DIST_STEM, filter=_normalized_tar_entry)
+            temporary.replace(sdist)
+        finally:
+            temporary.unlink(missing_ok=True)
     return sdist
 
 
@@ -175,6 +240,7 @@ def test_distribution(distribution: Path) -> None:
                 "--no-cache-dir", "--no-build-isolation", distribution,
             ],
             cwd=consumer,
+            env=dict(os.environ, CARGO_HOME=str(consumer / "cargo-cache")),
             stdout=sys.stderr,
             check=True,
         )

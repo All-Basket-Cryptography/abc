@@ -11,14 +11,21 @@ import unittest
 from weakref import ref
 
 import abc_crypto
+from abc_crypto import _native
 
 
 class WheelConsumerTests(unittest.TestCase):
     def test_installed_metadata_and_native_backend(self):
-        self.assertEqual(metadata.version("abc-crypto-research"), "0.1.0")
+        distribution = metadata.distribution("abc-crypto-research")
+        self.assertEqual(distribution.version, "0.1.0")
+        licenses = distribution.metadata.get_all("License-File")
+        self.assertIn("third-party-licenses/pyo3-0.23.5/LICENSE-MIT", licenses)
+        filenames = [path.as_posix() for path in distribution.files]
+        for license_file in licenses:
+            self.assertTrue(any(name.endswith(f".dist-info/licenses/{license_file}") for name in filenames))
         root = Path(abc_crypto.__file__).resolve().parent
         self.assertTrue(root.is_relative_to(Path(sys.prefix).resolve()))
-        self.assertTrue((root / "abc_crypto.dll").is_file())
+        self.assertEqual(Path(_native.__file__).resolve(), root / "_native.pyd")
         self.assertEqual(abc_crypto.ABI_VERSION, 0x00010000)
         self.assertEqual(abc_crypto.IMPLEMENTATION_ID, "sha256-abc-rust-portable")
 

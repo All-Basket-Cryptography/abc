@@ -4,7 +4,7 @@
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     (void)vm;
     (void)reserved;
-    return abc_abi_version() == ABC_ABI_VERSION ? JNI_VERSION_1_8 : JNI_ERR;
+    return abc_abi_version() == ABC_ABI_VERSION ? JNI_VERSION_1_6 : JNI_ERR;
 }
 
 JNIEXPORT jstring JNICALL Java_org_allbasket_abc_Sha256_implementation(JNIEnv *env, jclass cls) {

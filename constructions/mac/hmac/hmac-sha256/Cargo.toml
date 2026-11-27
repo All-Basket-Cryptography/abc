@@ -1,4 +1,5 @@
 [package]
+workspace = "../../../../build/rust"
 name = "abc-hmac-sha256"
 version = "0.1.0"
 edition = "2021"

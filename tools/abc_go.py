@@ -8,7 +8,7 @@ import sys
 from tempfile import TemporaryDirectory
 from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
-from tools.abc_package import RUST_CHANNEL, _metadata, _run
+from tools.abc_package import RUST_CHANNEL, RUST_MANIFEST, _metadata, _run
 
 
 ARTIFACT = "abc-go-0.1.0-windows-amd64.zip"
@@ -22,7 +22,8 @@ def _require_windows():
 
 def package_go(repo, directory):
     _require_windows()
-    _run(["cargo", f"+{RUST_CHANNEL}", "build", "--locked", "--offline", "-p", "abc-c-ffi", "--release"], repo)
+    _run(["cargo", f"+{RUST_CHANNEL}", "build", "--manifest-path", RUST_MANIFEST, "--target-dir", "target",
+          "--locked", "--offline", "-p", "abc-c-ffi", "--release"], repo)
     directory.mkdir(parents=True, exist_ok=True)
     artifact = directory / ARTIFACT
     with ZipFile(artifact, "w", compression=ZIP_DEFLATED) as distribution:

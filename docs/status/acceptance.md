@@ -18,12 +18,12 @@ This report covers the [handoff checks](../plan/abc/ACCEPTANCE.md). The scope of
 | AC-16 | Native fuzz rejected arithmetic and SHA-256 mutations. Runner timeout tests passed. Fuzz sanitizers and full OOM classification remain pending. |
 | AC-17 | SHA-256 differential results disclose RustCrypto oracle lineage. The seven SDK consumers share the ABC core. |
 | AC-18 | The differential harness rejected a changed SHA-256 digest. The formal gate is pending. |
-| AC-19 | Seven research packages passed clean local consumers. The npm result covers Node. |
+| AC-19 | Seven research packages passed clean local consumers. npm/WASM ran in Node and Chrome and the Python source and wheel used PyO3. |
 | AC-20 | Native and managed consumers cover declared byte, error, and context boundaries. Broader target testing is pending. |
 | AC-21 | The first package set establishes the compatibility baseline. There are no earlier release artifacts. |
 | AC-22–24 | Secret-bearing release profiles and production dependency-closure tests are pending. |
-| AC-25 | Local gate fixtures reject missing and failed work. Hosted cancellation and required-status enforcement are unverified. |
-| AC-26 | A synthetic advisory drill and installed consumer comparison ran locally. Live feeds and actual release lineage are pending. |
+| AC-25 | Local gate fixtures reject missing and failed work. The hosted candidate fixtures passed and the required gate rejected the unreviewed base. Hosted cancellation and a reviewed baseline are pending. |
+| AC-26 | A live scoped OSV query, synthetic advisory drill and installed consumer comparison ran locally. Scheduled feeds and actual release lineage are pending. |
 | AC-27 | Rust, npm, Go, and JVM package checks validate expected archive contents. Isolated native and Python consumers exercise required headers and libraries. |
 | AC-28 | Research Rust and npm replay emits exact-byte digests, an SBOM, and local provenance. Production attestations are pending. |
 | AC-29 | Explorer publishes validated registry and task metadata. Trusted proof and release assurance display remains pending. |

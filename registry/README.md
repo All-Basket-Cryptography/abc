@@ -1,6 +1,6 @@
 # ABC catalog
 
-Files under this directory are canonical identity and provenance records in the JSON-compatible subset of YAML 1.2. Put one record in each `.json` file and validate from the repository root with `python abc.py registry validate --strict`. Built artifacts and verification results need separate records with scoped evidence.
+Files under this directory are canonical identity and provenance records in the JSON-compatible subset of YAML 1.2. Put one record in each `.json` file and validate from the repository root with `python -m tools.abc_cli registry validate --strict`. Built artifacts and verification results need separate records with scoped evidence.
 
 This is an initial, source-linked snapshot. The entries index historical rotor ciphers, deprecated security properties, standardized cryptography, and experimental designs. Use the cited editions and sections for source material. This snapshot redistributes bibliographic metadata and ABC descriptions. Source documents and upstream code are linked.
 

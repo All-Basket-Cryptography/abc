@@ -55,7 +55,7 @@ def _bom(artifacts):
 def _provenance(source, artifacts):
     return {"schema_version": 1, "scope": "local-research-replay", "source": source,
             "subjects": [{"file": entry["file"], "sha256": entry["sha256"]} for entry in artifacts],
-            "recipe": {"entry": "abc.py release prepare", "profile": "research", "sdks": [entry["sdk"] for entry in artifacts]}}
+            "recipe": {"entry": "python -m tools.abc_cli release prepare", "profile": "research", "sdks": [entry["sdk"] for entry in artifacts]}}
 
 
 def prepare(repo, directory, profile, sdks):

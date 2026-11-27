@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:algorithm:ed25519",
+  "record_type": "algorithm",
+  "name": "Ed25519",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc8032.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "signature",
+  "family_ref": "abc:family:eddsa",
+  "catalog_state": "indexed",
+  "lifecycle": "established",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [],
+  "literature_refs": [
+    "abc:literature:rfc-8032"
+  ],
+  "standard_refs": [],
+  "finding_refs": [],
+  "use_cases": [
+    "Edwards-curve digital signature schemes"
+  ],
+  "limitations": [
+    "The containing protocol defines key usage and message domains."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified"
+}

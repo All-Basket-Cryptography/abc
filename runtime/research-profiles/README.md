@@ -1,0 +1,9 @@
+# ABC secret-bearing research profiles
+
+`sealed_message` wraps RustCrypto ChaCha20-Poly1305 0.10.1. It targets transient in-process encryption with associated data. The suite follows RFC 8439 with a 256-bit key, 96-bit nonce, and 128-bit tag. The sealing key comes from the platform RNG and owns its nonce sequence. Only the generating object can seal. Opening handles authenticate ciphertext and associated data with the same key. Each new sealing context uses a fresh key. The native package APIs continue to expose their separately tested SHA-256 capability.
+
+`wallet` uses ed25519-dalek 2.2.0. Ed25519 is the signature scheme over the Edwards25519 curve with its scheme-defined SHA-512 operations. The ABC transcript begins with a fixed domain label, followed by an ASCII application identifier, a 32-byte challenge nonce, and length-prefixed operation bytes. The verifying application owns freshness, replay tracking, and authorization. Wallet address encodings, HD derivation, chain transactions, key storage, and platform signing providers have separate requirements.
+
+The `interop` task checks RFC vectors and misuse boundaries. RNG failure ends key generation. Nonce exhaustion ends sealing. Reusing a challenge, changing the audience, or presenting a mutated signature must be evaluated against the application's authorization and replay policy. A valid signature proves only the bound transcript. Upstream dependency versions and hashes are pinned by this package's lockfile. Functional refinement, platform leakage evidence, and independent production approval remain open.
+
+[AEAD standard and vectors](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.8.2) · [EdDSA standard](https://www.rfc-editor.org/rfc/rfc8032.html) · [RustCrypto provider](https://docs.rs/chacha20poly1305/0.10.1/chacha20poly1305/) · [Dalek provider](https://docs.rs/ed25519-dalek/2.2.0/ed25519_dalek/)

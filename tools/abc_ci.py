@@ -17,7 +17,7 @@ REQUIRED_METADATA = {"repository-assurance:registry", "repository-assurance:stat
 SHA = re.compile(r"[a-f0-9]{40}\Z")
 BASELINE_ENTRY = "tools/abc_ci.py"
 BOOTSTRAP_CHECKS = (
-    ("abc.py", "registry", "validate", "--strict"),
+    ("-m", "tools.abc_cli", "registry", "validate", "--strict"),
     ("-m", "unittest", "discover", "-s", "fixtures/registry", "-p", "test_*.py"),
     ("-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py"),
 )

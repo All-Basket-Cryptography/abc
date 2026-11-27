@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "id": "abc:parameter:secp256r1",
+  "record_type": "parameter",
+  "name": "P-256 (secp256r1)",
+  "sources": [
+    {
+      "url": "https://www.secg.org/sec2-v2.pdf",
+      "locator": "Section 2.4.2"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "parameter_kind": "curve",
+  "description": "The P-256 prime-field elliptic curve domain parameters.",
+  "standard_refs": [
+    "abc:standard:sec-2-v2"
+  ]
+}

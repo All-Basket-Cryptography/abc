@@ -5,6 +5,6 @@ cargo_manifests = ["constructions/kdf/hkdf/hkdf-sha256/Cargo.toml"]
 
 [tasks.test]
 kind = "test"
-command = ["cargo", "+1.92.0", "test", "--locked", "-p", "abc-hkdf-sha256"]
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "build/rust/Cargo.toml", "--locked", "-p", "abc-hkdf-sha256"]
 tools = ["cargo"]
 timeout_seconds = 120

@@ -94,7 +94,7 @@ def parser():
 
 def main():
     args = parser().parse_args()
-    repo = Path(__file__).resolve().parent
+    repo = Path(__file__).resolve().parents[1]
     try:
         if args.command == "doctor":
             output(doctor(repo))

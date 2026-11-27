@@ -41,8 +41,9 @@ def check_all(repo, directory, browser=None):
     wheel_path = Path(python_result["wheel"])
     results.append({"sdk": "python", **_metadata(wheel_path), "checks": {"python": python_result["consumer_test"]}})
 
+    artifacts = [{**_metadata(path), "file": path.name} for path in sorted(directory.iterdir()) if path.is_file()]
     report = {"schema_version": 1, "profile": "research", "target": "windows-amd64", "common_vector": "nist-sha256-abc",
               "browser": "passed" if browser else "not_run", "prior_release_compatibility": "no_previous_release",
-              "consumers": [{**entry, "file": Path(entry["file"]).name} for entry in results]}
+              "consumers": [{**entry, "file": Path(entry["file"]).name} for entry in results], "artifacts": artifacts}
     _write_json(directory / "conformance.json", report)
     return report

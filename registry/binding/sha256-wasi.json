@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "abc:binding:sha256-wasi",
+  "record_type": "binding",
+  "name": "ABC SHA-256 WASI command",
+  "sources": [
+    {
+      "path": "sdk/wasi/README.md"
+    },
+    {
+      "path": "sdk/wasi/src/main.rs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "ecosystem": "wasi",
+  "language": "rust",
+  "runtime": "Wasmtime 50.0.3",
+  "implementation_ref": "abc:implementation:sha256-abc-rust-portable",
+  "provider": "ABC portable Rust SHA-256",
+  "encoding_contract": "Read raw bytes on stdin and write the lowercase hexadecimal digest with a newline.",
+  "error_contract": "Invalid arguments and I/O failures return a nonzero status.",
+  "ownership_contract": "The command owns its streaming context until process exit.",
+  "target_refs": [
+    "abc:build-target:sha256-wasi-preview2"
+  ],
+  "package_name": "abc-wasi-sha256"
+}

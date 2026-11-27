@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:literature:rfc-9497",
+  "record_type": "literature",
+  "name": "Oblivious Pseudorandom Functions (OPRFs) Using Prime-Order Groups",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc9497.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "RFC 9497",
+  "authors": [
+    "A. Davidson",
+    "A. Faz-Hernandez",
+    "N. Sullivan",
+    "C. A. Wood"
+  ],
+  "publisher": "RFC Editor",
+  "published": "2023-12",
+  "accessed": "2026-11-28",
+  "license": "See the RFC's copyright notice and applicable RFC publication terms.",
+  "redistribution": "link-only",
+  "sections": [
+    "Sections 3.3 and 4.3",
+    "Appendix A.3.2"
+  ],
+  "errata_urls": [
+    "https://www.rfc-editor.org/info/rfc9497/"
+  ],
+  "citation_refs": [],
+  "doi": "10.17487/RFC9497"
+}

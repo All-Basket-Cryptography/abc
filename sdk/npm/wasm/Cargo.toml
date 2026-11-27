@@ -1,4 +1,5 @@
 [package]
+workspace = "../../../build/rust"
 name = "abc-sha256-wasm"
 version = "0.1.0"
 edition = "2021"

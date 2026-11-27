@@ -9,6 +9,15 @@ import java.util.Objects;
 /** Research byte-oriented SHA-256, using the ABC native provider. */
 public final class Sha256 implements AutoCloseable {
     static {
+        loadNative();
+    }
+
+    private static void loadNative() {
+        if ("Dalvik".equals(System.getProperty("java.vm.name"))
+                || "Android Runtime".equals(System.getProperty("java.runtime.name"))) {
+            System.loadLibrary("abc_android");
+            return;
+        }
         if (!System.getProperty("os.name").startsWith("Windows") || !System.getProperty("os.arch").equals("amd64")) {
             throw new UnsupportedOperationException("This ABC artifact targets Windows amd64");
         }

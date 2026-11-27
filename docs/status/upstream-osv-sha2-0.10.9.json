@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "feed": "https://api.osv.dev/v1/querybatch",
+  "retrieved_at": "2026-11-27T17:42:48+00:00",
+  "implementation_ref": "abc:implementation:sha256-rustcrypto-0-10-9",
+  "registry_revision": "sha2 0.10.9",
+  "query": {
+    "package": {
+      "ecosystem": "crates.io",
+      "name": "sha2"
+    },
+    "version": "0.10.9"
+  },
+  "response_sha256": "a0460b2895f6918d679db4ec8ceaa94dc85b501d9060c02839d05e919aac5e31",
+  "advisory_ids": []
+}

@@ -12,8 +12,21 @@ python -m tools.abc_upstream drill
 Save the previous inventory as JSON before updating the reviewed catalog. The
 inventory includes fixed revisions, original language, licenses, source digests,
 maintenance assignments, and existing advisories. The comparison reports
-added, removed, and changed IDs. This is a local snapshot comparison, with
-upstream notifications and scheduled advisory sources still pending.
+added, removed, and changed IDs. Scheduled advisory retrieval and upstream
+notifications remain pending.
+
+Query the public feed for the reviewed RustCrypto package mapping.
+
+```sh
+python -m tools.abc_upstream osv-snapshot --implementation abc:implementation:sha256-rustcrypto-0-10-9
+```
+
+The query records advisory IDs, the exact package version, retrieval time,
+and a digest of the response. The November 28, 2026 Taipei observation
+returned an empty advisory list for `sha2` 0.10.9 from this feed. A later
+response needs its own snapshot and review before entries are mapped to
+affected releases. [Recorded response summary](upstream-osv-sha2-0.10.9.json)
+[OSV query API](https://google.github.io/osv.dev/post-v1-querybatch/)
 
 The affected-release query walks registered packages through their binding
 to the exact implementation ID. A package can carry its historical
@@ -38,7 +51,7 @@ On the demonstrated Windows CPython target, run the same drill with the
 local research wheel to exercise provider compatibility.
 
 ```sh
-python -m tools.abc_upstream drill --wheel .abc/dist/python/abc_crypto_research-0.1.0-cp313-none-win_amd64.whl
+python -m tools.abc_upstream drill --wheel .abc/dist/python/abc_crypto_research-0.1.0-cp313-cp313-win_amd64.whl
 ```
 
 The offline external consumer compares ABC's digest bytes against

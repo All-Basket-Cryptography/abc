@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:alias:sha256",
+  "record_type": "alias",
+  "name": "SHA256 digest identifier",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/projects/cryptographic-algorithm-validation-program/secure-hashing"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "alias_id": "abc:algorithm:sha256",
+  "canonical_ref": "abc:algorithm:sha-256"
+}
