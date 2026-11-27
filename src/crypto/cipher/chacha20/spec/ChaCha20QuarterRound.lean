@@ -32,4 +32,30 @@ theorem rfcQuarterRound :
       ⟨0xea2a92f4, 0xcb1cf8ce, 0x4581472e, 0x5881c4bb⟩ := by
   decide
 
+/-- A column round followed by a diagonal round (RFC 8439, § 2.3). -/
+def doubleRound (state : State) : State :=
+  let s1 := quarterRoundAt state 0 4 8 12
+  let s2 := quarterRoundAt s1 1 5 9 13
+  let s3 := quarterRoundAt s2 2 6 10 14
+  let s4 := quarterRoundAt s3 3 7 11 15
+  let s5 := quarterRoundAt s4 0 5 10 15
+  let s6 := quarterRoundAt s5 1 6 11 12
+  let s7 := quarterRoundAt s6 2 7 8 13
+  quarterRoundAt s7 3 4 9 14
+
+/-- Apply the specified double round repeatedly, in chronological order. -/
+def repeatDouble : Nat → State → State
+  | 0, state => state
+  | n + 1, state => repeatDouble n (doubleRound state)
+
+/-- The block counter occupies word 12 of the initial state. -/
+def withCounter (state : State) (counter : Word) : State :=
+  fun i => if i.val = 12 then counter else state i
+
+/-- The RFC block function from input words to output words. -/
+def blockWords (state : State) (counter : Word) : State :=
+  let initial := withCounter state counter
+  let transformed := repeatDouble 10 initial
+  fun i => transformed i + initial i
+
 end Abc.Spec.ChaCha20

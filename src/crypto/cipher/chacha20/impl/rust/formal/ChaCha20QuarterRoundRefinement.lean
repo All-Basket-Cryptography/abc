@@ -87,4 +87,82 @@ theorem quarter_round_refines (state : StateArray) (a b c d : Usize)
 
 #print axioms quarter_round_refines
 
+/-- All eight indexed operations refine the specified column and diagonal rounds. -/
+theorem double_round_refines (state : StateArray) :
+    ∃ out, Abc.ChaCha20.Extracted.double_round state = .ok out ∧
+      stateView out = doubleRound (stateView state) := by
+  obtain ⟨s1, ok1, view1⟩ := quarter_round_refines state 0#usize 4#usize 8#usize 12#usize
+    (by decide) (by decide) (by decide) (by decide)
+    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+  obtain ⟨s2, ok2, view2⟩ := quarter_round_refines s1 1#usize 5#usize 9#usize 13#usize
+    (by decide) (by decide) (by decide) (by decide)
+    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+  obtain ⟨s3, ok3, view3⟩ := quarter_round_refines s2 2#usize 6#usize 10#usize 14#usize
+    (by decide) (by decide) (by decide) (by decide)
+    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+  obtain ⟨s4, ok4, view4⟩ := quarter_round_refines s3 3#usize 7#usize 11#usize 15#usize
+    (by decide) (by decide) (by decide) (by decide)
+    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+  obtain ⟨s5, ok5, view5⟩ := quarter_round_refines s4 0#usize 5#usize 10#usize 15#usize
+    (by decide) (by decide) (by decide) (by decide)
+    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+  obtain ⟨s6, ok6, view6⟩ := quarter_round_refines s5 1#usize 6#usize 11#usize 12#usize
+    (by decide) (by decide) (by decide) (by decide)
+    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+  obtain ⟨s7, ok7, view7⟩ := quarter_round_refines s6 2#usize 7#usize 8#usize 13#usize
+    (by decide) (by decide) (by decide) (by decide)
+    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+  obtain ⟨s8, ok8, view8⟩ := quarter_round_refines s7 3#usize 4#usize 9#usize 14#usize
+    (by decide) (by decide) (by decide) (by decide)
+    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+  refine ⟨s8, ?_, ?_⟩
+  · simp only [Abc.ChaCha20.Extracted.double_round, ok1, ok2, ok3, ok4, ok5, ok6, ok7, ok8,
+      Aeneas.Std.bind_tc_ok]
+  · rw [view8, view7, view6, view5, view4, view3, view2, view1]
+    rfl
+
+/-- Ten extracted double rounds produce the twenty-round state for every input. -/
+theorem rounds_20_refines (state : StateArray) :
+    ∃ out, Abc.ChaCha20.Extracted.rounds_20 state = .ok out ∧
+      stateView out = repeatDouble 10 (stateView state) := by
+  obtain ⟨s1, ok1, view1⟩ := double_round_refines state
+  obtain ⟨s2, ok2, view2⟩ := double_round_refines s1
+  obtain ⟨s3, ok3, view3⟩ := double_round_refines s2
+  obtain ⟨s4, ok4, view4⟩ := double_round_refines s3
+  obtain ⟨s5, ok5, view5⟩ := double_round_refines s4
+  obtain ⟨s6, ok6, view6⟩ := double_round_refines s5
+  obtain ⟨s7, ok7, view7⟩ := double_round_refines s6
+  obtain ⟨s8, ok8, view8⟩ := double_round_refines s7
+  obtain ⟨s9, ok9, view9⟩ := double_round_refines s8
+  obtain ⟨s10, ok10, view10⟩ := double_round_refines s9
+  refine ⟨s10, ?_, ?_⟩
+  · simp only [Abc.ChaCha20.Extracted.rounds_20, ok1, ok2, ok3, ok4, ok5, ok6, ok7, ok8,
+      ok9, ok10, Aeneas.Std.bind_tc_ok]
+  · rw [view10, view9, view8, view7, view6, view5, view4, view3, view2, view1]
+    rfl
+
+/-- The extracted Rust block word function, including counter installation and all
+sixteen modular additions, refines the RFC word function for every input. -/
+theorem block_words_refines (state : StateArray) (counter : U32) :
+    ∃ out, Abc.ChaCha20.Extracted.block_words state counter = .ok out ∧
+      stateView out = blockWords (stateView state) counter.bv := by
+  let initial := state.set 12#usize counter
+  have updateCounter : state.update 12#usize counter = .ok initial :=
+    update_ok state 12#usize counter (by decide)
+  have viewInitial : stateView initial = withCounter (stateView state) counter.bv := by
+    funext i
+    exact stateView_set state 12#usize counter (by decide) i
+  obtain ⟨transformed, okRounds, viewRounds⟩ := rounds_20_refines initial
+  simp (disch := decide) only [Abc.ChaCha20.Extracted.block_words, updateCounter, okRounds,
+    index_ok, lift, Aeneas.Std.bind_tc_ok]
+  refine ⟨_, rfl, ?_⟩
+  funext i
+  simp only [blockWords, ← viewInitial, ← viewRounds]
+  fin_cases i <;> simp only [stateView, Aeneas.Std.Array.getElem!_Usize_eq,
+    ← core.num.U32.wrapping_add_bv_eq] <;> rfl
+
+#print axioms double_round_refines
+#print axioms rounds_20_refines
+#print axioms block_words_refines
+
 end Abc.Refine.ChaCha20

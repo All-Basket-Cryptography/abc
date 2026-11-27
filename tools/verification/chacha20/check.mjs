@@ -14,7 +14,8 @@ const subdir = namespace.replaceAll('.', '/');
 const modelFiles = [`${subdir}/Funs.lean`, `${subdir}/Types.lean`];
 const specFile = 'ChaCha20QuarterRound.lean';
 const proofFile = 'ChaCha20QuarterRoundRefinement.lean';
-const theorem = 'Abc.Refine.ChaCha20.quarter_round_refines';
+const theorems = ['quarter_round_refines', 'double_round_refines', 'rounds_20_refines',
+  'block_words_refines'].map((name) => `Abc.Refine.ChaCha20.${name}`);
 const allowedAxioms = new Set(['propext', 'Classical.choice', 'Quot.sound']);
 const target = 'x86_64-unknown-linux-gnu';
 const cargo = ['--locked', '--offline', '--lib', '--no-default-features', '--target', target];
@@ -44,7 +45,7 @@ function check(toolRoot) {
   const output = join(repo, '.abc/chacha20-extraction');
   mkdirSync(output, { recursive: true });
   const work = mkdtempSync(join(output, 'run-'));
-  const report = { status: 'failed', scope: 'quarter_round', pins, target, features: [], cargo,
+  const report = { status: 'failed', scope: 'block_words', pins, target, features: [], cargo,
     charonArgs, aeneasArgs };
 
   function run(label, program, args, cwd, env = {}) {
@@ -119,15 +120,19 @@ function check(toolRoot) {
     compile(join(repo, scope, 'spec'), specFile);
     const audit = compile(join(crate, 'formal'), proofFile);
     const reports = [...audit.matchAll(/^'([^']+)' (?:depends on axioms:\s*\[([^\]]+)\]|does not depend on any axioms)\r?$/gm)];
-    const entry = reports.filter((match) => match[1] === theorem);
-    if (entry.length !== 1) throw new Error(`Missing or ambiguous axiom report for ${theorem}`);
-    const axioms = entry[0][2]?.split(',').map((name) => name.trim()) ?? [];
-    if (axioms.some((name) => !allowedAxioms.has(name))) throw new Error(`Unapproved axiom in ${theorem}`);
+    const auditByTheorem = {};
+    for (const theorem of theorems) {
+      const entry = reports.filter((match) => match[1] === theorem);
+      if (entry.length !== 1) throw new Error(`Missing or ambiguous axiom report for ${theorem}`);
+      const axioms = entry[0][2]?.split(',').map((name) => name.trim()) ?? [];
+      if (axioms.some((name) => !allowedAxioms.has(name))) throw new Error(`Unapproved axiom in ${theorem}`);
+      auditByTheorem[theorem] = axioms;
+    }
     if (!same(hashes(repo, sourceFiles), report.sources) || !same(hashes(model, modelFiles), report.first.files)) {
       throw new Error('Source or generated model changed during verification');
     }
-    report.theorems = { [theorem]: axioms };
-    report.status = 'quarter_round_refinement_checked';
+    report.theorems = auditByTheorem;
+    report.status = 'block_words_refinement_checked';
   } catch (error) {
     report.error = error.message;
     process.exitCode = 1;

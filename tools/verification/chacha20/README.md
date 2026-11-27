@@ -1,9 +1,9 @@
-# ChaCha20 quarter-round refinement
+# ChaCha20 block word refinement
 
-The verifier selects `crate::quarter_round` from `abc-chacha20` on the locked
+The verifier selects `crate::block_words` from `abc-chacha20` on the locked
 Cargo workspace with default features disabled. Charon and Aeneas translate
 it twice. Lean checks the unmodified generated model against an independent
-bitvector specification of RFC 8439 §§ 2.1–2.2 and audits the theorem's
+bitvector specification of RFC 8439 §§ 2.1–2.3 and audits the theorems'
 axioms. [RFC 8439](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.1)
 
 On Linux x86-64, set `ABC_AENEAS_ROOT` to the pinned Aeneas checkout with the
@@ -22,22 +22,17 @@ axiom audit. The generated Lean files must match between the two runs.
 
 ## Checked scope
 
-The local `x86_64-pc-windows-msvc` run used Charon at
+The `x86_64-unknown-linux-gnu` extraction uses Charon at
 `b104e24fea7d721b71e6c39fd70f26ff20bc0980`, Rust `nightly-2026-08-18`,
-the Linux Aeneas release at `505b6ca35217e7be5c96c3e2f8045edfbdf47291`, and
-Lean 4.31.0 with the pinned Mathlib backend. Two translations produced
-matching `Types.lean` and `Funs.lean` files without external declarations.
-Lean checked `Abc.Refine.ChaCha20.quarter_round_refines` with `propext`,
-`Classical.choice`, and `Quot.sound`.
+and the Aeneas release at `505b6ca35217e7be5c96c3e2f8045edfbdf47291`.
+Lean 4.31.0 checks each of the four theorems with the pinned Mathlib backend
+and accepts only `propext`, `Classical.choice`, and `Quot.sound`.
 
-The measured Rust source SHA-256 is
-`6609fa40b99d655f2b7bcb0922b3df4b6c09363ffcdc1fa51ff4c4ee62e5bde4`.
-The matching generated `Funs.lean` files from that local target have
-SHA-256 `bec7838c17ff20f0d6cb2e73272fdb668c09396bfb220992649c6b921bc4e1e9`.
-The generated files contain the source location and the verifier records
-their digests per target and checkout.
+`quarter_round_refines` covers all 16 state words for arbitrary state and
+four distinct in-range indices. `double_round_refines` checks the eight
+indexed calls of a column and diagonal round. `rounds_20_refines` checks
+their ten repetitions. `block_words_refines` checks counter installation
+and all sixteen feedforward additions for any input state and counter.
 
-The theorem covers all 16 output words of a single quarter round for
-arbitrary state and four distinct in-range indices. Block rounds, the
-counter and keystream API, and compiled-target leakage remain separate
-verification work.
+Key and nonce decoding, little-endian byte serialization, the public
+keystream API and compiled-target leakage remain open.

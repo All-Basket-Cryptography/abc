@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   refine-quarter-round:
-    name: Extract and prove the indexed Rust quarter round
+    name: Extract and prove the Rust ChaCha20 block words
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:

@@ -16,10 +16,11 @@ counter boundary. Lean checks block-count coverage, that every admitted
 counter index fits 32 bits, and the single-block limit at the last
 counter.
 
-Lean also checks `Abc.Refine.ChaCha20.quarter_round_refines` against the actual
-Rust `quarter_round` extracted by pinned Charon and Aeneas. For every
-16-word state and every four distinct in-range indices, the extracted
-function succeeds and returns the RFC quarter-round state. This covers the
-four updated words and the twelve preserved words. The specification
-checks the RFC quarter-round known answer. Refinement of the block and
-keystream API remains open. [Reproduction and scope](../../../../../tools/verification/chacha20/README.md)
+Pinned Charon and Aeneas extract the Rust `block_words` called by the active
+block function. Lean checks the indexed quarter round, all eight quarter
+rounds in each column and diagonal pair, and all ten consecutive pairs.
+`Abc.Refine.ChaCha20.block_words_refines` proves success and equality with
+the RFC word result for every 16-word state and 32-bit counter, including
+counter placement and all 16 wrapping additions of the initial state.
+Key and nonce decoding, little-endian serialization, stream XOR and
+compiled-target leakage remain open. [Reproduction and scope](../../../../../tools/verification/chacha20/README.md)
