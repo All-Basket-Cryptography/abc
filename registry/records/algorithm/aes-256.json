@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:algorithm:aes-256",
+  "record_type": "algorithm",
+  "name": "AES-256",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/pubs/fips/197/final"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "symmetric",
+  "family_ref": "abc:family:aes",
+  "catalog_state": "indexed",
+  "lifecycle": "standardized",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [],
+  "literature_refs": [],
+  "standard_refs": [
+    "abc:standard:fips-197-2023"
+  ],
+  "finding_refs": [],
+  "use_cases": [
+    "The 256-bit key variant of AES used as a block primitive."
+  ],
+  "limitations": [
+    "A single block cipher call does not authenticate data."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified"
+}

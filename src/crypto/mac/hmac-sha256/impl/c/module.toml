@@ -1,0 +1,11 @@
+schema_version = 1
+id = "hmac-sha256-c-portable"
+owned_paths = ["src/crypto/mac/hmac-sha256/impl/c"]
+dependencies = [{ module = "sha256-c", type = "imports" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "src/crypto/mac/hmac-sha256/impl/c/check.py"]
+tools = ["python", "clang"]
+target = "native"
+timeout_seconds = 180

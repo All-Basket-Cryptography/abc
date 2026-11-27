@@ -21,7 +21,7 @@
   "spec_ref": "abc:specification:hmac-sha-256-rfc2104",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "145237e0a41853436aa178867321b5b3383ab4d0ddd8666419b258f39c7ad710",
+  "source_sha256": "0a3e985bf21ca4c678a29ded35ec0809a18bac28052e78199735345031f967c8",
   "path": "src/crypto/mac/hmac-sha256/impl/go/hmac.go",
   "languages": [
     "go"

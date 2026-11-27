@@ -1,0 +1,11 @@
+schema_version = 1
+id = "pbkdf2-hmac-sha256-python-portable"
+owned_paths = ["src/crypto/kdf/pbkdf2-hmac-sha256/impl/python"]
+dependencies = [{ module = "hmac-sha256-python-portable", type = "imports" }]
+
+[tasks.test]
+kind = "test"
+command = ["python","-B","-m","unittest","discover","-s","src/crypto/kdf/pbkdf2-hmac-sha256/impl/python","-p","test_pbkdf2.py"]
+tools = ["python"]
+target = "portable"
+timeout_seconds = 120

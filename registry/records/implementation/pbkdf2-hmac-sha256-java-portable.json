@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:pbkdf2-hmac-sha256-java-portable",
+  "record_type": "implementation",
+  "name": "ABC research PBKDF2-HMAC-SHA-256 in Java",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/java/src/org/allbasket/abc/kdf/pbkdf2sha256/Pbkdf2Sha256.java"
+    },
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/java/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:pbkdf2-hmac-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "bb6820abe7c3c4ca8ead70b46738b32034004412dca7a605f0ca90bebf3a960e",
+  "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/java",
+  "languages": [
+    "java"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC hmac-sha256 in Java"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable java research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

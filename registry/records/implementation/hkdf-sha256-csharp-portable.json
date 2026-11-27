@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:hkdf-sha256-csharp-portable",
+  "record_type": "implementation",
+  "name": "ABC research HKDF-SHA-256 in C#",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/hkdf-sha256/impl/csharp/HkdfSha256.cs"
+    },
+    {
+      "path": "src/crypto/kdf/hkdf-sha256/impl/csharp/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hkdf-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "0664c2a3e9434a6dabe61fbef2583795cd7731dacba51946a33905284705a3c0",
+  "path": "src/crypto/kdf/hkdf-sha256/impl/csharp",
+  "languages": [
+    "csharp"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC hmac-sha256 in C#"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable csharp research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision",
+  "spec_ref": "abc:specification:hkdf-sha-256-rfc5869"
+}

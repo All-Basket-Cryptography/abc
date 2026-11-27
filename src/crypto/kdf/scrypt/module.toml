@@ -1,0 +1,17 @@
+schema_version = 1
+id = "scrypt-rust"
+owned_paths = ["src/crypto/kdf/scrypt"]
+cargo_manifests = ["src/crypto/kdf/scrypt/impl/rust/Cargo.toml"]
+lean_sources = { ScryptBounds = "src/crypto/kdf/scrypt/spec" }
+
+[tasks.test]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "tools/build/rust/Cargo.toml", "--locked", "--offline", "-p", "abc-scrypt"]
+tools = ["cargo", "rustc", "rustup"]
+timeout_seconds = 120
+
+[tasks.proof]
+kind = "formal"
+command = ["lean", "src/crypto/kdf/scrypt/spec/ScryptBounds.lean"]
+tools = ["lean"]
+timeout_seconds = 120

@@ -1,0 +1,12 @@
+[package]
+name = "abc-portable-aead-check"
+version = "0.0.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+
+[workspace]
+
+[dependencies]
+abc-aes256-gcm = { path = "../../../src/crypto/aead/aes256-gcm/impl/rust" }
+abc-chacha20-poly1305 = { path = "../../../src/crypto/aead/chacha20-poly1305/impl/rust" }

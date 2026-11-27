@@ -1,0 +1,15 @@
+schema_version = 1
+id = "hkdf-sha256-java-portable"
+owned_paths = ["src/crypto/kdf/hkdf-sha256/impl/java"]
+dependencies = [
+  { module = "hmac-sha256-java-portable", type = "calls" },
+  { module = "sha256-java", type = "calls" },
+  { module = "hkdf-sha256-spec", type = "implements" },
+]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "src/crypto/kdf/hkdf-sha256/impl/java/check.py"]
+tools = ["python", "javac", "java", "jar"]
+target = "jdk17"
+timeout_seconds = 180

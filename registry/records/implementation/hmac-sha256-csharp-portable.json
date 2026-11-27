@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:hmac-sha256-csharp-portable",
+  "record_type": "implementation",
+  "name": "ABC research HMAC-SHA-256 in C#",
+  "sources": [
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/csharp/HmacSha256.cs"
+    },
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/csharp/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hmac-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "42345902608fcdf55f93dc522c20d1c5ffea5bb479384488b9dd8f3b85c60d39",
+  "path": "src/crypto/mac/hmac-sha256/impl/csharp",
+  "languages": [
+    "csharp"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC sha256 in C#"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable csharp research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision",
+  "spec_ref": "abc:specification:hmac-sha-256-rfc2104"
+}

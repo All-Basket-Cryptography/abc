@@ -28,7 +28,8 @@ var (
 )
 
 // Hasher holds the inner and outer SHA-256 states for a key. Initialize a
-// Hasher with New. Calls on one Hasher must be serialized.
+// Hasher with New. A value copy snapshots the current state independently.
+// Calls and value copies of one Hasher must be serialized.
 type Hasher struct {
 	inner        sha256.Hasher
 	outer        sha256.Hasher

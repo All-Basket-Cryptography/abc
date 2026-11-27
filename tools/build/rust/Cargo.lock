@@ -3,6 +3,17 @@
 version = 4
 
 [[package]]
+name = "abc-aes256"
+version = "0.1.0"
+
+[[package]]
+name = "abc-aes256-gcm"
+version = "0.1.0"
+dependencies = [
+ "abc-aes256",
+]
+
+[[package]]
 name = "abc-blake2b"
 version = "0.1.0"
 
@@ -16,6 +27,14 @@ dependencies = [
 [[package]]
 name = "abc-chacha20"
 version = "0.1.0"
+
+[[package]]
+name = "abc-chacha20-poly1305"
+version = "0.1.0"
+dependencies = [
+ "abc-chacha20",
+ "abc-poly1305",
+]
 
 [[package]]
 name = "abc-hkdf-sha256"
@@ -41,6 +60,17 @@ version = "0.1.0"
 dependencies = [
  "abc-hmac-sha256",
  "abc-sha256",
+]
+
+[[package]]
+name = "abc-poly1305"
+version = "0.1.0"
+
+[[package]]
+name = "abc-scrypt"
+version = "0.1.0"
+dependencies = [
+ "abc-pbkdf2-hmac-sha256",
 ]
 
 [[package]]

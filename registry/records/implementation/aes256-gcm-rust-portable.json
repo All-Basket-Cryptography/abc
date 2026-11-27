@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-gcm-rust-portable",
+  "record_type": "implementation",
+  "name": "ABC research AES-256-GCM in Rust",
+  "sources": [
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/rust/src/lib.rs"
+    },
+    {
+      "path": "src/crypto/aead/aes256-gcm/spec/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:aes-256-gcm",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "077e6627a5e21741cbc8409e330cebc8d239b1a16b2e267ec0d310942ffc7a90",
+  "path": "src/crypto/aead/aes256-gcm/impl/rust",
+  "languages": [
+    "rust"
+  ],
+  "features": [],
+  "external_calls": [
+    "abc-aes256"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable rust research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

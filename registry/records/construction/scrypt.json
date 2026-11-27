@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "id": "abc:construction:scrypt",
+  "record_type": "construction",
+  "name": "scrypt",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc7914.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "kdf-password",
+  "family_ref": "abc:family:scrypt",
+  "catalog_state": "indexed",
+  "lifecycle": "established",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [],
+  "literature_refs": [
+    "abc:literature:rfc-7914"
+  ],
+  "standard_refs": [],
+  "finding_refs": [],
+  "use_cases": [
+    "Password derivation under a deployment resource policy."
+  ],
+  "limitations": [
+    "ROMix uses data-dependent memory access."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified",
+  "component_refs": [
+    "abc:construction:pbkdf2-hmac-sha-256"
+  ]
+}

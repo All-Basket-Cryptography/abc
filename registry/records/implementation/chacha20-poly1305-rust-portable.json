@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:chacha20-poly1305-rust-portable",
+  "record_type": "implementation",
+  "name": "ABC research ChaCha20-Poly1305 in Rust",
+  "sources": [
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/rust/src/lib.rs"
+    },
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/spec/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:chacha20-poly1305",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "9ae8b49dda839c7935f049569c50ff98e789795c32742f35f5b9798cd51c811c",
+  "path": "src/crypto/aead/chacha20-poly1305/impl/rust",
+  "languages": [
+    "rust"
+  ],
+  "features": [],
+  "external_calls": [
+    "abc-chacha20",
+    "abc-poly1305"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable rust research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

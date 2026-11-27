@@ -1,0 +1,14 @@
+schema_version = 1
+id = "hkdf-sha256-cpp-portable"
+owned_paths = ["src/crypto/kdf/hkdf-sha256/impl/cpp"]
+dependencies = [
+  { module = "hmac-sha256-cpp-portable", type = "calls" },
+  { module = "hkdf-sha256-spec", type = "implements" },
+]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "src/crypto/kdf/hkdf-sha256/impl/cpp/check.py"]
+tools = ["python", "clang"]
+target = "portable-cpp17"
+timeout_seconds = 180

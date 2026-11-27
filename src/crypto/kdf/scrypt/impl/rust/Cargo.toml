@@ -1,0 +1,11 @@
+[package]
+workspace = "../../../../../../tools/build/rust"
+name = "abc-scrypt"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+description = "Portable research RFC 7914 scrypt with caller-owned workspace"
+
+[dependencies]
+abc-pbkdf2-hmac-sha256 = { path = "../../../pbkdf2-hmac-sha256/impl/rust" }

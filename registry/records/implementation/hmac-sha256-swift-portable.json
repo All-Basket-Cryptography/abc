@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:hmac-sha256-swift-portable",
+  "record_type": "implementation",
+  "name": "ABC research HMAC-SHA-256 in Swift",
+  "sources": [
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/swift/Sources/AbcHmacSha256Swift/HmacSha256.swift"
+    },
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/swift/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hmac-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "80b036d8d2cf3552168be0399e4d4002e71db3c81bad0471f97b4d1f8f97a287",
+  "path": "src/crypto/mac/hmac-sha256/impl/swift",
+  "languages": [
+    "swift"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC sha256 in Swift"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable swift research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision",
+  "spec_ref": "abc:specification:hmac-sha-256-rfc2104"
+}

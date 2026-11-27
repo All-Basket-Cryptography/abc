@@ -1,0 +1,11 @@
+schema_version = 1
+id = "hkdf-sha256-typescript-portable"
+owned_paths = ["src/crypto/kdf/hkdf-sha256/impl/typescript"]
+dependencies = [{ module = "hmac-sha256-typescript-portable", type = "imports" }]
+
+[tasks.test]
+kind = "test"
+command = ["node","--test","src/crypto/kdf/hkdf-sha256/impl/typescript/hkdf.test.mts"]
+tools = ["node"]
+target = "portable"
+timeout_seconds = 120

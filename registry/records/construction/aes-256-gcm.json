@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "id": "abc:construction:aes-256-gcm",
+  "record_type": "construction",
+  "name": "AES-256-GCM",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/pubs/sp/800/38/d/final"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "symmetric",
+  "family_ref": "abc:family:aes",
+  "catalog_state": "indexed",
+  "lifecycle": "standardized",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [],
+  "literature_refs": [],
+  "standard_refs": [
+    "abc:standard:nist-sp-800-38d-2007"
+  ],
+  "finding_refs": [],
+  "use_cases": [
+    "Authenticated encryption with associated data."
+  ],
+  "limitations": [
+    "The ABC profile uses 96-bit nonces and 128-bit tags. Each encryption under a key requires a unique nonce."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified",
+  "component_refs": [
+    "abc:algorithm:aes-256"
+  ]
+}

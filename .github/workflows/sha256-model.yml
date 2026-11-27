@@ -4,7 +4,8 @@ on:
   pull_request:
     paths:
       - '.github/workflows/sha256-model.yml'
-      - 'src/crypto/hash/sha256/**'
+      - 'src/crypto/hash/sha256/impl/rust/**'
+      - 'src/crypto/hash/sha256/spec/**'
       - 'tools/build/rust/**'
       - 'src/lean/**'
       - 'src/crypto/hash/sha512/spec/**'
@@ -12,10 +13,17 @@ on:
       - 'src/crypto/hash/shake256/spec/**'
       - 'src/crypto/cipher/chacha20/spec/**'
       - 'src/crypto/kdf/pbkdf2-hmac-sha256/spec/**'
+      - 'src/crypto/kdf/scrypt/spec/**'
+      - 'src/crypto/mac/poly1305/spec/**'
+      - 'src/crypto/aead/chacha20-poly1305/spec/**'
+      - 'src/crypto/cipher/aes256/spec/**'
+      - 'src/crypto/aead/aes256-gcm/spec/**'
       - 'tools/verification/probe/toolchain-candidate.json'
       - 'tools/verification/hmac-hkdf/**'
-      - 'src/crypto/mac/hmac-sha256/**'
-      - 'src/crypto/kdf/hkdf-sha256/**'
+      - 'src/crypto/mac/hmac-sha256/impl/rust/**'
+      - 'src/crypto/mac/hmac-sha256/spec/**'
+      - 'src/crypto/kdf/hkdf-sha256/impl/rust/**'
+      - 'src/crypto/kdf/hkdf-sha256/spec/**'
   workflow_dispatch:
 
 permissions:
@@ -82,6 +90,11 @@ jobs:
             python3 src/lean/check.py "$algorithm"
           done
           lean src/crypto/hash/blake2b/spec/Blake2bBuffer.lean
+          lean src/crypto/mac/poly1305/spec/Poly1305Reduction.lean
+          lean src/crypto/aead/chacha20-poly1305/spec/ChaCha20Poly1305Lengths.lean
+          lean src/crypto/kdf/scrypt/spec/ScryptBounds.lean
+          lean src/crypto/cipher/aes256/spec/Aes256Byte.lean
+          lean src/crypto/aead/aes256-gcm/spec/Aes256GcmBounds.lean
       - name: Check SHA-256, HMAC and HKDF refinements
         env:
           ABC_FORMAL_USE_MATHLIB_CACHE: '1'

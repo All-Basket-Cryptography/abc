@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:hmac-sha256-java-portable",
+  "record_type": "implementation",
+  "name": "ABC research HMAC-SHA-256 in Java",
+  "sources": [
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/java/src/org/allbasket/abc/mac/hmacsha256/HmacSha256.java"
+    },
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/java/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hmac-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "b147f3a3c0dc4b7415cb3a38c777e553e9cda4c194f83fd1c1839888941a1c67",
+  "path": "src/crypto/mac/hmac-sha256/impl/java",
+  "languages": [
+    "java"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC sha256 in Java"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable java research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision",
+  "spec_ref": "abc:specification:hmac-sha-256-rfc2104"
+}

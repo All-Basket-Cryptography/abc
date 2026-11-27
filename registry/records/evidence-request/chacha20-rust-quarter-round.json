@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "id": "abc:evidence-request:chacha20-rust-quarter-round",
+  "record_type": "evidence-request",
+  "name": "Indexed Rust ChaCha20 quarter round",
+  "sources": [
+    {
+      "path": "src/crypto/cipher/chacha20/spec/ChaCha20QuarterRound.lean"
+    },
+    {
+      "path": "tools/verification/chacha20/check.mjs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:implementation:chacha20-rust-portable",
+  "claim": "refinement",
+  "method": "formal",
+  "scope": "Successful execution and exact equality of all 16 state lanes for the extracted indexed ChaCha20 Rust quarter round with four distinct in-range indices.",
+  "theorems": [
+    "Abc.Refine.ChaCha20.quarter_round_refines"
+  ],
+  "toolchain": [
+    {
+      "name": "Lean",
+      "version": "4.31.0"
+    },
+    {
+      "name": "Charon",
+      "version": "b104e24fea7d721b71e6c39fd70f26ff20bc0980"
+    },
+    {
+      "name": "Aeneas",
+      "version": "505b6ca35217e7be5c96c3e2f8045edfbdf47291"
+    }
+  ],
+  "assumption_policy": "ABC verification policy, pinned extracted semantics and standard Lean axioms.",
+  "output_format": "Source, tool, LLBC and Lean digests with the checked theorem and dependency list."
+}
