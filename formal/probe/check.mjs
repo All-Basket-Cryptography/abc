@@ -105,6 +105,9 @@ function main(work) {
   if (mathlib?.inputRev !== pins.mathlib || mathlib?.rev !== pins.mathlibRevision) {
     throw new Error('Lake did not resolve the pinned Mathlib release');
   }
+  if (process.env.ABC_FORMAL_USE_MATHLIB_CACHE === '1') {
+    requireSuccess(run('lake', ['exe', 'cache', 'get'], leanRoot, 'mathlib-cache', work), 'Pinned Mathlib cache');
+  }
   requireSuccess(run('lake', ['build'], leanRoot, 'positive-model', work), 'Lean model build');
   copyFileSync(join(probe, 'Proof.lean'), join(leanRoot, 'Proof.lean'));
   const proofOutput = requireSuccess(run('lake', ['env', 'lean', 'Proof.lean'], leanRoot, 'positive-proof', work), 'Lean proof');

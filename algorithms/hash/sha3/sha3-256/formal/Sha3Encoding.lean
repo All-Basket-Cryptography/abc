@@ -28,6 +28,6 @@ theorem decodeLane_example : decodeLane [0, 1, 2, 3, 4, 5, 6, 7] = 0x07060504030
   decide
 
 theorem paddedTail_rateBoundary : paddedTail (List.replicate 135 0) = some (List.replicate 135 0 ++ [0x86]) := by
-  decide
+  simp [paddedTail, rateBytes]
 
 end Abc.Spec.Sha3Encoding

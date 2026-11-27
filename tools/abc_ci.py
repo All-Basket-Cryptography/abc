@@ -15,11 +15,48 @@ from tools.abc_status import read_json
 
 REQUIRED_METADATA = {"repository-assurance:registry", "repository-assurance:status"}
 SHA = re.compile(r"[a-f0-9]{40}\Z")
+BASELINE_ENTRY = "tools/abc_ci.py"
+BOOTSTRAP_CHECKS = (
+    ("abc.py", "registry", "validate", "--strict"),
+    ("-m", "unittest", "discover", "-s", "fixtures/registry", "-p", "test_*.py"),
+    ("-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py"),
+)
+
+
+def _event_revisions(repo, base, head):
+    if not SHA.fullmatch(base) or not SHA.fullmatch(head):
+        raise ValueError("The CI event must provide fixed base and head commit IDs")
+    for revision in (base, head):
+        kind = subprocess.check_output(["git", "cat-file", "-t", revision], cwd=repo)
+        if kind.strip() != b"commit":
+            raise ValueError(f"The CI revision is not a commit: {revision}")
+
+
+def _has_baseline(repo, base):
+    result = subprocess.run(["git", "cat-file", "-t", f"{base}:{BASELINE_ENTRY}"], cwd=repo, capture_output=True)
+    return result.returncode == 0 and result.stdout.strip() == b"blob"
+
+
+def _bootstrap(repo, base, head):
+    _event_revisions(repo, base, head)
+    if _has_baseline(repo, base):
+        raise ValueError("A reviewed CI baseline exists; run the baseline workflow")
+    ancestry = subprocess.run(["git", "merge-base", "--is-ancestor", base, head], cwd=repo, check=False)
+    if ancestry.returncode or base == head:
+        raise ValueError("Bootstrap requires the initial base commit to precede the candidate")
+    checkout = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
+    if checkout != head or subprocess.check_output(["git", "status", "--porcelain", "--untracked-files=all"], cwd=repo):
+        raise ValueError("Bootstrap fixtures require a clean checkout at the candidate commit")
+    for check in BOOTSTRAP_CHECKS:
+        subprocess.run([sys.executable, "-B", *check], cwd=repo, check=True, timeout=180)
+    return {"status": "advisory-passed", "domain": "untrusted-pr", "head_revision": head,
+            "review": "independent-review-required"}
 
 
 def _plan(repo, base, head):
-    if not SHA.fullmatch(base) or not SHA.fullmatch(head):
-        raise ValueError("The CI event must provide fixed base and head commit IDs")
+    _event_revisions(repo, base, head)
+    if not _has_baseline(repo, base):
+        raise ValueError("The reviewed CI baseline is absent; independent initial review is required")
     plan = create_plan(repo, base, head, merge_base=True)
     if plan["base_revision"] is None or plan["head_revision"] != head or plan["required_gate"] != "abc-required":
         raise ValueError("CI requires a real merge base and the fixed required gate")
@@ -62,7 +99,7 @@ def gate(plan, downloaded):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=("plan", "worker", "gate"))
+    parser.add_argument("mode", choices=("bootstrap", "plan", "worker", "gate"))
     parser.add_argument("--repo", type=Path, required=True)
     parser.add_argument("--base", required=True)
     parser.add_argument("--head", required=True)
@@ -71,6 +108,9 @@ def main():
     args = parser.parse_args()
     try:
         repo = args.repo.resolve()
+        if args.mode == "bootstrap":
+            print(json.dumps(_bootstrap(repo, args.base, args.head)))
+            return 0
         plan = _plan(repo, args.base, args.head)
         if args.mode == "plan":
             matrix = {"include": [{"target": name, "artifact": _digest(name)} for name in plan["selected_tasks"]]}

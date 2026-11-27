@@ -1,59 +1,95 @@
 name: ABC pull request assurance
 
-on: pull_request
+on:
+  pull_request:
+  merge_group:
+    types: [checks_requested]
 
 permissions:
   contents: read
 
 concurrency:
-  group: abc-pr-${{ github.event.pull_request.number }}
+  group: abc-pr-${{ github.event.pull_request.number || github.event.merge_group.head_ref }}
   cancel-in-progress: true
+
+env:
+  EVENT_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+  EVENT_HEAD: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
 
 jobs:
   plan:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     outputs:
+      mode: ${{ steps.baseline.outputs.mode }}
       matrix: ${{ steps.plan.outputs.matrix }}
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ env.EVENT_HEAD }}
           fetch-depth: 0
           persist-credentials: false
           path: candidate
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          ref: ${{ github.event.pull_request.base.sha }}
+          ref: ${{ env.EVENT_BASE }}
           persist-credentials: false
           path: baseline
+      - id: baseline
+        name: Identify the baseline at the event revision
+        working-directory: baseline
+        run: |
+          test "$(git rev-parse --verify HEAD)" = "$EVENT_BASE"
+          if [ "$(git cat-file -t "$EVENT_BASE:tools/abc_ci.py" 2>/dev/null)" = blob ]; then
+            printf 'mode=baseline\n' >> "$GITHUB_OUTPUT"
+          else
+            printf 'mode=bootstrap\n' >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        if: steps.baseline.outputs.mode == 'baseline'
         with:
           python-version: '3.13.14'
       - id: plan
+        if: steps.baseline.outputs.mode == 'baseline'
         working-directory: baseline
-        env:
-          EVENT_BASE: ${{ github.event.pull_request.base.sha }}
-          EVENT_HEAD: ${{ github.event.pull_request.head.sha }}
         run: python -m tools.abc_ci plan --repo ../candidate --base "$EVENT_BASE" --head "$EVENT_HEAD"
+
+  bootstrap-advisory:
+    name: Initial candidate fixtures (advisory)
+    needs: plan
+    if: needs.plan.outputs.mode == 'bootstrap' && github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ env.EVENT_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13.14'
+      - name: Run candidate registry and standalone fixtures
+        run: python -B -m tools.abc_ci bootstrap --repo . --base "$EVENT_BASE" --head "$EVENT_HEAD"
 
   modules:
     needs: plan
+    if: needs.plan.outputs.mode == 'baseline'
     strategy:
       fail-fast: false
       max-parallel: 6
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     uses: ./.github/workflows/module-check.yml
     with:
-      base: ${{ github.event.pull_request.base.sha }}
-      head: ${{ github.event.pull_request.head.sha }}
+      base: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+      head: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
       target: ${{ matrix.target }}
       artifact: ${{ matrix.artifact }}
 
   abc-required:
     name: abc-required
     if: ${{ always() }}
-    needs: [plan, modules]
+    needs: [plan, modules, bootstrap-advisory]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -61,16 +97,23 @@ jobs:
         env:
           PLAN_RESULT: ${{ needs.plan.result }}
           MODULES_RESULT: ${{ needs.modules.result }}
-        run: test "$PLAN_RESULT" = success && test "$MODULES_RESULT" = success
+          BASELINE_MODE: ${{ needs.plan.outputs.mode }}
+          ADVISORY_RESULT: ${{ needs.bootstrap-advisory.result }}
+        run: |
+          if [ "$BASELINE_MODE" = bootstrap ]; then
+            echo "::error::Independent initial review required. The reviewed CI baseline is absent. Candidate fixtures: $ADVISORY_RESULT."
+            exit 1
+          fi
+          test "$PLAN_RESULT" = success && test "$BASELINE_MODE" = baseline && test "$MODULES_RESULT" = success
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ env.EVENT_HEAD }}
           fetch-depth: 0
           persist-credentials: false
           path: candidate
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          ref: ${{ github.event.pull_request.base.sha }}
+          ref: ${{ env.EVENT_BASE }}
           persist-credentials: false
           path: baseline
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
@@ -82,7 +125,4 @@ jobs:
           path: receipts
       - name: Check the expected task closure and attached outputs
         working-directory: baseline
-        env:
-          EVENT_BASE: ${{ github.event.pull_request.base.sha }}
-          EVENT_HEAD: ${{ github.event.pull_request.head.sha }}
         run: python -m tools.abc_ci gate --repo ../candidate --base "$EVENT_BASE" --head "$EVENT_HEAD" --directory ../receipts

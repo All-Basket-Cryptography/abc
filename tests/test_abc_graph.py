@@ -10,7 +10,7 @@ import tempfile
 import unittest
 
 from tools.abc_graph import GraphError, build_graph, create_plan
-from tools.abc_ci import _plan as ci_plan
+from tools.abc_ci import BASELINE_ENTRY, _plan as ci_plan
 from tools.abc_runner import VERIFIER_INPUTS
 
 
@@ -274,7 +274,7 @@ edition = "2021"
 
     def test_ci_cli_plans_runs_and_rejects_incomplete_receipts(self):
         approved = Path(__file__).resolve().parents[1]
-        for name in VERIFIER_INPUTS:
+        for name in (*VERIFIER_INPUTS, BASELINE_ENTRY):
             self.write(name, (approved / name).read_text(encoding="utf-8"))
         self.write("module.toml", """schema_version = 1
 id = "repository-assurance"
@@ -337,6 +337,13 @@ command = ["python", "runtime/check.py"]
         missing = ci("gate", "--directory", artifacts, check=False)
         self.assertEqual(missing.returncode, 1)
         self.assertIn("Incomplete or unexpected set of CI task artifacts", missing.stderr)
+
+        original = (self.repo / BASELINE_ENTRY).read_text(encoding="utf-8")
+        self.write(BASELINE_ENTRY, original + "\n# This candidate changes its own verifier.\n")
+        head = self.commit("modify the protected baseline entry")
+        changed_baseline = ci("plan", check=False)
+        self.assertEqual(changed_baseline.returncode, 1)
+        self.assertIn(f"Independent review required for assurance changes: {BASELINE_ENTRY}", changed_baseline.stderr)
 
 
 if __name__ == "__main__":

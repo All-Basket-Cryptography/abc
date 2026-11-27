@@ -1,0 +1,79 @@
+name: ABC formal probe (advisory)
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/formal-probe.yml'
+      - 'formal/probe/**'
+      - 'foundation/lean/**'
+      - 'algorithms/hash/sha2/sha256/formal/**'
+      - 'algorithms/hash/sha3/sha3-256/formal/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  research-probe:
+    name: Rust-to-Lean research probe (advisory)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          repository: AeneasVerif/aeneas
+          ref: 505b6ca35217e7be5c96c3e2f8045edfbdf47291
+          path: .abc/formal-tools/aeneas
+          persist-credentials: false
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          repository: AeneasVerif/charon
+          ref: b104e24fea7d721b71e6c39fd70f26ff20bc0980
+          path: .abc/formal-tools/aeneas/charon
+          persist-credentials: false
+      - name: Install and verify the published Lean build
+        shell: bash
+        run: |
+          archive="$RUNNER_TEMP/lean-4.31.0-linux.tar.zst"
+          curl --silent --show-error --fail --location --proto '=https' --retry 2 --max-time 300 \
+            --output "$archive" https://github.com/leanprover/lean4/releases/download/v4.31.0/lean-4.31.0-linux.tar.zst
+          printf '%s  %s\n' 07a633cc8d9151cbc08825ea4cdda50d4b02a2c9cb852c0131b13046f49cad7f "$archive" | sha256sum --check --strict
+          tar --zstd -xf "$archive" -C "$RUNNER_TEMP"
+          printf '%s\n' "$RUNNER_TEMP/lean-4.31.0-linux/bin" >> "$GITHUB_PATH"
+      - name: Check the Lean specification independently
+        run: python3 foundation/lean/check.py sha256
+      - uses: cachix/install-nix-action@75c75c31ebece974e48ebc36b4ad125bd97bd97b
+      - name: Build the exact Aeneas and Charon tools
+        shell: bash
+        run: |
+          aeneas="$GITHUB_WORKSPACE/.abc/formal-tools/aeneas"
+          test "$(git -C "$aeneas" rev-parse HEAD)" = 505b6ca35217e7be5c96c3e2f8045edfbdf47291
+          test "$(git -C "$aeneas/charon" rev-parse HEAD)" = b104e24fea7d721b71e6c39fd70f26ff20bc0980
+          test "$(tail -n 1 "$aeneas/charon-pin")" = b104e24fea7d721b71e6c39fd70f26ff20bc0980
+          build=$(nix build --no-write-lock-file --no-link --print-out-paths "$aeneas#default")
+          test -x "$build/bin/aeneas"
+          test -x "$build/bin/charon"
+          mkdir -p "$aeneas/bin" "$aeneas/charon/bin"
+          ln -s "$build/bin/aeneas" "$aeneas/bin/aeneas"
+          ln -s "$build/bin/charon" "$aeneas/charon/bin/charon"
+          rustup toolchain install nightly-2026-08-18 --profile minimal
+          printf 'ABC_AENEAS_ROOT=%s\n' "$aeneas" >> "$GITHUB_ENV"
+      - name: Run the positive and negative formal probe
+        env:
+          ABC_FORMAL_USE_MATHLIB_CACHE: '1'
+        run: node formal/probe/check.mjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ always() }}
+        with:
+          name: formal-probe-untrusted-pr
+          path: |
+            .abc/formal-probe/run-*/result.json
+            .abc/formal-probe/run-*/*.log
+            .abc/formal-probe/run-*/*.llbc
+            .abc/formal-probe/run-*/positive-generated/*.lean
+            .abc/formal-probe/run-*/lean/Generated/*.lean
+          if-no-files-found: ignore
+          retention-days: 3

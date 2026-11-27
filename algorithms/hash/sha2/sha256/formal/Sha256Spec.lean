@@ -105,4 +105,20 @@ def Stream.update (state : Stream) (chunk : Message) : Option Stream :=
 
 def Stream.finalize (state : Stream) : Option (List Byte) := digest state.message
 
+theorem Stream.update_within_domain (state : Stream) (chunk : Message)
+    (allowed : byteLengthAllowed (state.message.length + chunk.length)) :
+    state.update chunk = some ⟨state.message ++ chunk⟩ := by
+  simp [Stream.update, allowed]
+
+theorem Stream.rejects_out_of_domain (state : Stream) (chunk : Message)
+    (disallowed : ¬ byteLengthAllowed (state.message.length + chunk.length)) :
+    state.update chunk = none := by
+  simp [Stream.update, disallowed]
+
+theorem Stream.finalize_after_update (state : Stream) (chunk : Message)
+    (allowed : byteLengthAllowed (state.message.length + chunk.length)) :
+    (state.update chunk).bind Stream.finalize = digest (state.message ++ chunk) := by
+  rw [state.update_within_domain chunk allowed]
+  rfl
+
 end Abc.Spec.Sha256

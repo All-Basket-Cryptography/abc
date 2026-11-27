@@ -32,3 +32,7 @@ def main : IO Unit := do
   unless decide (byteLengthAllowed (2 ^ 61 - 1)) && !decide (byteLengthAllowed (2 ^ 61)) do
     throw (IO.userError "SHA-256 message length bound mismatch")
   IO.println "SHA-256 specification checks passed"
+
+#print axioms Abc.Spec.Sha256.Stream.update_within_domain
+#print axioms Abc.Spec.Sha256.Stream.rejects_out_of_domain
+#print axioms Abc.Spec.Sha256.Stream.finalize_after_update
