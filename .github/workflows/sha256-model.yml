@@ -1,0 +1,72 @@
+name: ABC SHA-256 model extraction (advisory)
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/sha256-model.yml'
+      - 'algorithms/hash/sha2/sha256/**'
+      - 'build/rust/**'
+      - 'formal/probe/toolchain-candidate.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    name: Extract the portable SHA-256 Rust model
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          repository: AeneasVerif/aeneas
+          ref: 505b6ca35217e7be5c96c3e2f8045edfbdf47291
+          path: .abc/formal-tools/aeneas
+          persist-credentials: false
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          repository: AeneasVerif/charon
+          ref: b104e24fea7d721b71e6c39fd70f26ff20bc0980
+          path: .abc/formal-tools/aeneas/charon
+          persist-credentials: false
+      - name: Install the pinned Aeneas and Charon release
+        shell: bash
+        run: |
+          aeneas="$GITHUB_WORKSPACE/.abc/formal-tools/aeneas"
+          archive="$RUNNER_TEMP/aeneas-505b6ca-linux-x86_64.tar.gz"
+          release_dir="$RUNNER_TEMP/aeneas-505b6ca"
+          test "$(tail -n 1 "$aeneas/charon-pin")" = b104e24fea7d721b71e6c39fd70f26ff20bc0980
+          curl --silent --show-error --fail --location --proto '=https' --retry 2 --max-time 180 \
+            --output "$archive" https://github.com/AeneasVerif/aeneas/releases/download/nightly-2026.09.09-505b6ca/aeneas-linux-x86_64.tar.gz
+          printf '%s  %s\n' d5ba53b1370d30866bcd86de5e34abfbadf09e76b3689a7f70f458cd0c133591 "$archive" | sha256sum --check --strict
+          mkdir "$release_dir"
+          tar -xzf "$archive" -C "$release_dir"
+          "$release_dir/aeneas" -version | grep -Fx 'aeneas nightly-2026.09.09-505b6ca'
+          test "$("$release_dir/charon" toolchain-version)" = nightly-2026-08-18
+          mkdir -p "$aeneas/bin" "$aeneas/charon/bin"
+          ln -s "$release_dir/aeneas" "$aeneas/bin/aeneas"
+          ln -s "$release_dir/charon" "$aeneas/charon/bin/charon"
+          rustup toolchain install nightly-2026-08-18 --profile minimal
+          printf 'ABC_AENEAS_ROOT=%s\n' "$aeneas" >> "$GITHUB_ENV"
+      - name: Extract and compare the complete Rust model
+        id: full
+        run: node algorithms/hash/sha2/sha256/formal/extract.mjs
+      - name: Diagnose the compression call graph separately
+        if: ${{ failure() && steps.full.outcome == 'failure' }}
+        run: node algorithms/hash/sha2/sha256/formal/extract.mjs --item crate::compress
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ always() }}
+        with:
+          name: sha256-extraction-untrusted-pr
+          path: |
+            .abc/sha256-extraction/run-*/result.json
+            .abc/sha256-extraction/run-*/*.log
+            .abc/sha256-extraction/run-*/*.llbc
+            .abc/sha256-extraction/run-*/*.txt
+            .abc/sha256-extraction/run-*/lean-*/**/*.lean
+          if-no-files-found: warn
+          retention-days: 7

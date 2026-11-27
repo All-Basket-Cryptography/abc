@@ -29,16 +29,16 @@ def padding (message : Message) : List Byte :=
   [0x80] ++ List.replicate zeroBytes 0 ++ bigEndian 8 (8 * message.length)
 
 -- FIPS 180-4 §§ 3.2, 4.1.2. BitVec addition is modulo 2^32.
-private def pick (x y z : Word) : Word := (x &&& y) ^^^ ((~~~x) &&& z)
-private def majority (x y z : Word) : Word := (x &&& y) ^^^ (x &&& z) ^^^ (y &&& z)
+def pick (x y z : Word) : Word := (x &&& y) ^^^ ((~~~x) &&& z)
+def majority (x y z : Word) : Word := (x &&& y) ^^^ (x &&& z) ^^^ (y &&& z)
 
-private def sumZero (x : Word) : Word := x.rotateRight 2 ^^^ x.rotateRight 13 ^^^ x.rotateRight 22
-private def sumOne (x : Word) : Word := x.rotateRight 6 ^^^ x.rotateRight 11 ^^^ x.rotateRight 25
-private def scheduleZero (x : Word) : Word := x.rotateRight 7 ^^^ x.rotateRight 18 ^^^ (x >>> 3)
-private def scheduleOne (x : Word) : Word := x.rotateRight 17 ^^^ x.rotateRight 19 ^^^ (x >>> 10)
+def sumZero (x : Word) : Word := x.rotateRight 2 ^^^ x.rotateRight 13 ^^^ x.rotateRight 22
+def sumOne (x : Word) : Word := x.rotateRight 6 ^^^ x.rotateRight 11 ^^^ x.rotateRight 25
+def scheduleZero (x : Word) : Word := x.rotateRight 7 ^^^ x.rotateRight 18 ^^^ (x >>> 3)
+def scheduleOne (x : Word) : Word := x.rotateRight 17 ^^^ x.rotateRight 19 ^^^ (x >>> 10)
 
 -- FIPS 180-4 § 4.2.2.
-private def constants : Array Word := #[
+def constants : Array Word := #[
   0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
   0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
   0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
@@ -50,36 +50,36 @@ private def constants : Array Word := #[
 ]
 
 -- FIPS 180-4 § 5.3.3.
-private def initial : State :=
+def initial : State :=
   ⟨0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19⟩
 
 -- FIPS 180-4 §§ 5.2.1, 6.2.2(1). Each block begins with sixteen big-endian words.
-private def parseWord (bytes : List Byte) : Word :=
+def parseWord (bytes : List Byte) : Word :=
   BitVec.ofNat 32 (Abc.Foundation.decodeBigEndian bytes)
 
-private def messageSchedule (block : List Byte) : Array Word :=
+def messageSchedule (block : List Byte) : Array Word :=
   let words := ((List.range 16).map fun i => parseWord ((block.drop (4 * i)).take 4)).toArray
   (List.range 48).foldl (fun schedule i =>
     schedule.push (scheduleOne (schedule.getD (i + 14) 0) + schedule.getD (i + 9) 0
       + scheduleZero (schedule.getD (i + 1) 0) + schedule.getD i 0)) words
 
 -- FIPS 180-4 § 6.2.2(2–4). Each round reads the same pre-round state for both temporaries.
-private def round (state : State) (constant word : Word) : State :=
+def round (state : State) (constant word : Word) : State :=
   let first := state.h + sumOne state.e + pick state.e state.f state.g + constant + word
   let second := sumZero state.a + majority state.a state.b state.c
   ⟨first + second, state.a, state.b, state.c, state.d + first, state.e, state.f, state.g⟩
 
-private def addState (left right : State) : State :=
+def addState (left right : State) : State :=
   ⟨left.a + right.a, left.b + right.b, left.c + right.c, left.d + right.d,
     left.e + right.e, left.f + right.f, left.g + right.g, left.h + right.h⟩
 
-private def compress (state : State) (block : List Byte) : State :=
+def compress (state : State) (block : List Byte) : State :=
   let schedule := messageSchedule block
   let final := (List.range 64).foldl
     (fun work i => round work (constants.getD i 0) (schedule.getD i 0)) state
   addState state final
 
-private def encode (state : State) : List Byte :=
+def encode (state : State) : List Byte :=
   [state.a, state.b, state.c, state.d, state.e, state.f, state.g, state.h].flatMap
     (fun word => bigEndian 4 word.toNat)
 

@@ -64,47 +64,68 @@ impl Sha256 {
 
     /// Append bytes. Overflow leaves the existing state unchanged.
     pub fn update(&mut self, mut input: &[u8]) -> Result<(), MessageTooLong> {
-        let incoming = u64::try_from(input.len()).map_err(|_| MessageTooLong)?;
-        self.length = self
-            .length
-            .checked_add(incoming)
-            .filter(|total| *total <= MAX_MESSAGE_BYTES)
-            .ok_or(MessageTooLong)?;
+        let incoming = input.len() as u64;
+        if incoming as usize != input.len() || incoming > MAX_MESSAGE_BYTES - self.length {
+            return Err(MessageTooLong);
+        }
+        self.length += incoming;
 
         if self.buffered != 0 {
-            let copied = (BLOCK_BYTES - self.buffered).min(input.len());
-            self.block[self.buffered..self.buffered + copied].copy_from_slice(&input[..copied]);
-            self.buffered += copied;
+            let mut copied = 0;
+            while self.buffered < BLOCK_BYTES && copied < input.len() {
+                self.block[self.buffered] = input[copied];
+                self.buffered += 1;
+                copied += 1;
+            }
             if self.buffered < BLOCK_BYTES {
                 return Ok(());
             }
-            compress(&mut self.state, &self.block);
+            self.state = compress(self.state, &self.block);
             input = &input[copied..];
         }
 
-        let (blocks, tail) = input.as_chunks::<BLOCK_BYTES>();
-        for block in blocks {
-            compress(&mut self.state, block);
+        while input.len() >= BLOCK_BYTES {
+            self.state = compress(self.state, &input[..BLOCK_BYTES]);
+            input = &input[BLOCK_BYTES..];
         }
-        self.block[..tail.len()].copy_from_slice(tail);
-        self.buffered = tail.len();
+        self.buffered = 0;
+        while self.buffered < input.len() {
+            self.block[self.buffered] = input[self.buffered];
+            self.buffered += 1;
+        }
         Ok(())
     }
 
     /// Append SHA-256 padding and return the digest in big-endian byte order.
     pub fn finalize(mut self) -> [u8; DIGEST_BYTES] {
         self.block[self.buffered] = 0x80;
-        self.block[self.buffered + 1..].fill(0);
-        if self.buffered >= 56 {
-            compress(&mut self.state, &self.block);
-            self.block.fill(0);
+        let mut i = self.buffered + 1;
+        while i < BLOCK_BYTES {
+            self.block[i] = 0;
+            i += 1;
         }
-        self.block[56..].copy_from_slice(&(self.length * 8).to_be_bytes());
-        compress(&mut self.state, &self.block);
+        if self.buffered >= 56 {
+            self.state = compress(self.state, &self.block);
+            self.block = [0; BLOCK_BYTES];
+        }
+        let length_bytes = (self.length * 8).to_be_bytes();
+        let mut i = 0;
+        while i < 8 {
+            self.block[56 + i] = length_bytes[i];
+            i += 1;
+        }
+        self.state = compress(self.state, &self.block);
 
         let mut digest = [0; DIGEST_BYTES];
-        for (bytes, word) in digest.as_chunks_mut::<4>().0.iter_mut().zip(self.state) {
-            *bytes = word.to_be_bytes();
+        let mut i = 0;
+        while i < self.state.len() {
+            let [a, b, c, d] = self.state[i].to_be_bytes();
+            let offset = 4 * i;
+            digest[offset] = a;
+            digest[offset + 1] = b;
+            digest[offset + 2] = c;
+            digest[offset + 3] = d;
+            i += 1;
         }
         digest
     }
@@ -116,49 +137,79 @@ pub fn digest(message: &[u8]) -> Result<[u8; DIGEST_BYTES], MessageTooLong> {
     Ok(hasher.finalize())
 }
 
-fn compress(state: &mut [u32; 8], block: &[u8; BLOCK_BYTES]) {
+fn compress(state: [u32; 8], block: &[u8]) -> [u32; 8] {
     let mut words = [0u32; 64];
-    for (word, bytes) in words.iter_mut().zip(block.as_chunks::<4>().0) {
-        *word = u32::from_be_bytes(*bytes);
+    let mut i = 0;
+    while i < 16 {
+        let offset = 4 * i;
+        words[i] = u32::from_be_bytes([
+            block[offset],
+            block[offset + 1],
+            block[offset + 2],
+            block[offset + 3],
+        ]);
+        i += 1;
     }
-    for round in 16..64 {
-        let x = words[round - 15];
-        let y = words[round - 2];
-        let sigma0 = x.rotate_right(7) ^ x.rotate_right(18) ^ (x >> 3);
-        let sigma1 = y.rotate_right(17) ^ y.rotate_right(19) ^ (y >> 10);
-        words[round] = words[round - 16]
-            .wrapping_add(sigma0)
-            .wrapping_add(words[round - 7])
-            .wrapping_add(sigma1);
+    while i < 64 {
+        words[i] = schedule_word(words[i - 16], words[i - 15], words[i - 7], words[i - 2]);
+        i += 1;
     }
 
-    let [mut a, mut b, mut c, mut d, mut e, mut f, mut g, mut h] = *state;
-    for (constant, word) in ROUND_CONSTANTS.into_iter().zip(words) {
-        let sigma1 = e.rotate_right(6) ^ e.rotate_right(11) ^ e.rotate_right(25);
-        let choose = (e & f) ^ (!e & g);
-        let temp1 = h
-            .wrapping_add(sigma1)
-            .wrapping_add(choose)
-            .wrapping_add(constant)
-            .wrapping_add(word);
-        let sigma0 = a.rotate_right(2) ^ a.rotate_right(13) ^ a.rotate_right(22);
-        let majority = (a & b) ^ (a & c) ^ (b & c);
-        let temp2 = sigma0.wrapping_add(majority);
+    let mut work = state;
+    let mut i = 0;
+    while i < 64 {
+        work = round_step(work, ROUND_CONSTANTS[i], words[i]);
+        i += 1;
+    }
 
-        (a, b, c, d, e, f, g, h) = (
-            temp1.wrapping_add(temp2),
-            a,
-            b,
-            c,
-            d.wrapping_add(temp1),
-            e,
-            f,
-            g,
-        );
-    }
-    for (value, addition) in state.iter_mut().zip([a, b, c, d, e, f, g, h]) {
-        *value = value.wrapping_add(addition);
-    }
+    feed_forward(state, work)
+}
+
+fn schedule_word(w16: u32, w15: u32, w7: u32, w2: u32) -> u32 {
+    let sigma0 = w15.rotate_right(7) ^ w15.rotate_right(18) ^ (w15 >> 3);
+    let sigma1 = w2.rotate_right(17) ^ w2.rotate_right(19) ^ (w2 >> 10);
+    w16.wrapping_add(sigma0)
+        .wrapping_add(w7)
+        .wrapping_add(sigma1)
+}
+
+fn round_step(state: [u32; 8], constant: u32, word: u32) -> [u32; 8] {
+    let [a, b, c, d, e, f, g, h] = state;
+    let sigma1 = e.rotate_right(6) ^ e.rotate_right(11) ^ e.rotate_right(25);
+    let choose = (e & f) ^ (!e & g);
+    let temp1 = h
+        .wrapping_add(sigma1)
+        .wrapping_add(choose)
+        .wrapping_add(constant)
+        .wrapping_add(word);
+    let sigma0 = a.rotate_right(2) ^ a.rotate_right(13) ^ a.rotate_right(22);
+    let majority = (a & b) ^ (a & c) ^ (b & c);
+    let temp2 = sigma0.wrapping_add(majority);
+    [
+        temp1.wrapping_add(temp2),
+        a,
+        b,
+        c,
+        d.wrapping_add(temp1),
+        e,
+        f,
+        g,
+    ]
+}
+
+fn feed_forward(state: [u32; 8], work: [u32; 8]) -> [u32; 8] {
+    let [a, b, c, d, e, f, g, h] = state;
+    let [wa, wb, wc, wd, we, wf, wg, wh] = work;
+    [
+        a.wrapping_add(wa),
+        b.wrapping_add(wb),
+        c.wrapping_add(wc),
+        d.wrapping_add(wd),
+        e.wrapping_add(we),
+        f.wrapping_add(wf),
+        g.wrapping_add(wg),
+        h.wrapping_add(wh),
+    ]
 }
 
 #[cfg(test)]
