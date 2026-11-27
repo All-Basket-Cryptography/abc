@@ -5,7 +5,7 @@ import { basename, dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const repo = resolve(here, '../../../../../..');
+const repo = resolve(here, '../../../../../../..');
 const crate = resolve(here, '..');
 const workspace = join(repo, 'tools/build/rust');
 const pins = JSON.parse(readFileSync(join(repo, 'tools/verification/probe/toolchain-candidate.json'), 'utf8'));

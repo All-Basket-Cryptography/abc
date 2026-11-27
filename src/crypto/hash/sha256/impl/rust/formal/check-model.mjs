@@ -5,7 +5,7 @@ import { delimiter, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const repo = resolve(here, '../../../../../..');
+const repo = resolve(here, '../../../../../../..');
 const pins = JSON.parse(readFileSync(join(repo, 'tools/verification/probe/toolchain-candidate.json'), 'utf8'));
 const modules = ['Abc/Sha256/Extracted/Types.lean', 'Abc/Sha256/Extracted/Funs.lean'];
 const proofModules = [

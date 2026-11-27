@@ -8,7 +8,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const algorithm = dirname(here);
 const build = algorithm;
 const implementationSource = join(build, 'src', 'lib.rs');
-const output = resolve(algorithm, '../../../../../', '.abc', 'sha256-fuzz');
+const output = resolve(algorithm, '../../../../../..', '.abc', 'sha256-fuzz');
 const args = process.argv.slice(2);
 const sourceCoverage = args[0] === '--source-coverage';
 const native = args[0] === '--native' || sourceCoverage;
