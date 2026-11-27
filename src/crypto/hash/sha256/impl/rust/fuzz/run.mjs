@@ -92,7 +92,7 @@ try {
   }
   const mutant = join(work, 'mutant');
   const mutantFuzz = join(mutant, 'fuzz');
-  const mutantCore = join(mutant, 'implementations', 'abc-rust-portable');
+  const mutantCore = mutant;
   mkdirSync(join(mutantFuzz, 'fuzz_targets'), { recursive: true });
   mkdirSync(join(mutantCore, 'src'), { recursive: true });
   for (const file of ['Cargo.toml', 'Cargo.lock', 'fuzz_targets/differential.rs']) {
