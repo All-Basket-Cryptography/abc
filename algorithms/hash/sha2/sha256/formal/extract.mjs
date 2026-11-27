@@ -56,8 +56,8 @@ function extract(charon, aeneas, label) {
   const llbc = join(output, `${label}.llbc`);
   const selector = item ? ['--start-from', item] : [];
   const env = { RUSTUP_TOOLCHAIN: pins.rust, CARGO_NET_OFFLINE: 'true', CARGO_TARGET_DIR: join(output, `cargo-${label}`) };
-  run(`${label}-charon`, charon, ['cargo', '--preset=aeneas', '--dest-file', llbc, ...selector,
-    '--', '--locked', '--offline', '--lib'], crate, env);
+  run(`${label}-charon`, charon, ['cargo', ...result.extraction.charon, '--dest-file', llbc, ...selector,
+    '--', ...result.extraction.cargo], crate, env);
   const readable = run(`${label}-pretty`, charon, ['pretty-print', llbc], crate);
   writeFileSync(join(output, `${label}.txt`), `${readable}\n`);
   const extraction = { llbc: digest(llbc) };
@@ -66,8 +66,7 @@ function extract(charon, aeneas, label) {
     const out = join(output, `lean-${label}`);
     mkdirSync(out);
     try {
-      run(`${label}-aeneas`, aeneas, ['-backend', 'lean', '-split-files', '-dest', out,
-        '-subdir', 'Abc/Sha256/Extracted', '-namespace', 'Abc.Sha256.Extracted', llbc], crate);
+      run(`${label}-aeneas`, aeneas, [...result.extraction.aeneas, '-dest', out, llbc], crate);
     } finally {
       extraction.lean = leanFiles(out);
     }
@@ -87,11 +86,23 @@ try {
     checkout(join(toolRoot, 'charon'), pins.charon, 'charon');
   }
   const rust = run('rustc-version', 'rustup', ['run', pins.rust, 'rustc', '-Vv'], repo);
+  const target = /^host: (\S+)$/m.exec(rust.replaceAll('\r', ''))?.[1];
+  if (!target) throw new Error('Cannot determine extraction target');
+  result.extraction = {
+    target, features: [],
+    cargo: ['--locked', '--offline', '--lib', '--no-default-features', '--target', target],
+    charon: ['--preset=aeneas'],
+    aeneas: aeneas ? ['-backend', 'lean', '-split-files', '-subdir', 'Abc/Sha256/Extracted',
+      '-namespace', 'Abc.Sha256.Extracted'] : undefined,
+  };
   const charonToolchain = run('charon-toolchain', charon, ['toolchain-version'], repo);
   if (charonToolchain !== pins.rust) throw new Error('Charon embeds a different Rust toolchain');
   const charonVersion = run('charon-version', charon, ['version'], repo);
-  if (llbcOnly && !charonVersion.includes(pins.charon)) throw new Error('Standalone Charon does not report the pinned revision');
+  if (!charonVersion.includes(pins.charon)) throw new Error('Charon does not report the pinned revision');
   const aeneasVersion = aeneas && run('aeneas-version', aeneas, ['-version'], repo);
+  if (aeneas && !aeneasVersion.includes(pins.aeneas.slice(0, 7))) {
+    throw new Error('Aeneas does not report the pinned revision');
+  }
   result.toolchain = { rust, charonVersion, charonBinary: digest(charon), aeneasVersion, aeneasBinary: aeneas && digest(aeneas) };
   extract(charon, aeneas, 'first');
   if (aeneas) {

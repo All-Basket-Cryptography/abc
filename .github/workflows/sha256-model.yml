@@ -6,6 +6,7 @@ on:
       - '.github/workflows/sha256-model.yml'
       - 'algorithms/hash/sha2/sha256/**'
       - 'build/rust/**'
+      - 'foundation/lean/**'
       - 'formal/probe/toolchain-candidate.json'
   workflow_dispatch:
 
@@ -16,7 +17,7 @@ jobs:
   extract:
     name: Extract the portable SHA-256 Rust model
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
@@ -58,6 +59,19 @@ jobs:
       - name: Diagnose the compression call graph separately
         if: ${{ failure() && steps.full.outcome == 'failure' }}
         run: node algorithms/hash/sha2/sha256/formal/extract.mjs --item crate::compress
+      - name: Install the pinned Lean release
+        shell: bash
+        run: |
+          archive="$RUNNER_TEMP/lean-4.31.0-linux.tar.zst"
+          curl --silent --show-error --fail --location --proto '=https' --retry 2 --max-time 300 \
+            --output "$archive" https://github.com/leanprover/lean4/releases/download/v4.31.0/lean-4.31.0-linux.tar.zst
+          printf '%s  %s\n' 07a633cc8d9151cbc08825ea4cdda50d4b02a2c9cb852c0131b13046f49cad7f "$archive" | sha256sum --check --strict
+          tar --zstd -xf "$archive" -C "$RUNNER_TEMP"
+          printf '%s\n' "$RUNNER_TEMP/lean-4.31.0-linux/bin" >> "$GITHUB_PATH"
+      - name: Check the generated model and its Lean correspondence
+        env:
+          ABC_FORMAL_USE_MATHLIB_CACHE: '1'
+        run: node algorithms/hash/sha2/sha256/formal/check-model.mjs .abc/sha256-extraction/run-*/result.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: ${{ always() }}
         with:
@@ -68,5 +82,7 @@ jobs:
             .abc/sha256-extraction/run-*/*.llbc
             .abc/sha256-extraction/run-*/*.txt
             .abc/sha256-extraction/run-*/lean-*/**/*.lean
+            .abc/sha256-extraction/run-*/proof-*/result.json
+            .abc/sha256-extraction/run-*/proof-*/*.log
           if-no-files-found: warn
           retention-days: 7

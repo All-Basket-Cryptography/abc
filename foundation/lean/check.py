@@ -42,6 +42,8 @@ def main():
         if selected == "sha256":
             directory = ROOT / "algorithms/hash/sha2/sha256/formal"
             checked_lean(command, ["-o", output / "Sha256Spec.olean", "Sha256Spec.lean"], directory, output)
+            for module in ("CompressionRefinement", "StreamingRefinement"):
+                checked_lean(command, ["-o", output / f"{module}.olean", f"{module}.lean"], directory, output)
             checked_lean(command, ["--run", "Checks.lean"], directory, output)
         elif selected == "sha3":
             directory = ROOT / "algorithms/hash/sha3/sha3-256/formal"

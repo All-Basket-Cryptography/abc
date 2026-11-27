@@ -40,7 +40,7 @@ The corrected Ubuntu advisory run passed on commit `05e496f6f2202950ddc0ac26c546
 | Native evaluation fixture | Lean reported `Abc.Probe.Fixtures.nativeEvaluation._native.native_decide.ax_1_1`, and the allowlist rejected it. |
 | Changed implementation | The mutant's `Funs.lean` at `439bed5716ca22d3a62e26ab051adba8c74d2eaa71f12f830c025506495f210f` compiled. The unchanged proof failed with `Eq is not a supported spec statement` after the checked addition was replaced with a direct return of `left`. |
 
-The advisory archive SHA-256 is `555fc40662fc1d6b8cf4a9f04cb800e4f22fb24a4b7765d25a67a903afeed373`. This run establishes the isolated bounded-addition probe on the pinned Linux toolchain. Full SHA-256 implementation refinement and trusted release evidence remain open. [Untrusted advisory diagnostics](https://github.com/All-Basket-Cryptography/abc/actions/runs/46046082715/artifacts/15222127448)
+The advisory archive SHA-256 is `555fc40662fc1d6b8cf4a9f04cb800e4f22fb24a4b7765d25a67a903afeed373`. This run establishes the isolated bounded-addition probe on the pinned Linux toolchain. [Untrusted advisory diagnostics](https://github.com/All-Basket-Cryptography/abc/actions/runs/46046082715/artifacts/15222127448)
 
 Edge instrumentation on Windows was attempted with cargo-fuzz 0.13.2 on the generic installed nightly and `nightly-2026-03-30`. MSVC failed to resolve `__start___sancov_cntrs`, `__stop___sancov_cntrs`, and the corresponding PC table symbols. The ASan build also failed to link after adding the installed LLVM runtime path because `stl_asan.lib` was unavailable. A supported nightly host remains necessary for the edge-counter mode. The tool itself documents the portability constraints. [Cargo-fuzz project](https://github.com/rust-fuzz/cargo-fuzz)
 
@@ -54,22 +54,35 @@ Edge instrumentation on Windows was attempted with cargo-fuzz 0.13.2 on the gene
 
 The independent model, standard mapping, intended refinement statements, and runnable check source are under `algorithms/hash/sha2/sha256/formal/`. The model uses the August 2015 FIPS revision and its included erratum. [FIPS 180-4](https://csrc.nist.gov/pubs/fips/180-4/upd1/final)
 
-`python foundation/lean/check.py sha256` exited 0 using the official Lean 4.31.0 Windows release, commit `68218e876d2a38b1985b8590fff244a83c321783`. The downloaded archive matched the published SHA-256 `9d482ee0c1af858cddb5bfb582969499a787caf9c4f953bc81d512da6dcc12c7`. Lean compiled the specification and checked its abstract stream theorems for accepted updates, rejection outside the length domain, and finalization after an accepted update. The three theorems have only `propext` and `Quot.sound` in their combined axiom dependencies. Executable empty and `abc` vectors, streaming, the padding boundary matrix, and the maximum byte length check passed. The log is `.abc/formal-tools/sha256-lean.log`. Rust-to-specification refinement is a separate open task. [Official Lean release](https://github.com/leanprover/lean4/releases/expanded_assets/v4.31.0)
+`python foundation/lean/check.py sha256` exited 0 using the official Lean 4.31.0 Windows release, commit `68218e876d2a38b1985b8590fff244a83c321783`. The downloaded archive matched the published SHA-256 `9d482ee0c1af858cddb5bfb582969499a787caf9c4f953bc81d512da6dcc12c7`. Lean compiled the specification and checked its abstract stream theorems for accepted updates, rejection outside the length domain, and finalization after an accepted update. The three theorems have only `propext` and `Quot.sound` in their combined axiom dependencies. Executable empty and `abc` vectors, streaming, the padding boundary matrix, and the maximum byte length check passed. The log is `.abc/formal-tools/sha256-lean.log`. [Official Lean release](https://github.com/leanprover/lean4/releases/expanded_assets/v4.31.0)
 
-The SHA-256 LLBC contains the `compress`, `update`, `finalize`, and `digest` bodies for the checked source digest. It includes external operations such as `core::slice::as_chunks` and `as_chunks_mut` as opaque declarations. Completing Rust refinement requires checking their generated Lean models and the reachable-state relation. The LLBC stage does not establish any of those properties.
+The Ubuntu advisory SHA-256 job passed on commit `e3495a50d9184c2ec0542d5ecf21d475f618b53e`. The complete portable Rust crate extracted twice using the same pinned Linux Aeneas, Charon, and Rust toolchain as the bounded-addition probe. The Rust source SHA-256 was `40b2cdf783ff5bfe430a3fb3717b8838570b736552152041ab17b6f5dfef621d`. The two independently emitted Lean files matched byte-for-byte and the extractor found zero unresolved templates. The model includes `Sha256.new`, `Sha256.update`, `Sha256.finalize`, `digest`, `compress`, and the private compression steps. [Passing SHA-256 extraction job](https://github.com/All-Basket-Cryptography/abc/actions/runs/46048461551/job/140673517528)
+
+| Generated SHA-256 Lean module | Common SHA-256 across both runs |
+|---|---|
+| `Abc/Sha256/Extracted/Funs.lean` | `88382ffd21fb193279335acca11e89551f377be5b87b66e16ef43a2ae8634f3a` |
+| `Abc/Sha256/Extracted/Types.lean` | `4446766af2e52f53dd14014853e764bbafbe8aa8ade4e2d6ca504395d0868e5a` |
+
+Windows Lean 4.31.0 compiled both unmodified hosted modules against the pinned Aeneas backend and Mathlib. It accepted the exact constructor, word schedule, round, feed-forward, round constants, length casts and maximum counter theorems. It also accepted the composition of the extracted one-shot and streaming APIs from their update and finalization contracts. The 13 audited declarations use only `propext`, `Classical.choice`, and `Quot.sound`. The audit transcript is `.abc/formal-tools/sha256-core-lean/exact-axiom-audit.log`.
+
+The same checker accepted the complete refinement in `Refinement.lean`. Its seven final declarations check the constructor, compression of every 64-byte block, update with unchanged-state length rejection, finalization of represented states, one-shot digest, and finalization of every finite update trace. When the total byte length is allowed, the trace theorem identifies the message with the concatenated chunks. Each final declaration's transitive axiom closure is exactly `propext`, `Classical.choice`, and `Quot.sound`. The transcript is `.abc/formal-tools/sha256-core-lean/full-refinement-audit.log`.
+
+The result relies on the pinned Charon and Aeneas translations preserving the portable Rust semantics and on the Aeneas backend's models of the Rust primitives used by the crate. Lean's kernel checks refinement of the generated definitions against the independent byte-oriented FIPS specification.
 
 A scratch copy of the specification with its first round constant changed from `0x428a2f98` to `0x428a2f99` compiled successfully. The original vector driver rejected the changed digest with exit 1 and `SHA-256 empty-message vector mismatch`. The transcript is `.abc/formal-tools/spec-mutant/result.log`.
 
 | Checked input | SHA-256 |
 |---|---|
-| `Sha256Spec.lean` | `71fa57c2b3eba86ebef15199818c12f78aed9e43582bdbd0bdacc21bd3e6ad2d` |
+| `Sha256Spec.lean` in the original specification run | `71fa57c2b3eba86ebef15199818c12f78aed9e43582bdbd0bdacc21bd3e6ad2d` |
 | `Checks.lean` | `90762aeff4f5635327799c56fe5f1ec6edad867cbcb2ff8ca8c4ce0b4bc2c5dc` |
 | Shared `Encoding.lean` | `1e4e51f3430cd6262cabedc9b6a7db80bb8e6f2a4f12af64a842f5e4ef7c32e9` |
 
 ## ABC-017
 
-`python abc.py fuzz --implementation sha256-abc-rust-portable --budget 2s --coverage` exited 0. The SHA-256 target used an independent RustCrypto `sha2` 0.10.9 oracle for one-shot, streaming-prefix, and streaming-final comparisons. The 16 retained seeds covered padding and block boundaries and contained messages from zero through 4,096 bytes. libFuzzer reported 124,052 invocations over three whole seconds and 29 MiB peak RSS. The process took 3,054 ms. A copied implementation with one flipped output bit failed on the 56-byte seed with `SHA-256 one-shot mismatch` and exit `3221226505`.
+The SHA-256 target uses an independent RustCrypto `sha2` 0.10.9 oracle for one-shot, streaming-prefix, and streaming-final comparisons. The 16 retained seeds cover padding and block boundaries and contain messages from zero through 4,096 bytes.
 
-The measured implementation had 195 of 206 covered LLVM source regions and 97 of 103 covered source lines. This run measured source coverage with mutation driven by retained seeds. It used no sanitizer and produced no branch-counter measurements. The engine command, coverage profile and export, corpus digests, and fault log are recorded in `.abc/sha256-fuzz/run-u9WCU7/`. The exact oracle and engine versions are in `algorithms/hash/sha2/sha256/fuzz/Cargo.lock`.
+`python -m tools.abc_cli fuzz --implementation sha256-abc-rust-portable --budget 2s --coverage` passed against the same Rust source hash as the full extraction run. libFuzzer processed 102,672 inputs and covered 227 of 237 LLVM source regions and 142 of 149 source lines. A copy with a flipped output bit failed the oracle check with exit `3221226505`. This run used source coverage without a sanitizer or branch counters. The engine log, profile, corpus digests, and fault log are in `.abc/sha256-fuzz/run-iRZFiB/`. An uninstrumented run with the same source and input budget processed 985,857 inputs in `.abc/sha256-fuzz/run-EIEr2d/`.
+
+The earlier implementation processed 124,052 inputs and covered 195 of 206 regions and 97 of 103 source lines in `.abc/sha256-fuzz/run-u9WCU7/`. The exact oracle and engine versions are in `algorithms/hash/sha2/sha256/fuzz/Cargo.lock`.
 
 The workspace's existing Cargo cache is read-only. For these runs the necessary registry archive and index files from the lockfile were copied into an ignored, workspace-local Cargo home before using offline mode. The Windows commands ran under the Visual Studio x64 developer environment.

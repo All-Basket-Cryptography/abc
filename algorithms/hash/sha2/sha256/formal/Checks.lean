@@ -1,4 +1,6 @@
 import Sha256Spec
+import CompressionRefinement
+import StreamingRefinement
 
 open Abc.Spec.Sha256
 
@@ -36,3 +38,7 @@ def main : IO Unit := do
 #print axioms Abc.Spec.Sha256.Stream.update_within_domain
 #print axioms Abc.Spec.Sha256.Stream.rejects_out_of_domain
 #print axioms Abc.Spec.Sha256.Stream.finalize_after_update
+#print axioms Abc.Refinement.Sha256.compress32_refines
+#print axioms Abc.Refine.Sha256.Streaming.update_refines_stream
+#print axioms Abc.Refine.Sha256.Streaming.finalizeTrace_refines_accepted
+#print axioms Abc.Refine.Sha256.Streaming.finalizeTrace_refines_concat

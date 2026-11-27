@@ -16,7 +16,7 @@
     "ABC-013": {"status":"in_review","evidence":["tools/abc_status.py","docs/status/acceptance.md"],"blockers":["Explorer and assessment are available. M1 approval requires independent review and the approved baseline gate."]},
     "ABC-014": {"status":"in_review","evidence":["docs/status/formal-and-fuzz.md","algorithms/hash/sha2/sha256/formal/Sha256Spec.lean","algorithms/hash/sha2/sha256/formal/Checks.lean"],"blockers":["Lean checked the independent specification and abstract stream properties. Independent review against the standard remains open."]},
     "ABC-015": {"status":"in_review","evidence":["algorithms/hash/sha2/sha256/implementations/abc-rust-portable/src/lib.rs","docs/status/progress.md"],"blockers":[]},
-    "ABC-016": {"status":"blocked","evidence":["docs/status/formal-and-fuzz.md"],"blockers":["Charon extracts the exact Rust source. Rust library models and checked correspondence of the complete API to the independent specification remain open."]},
+    "ABC-016": {"status":"in_review","evidence":["docs/status/formal-and-fuzz.md","algorithms/hash/sha2/sha256/formal/Refinement.lean","algorithms/hash/sha2/sha256/formal/TrustedClaims.lean",".github/workflows/sha256-model.yml"],"blockers":["The full implementation refinement passed Lean. Independent review of the specification, trusted statements, and toolchain assumptions remains open."]},
     "ABC-017": {"status":"in_review","evidence":["docs/status/formal-and-fuzz.md"],"blockers":[]},
     "ABC-018": {"status":"in_review","evidence":["docs/runtime/sha256.md"],"blockers":[]},
     "ABC-019": {"status":"in_review","evidence":["compatibility/consumers/rust/src/main.rs","docs/status/progress.md"],"blockers":[]},
