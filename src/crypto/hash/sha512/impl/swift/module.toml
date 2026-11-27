@@ -1,0 +1,11 @@
+schema_version = 1
+id = "sha512-swift-portable"
+owned_paths = ["src/crypto/hash/sha512/impl/swift"]
+dependencies = [{ module = "sha512-spec", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["swift", "test", "--package-path", "src/crypto/hash/sha512/impl/swift/AbcSha512Swift", "--configuration", "release", "-Xswiftc", "-warnings-as-errors"]
+tools = ["swift"]
+target = "macos"
+timeout_seconds = 180

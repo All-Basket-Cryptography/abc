@@ -27,3 +27,9 @@ qualification on the selected target.
 The Go, Java, and Python implementations each have independent oracle tests and
 all-split checks around the padding and block boundaries.
 [Go implementation](../impl/go) · [Java implementation](../impl/java) · [Python implementation](../impl/python)
+
+The additional C, C++, C#, JavaScript, TypeScript, Kotlin and Swift
+cores expose streaming snapshots and have independent provider suites.
+Lean checks the C two-word counter and the split-word rotations, shifts and
+modular carry model used by the JavaScript and TypeScript implementations.
+[C counter](../impl/c/proof/Sha512LengthHalves.lean) · [Split-word model](Sha512SplitWord.lean)

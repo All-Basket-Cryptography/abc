@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:poly1305-go-portable",
+  "record_type": "implementation",
+  "name": "ABC research Poly1305 in Go",
+  "sources": [
+    {
+      "path": "src/crypto/mac/poly1305/impl/go/poly1305.go"
+    },
+    {
+      "path": "src/crypto/mac/poly1305/impl/go/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:poly1305",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "334f96ed596a5409be807c6305be3286feac0be7fa664fa7e1382e7a84f79791",
+  "path": "src/crypto/mac/poly1305/impl/go",
+  "languages": [
+    "go"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable Go research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -1,0 +1,11 @@
+schema_version = 1
+id = "sha512-cpp-portable"
+owned_paths = ["src/crypto/hash/sha512/impl/cpp"]
+dependencies = [{ module = "sha512-spec", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "src/crypto/hash/sha512/impl/cpp/check.py"]
+tools = ["python", "clang"]
+target = "portable-cpp17"
+timeout_seconds = 180

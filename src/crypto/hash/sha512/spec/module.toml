@@ -1,7 +1,7 @@
 schema_version = 1
 id = "sha512-spec"
 owned_paths = ["src/crypto/hash/sha512/spec"]
-lean_sources = { Sha512Length = "src/crypto/hash/sha512/spec", Sha512Ring = "src/crypto/hash/sha512/spec" }
+lean_sources = { Sha512Length = "src/crypto/hash/sha512/spec", Sha512Ring = "src/crypto/hash/sha512/spec", Sha512SplitWord = "src/crypto/hash/sha512/spec" }
 
 [tasks.check]
 kind = "formal"
@@ -12,5 +12,11 @@ timeout_seconds = 120
 [tasks.ring-proof]
 kind = "formal"
 command = ["lean", "src/crypto/hash/sha512/spec/Sha512Ring.lean"]
+tools = ["lean"]
+timeout_seconds = 120
+
+[tasks.split-word-proof]
+kind = "formal"
+command = ["lean", "src/crypto/hash/sha512/spec/Sha512SplitWord.lean"]
 tools = ["lean"]
 timeout_seconds = 120

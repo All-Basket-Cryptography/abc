@@ -1,0 +1,14 @@
+schema_version = 1
+id = "sha3-256-go-portable"
+owned_paths = ["src/crypto/hash/sha3-256/impl/go"]
+dependencies = [
+  { module = "keccak-p1600-go", type = "imports" },
+  { module = "sha3-encoding-spec", type = "implements" },
+]
+
+[tasks.test]
+kind = "test"
+command = ["go", "test", "-C", "src/crypto/hash/sha3-256/impl/go", "-count=1", "./..."]
+tools = ["go"]
+target = "portable"
+timeout_seconds = 120

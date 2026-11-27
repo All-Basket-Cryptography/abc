@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha512-cpp-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHA-512 in C++",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha512/impl/cpp/sha512.cpp"
+    },
+    {
+      "path": "src/crypto/hash/sha512/impl/cpp/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha-512",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "1650c18979498761ae0dba72ff384d69bbd7e4f1acc11f5ccd88b36b0dd3fb87",
+  "path": "src/crypto/hash/sha512/impl/cpp",
+  "languages": [
+    "cpp"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable C++ research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

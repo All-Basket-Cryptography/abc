@@ -1,0 +1,14 @@
+schema_version = 1
+id = "sha3-256-python-portable"
+owned_paths = ["src/crypto/hash/sha3-256/impl/python"]
+dependencies = [
+  { module = "keccak-p1600-python", type = "imports" },
+  { module = "sha3-encoding-spec", type = "implements" },
+]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "-m", "unittest", "discover", "-s", "src/crypto/hash/sha3-256/impl/python", "-p", "test_sha3_256.py"]
+tools = ["python"]
+target = "portable"
+timeout_seconds = 120

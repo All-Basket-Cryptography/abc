@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:chacha20-poly1305-go-portable",
+  "record_type": "implementation",
+  "name": "ABC research ChaCha20-Poly1305 in Go",
+  "sources": [
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/go/chacha20poly1305.go"
+    },
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/go/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:chacha20-poly1305",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "b28334f3aefa15b21bc59d35f8e679419ba74105f8745fbf47207b5e7462dba3",
+  "path": "src/crypto/aead/chacha20-poly1305/impl/go",
+  "languages": [
+    "go"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Go ChaCha20",
+    "ABC Go Poly1305"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable Go research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

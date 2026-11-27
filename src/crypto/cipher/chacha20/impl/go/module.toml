@@ -1,0 +1,18 @@
+schema_version = 1
+id = "chacha20-go-portable"
+owned_paths = ["src/crypto/cipher/chacha20/impl/go"]
+dependencies = [{ module = "chacha20-spec", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["go", "test", "-C", "src/crypto/cipher/chacha20/impl/go", "-count=1", "./..."]
+tools = ["go"]
+target = "portable"
+timeout_seconds = 120
+
+[tasks.openssl]
+kind = "test"
+command = ["go", "test", "-C", "src/crypto/cipher/chacha20/impl/go", "-count=1", "-run", "^TestOpenSSL$", "./..."]
+tools = ["go", "node"]
+target = "node-openssl"
+timeout_seconds = 120

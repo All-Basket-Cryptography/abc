@@ -1,0 +1,14 @@
+schema_version = 1
+id = "shake256-python-portable"
+owned_paths = ["src/crypto/hash/shake256/impl/python"]
+dependencies = [
+  { module = "keccak-p1600-python", type = "imports" },
+  { module = "shake256-spec", type = "implements" },
+]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "-m", "unittest", "discover", "-s", "src/crypto/hash/shake256/impl/python", "-p", "test_shake256.py"]
+tools = ["python"]
+target = "portable"
+timeout_seconds = 120

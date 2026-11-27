@@ -1,0 +1,10 @@
+schema_version = 1
+id = "sha512-javascript-portable"
+owned_paths = ["src/crypto/hash/sha512/impl/javascript"]
+dependencies = [{ module = "sha512-spec", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/hash/sha512/impl/javascript/sha512.test.mjs"]
+tools = ["node"]
+timeout_seconds = 120

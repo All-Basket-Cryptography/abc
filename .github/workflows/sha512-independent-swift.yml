@@ -1,0 +1,45 @@
+name: ABC independent Swift SHA-512
+
+on:
+  pull_request:
+    paths:
+      - 'src/crypto/hash/sha512/impl/swift/**'
+      - '.github/workflows/sha512-independent-swift.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-swift:
+    name: Swift 6.1.2 macOS release-mode SHA-512
+    runs-on: macos-15
+    timeout-minutes: 10
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - name: Test the independent SwiftPM SHA-512 core
+        shell: bash
+        run: |
+          package="src/crypto/hash/sha512/impl/swift/AbcSha512Swift"
+          mkdir -p dist/sha512-swift
+          swift --version | tee dist/sha512-swift/toolchain.txt
+          grep -E 'Apple Swift version 6\.1\.2([[:space:]]|$)' dist/sha512-swift/toolchain.txt
+          grep -E '^Target: arm64-apple-macosx' dist/sha512-swift/toolchain.txt
+          swift test --package-path "$package" --scratch-path "$RUNNER_TEMP/abc-sha512-swift" \
+            --configuration release -Xswiftc -warnings-as-errors 2>&1 | tee dist/sha512-swift/swift-test.log
+          grep -E 'Executed 2 tests?, with 0 failures' dist/sha512-swift/swift-test.log
+          grep -Fx 'known_answers=3' dist/sha512-swift/swift-test.log
+          grep -Fx 'provider_comparisons=14' dist/sha512-swift/swift-test.log
+          grep -Fx 'streaming_snapshots=9021' dist/sha512-swift/swift-test.log
+          shasum -a 256 "$package/Sources/AbcSha512Swift/Sha512.swift" \
+            "$package/Tests/AbcSha512SwiftTests/Sha512Tests.swift" > dist/sha512-swift/source-sha256.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: abc-sha512-independent-swift-macos-arm64
+          path: dist/sha512-swift/
+          if-no-files-found: error
+          retention-days: 7
