@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aws-lc-5-5-0-ml-dsa-65-c",
+  "record_type": "implementation",
+  "name": "AWS-LC ML-DSA-65 in C",
+  "sources": [
+    {
+      "url": "https://github.com/aws/aws-lc-rs/tree/f464440d1fd3983ce9fb023e9eaf1698530919a2/aws-lc-sys"
+    },
+    {
+      "url": "https://crates.io/crates/aws-lc-sys/0.44.0/download"
+    },
+    {
+      "path": "src/crypto/signature/ml-dsa-65/spec/README.md"
+    },
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/c/abc_mldsa65_c.c"
+    },
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/c/abc_mldsa65_c.h"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-dsa",
+  "origin": "upstream",
+  "revision": "5.5.0 (aws-lc-sys 0.44.0)",
+  "source_sha256": "f09fae7be8bb3174e05c6afdb34199e6dc0c7c04ba9fa237b1967adfbde27483",
+  "languages": [
+    "c"
+  ],
+  "features": [
+    "ml-dsa-65"
+  ],
+  "external_calls": [],
+  "provider": "AWS-LC native C",
+  "target_refs": [],
+  "maintenance": {
+    "state": "upstream-supported"
+  },
+  "license": "ISC AND (Apache-2.0 OR ISC) AND Apache-2.0 AND MIT AND BSD-3-Clause AND (Apache-2.0 OR ISC OR MIT) AND (Apache-2.0 OR ISC OR MIT-0)"
+}

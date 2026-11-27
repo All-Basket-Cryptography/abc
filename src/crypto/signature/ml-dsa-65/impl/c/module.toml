@@ -1,0 +1,9 @@
+schema_version = 1
+id = "ml-dsa-65-aws-lc-c"
+owned_paths = ["src/crypto/signature/ml-dsa-65/impl/c", "src/crypto/signature/ml-dsa-65/spec"]
+
+[tasks.fixtures]
+kind = "test"
+command = ["python", "-B", "src/crypto/signature/ml-dsa-65/impl/c/check.py", "--check-fixtures"]
+tools = ["python"]
+timeout_seconds = 15

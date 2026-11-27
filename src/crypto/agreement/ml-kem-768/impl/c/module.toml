@@ -1,0 +1,12 @@
+schema_version = 1
+id = "ml-kem-768-c-aws-lc"
+owned_paths = [
+  "src/crypto/agreement/ml-kem-768/impl/c",
+  "src/crypto/agreement/ml-kem-768/spec",
+]
+
+[tasks.fixture-integrity]
+kind = "test"
+command = ["python", "-B", "src/crypto/agreement/ml-kem-768/spec/fixtures.py"]
+tools = ["python"]
+timeout_seconds = 60
