@@ -1,0 +1,19 @@
+schema_version = 1
+id = "sha256"
+owner = "runtime"
+owned_paths = ["algorithms/hash/sha2/sha256"]
+cargo_manifests = ["algorithms/hash/sha2/sha256/implementations/abc-rust-portable/Cargo.toml", "algorithms/hash/sha2/sha256/fuzz/Cargo.toml"]
+lean_sources = { Sha256Spec = "algorithms/hash/sha2/sha256/formal" }
+
+[tasks.rust-tests]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--locked", "--offline", "-p", "abc-sha256"]
+tools = ["cargo", "rustc", "rustup"]
+target = "portable"
+
+[tasks.differential-fuzz]
+kind = "fuzz"
+command = ["node", "algorithms/hash/sha2/sha256/fuzz/run.mjs", "--native", "2"]
+tools = ["node", "cargo", "rustc", "rustup"]
+target = "native"
+timeout_seconds = 360

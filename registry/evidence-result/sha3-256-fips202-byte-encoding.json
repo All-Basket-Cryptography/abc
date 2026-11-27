@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "id": "abc:evidence-result:sha3-256-fips202-byte-encoding",
+  "record_type": "evidence-result",
+  "name": "SHA3-256 Lean encoding checks blocked locally",
+  "sources": [
+    {
+      "path": "docs/status/graph.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:specification:sha3-256-fips202-byte-encoding",
+  "request_ref": "abc:evidence-request:sha3-256-fips202-byte-encoding",
+  "subject_revision": "research-0.1.0",
+  "subject_sha256": "6415b02bcaa64878f80b26767e5d71f4d2f4b1d181105254e184dbc0c149e231",
+  "claim": "functional-correctness",
+  "state": "blocked",
+  "scope": "Checks three concrete examples for the Lean lane encoding and rate-boundary padding model.",
+  "assumptions": [],
+  "tcb": [],
+  "observations": [],
+  "artifacts": [],
+  "trust": "local",
+  "reason": "python foundation/lean/check.py sha3 exited 1: Lean toolchain unavailable: leanprover/lean4:v4.31.0"
+}

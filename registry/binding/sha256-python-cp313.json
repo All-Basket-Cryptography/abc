@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "abc:binding:sha256-python-cp313",
+  "record_type": "binding",
+  "name": "ABC Python SHA-256 research binding",
+  "sources": [
+    {
+      "path": "sdk/python/README.md"
+    },
+    {
+      "path": "sdk/python/abc_crypto/__init__.py"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "ecosystem": "pypi",
+  "language": "python",
+  "runtime": "CPython 3.13",
+  "implementation_ref": "abc:implementation:sha256-abc-rust-portable",
+  "provider": "ABC C ABI through ctypes",
+  "encoding_contract": "Single-byte-item buffers are accepted. SHA-256 returns immutable 32-byte digests.",
+  "error_contract": "TypeError for invalid buffers, ValueError for lifecycle errors, OverflowError for input overflow, and MemoryError for native allocation failure.",
+  "ownership_contract": "Each streaming object owns one native context, serializes calls, and frees it on close or collection.",
+  "target_refs": [
+    "abc:build-target:sha256-python-cp313-win-amd64"
+  ],
+  "package_name": "abc-crypto-research"
+}

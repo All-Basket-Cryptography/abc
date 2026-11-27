@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:build-target:sha256-c-abi-win64-msvc",
+  "record_type": "build-target",
+  "name": "Windows x64 C ABI v1 research build",
+  "sources": [
+    {
+      "path": "sdk/c/ffi/Cargo.toml"
+    },
+    {
+      "path": "docs/status/native-sdks.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "triple": "x86_64-pc-windows-msvc",
+  "os": "windows",
+  "arch": "x86_64",
+  "abi": "msvc",
+  "cpu_features": [],
+  "compiler": {
+    "name": "rustc",
+    "version": "1.92.0"
+  },
+  "linker": {
+    "name": "MSVC link",
+    "version": "14.44.35207"
+  },
+  "flags": [
+    "--release",
+    "--locked",
+    "--offline"
+  ],
+  "dependency_lock_sha256": "f08633afeeed806a3c1b3bc079452a1edef69425b8fd7949d4602a1d303c8015",
+  "runtime": "Native static library and DLL",
+  "dispatch_policy": "Fixed portable Rust SHA-256"
+}

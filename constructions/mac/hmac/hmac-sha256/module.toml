@@ -1,0 +1,10 @@
+schema_version = 1
+id = "hmac-sha256"
+owned_paths = ["constructions/mac/hmac/hmac-sha256"]
+cargo_manifests = ["constructions/mac/hmac/hmac-sha256/Cargo.toml"]
+
+[tasks.test]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--locked", "-p", "abc-hmac-sha256"]
+tools = ["cargo"]
+timeout_seconds = 120

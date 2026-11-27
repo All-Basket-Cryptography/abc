@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>ABC browser consumer</title>
+<output id="result">Waiting for WASM</output>
+<script type="module">
+import { createSha256Provider } from './node_modules/abc-cryptography-research/index.js';
+const result = document.querySelector('#result');
+try {
+  const abc = new TextEncoder().encode('abc');
+  const provider = await createSha256Provider();
+  const context = provider.create();
+  context.update(abc.subarray(0, 1));
+  context.update(abc.subarray(1));
+  const hex = [...context.finalize()].map(value => value.toString(16).padStart(2, '0')).join('');
+  if (hex !== 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad') throw new Error('Digest mismatch');
+  if (provider.identity.target !== 'wasm32-unknown-unknown') throw new Error('Unexpected implementation target');
+  result.textContent = 'ABC_BROWSER_SHA256_PASS';
+} catch (failure) {
+  result.textContent = `SHA-256 consumer failed: ${failure}`;
+}
+</script>
+</html>

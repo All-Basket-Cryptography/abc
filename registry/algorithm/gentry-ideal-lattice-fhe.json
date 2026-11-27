@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:algorithm:gentry-ideal-lattice-fhe",
+  "record_type": "algorithm",
+  "name": "Gentry ideal-lattice FHE",
+  "sources": [
+    {
+      "url": "https://research.ibm.com/publications/fully-homomorphic-encryption-using-ideal-lattices"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "homomorphic",
+  "family_ref": "abc:family:lattice-fhe",
+  "catalog_state": "indexed",
+  "lifecycle": "experimental",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [],
+  "literature_refs": [
+    "abc:literature:gentry-stoc-2009"
+  ],
+  "standard_refs": [],
+  "finding_refs": [],
+  "use_cases": [
+    "Research on fully homomorphic encryption"
+  ],
+  "limitations": [
+    "Research scheme indexed from the conference paper."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified"
+}

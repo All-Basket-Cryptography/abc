@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha3-256-abc-rust-portable",
+  "record_type": "implementation",
+  "name": "ABC portable Rust SHA3-256",
+  "sources": [
+    {
+      "path": "algorithms/hash/sha3/sha3-256/implementations/abc-rust-portable/src/lib.rs"
+    },
+    {
+      "url": "https://csrc.nist.gov/pubs/fips/202/final",
+      "locator": "Sections 3 through 6"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha3-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "a9f17e6328802d5487d9dd7b93d38678d429704c38991b9a4a974a7b3e036451",
+  "path": "algorithms/hash/sha3/sha3-256/implementations/abc-rust-portable/src/lib.rs",
+  "languages": [
+    "rust"
+  ],
+  "features": [],
+  "external_calls": [],
+  "provider": "sha3-256-abc-rust-portable",
+  "target_refs": [],
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "First-party license decision pending."
+}

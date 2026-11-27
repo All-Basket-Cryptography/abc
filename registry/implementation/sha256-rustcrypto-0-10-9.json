@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha256-rustcrypto-0-10-9",
+  "record_type": "implementation",
+  "name": "RustCrypto sha2 crate SHA-256",
+  "sources": [
+    {
+      "url": "https://crates.io/crates/sha2/0.10.9",
+      "locator": "SHA-256 scope: sha2-0.10.9.crate distribution bytes, checked against the local Cargo cache."
+    },
+    {
+      "url": "https://github.com/RustCrypto/hashes/blob/sha2-v0.10.9/sha2/Cargo.toml"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha-256",
+  "origin": "upstream",
+  "revision": "sha2 0.10.9",
+  "source_sha256": "a7507d819769d01a365ab707794a4084392c824f54a7a6a7862f8c3d0892b283",
+  "languages": [
+    "rust"
+  ],
+  "features": [
+    "std",
+    "force-soft",
+    "force-soft-compact",
+    "asm",
+    "loongarch64_asm"
+  ],
+  "external_calls": [
+    "Optional sha2-asm crate"
+  ],
+  "provider": "RustCrypto sha2 crate",
+  "target_refs": [],
+  "maintenance": {
+    "state": "catalog-only"
+  },
+  "license": "MIT OR Apache-2.0"
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:ml-kem",
+  "record_type": "family",
+  "name": "ML-KEM",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/pubs/fips/203/final"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "key-agreement-kem",
+  "description": "The module-lattice-based key encapsulation family in FIPS 203."
+}

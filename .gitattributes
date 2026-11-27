@@ -1,0 +1,3 @@
+* text=auto eol=lf
+# Keep the archived handoff byte-for-byte reproducible on every platform.
+docs/plan/abc/** -text

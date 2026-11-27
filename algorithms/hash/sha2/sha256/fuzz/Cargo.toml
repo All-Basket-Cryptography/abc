@@ -1,0 +1,22 @@
+[package]
+name = "abc-sha256-fuzz"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+abc-sha256 = { path = "../implementations/abc-rust-portable" }
+libfuzzer-sys = "=0.4.13"
+sha2 = { version = "=0.10.9", default-features = false }
+
+[[bin]]
+name = "differential"
+path = "fuzz_targets/differential.rs"
+test = false
+doc = false
+bench = false
+
+[workspace]

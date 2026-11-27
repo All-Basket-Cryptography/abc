@@ -1,0 +1,2493 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ABC registry record version 1",
+  "description": "A canonical registry record with closed keys and typed identities.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/family"
+    },
+    {
+      "$ref": "#/$defs/parameter"
+    },
+    {
+      "$ref": "#/$defs/algorithm"
+    },
+    {
+      "$ref": "#/$defs/construction"
+    },
+    {
+      "$ref": "#/$defs/protocol"
+    },
+    {
+      "$ref": "#/$defs/standard"
+    },
+    {
+      "$ref": "#/$defs/literature"
+    },
+    {
+      "$ref": "#/$defs/finding"
+    },
+    {
+      "$ref": "#/$defs/specification"
+    },
+    {
+      "$ref": "#/$defs/implementation"
+    },
+    {
+      "$ref": "#/$defs/build-target"
+    },
+    {
+      "$ref": "#/$defs/binding"
+    },
+    {
+      "$ref": "#/$defs/evidence-request"
+    },
+    {
+      "$ref": "#/$defs/evidence-result"
+    },
+    {
+      "$ref": "#/$defs/policy"
+    },
+    {
+      "$ref": "#/$defs/release-set"
+    },
+    {
+      "$ref": "#/$defs/advisory"
+    },
+    {
+      "$ref": "#/$defs/alias"
+    },
+    {
+      "$ref": "#/$defs/tombstone"
+    }
+  ],
+  "$defs": {
+    "path": {
+      "type": "string",
+      "pattern": "^[^\\\\/:<>|\"*?\\u0000-\\u001f]+(/[^\\\\/:<>|\"*?\\u0000-\\u001f]+)*$"
+    },
+    "url": {
+      "type": "string",
+      "pattern": "^https://[^/\\s?#]+([/?#][^\\s]*)?$"
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "url": {
+              "$ref": "#/$defs/url"
+            },
+            "locator": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "url"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "$ref": "#/$defs/path"
+            },
+            "locator": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "owner": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "assigned",
+            "unassigned"
+          ]
+        },
+        "contacts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "state",
+        "contacts"
+      ],
+      "additionalProperties": false
+    },
+    "artifact": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "tool": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "maintenance": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "catalog-only",
+            "upstream-supported",
+            "abc-supported",
+            "unmaintained",
+            "unknown"
+          ]
+        },
+        "support_until": {
+          "$ref": "#/$defs/date"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "subject_id": {
+      "type": "string",
+      "pattern": "^abc:(algorithm|construction|protocol|parameter|specification|implementation|build-target|binding|release-set):[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "language": {
+      "enum": [
+        "rust",
+        "c",
+        "cpp",
+        "go",
+        "java",
+        "javascript",
+        "typescript",
+        "python",
+        "swift",
+        "kotlin",
+        "dotnet",
+        "lean",
+        "assembly",
+        "other"
+      ]
+    },
+    "ecosystem": {
+      "enum": [
+        "rust",
+        "c",
+        "cpp",
+        "go",
+        "java",
+        "npm",
+        "pypi",
+        "swift",
+        "kotlin",
+        "dotnet",
+        "wasi"
+      ]
+    },
+    "family": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(family):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "family"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "primary_function": {
+          "enum": [
+            "classical",
+            "symmetric",
+            "hash-xof",
+            "mac-prf",
+            "kdf-password",
+            "randomness",
+            "key-agreement-kem",
+            "public-key-encryption",
+            "signature",
+            "commitment-authenticated-structure",
+            "vrf-vdf",
+            "secret-sharing-threshold",
+            "zero-knowledge",
+            "mpc-privacy",
+            "homomorphic",
+            "construction",
+            "protocol",
+            "cryptanalysis"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "primary_function",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "parameter": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(parameter):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "parameter"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "parameter_kind": {
+          "enum": [
+            "curve",
+            "parameter-set",
+            "digest",
+            "block",
+            "domain",
+            "other"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "standard_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(standard):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "parameter_kind",
+        "description",
+        "standard_refs"
+      ],
+      "additionalProperties": false
+    },
+    "algorithm": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(algorithm):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "algorithm"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "primary_function": {
+          "enum": [
+            "classical",
+            "symmetric",
+            "hash-xof",
+            "mac-prf",
+            "kdf-password",
+            "randomness",
+            "key-agreement-kem",
+            "public-key-encryption",
+            "signature",
+            "commitment-authenticated-structure",
+            "vrf-vdf",
+            "secret-sharing-threshold",
+            "zero-knowledge",
+            "mpc-privacy",
+            "homomorphic",
+            "construction",
+            "protocol",
+            "cryptanalysis"
+          ]
+        },
+        "family_ref": {
+          "type": "string",
+          "pattern": "^abc:(family):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "catalog_state": {
+          "enum": [
+            "indexed",
+            "archived"
+          ]
+        },
+        "lifecycle": {
+          "enum": [
+            "historical",
+            "broken",
+            "standardized",
+            "experimental",
+            "established",
+            "deprecated"
+          ]
+        },
+        "variant_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(algorithm|construction|protocol):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "parameter_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(parameter):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "spec_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(specification):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "literature_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(literature):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "standard_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(standard):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "finding_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(finding):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "use_cases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "quantum_model": {
+          "enum": [
+            "unspecified",
+            "classical",
+            "post-quantum-design"
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "primary_function",
+        "family_ref",
+        "catalog_state",
+        "lifecycle",
+        "variant_refs",
+        "parameter_refs",
+        "spec_refs",
+        "literature_refs",
+        "standard_refs",
+        "finding_refs",
+        "use_cases",
+        "limitations",
+        "assumptions",
+        "quantum_model"
+      ],
+      "additionalProperties": false
+    },
+    "construction": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(construction):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "construction"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "primary_function": {
+          "enum": [
+            "classical",
+            "symmetric",
+            "hash-xof",
+            "mac-prf",
+            "kdf-password",
+            "randomness",
+            "key-agreement-kem",
+            "public-key-encryption",
+            "signature",
+            "commitment-authenticated-structure",
+            "vrf-vdf",
+            "secret-sharing-threshold",
+            "zero-knowledge",
+            "mpc-privacy",
+            "homomorphic",
+            "construction",
+            "protocol",
+            "cryptanalysis"
+          ]
+        },
+        "family_ref": {
+          "type": "string",
+          "pattern": "^abc:(family):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "catalog_state": {
+          "enum": [
+            "indexed",
+            "archived"
+          ]
+        },
+        "lifecycle": {
+          "enum": [
+            "historical",
+            "broken",
+            "standardized",
+            "experimental",
+            "established",
+            "deprecated"
+          ]
+        },
+        "variant_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(algorithm|construction|protocol):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "parameter_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(parameter):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "spec_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(specification):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "literature_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(literature):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "standard_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(standard):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "finding_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(finding):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "use_cases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "quantum_model": {
+          "enum": [
+            "unspecified",
+            "classical",
+            "post-quantum-design"
+          ]
+        },
+        "component_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(algorithm|construction|protocol):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "primary_function",
+        "family_ref",
+        "catalog_state",
+        "lifecycle",
+        "variant_refs",
+        "parameter_refs",
+        "spec_refs",
+        "literature_refs",
+        "standard_refs",
+        "finding_refs",
+        "use_cases",
+        "limitations",
+        "assumptions",
+        "quantum_model",
+        "component_refs"
+      ],
+      "additionalProperties": false
+    },
+    "protocol": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(protocol):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "protocol"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "primary_function": {
+          "enum": [
+            "classical",
+            "symmetric",
+            "hash-xof",
+            "mac-prf",
+            "kdf-password",
+            "randomness",
+            "key-agreement-kem",
+            "public-key-encryption",
+            "signature",
+            "commitment-authenticated-structure",
+            "vrf-vdf",
+            "secret-sharing-threshold",
+            "zero-knowledge",
+            "mpc-privacy",
+            "homomorphic",
+            "construction",
+            "protocol",
+            "cryptanalysis"
+          ]
+        },
+        "family_ref": {
+          "type": "string",
+          "pattern": "^abc:(family):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "catalog_state": {
+          "enum": [
+            "indexed",
+            "archived"
+          ]
+        },
+        "lifecycle": {
+          "enum": [
+            "historical",
+            "broken",
+            "standardized",
+            "experimental",
+            "established",
+            "deprecated"
+          ]
+        },
+        "variant_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(algorithm|construction|protocol):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "parameter_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(parameter):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "spec_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(specification):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "literature_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(literature):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "standard_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(standard):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "finding_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(finding):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "use_cases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "quantum_model": {
+          "enum": [
+            "unspecified",
+            "classical",
+            "post-quantum-design"
+          ]
+        },
+        "component_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(algorithm|construction|protocol):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "primary_function",
+        "family_ref",
+        "catalog_state",
+        "lifecycle",
+        "variant_refs",
+        "parameter_refs",
+        "spec_refs",
+        "literature_refs",
+        "standard_refs",
+        "finding_refs",
+        "use_cases",
+        "limitations",
+        "assumptions",
+        "quantum_model",
+        "component_refs"
+      ],
+      "additionalProperties": false
+    },
+    "standard": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(standard):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "standard"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "publisher": {
+          "type": "string",
+          "minLength": 1
+        },
+        "published": {
+          "type": "string",
+          "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$"
+        },
+        "accessed": {
+          "$ref": "#/$defs/date"
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1
+        },
+        "redistribution": {
+          "enum": [
+            "link-only",
+            "permitted"
+          ]
+        },
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "errata_urls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/url"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "doi": {
+          "type": "string",
+          "minLength": 1
+        },
+        "citation_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(standard|literature):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "version",
+        "authors",
+        "publisher",
+        "published",
+        "accessed",
+        "license",
+        "redistribution",
+        "sections",
+        "errata_urls",
+        "citation_refs"
+      ],
+      "additionalProperties": false
+    },
+    "literature": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(literature):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "literature"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "publisher": {
+          "type": "string",
+          "minLength": 1
+        },
+        "published": {
+          "type": "string",
+          "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$"
+        },
+        "accessed": {
+          "$ref": "#/$defs/date"
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1
+        },
+        "redistribution": {
+          "enum": [
+            "link-only",
+            "permitted"
+          ]
+        },
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "errata_urls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/url"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "doi": {
+          "type": "string",
+          "minLength": 1
+        },
+        "citation_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(standard|literature):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "version",
+        "authors",
+        "publisher",
+        "published",
+        "accessed",
+        "license",
+        "redistribution",
+        "sections",
+        "errata_urls",
+        "citation_refs"
+      ],
+      "additionalProperties": false
+    },
+    "finding": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(finding):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "finding"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "subject_ref": {
+          "type": "string",
+          "pattern": "^abc:(algorithm|construction|protocol|parameter|specification|implementation):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "specification_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parameter_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(parameter):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "use_case": {
+          "type": "string",
+          "minLength": 1
+        },
+        "attacker_model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resource_bound": {
+          "type": "string",
+          "minLength": 1
+        },
+        "published": {
+          "type": "string",
+          "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$"
+        },
+        "literature_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(literature|standard):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "subject_ref",
+        "specification_version",
+        "parameter_refs",
+        "scope",
+        "use_case",
+        "attacker_model",
+        "resource_bound",
+        "published",
+        "literature_refs"
+      ],
+      "additionalProperties": false
+    },
+    "specification": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(specification):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "specification"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "subject_ref": {
+          "type": "string",
+          "pattern": "^abc:(algorithm|construction|protocol):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reference_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(literature|standard):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "errata_urls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/url"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "lean_module": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "theorems": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "domain": {
+          "type": "string",
+          "minLength": 1
+        },
+        "input_semantics": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_semantics": {
+          "type": "string",
+          "minLength": 1
+        },
+        "preconditions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "reviewer": {
+          "$ref": "#/$defs/owner"
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "subject_ref",
+        "version",
+        "reference_refs",
+        "sections",
+        "errata_urls",
+        "theorems",
+        "domain",
+        "input_semantics",
+        "output_semantics",
+        "preconditions",
+        "reviewer"
+      ],
+      "additionalProperties": false
+    },
+    "implementation": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(implementation):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "implementation"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "subject_ref": {
+          "type": "string",
+          "pattern": "^abc:(algorithm|construction|protocol):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "spec_ref": {
+          "type": "string",
+          "pattern": "^abc:(specification):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "origin": {
+          "enum": [
+            "first-party",
+            "upstream"
+          ]
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/language"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "external_calls": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(build-target):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "maintenance": {
+          "$ref": "#/$defs/maintenance"
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "subject_ref",
+        "origin",
+        "revision",
+        "languages",
+        "features",
+        "external_calls",
+        "provider",
+        "target_refs",
+        "maintenance",
+        "license"
+      ],
+      "additionalProperties": false
+    },
+    "build-target": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(build-target):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "build-target"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "triple": {
+          "type": "string",
+          "minLength": 1
+        },
+        "os": {
+          "type": "string",
+          "minLength": 1
+        },
+        "arch": {
+          "type": "string",
+          "minLength": 1
+        },
+        "abi": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cpu_features": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "compiler": {
+          "$ref": "#/$defs/tool"
+        },
+        "linker": {
+          "$ref": "#/$defs/tool"
+        },
+        "flags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "dependency_lock_sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "runtime": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dispatch_policy": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "triple",
+        "os",
+        "arch",
+        "abi",
+        "cpu_features",
+        "compiler",
+        "flags",
+        "dependency_lock_sha256",
+        "runtime",
+        "dispatch_policy"
+      ],
+      "additionalProperties": false
+    },
+    "binding": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(binding):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "binding"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "ecosystem": {
+          "$ref": "#/$defs/ecosystem"
+        },
+        "language": {
+          "$ref": "#/$defs/language"
+        },
+        "runtime": {
+          "type": "string",
+          "minLength": 1
+        },
+        "implementation_ref": {
+          "type": "string",
+          "pattern": "^abc:(implementation):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "encoding_contract": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_contract": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ownership_contract": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(build-target):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "package_name": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "ecosystem",
+        "language",
+        "runtime",
+        "implementation_ref",
+        "provider",
+        "encoding_contract",
+        "error_contract",
+        "ownership_contract",
+        "target_refs",
+        "package_name"
+      ],
+      "additionalProperties": false
+    },
+    "evidence-request": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(evidence-request):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "evidence-request"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "subject_ref": {
+          "$ref": "#/$defs/subject_id"
+        },
+        "claim": {
+          "enum": [
+            "functional-correctness",
+            "spec-fidelity",
+            "refinement",
+            "cryptographic-security",
+            "constant-time",
+            "memory-safety",
+            "abi-conformance",
+            "test",
+            "fuzz",
+            "benchmark",
+            "reproducibility",
+            "supply-chain"
+          ]
+        },
+        "method": {
+          "enum": [
+            "formal",
+            "test",
+            "fuzz",
+            "measurement",
+            "review"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "theorems": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "toolchain": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/tool"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "assumption_policy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_format": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "subject_ref",
+        "claim",
+        "method",
+        "scope",
+        "theorems",
+        "toolchain",
+        "assumption_policy",
+        "output_format"
+      ],
+      "additionalProperties": false
+    },
+    "evidence-result": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(evidence-result):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "evidence-result"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "request_ref": {
+          "type": "string",
+          "pattern": "^abc:(evidence-request):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "subject_ref": {
+          "$ref": "#/$defs/subject_id"
+        },
+        "subject_revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject_sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "claim": {
+          "enum": [
+            "functional-correctness",
+            "spec-fidelity",
+            "refinement",
+            "cryptographic-security",
+            "constant-time",
+            "memory-safety",
+            "abi-conformance",
+            "test",
+            "fuzz",
+            "benchmark",
+            "reproducibility",
+            "supply-chain"
+          ]
+        },
+        "state": {
+          "enum": [
+            "missing",
+            "in_progress",
+            "partial",
+            "proved",
+            "refuted",
+            "blocked",
+            "not_applicable",
+            "not_run",
+            "passed",
+            "failed"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "tcb": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "observations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "execution_sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifact"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "verifier": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observed_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+        },
+        "trust": {
+          "enum": [
+            "local",
+            "untrusted-pr",
+            "reviewed-ci",
+            "protected-release"
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "request_ref",
+        "subject_ref",
+        "subject_revision",
+        "subject_sha256",
+        "claim",
+        "state",
+        "scope",
+        "assumptions",
+        "tcb",
+        "observations",
+        "artifacts",
+        "trust"
+      ],
+      "additionalProperties": false
+    },
+    "policy": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(policy):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "policy"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "profile": {
+          "enum": [
+            "historical",
+            "research",
+            "production"
+          ]
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "use_cases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "allowed_subject_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(algorithm|construction|protocol|implementation|binding):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "allowed_parameter_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(parameter):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "allowed_providers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "evidence_request_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(evidence-request):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "maintenance_conditions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "exceptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "expires": {
+                "$ref": "#/$defs/date"
+              },
+              "reviewer": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "reason",
+              "expires",
+              "reviewer"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "profile",
+        "version",
+        "use_cases",
+        "allowed_subject_refs",
+        "allowed_parameter_refs",
+        "allowed_providers",
+        "evidence_request_refs",
+        "maintenance_conditions",
+        "exceptions"
+      ],
+      "additionalProperties": false
+    },
+    "release-set": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(release-set):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "release-set"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "profile": {
+          "enum": [
+            "research",
+            "production"
+          ]
+        },
+        "approval": {
+          "enum": [
+            "pending",
+            "rejected",
+            "approved"
+          ]
+        },
+        "source_commit": {
+          "type": "string",
+          "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+        },
+        "policy_ref": {
+          "type": "string",
+          "pattern": "^abc:(policy):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "packages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ecosystem": {
+                "$ref": "#/$defs/ecosystem"
+              },
+              "package_name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "version": {
+                "type": "string",
+                "minLength": 1
+              },
+              "binding_ref": {
+                "type": "string",
+                "pattern": "^abc:(binding):[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "implementation_revision": {
+                "type": "string",
+                "minLength": 1
+              },
+              "build_target_ref": {
+                "type": "string",
+                "pattern": "^abc:(build-target):[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "features": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "artifacts": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/artifact"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "ecosystem",
+              "package_name",
+              "version",
+              "binding_ref",
+              "artifacts"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "compatibility": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_result_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(evidence-result):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "sbom": {
+          "$ref": "#/$defs/artifact"
+        },
+        "provenance": {
+          "$ref": "#/$defs/artifact"
+        },
+        "support_from": {
+          "$ref": "#/$defs/date"
+        },
+        "support_until": {
+          "$ref": "#/$defs/date"
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "profile",
+        "approval",
+        "source_commit",
+        "policy_ref",
+        "packages",
+        "compatibility",
+        "evidence_result_refs",
+        "sbom",
+        "provenance",
+        "support_from",
+        "support_until"
+      ],
+      "additionalProperties": false
+    },
+    "advisory": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(advisory):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "advisory"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "implementation_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(implementation):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "affected_versions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "target_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(build-target):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "use_cases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "risk": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mitigation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_result_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^abc:(evidence-result):[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "disclosure": {
+          "enum": [
+            "public",
+            "withdrawn"
+          ]
+        },
+        "external_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "implementation_refs",
+        "affected_versions",
+        "features",
+        "target_refs",
+        "use_cases",
+        "risk",
+        "mitigation",
+        "evidence_result_refs",
+        "disclosure",
+        "external_ids"
+      ],
+      "additionalProperties": false
+    },
+    "alias": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(alias):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "alias"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "alias_id": {
+          "type": "string",
+          "pattern": "^abc:(family|parameter|algorithm|construction|protocol|standard|literature|finding|specification|implementation|build-target|binding|evidence-request|evidence-result|policy|release-set|advisory):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "canonical_ref": {
+          "type": "string",
+          "pattern": "^abc:(family|parameter|algorithm|construction|protocol|standard|literature|finding|specification|implementation|build-target|binding|evidence-request|evidence-result|policy|release-set|advisory):[a-z0-9]+(-[a-z0-9]+)*$"
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "alias_id",
+        "canonical_ref"
+      ],
+      "additionalProperties": false
+    },
+    "tombstone": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^abc:(tombstone):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "record_type": {
+          "const": "tombstone"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "owner": {
+          "$ref": "#/$defs/owner"
+        },
+        "retired_id": {
+          "type": "string",
+          "pattern": "^abc:(family|parameter|algorithm|construction|protocol|standard|literature|finding|specification|implementation|build-target|binding|evidence-request|evidence-result|policy|release-set|advisory):[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "retired_on": {
+          "$ref": "#/$defs/date"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "replacement_ref": {
+          "type": "string",
+          "pattern": "^abc:(family|parameter|algorithm|construction|protocol|standard|literature|finding|specification|implementation|build-target|binding|evidence-request|evidence-result|policy|release-set|advisory):[a-z0-9]+(-[a-z0-9]+)*$"
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "record_type",
+        "name",
+        "sources",
+        "owner",
+        "retired_id",
+        "retired_on",
+        "reason"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

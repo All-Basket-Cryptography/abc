@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "id": "abc:evidence-request:sha3-256-rust-vectors",
+  "record_type": "evidence-request",
+  "name": "SHA3-256 Rust known-answer and boundary tests",
+  "sources": [
+    {
+      "path": "algorithms/hash/sha3/sha3-256/implementations/abc-rust-portable/tests/vectors.rs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:implementation:sha3-256-abc-rust-portable",
+  "claim": "test",
+  "method": "test",
+  "scope": "SHA3-256 byte-oriented one-shot digest, local x86_64-pc-windows-msvc Rust build, NIST known answers and deterministic boundary vectors.",
+  "theorems": [],
+  "toolchain": [
+    {
+      "name": "rustc",
+      "version": "1.92.0"
+    },
+    {
+      "name": "cargo",
+      "version": "1.92.0"
+    }
+  ],
+  "assumption_policy": "NIST examples and independently computed boundary results are assumed correct.",
+  "output_format": "text"
+}

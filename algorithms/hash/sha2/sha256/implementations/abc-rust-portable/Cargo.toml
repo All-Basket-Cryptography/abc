@@ -1,0 +1,9 @@
+[package]
+name = "abc-sha256"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+description = "All-Basket Cryptography research SHA-256 core"
+readme = "README.md"
+include = ["src/lib.rs", "README.md", "tests/vectors.rs"]

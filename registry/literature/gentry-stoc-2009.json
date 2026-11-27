@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "id": "abc:literature:gentry-stoc-2009",
+  "record_type": "literature",
+  "name": "Fully Homomorphic Encryption Using Ideal Lattices",
+  "sources": [
+    {
+      "url": "https://research.ibm.com/publications/fully-homomorphic-encryption-using-ideal-lattices"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "STOC 2009 conference paper",
+  "authors": [
+    "Craig Gentry"
+  ],
+  "publisher": "ACM",
+  "published": "2009",
+  "accessed": "2026-11-28",
+  "license": "Copyright ACM, 2009.",
+  "redistribution": "link-only",
+  "sections": [],
+  "errata_urls": [],
+  "citation_refs": []
+}

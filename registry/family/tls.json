@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:tls",
+  "record_type": "family",
+  "name": "Transport Layer Security",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc8446.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "protocol",
+  "description": "Transport protocols providing authenticated and confidential channels under their applicable configuration."
+}

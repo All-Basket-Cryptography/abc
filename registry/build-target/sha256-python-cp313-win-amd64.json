@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:build-target:sha256-python-cp313-win-amd64",
+  "record_type": "build-target",
+  "name": "CPython 3.13 on Windows x86-64",
+  "sources": [
+    {
+      "path": "sdk/python/wheel.py",
+      "locator": "Package tag cp313-none-win_amd64 and bundled native library build."
+    },
+    {
+      "path": "sdk/python/tests/consumer.py",
+      "locator": "Installed consumer conformance checks."
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "triple": "x86_64-pc-windows-msvc",
+  "os": "windows",
+  "arch": "x86_64",
+  "abi": "ABC native C ABI version 1",
+  "cpu_features": [],
+  "compiler": {
+    "name": "rustc",
+    "version": "1.92.0"
+  },
+  "flags": [
+    "--release",
+    "-C target-feature=+crt-static"
+  ],
+  "dependency_lock_sha256": "f08633afeeed806a3c1b3bc079452a1edef69425b8fd7949d4602a1d303c8015",
+  "runtime": "CPython 3.13.14 on Windows x86-64",
+  "dispatch_policy": "Use the adjacent abc_crypto.dll after checking ABI version 1."
+}

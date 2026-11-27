@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "id": "abc:literature:nsa-enigma-exhibit",
+  "record_type": "literature",
+  "name": "World War 2: Enigma",
+  "sources": [
+    {
+      "url": "https://www.nsa.gov/History/National-Cryptologic-Museum/Exhibits-Artifacts/Exhibit-View/Article/2719176/world-war-2-enigma/"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "2021 museum exhibit page",
+  "authors": [
+    "National Cryptologic Museum"
+  ],
+  "publisher": "National Security Agency",
+  "published": "2021-08-04",
+  "accessed": "2026-11-28",
+  "license": "Rights of text and images have not been established for ABC redistribution.",
+  "redistribution": "link-only",
+  "sections": [],
+  "errata_urls": [],
+  "citation_refs": []
+}

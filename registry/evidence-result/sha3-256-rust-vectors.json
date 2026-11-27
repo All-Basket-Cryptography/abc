@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "abc:evidence-result:sha3-256-rust-vectors",
+  "record_type": "evidence-result",
+  "name": "Local SHA3-256 Rust vector test run",
+  "sources": [
+    {
+      "path": "docs/status/sha3-256-tests.txt"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "request_ref": "abc:evidence-request:sha3-256-rust-vectors",
+  "subject_ref": "abc:implementation:sha3-256-abc-rust-portable",
+  "subject_revision": "0.1.0-research",
+  "subject_sha256": "a9f17e6328802d5487d9dd7b93d38678d429704c38991b9a4a974a7b3e036451",
+  "claim": "test",
+  "state": "passed",
+  "scope": "SHA3-256 byte-oriented one-shot digest, local x86_64-pc-windows-msvc Rust build, NIST known answers and deterministic boundary vectors.",
+  "assumptions": [],
+  "tcb": [
+    "Rust 1.92.0",
+    "host MSVC linker and Windows x64 runtime"
+  ],
+  "observations": [
+    "nist_byte_aligned_examples",
+    "fips_202_domain_separator",
+    "independently_computed_rate_boundaries"
+  ],
+  "execution_sha256": "fd0b627e148131f4d7fd4c0fa4943403c564a0aab07370c3d13ea27ee7be0aba",
+  "artifacts": [
+    {
+      "path": "docs/status/sha3-256-tests.txt",
+      "sha256": "fd0b627e148131f4d7fd4c0fa4943403c564a0aab07370c3d13ea27ee7be0aba",
+      "size_bytes": 1290
+    }
+  ],
+  "trust": "local",
+  "verifier": "Cargo test harness with Rust 1.92.0",
+  "observed_at": "2026-11-27T16:51:28Z"
+}

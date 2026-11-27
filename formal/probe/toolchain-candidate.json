@@ -1,0 +1,9 @@
+{
+  "status": "blocked_unverified",
+  "aeneas": "505b6ca35217e7be5c96c3e2f8045edfbdf47291",
+  "charon": "b104e24fea7d721b71e6c39fd70f26ff20bc0980",
+  "rust": "nightly-2026-08-18",
+  "lean": "leanprover/lean4:v4.31.0",
+  "mathlib": "v4.31.0",
+  "mathlibRevision": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f"
+}

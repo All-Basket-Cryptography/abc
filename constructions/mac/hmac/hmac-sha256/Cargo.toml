@@ -1,0 +1,12 @@
+[package]
+name = "abc-hmac-sha256"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+description = "All-Basket Cryptography research HMAC-SHA-256 construction"
+readme = "README.md"
+include = ["src/lib.rs", "tests/vectors.rs", "README.md", "SPECIFICATION.md"]
+
+[dependencies]
+abc-sha256 = { version = "0.1.0", path = "../../../../algorithms/hash/sha2/sha256/implementations/abc-rust-portable" }

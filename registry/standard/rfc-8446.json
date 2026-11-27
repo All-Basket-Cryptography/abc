@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "id": "abc:standard:rfc-8446",
+  "record_type": "standard",
+  "name": "The Transport Layer Security (TLS) Protocol Version 1.3",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc8446.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "RFC 8446",
+  "authors": [
+    "E. Rescorla"
+  ],
+  "publisher": "RFC Editor",
+  "published": "2018-08",
+  "accessed": "2026-11-28",
+  "license": "See the RFC's copyright notice and applicable RFC publication terms.",
+  "redistribution": "link-only",
+  "sections": [
+    "Sections 4 and 7.1"
+  ],
+  "errata_urls": [],
+  "citation_refs": [
+    "abc:literature:rfc-5869"
+  ],
+  "doi": "10.17487/RFC8446"
+}

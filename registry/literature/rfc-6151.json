@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:literature:rfc-6151",
+  "record_type": "literature",
+  "name": "Updated Security Considerations for MD5 and HMAC-MD5",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc6151.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "RFC 6151",
+  "authors": [
+    "S. Turner",
+    "L. Chen"
+  ],
+  "publisher": "RFC Editor",
+  "published": "2011-03",
+  "accessed": "2026-11-28",
+  "license": "See the RFC's copyright notice and applicable RFC publication terms.",
+  "redistribution": "link-only",
+  "sections": [
+    "Sections 2 and 2.1"
+  ],
+  "errata_urls": [],
+  "citation_refs": [
+    "abc:literature:rfc-1321",
+    "abc:literature:rfc-2104"
+  ],
+  "doi": "10.17487/RFC6151"
+}

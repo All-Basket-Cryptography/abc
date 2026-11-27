@@ -1,0 +1,10 @@
+schema_version = 1
+id = "c-sdk"
+owned_paths = ["sdk/c"]
+
+[tasks.consumer]
+kind = "test"
+command = ["python", "sdk/c/package.py", "--sdk", "c", "--consumer", "--output", ".abc/c-sdk"]
+tools = ["python", "cargo", "rustc", "rustup"]
+outputs = ["archive-sha256.json"]
+timeout_seconds = 420

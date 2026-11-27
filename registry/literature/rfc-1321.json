@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "abc:literature:rfc-1321",
+  "record_type": "literature",
+  "name": "The MD5 Message-Digest Algorithm",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc1321.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "RFC 1321",
+  "authors": [
+    "R. Rivest"
+  ],
+  "publisher": "RFC Editor",
+  "published": "1992-04",
+  "accessed": "2026-11-28",
+  "license": "See the RFC's copyright notice and applicable RFC publication terms.",
+  "redistribution": "link-only",
+  "sections": [
+    "Section 3"
+  ],
+  "errata_urls": [],
+  "citation_refs": [],
+  "doi": "10.17487/RFC1321"
+}

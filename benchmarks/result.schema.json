@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ABC public-input benchmark result v1",
+  "type": "object",
+  "required": ["schemaVersion", "implementation", "scope", "environment", "build", "sourceDigests", "method", "sizes"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "implementation": { "type": "string", "minLength": 1 },
+    "scope": { "type": "string", "minLength": 1 },
+    "environment": {
+      "type": "object",
+      "required": ["hostTimeUtc", "os", "osRelease", "architecture", "cpuModel", "reportedMHz", "logicalCpus", "powerPolicy", "aggregateCpuUtilization", "isolation", "affinity"],
+      "additionalProperties": false,
+      "properties": {
+        "hostTimeUtc": { "type": "string", "format": "date-time" },
+        "os": { "type": "string", "minLength": 1 },
+        "osRelease": { "type": "string", "minLength": 1 },
+        "architecture": { "type": "string", "minLength": 1 },
+        "cpuModel": { "type": ["string", "null"] },
+        "reportedMHz": { "type": ["number", "null"], "minimum": 0 },
+        "logicalCpus": { "type": "integer", "minimum": 0 },
+        "powerPolicy": { "type": ["string", "null"] },
+        "aggregateCpuUtilization": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "isolation": { "type": "string", "minLength": 1 },
+        "affinity": { "type": "string", "minLength": 1 }
+      }
+    },
+    "build": {
+      "type": "object",
+      "required": ["compiler", "cargo", "linker", "target", "profile", "rustFlags", "command", "executableSha256"],
+      "additionalProperties": false,
+      "properties": {
+        "compiler": { "type": "string", "minLength": 1 },
+        "cargo": { "type": "string", "minLength": 1 },
+        "linker": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "profile": {
+          "type": "object",
+          "required": ["optLevel", "codegenUnits", "lto", "incremental", "debug", "panic"],
+          "additionalProperties": false,
+          "properties": {
+            "optLevel": { "type": "integer", "minimum": 0, "maximum": 3 },
+            "codegenUnits": { "type": "integer", "minimum": 1 },
+            "lto": { "enum": ["off", "thin", "fat"] },
+            "incremental": { "type": "boolean" },
+            "debug": { "type": "boolean" },
+            "panic": { "enum": ["abort", "unwind"] }
+          }
+        },
+        "rustFlags": { "type": "array", "items": { "type": "string" } },
+        "command": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "executableSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "sourceDigests": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/sha256" }
+    },
+    "method": {
+      "type": "object",
+      "required": ["clock", "inputDistribution", "sampling", "interval", "bootstrapSeed", "bootstrapDraws", "inputPool", "warmupBatches", "rounds", "seed"],
+      "additionalProperties": false,
+      "properties": {
+        "clock": { "type": "string", "minLength": 1 },
+        "inputDistribution": { "type": "string", "minLength": 1 },
+        "sampling": { "type": "string", "minLength": 1 },
+        "interval": { "type": "string", "minLength": 1 },
+        "bootstrapSeed": { "type": "integer", "minimum": 0 },
+        "bootstrapDraws": { "type": "integer", "minimum": 1 },
+        "inputPool": { "type": "integer", "minimum": 1 },
+        "warmupBatches": { "type": "integer", "minimum": 1 },
+        "rounds": { "type": "integer", "minimum": 1 },
+        "seed": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "sizes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["bytes", "iterations", "elapsedNs", "nsPerOperation", "medianMiBPerSecond"],
+        "additionalProperties": false,
+        "properties": {
+          "bytes": { "type": "integer", "minimum": 0 },
+          "iterations": { "type": "integer", "minimum": 1 },
+          "elapsedNs": { "type": "array", "minItems": 1, "items": { "type": "integer", "minimum": 1 } },
+          "nsPerOperation": {
+            "type": "object",
+            "required": ["median", "min", "max", "bootstrap95"],
+            "additionalProperties": false,
+            "properties": {
+              "median": { "$ref": "#/$defs/positiveNumber" },
+              "min": { "$ref": "#/$defs/positiveNumber" },
+              "max": { "$ref": "#/$defs/positiveNumber" },
+              "bootstrap95": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/$defs/positiveNumber" } }
+            }
+          },
+          "medianMiBPerSecond": { "type": ["number", "null"], "exclusiveMinimum": 0 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "positiveNumber": { "type": "number", "exclusiveMinimum": 0 }
+  }
+}

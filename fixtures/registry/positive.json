@@ -1,0 +1,300 @@
+[
+  {
+    "schema_version": 1,
+    "id": "abc:specification:fixture-sha256",
+    "record_type": "specification",
+    "name": "Fixture fixture-sha256",
+    "sources": [
+      {
+        "path": "fixtures/registry/positive.json"
+      }
+    ],
+    "owner": {
+      "state": "unassigned",
+      "contacts": []
+    },
+    "subject_ref": "abc:algorithm:sha-256",
+    "version": "fixture-1",
+    "reference_refs": [
+      "abc:standard:fips-180-4-2015"
+    ],
+    "sections": [
+      "6.2"
+    ],
+    "errata_urls": [],
+    "theorems": [],
+    "domain": "synthetic subject for contract testing",
+    "input_semantics": "byte array",
+    "output_semantics": "32-byte digest",
+    "preconditions": [],
+    "reviewer": {
+      "state": "unassigned",
+      "contacts": []
+    }
+  },
+  {
+    "schema_version": 1,
+    "id": "abc:implementation:fixture-sha256",
+    "record_type": "implementation",
+    "name": "Fixture fixture-sha256",
+    "sources": [
+      {
+        "path": "fixtures/registry/positive.json"
+      }
+    ],
+    "owner": {
+      "state": "unassigned",
+      "contacts": []
+    },
+    "subject_ref": "abc:algorithm:sha-256",
+    "spec_ref": "abc:specification:fixture-sha256",
+    "origin": "first-party",
+    "revision": "fixture-1",
+    "path": "fixtures/registry/positive.json",
+    "languages": [
+      "rust"
+    ],
+    "features": [],
+    "external_calls": [],
+    "provider": "synthetic",
+    "target_refs": [
+      "abc:build-target:fixture-test"
+    ],
+    "maintenance": {
+      "state": "unknown"
+    },
+    "license": "Fixture only"
+  },
+  {
+    "schema_version": 1,
+    "id": "abc:build-target:fixture-test",
+    "record_type": "build-target",
+    "name": "Fixture fixture-test",
+    "sources": [
+      {
+        "path": "fixtures/registry/positive.json"
+      }
+    ],
+    "owner": {
+      "state": "unassigned",
+      "contacts": []
+    },
+    "triple": "x86_64-unknown-linux-gnu",
+    "os": "linux",
+    "arch": "x86_64",
+    "abi": "gnu",
+    "cpu_features": [],
+    "compiler": {
+      "name": "fixture-tool",
+      "version": "0.0.0"
+    },
+    "flags": [],
+    "dependency_lock_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "runtime": "native",
+    "dispatch_policy": "fixed"
+  },
+  {
+    "schema_version": 1,
+    "id": "abc:binding:fixture-rust",
+    "record_type": "binding",
+    "name": "Fixture fixture-rust",
+    "sources": [
+      {
+        "path": "fixtures/registry/positive.json"
+      }
+    ],
+    "owner": {
+      "state": "unassigned",
+      "contacts": []
+    },
+    "ecosystem": "rust",
+    "language": "rust",
+    "runtime": "native",
+    "implementation_ref": "abc:implementation:fixture-sha256",
+    "provider": "synthetic",
+    "encoding_contract": "byte arrays",
+    "error_contract": "explicit errors",
+    "ownership_contract": "caller-owned input",
+    "target_refs": [
+      "abc:build-target:fixture-test"
+    ],
+    "package_name": "fixture-sha256"
+  },
+  {
+    "schema_version": 1,
+    "id": "abc:evidence-request:fixture-refinement",
+    "record_type": "evidence-request",
+    "name": "Fixture fixture-refinement",
+    "sources": [
+      {
+        "path": "fixtures/registry/positive.json"
+      }
+    ],
+    "owner": {
+      "state": "unassigned",
+      "contacts": []
+    },
+    "subject_ref": "abc:implementation:fixture-sha256",
+    "claim": "refinement",
+    "method": "formal",
+    "scope": "fixture scope",
+    "theorems": [
+      "Fixture.refinement"
+    ],
+    "toolchain": [
+      {
+        "name": "fixture-tool",
+        "version": "0.0.0"
+      }
+    ],
+    "assumption_policy": "fixture assumptions",
+    "output_format": "text"
+  },
+  {
+    "schema_version": 1,
+    "id": "abc:evidence-result:fixture-refinement",
+    "record_type": "evidence-result",
+    "name": "Fixture fixture-refinement",
+    "sources": [
+      {
+        "path": "fixtures/registry/positive.json"
+      }
+    ],
+    "owner": {
+      "state": "unassigned",
+      "contacts": []
+    },
+    "request_ref": "abc:evidence-request:fixture-refinement",
+    "subject_ref": "abc:implementation:fixture-sha256",
+    "subject_revision": "fixture-1",
+    "subject_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "claim": "refinement",
+    "state": "missing",
+    "scope": "fixture scope",
+    "assumptions": [],
+    "tcb": [],
+    "observations": [],
+    "artifacts": [],
+    "trust": "local"
+  },
+  {
+    "schema_version": 1,
+    "id": "abc:policy:fixture-research",
+    "record_type": "policy",
+    "name": "Fixture fixture-research",
+    "sources": [
+      {
+        "path": "fixtures/registry/positive.json"
+      }
+    ],
+    "owner": {
+      "state": "unassigned",
+      "contacts": []
+    },
+    "profile": "research",
+    "version": "fixture-1",
+    "use_cases": [
+      "validation fixture"
+    ],
+    "allowed_subject_refs": [
+      "abc:algorithm:sha-256",
+      "abc:implementation:fixture-sha256",
+      "abc:binding:fixture-rust"
+    ],
+    "allowed_parameter_refs": [],
+    "allowed_providers": [
+      "synthetic"
+    ],
+    "evidence_request_refs": [
+      "abc:evidence-request:fixture-refinement"
+    ],
+    "maintenance_conditions": [],
+    "exceptions": []
+  },
+  {
+    "schema_version": 1,
+    "id": "abc:release-set:fixture-research",
+    "record_type": "release-set",
+    "name": "Fixture fixture-research",
+    "sources": [
+      {
+        "path": "fixtures/registry/positive.json"
+      }
+    ],
+    "owner": {
+      "state": "unassigned",
+      "contacts": []
+    },
+    "profile": "research",
+    "approval": "pending",
+    "source_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "policy_ref": "abc:policy:fixture-research",
+    "packages": [
+      {
+        "ecosystem": "rust",
+        "package_name": "fixture-sha256",
+        "version": "0.0.0",
+        "binding_ref": "abc:binding:fixture-rust",
+        "artifacts": [
+          {
+            "path": "fixtures/registry/positive.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+            "size_bytes": 1
+          }
+        ]
+      }
+    ],
+    "compatibility": "fixture-1",
+    "evidence_result_refs": [
+      "abc:evidence-result:fixture-refinement"
+    ],
+    "sbom": {
+      "path": "fixtures/registry/positive.json",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "size_bytes": 1
+    },
+    "provenance": {
+      "path": "fixtures/registry/positive.json",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "size_bytes": 1
+    },
+    "support_from": "2026-11-28",
+    "support_until": "2026-11-28"
+  },
+  {
+    "schema_version": 1,
+    "id": "abc:alias:sha-256-example",
+    "record_type": "alias",
+    "name": "Fixture sha-256-example",
+    "sources": [
+      {
+        "path": "fixtures/registry/positive.json"
+      }
+    ],
+    "owner": {
+      "state": "unassigned",
+      "contacts": []
+    },
+    "alias_id": "abc:algorithm:sha-256-example",
+    "canonical_ref": "abc:algorithm:sha-256"
+  },
+  {
+    "schema_version": 1,
+    "id": "abc:tombstone:retired-example",
+    "record_type": "tombstone",
+    "name": "Fixture retired-example",
+    "sources": [
+      {
+        "path": "fixtures/registry/positive.json"
+      }
+    ],
+    "owner": {
+      "state": "unassigned",
+      "contacts": []
+    },
+    "retired_id": "abc:algorithm:retired-example",
+    "retired_on": "2026-11-28",
+    "reason": "schema fixture",
+    "replacement_ref": "abc:algorithm:sha-256"
+  }
+]

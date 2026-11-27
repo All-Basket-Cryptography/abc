@@ -1,0 +1,10 @@
+schema_version = 1
+id = "lean-encoding-foundation"
+owned_paths = ["foundation/lean"]
+lean_sources = { "Abc.Foundation" = "foundation/lean" }
+
+[tasks.check]
+kind = "formal"
+command = ["python", "foundation/lean/check.py", "foundation"]
+tools = ["python", "lean"]
+timeout_seconds = 120

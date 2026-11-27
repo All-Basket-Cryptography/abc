@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:literature:rfc-5869",
+  "record_type": "literature",
+  "name": "HMAC-based Extract-and-Expand Key Derivation Function",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc5869.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "RFC 5869",
+  "authors": [
+    "H. Krawczyk",
+    "P. Eronen"
+  ],
+  "publisher": "RFC Editor",
+  "published": "2010-05",
+  "accessed": "2026-11-28",
+  "license": "See the RFC's copyright notice and applicable RFC publication terms.",
+  "redistribution": "link-only",
+  "sections": [
+    "Sections 2 and 3",
+    "Appendix A"
+  ],
+  "errata_urls": [
+    "https://www.rfc-editor.org/info/rfc5869/"
+  ],
+  "citation_refs": [
+    "abc:literature:rfc-2104"
+  ],
+  "doi": "10.17487/RFC5869"
+}

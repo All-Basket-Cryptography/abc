@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "id": "abc:specification:sha3-256-fips202-byte-encoding",
+  "record_type": "specification",
+  "name": "SHA3-256 FIPS 202 byte encoding and padding model",
+  "sources": [
+    {
+      "path": "algorithms/hash/sha3/sha3-256/formal/Sha3Encoding.lean"
+    },
+    {
+      "url": "https://csrc.nist.gov/pubs/fips/202/final",
+      "locator": "Sections 3.1.2, 5, and 6.1"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha3-256",
+  "version": "FIPS 202 (August 2015), encoding scope",
+  "reference_refs": [
+    "abc:standard:fips-202-2015"
+  ],
+  "sections": [
+    "3.1.2",
+    "5",
+    "6.1"
+  ],
+  "errata_urls": [],
+  "lean_module": "Sha3Encoding",
+  "path": "algorithms/hash/sha3/sha3-256/formal/Sha3Encoding.lean",
+  "theorems": [
+    "Abc.Spec.Sha3Encoding.encodeLane_example",
+    "Abc.Spec.Sha3Encoding.decodeLane_example",
+    "Abc.Spec.Sha3Encoding.paddedTail_rateBoundary"
+  ],
+  "domain": "Byte-aligned SHA3-256 final block and little-endian 64-bit Keccak lane encoding.",
+  "input_semantics": "Final partial byte block or a 64-bit lane value.",
+  "output_semantics": "A 136-byte final padded block or canonical little-endian lane bytes.",
+  "preconditions": [
+    "The final partial block has fewer than 136 bytes."
+  ],
+  "reviewer": {
+    "state": "unassigned",
+    "contacts": []
+  }
+}

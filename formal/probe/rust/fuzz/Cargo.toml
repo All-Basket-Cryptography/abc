@@ -1,0 +1,21 @@
+[package]
+name = "abc-probe-fuzz"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+abc_probe = { path = ".." }
+libfuzzer-sys = "=0.4.13"
+
+[[bin]]
+name = "bounded_add"
+path = "fuzz_targets/bounded_add.rs"
+test = false
+doc = false
+bench = false
+
+[workspace]

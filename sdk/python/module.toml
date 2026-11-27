@@ -1,0 +1,10 @@
+schema_version = 1
+id = "python-sdk"
+owned_paths = ["sdk/python"]
+dependencies = [{ module = "c-sdk", type = "wraps" }]
+
+[tasks.source]
+kind = "test"
+command = ["python", "sdk/python/wheel.py", "--check-source"]
+tools = ["python"]
+timeout_seconds = 30

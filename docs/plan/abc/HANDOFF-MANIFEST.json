@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "package": "ABC Agent Handoff",
+  "version": "1.0",
+  "date": "2026-11-28",
+  "state": "planning_artifact_not_implementation_evidence",
+  "checks_performed": [
+    "task_json_schema_valid",
+    "40_unique_tasks",
+    "task_dependencies_resolve",
+    "task_graph_acyclic",
+    "all_tasks_not_started",
+    "30_acceptance_cases",
+    "task_appendix_matches",
+    "markdown_fences_balanced",
+    "local_document_links_resolve"
+  ],
+  "files": [
+    {
+      "path": "ABC-MASTER-PLAN.zh-Hant.md",
+      "size_bytes": 82288,
+      "sha256": "28cde9128e9e463c5f14c88455eff9ed3c649295c79a6105ce036148ce917d15"
+    },
+    {
+      "path": "ACCEPTANCE.md",
+      "size_bytes": 3103,
+      "sha256": "5fb9d2e75016afe92e1096061d74b45f150b13f5e9c5276608a3896fba58193e"
+    },
+    {
+      "path": "AGENTS.md",
+      "size_bytes": 9059,
+      "sha256": "56fe9e0d4359109b4ca0198b6fa5703a363c9a468f28cc908b817639843748b5"
+    },
+    {
+      "path": "README.md",
+      "size_bytes": 1934,
+      "sha256": "e6392643f637da563560845a3d47a7568439159c4e97b149370aef02c2fbe4d1"
+    },
+    {
+      "path": "START-HERE.md",
+      "size_bytes": 3352,
+      "sha256": "957111d15e99854092b5f80f8b398272a8021015dcb5fd1b69929bbf2c33e1d6"
+    },
+    {
+      "path": "TASKS.json",
+      "size_bytes": 32150,
+      "sha256": "7b5dc746802bb4c6ec7f3bab33194b3b9c7bc711383b9e088c5e9cab21623542"
+    },
+    {
+      "path": "TASKS.schema.json",
+      "size_bytes": 2841,
+      "sha256": "fa7e08bf64a94cadcbddc7ab94df259cfbe7c3379a30b9af8a57fadc1e5418a0"
+    }
+  ]
+}

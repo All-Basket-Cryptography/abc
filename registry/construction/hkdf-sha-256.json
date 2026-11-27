@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "id": "abc:construction:hkdf-sha-256",
+  "record_type": "construction",
+  "name": "HKDF-SHA-256",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc5869.html",
+      "locator": "Sections 2.2 and 2.3"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "kdf-password",
+  "family_ref": "abc:family:hkdf",
+  "catalog_state": "indexed",
+  "lifecycle": "established",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [
+    "abc:specification:hkdf-sha-256-rfc5869"
+  ],
+  "literature_refs": [
+    "abc:literature:rfc-5869"
+  ],
+  "standard_refs": [],
+  "finding_refs": [],
+  "use_cases": [
+    "Key extraction and context-specific key expansion"
+  ],
+  "limitations": [
+    "The expand output is limited to 255 times the digest length."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified",
+  "component_refs": [
+    "abc:construction:hmac-sha-256"
+  ]
+}

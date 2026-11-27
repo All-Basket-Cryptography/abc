@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:specification:hkdf-sha-256-rfc5869",
+  "record_type": "specification",
+  "name": "HKDF-SHA-256 byte-domain specification",
+  "sources": [
+    {
+      "path": "constructions/kdf/hkdf/hkdf-sha256/SPECIFICATION.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hkdf-sha-256",
+  "version": "RFC 5869 (May 2010)",
+  "reference_refs": [
+    "abc:literature:rfc-5869"
+  ],
+  "sections": [
+    "Sections 2.2 and 2.3",
+    "Appendix A.1–A.3"
+  ],
+  "errata_urls": [
+    "https://www.rfc-editor.org/info/rfc5869/"
+  ],
+  "theorems": [],
+  "domain": "Byte-oriented inputs accepted by the corresponding HMAC operations and output lengths from zero through 8160 bytes.",
+  "input_semantics": "Optional salt, input keying material, and application context, with a caller-selected output length.",
+  "output_semantics": "The extract step returns a 32-byte key. Expand writes exactly the buffer length on success.",
+  "preconditions": [
+    "An imported pseudorandom key has at least 32 bytes.",
+    "Each HMAC input fits the available byte domain."
+  ],
+  "reviewer": {
+    "state": "unassigned",
+    "contacts": []
+  }
+}
