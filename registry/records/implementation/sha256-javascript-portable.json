@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha256-javascript-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHA-256 in JavaScript",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha256/impl/javascript/sha256.mjs"
+    },
+    {
+      "path": "src/crypto/hash/sha256/impl/javascript/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha-256",
+  "spec_ref": "abc:specification:sha256-fips180-4-2015",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "26ab106d9876e13584e8c06ac75c9231a15593576b7c1fa8eb0de30533c35dae",
+  "path": "src/crypto/hash/sha256/impl/javascript",
+  "languages": [
+    "javascript"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable JavaScript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

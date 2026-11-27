@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:construction:pbkdf2-hmac-sha-256",
+  "record_type": "construction",
+  "name": "PBKDF2-HMAC-SHA-256",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc8018.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "kdf-password",
+  "family_ref": "abc:family:pbkdf2",
+  "catalog_state": "indexed",
+  "lifecycle": "established",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [],
+  "literature_refs": [
+    "abc:literature:rfc-8018",
+    "abc:literature:rfc-7914"
+  ],
+  "standard_refs": [],
+  "finding_refs": [],
+  "use_cases": [
+    "Password-based key derivation for qualified protocols"
+  ],
+  "limitations": [
+    "Production password policy, timing and caller work limits require separate validation."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified",
+  "component_refs": [
+    "abc:construction:hmac-sha-256"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha256-kotlin-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHA-256 in Kotlin",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha256/impl/kotlin/src/Sha256.kt"
+    },
+    {
+      "path": "src/crypto/hash/sha256/impl/kotlin/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha-256",
+  "spec_ref": "abc:specification:sha256-fips180-4-2015",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "26eb488695398d4f25bc4d2d605696dbac4243eafe16a273985768196733fc0e",
+  "path": "src/crypto/hash/sha256/impl/kotlin",
+  "languages": [
+    "kotlin"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable Kotlin research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

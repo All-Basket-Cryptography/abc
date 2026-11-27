@@ -7,6 +7,11 @@ on:
       - 'src/crypto/hash/sha256/**'
       - 'tools/build/rust/**'
       - 'src/lean/**'
+      - 'src/crypto/hash/sha512/spec/**'
+      - 'src/crypto/hash/blake2b/spec/**'
+      - 'src/crypto/hash/shake256/spec/**'
+      - 'src/crypto/cipher/chacha20/spec/**'
+      - 'src/crypto/kdf/pbkdf2-hmac-sha256/spec/**'
       - 'tools/verification/probe/toolchain-candidate.json'
       - 'tools/verification/hmac-hkdf/**'
       - 'src/crypto/mac/hmac-sha256/**'
@@ -71,6 +76,12 @@ jobs:
           printf '%s  %s\n' 07a633cc8d9151cbc08825ea4cdda50d4b02a2c9cb852c0131b13046f49cad7f "$archive" | sha256sum --check --strict
           tar --zstd -xf "$archive" -C "$RUNNER_TEMP"
           printf '%s\n' "$RUNNER_TEMP/lean-4.31.0-linux/bin" >> "$GITHUB_PATH"
+      - name: Check new arithmetic and encoding lemmas
+        run: |
+          for algorithm in sha512 shake256 chacha20 pbkdf2; do
+            python3 src/lean/check.py "$algorithm"
+          done
+          lean src/crypto/hash/blake2b/spec/Blake2bBuffer.lean
       - name: Check SHA-256, HMAC and HKDF refinements
         env:
           ABC_FORMAL_USE_MATHLIB_CACHE: '1'

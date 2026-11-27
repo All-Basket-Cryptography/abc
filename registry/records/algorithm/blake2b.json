@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:algorithm:blake2b",
+  "record_type": "algorithm",
+  "name": "BLAKE2b",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc7693.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "hash-xof",
+  "family_ref": "abc:family:blake2",
+  "catalog_state": "indexed",
+  "lifecycle": "established",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [],
+  "literature_refs": [
+    "abc:literature:rfc-7693"
+  ],
+  "standard_refs": [],
+  "finding_refs": [],
+  "use_cases": [
+    "Parameterized digest computation"
+  ],
+  "limitations": [
+    "The current ABC core covers only the unkeyed sequential profile."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified"
+}

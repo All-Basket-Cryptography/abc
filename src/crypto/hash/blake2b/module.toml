@@ -1,0 +1,19 @@
+schema_version = 1
+id = "blake2b"
+owned_paths = ["src/crypto/hash/blake2b"]
+cargo_manifests = ["src/crypto/hash/blake2b/impl/rust/Cargo.toml"]
+lean_sources = { Blake2bBuffer = "src/crypto/hash/blake2b/spec" }
+
+[tasks.rust-tests]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "tools/build/rust/Cargo.toml", "--locked", "--offline", "-p", "abc-blake2b"]
+tools = ["cargo", "rustc", "rustup"]
+target = "portable"
+
+[tasks.differential]
+kind = "test"
+command = ["python", "-B", "src/crypto/hash/blake2b/verify.py"]
+dependencies = ["rust-tests"]
+tools = ["python", "cargo", "rustc", "rustup"]
+target = "portable"
+timeout_seconds = 120

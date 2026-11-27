@@ -1,0 +1,8 @@
+[package]
+name = "abc-blake2b"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+description = "All-Basket Cryptography portable unkeyed sequential BLAKE2b"
+workspace = "../../../../../../tools/build/rust"

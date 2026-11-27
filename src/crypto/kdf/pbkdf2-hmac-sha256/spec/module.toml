@@ -1,0 +1,10 @@
+schema_version = 1
+id = "pbkdf2-hmac-sha256-spec"
+owned_paths = ["src/crypto/kdf/pbkdf2-hmac-sha256/spec"]
+lean_sources = { Pbkdf2Spec = "src/crypto/kdf/pbkdf2-hmac-sha256/spec" }
+
+[tasks.check]
+kind = "formal"
+command = ["python", "src/lean/check.py", "pbkdf2"]
+tools = ["python", "lean"]
+timeout_seconds = 120

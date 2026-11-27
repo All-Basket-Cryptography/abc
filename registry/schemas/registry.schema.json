@@ -211,6 +211,7 @@
         "rust",
         "c",
         "cpp",
+        "csharp",
         "go",
         "java",
         "javascript",

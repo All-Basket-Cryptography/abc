@@ -3,11 +3,19 @@
 version = 4
 
 [[package]]
+name = "abc-blake2b"
+version = "0.1.0"
+
+[[package]]
 name = "abc-c-ffi"
 version = "0.1.0"
 dependencies = [
  "abc-sha256",
 ]
+
+[[package]]
+name = "abc-chacha20"
+version = "0.1.0"
 
 [[package]]
 name = "abc-hkdf-sha256"
@@ -24,6 +32,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "abc-keccak-p1600"
+version = "0.1.0"
+
+[[package]]
+name = "abc-pbkdf2-hmac-sha256"
+version = "0.1.0"
+dependencies = [
+ "abc-hmac-sha256",
+]
+
+[[package]]
 name = "abc-sha256"
 version = "0.1.0"
 
@@ -37,6 +56,20 @@ dependencies = [
 [[package]]
 name = "abc-sha3-256"
 version = "0.1.0"
+dependencies = [
+ "abc-keccak-p1600",
+]
+
+[[package]]
+name = "abc-sha512"
+version = "0.1.0"
+
+[[package]]
+name = "abc-shake256"
+version = "0.1.0"
+dependencies = [
+ "abc-keccak-p1600",
+]
 
 [[package]]
 name = "abc-wasi-sha256"

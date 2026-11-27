@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:literature:rfc-7693",
+  "record_type": "literature",
+  "name": "The BLAKE2 Cryptographic Hash and Message Authentication Code (MAC)",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc7693.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "RFC 7693",
+  "authors": [
+    "M-J. Saarinen (ed.)",
+    "J-P. Aumasson"
+  ],
+  "publisher": "RFC Editor",
+  "published": "2015-11",
+  "accessed": "2026-11-28",
+  "license": "See RFC copyright notice.",
+  "redistribution": "link-only",
+  "sections": [
+    "Sections 2 and 3",
+    "Appendices A and E"
+  ],
+  "errata_urls": [
+    "https://www.rfc-editor.org/info/rfc7693/"
+  ],
+  "citation_refs": [],
+  "doi": "10.17487/RFC7693"
+}

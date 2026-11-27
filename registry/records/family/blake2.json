@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:blake2",
+  "record_type": "family",
+  "name": "BLAKE2",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc7693.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "hash-xof",
+  "description": "Hash and keyed authentication functions using BLAKE2 permutations."
+}

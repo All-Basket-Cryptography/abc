@@ -1,0 +1,11 @@
+[package]
+workspace = "../../../../../../tools/build/rust"
+name = "abc-shake256"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+description = "All-Basket Cryptography byte-oriented research SHAKE256"
+
+[dependencies]
+abc-keccak-p1600 = { path = "../../../keccak-p1600/impl/rust" }

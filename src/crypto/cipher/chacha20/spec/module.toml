@@ -1,0 +1,10 @@
+schema_version = 1
+id = "chacha20-spec"
+owned_paths = ["src/crypto/cipher/chacha20/spec"]
+lean_sources = { ChaCha20Counter = "src/crypto/cipher/chacha20/spec" }
+
+[tasks.check]
+kind = "formal"
+command = ["python", "src/lean/check.py", "chacha20"]
+tools = ["python", "lean"]
+timeout_seconds = 120

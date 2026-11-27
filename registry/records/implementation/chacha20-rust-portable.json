@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:chacha20-rust-portable",
+  "record_type": "implementation",
+  "name": "ABC research ChaCha20 in Rust",
+  "sources": [
+    {
+      "path": "src/crypto/cipher/chacha20/impl/rust/src/lib.rs"
+    },
+    {
+      "path": "src/crypto/cipher/chacha20/spec/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:chacha20",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "6609fa40b99d655f2b7bcb0922b3df4b6c09363ffcdc1fa51ff4c4ee62e5bde4",
+  "path": "src/crypto/cipher/chacha20/impl/rust/src/lib.rs",
+  "languages": [
+    "rust"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable Rust research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

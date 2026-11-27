@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:pbkdf2",
+  "record_type": "family",
+  "name": "PBKDF2",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc8018.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "kdf-password",
+  "description": "Iterated password-based key derivation with a pseudorandom function."
+}

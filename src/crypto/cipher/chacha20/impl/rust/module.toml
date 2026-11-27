@@ -1,0 +1,11 @@
+schema_version = 1
+id = "chacha20-rust"
+owned_paths = ["src/crypto/cipher/chacha20/impl/rust"]
+cargo_manifests = ["src/crypto/cipher/chacha20/impl/rust/Cargo.toml"]
+dependencies = [{ module = "chacha20-spec", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "tools/build/rust/Cargo.toml", "--locked", "--offline", "-p", "abc-chacha20"]
+tools = ["cargo", "rustc", "rustup"]
+timeout_seconds = 120

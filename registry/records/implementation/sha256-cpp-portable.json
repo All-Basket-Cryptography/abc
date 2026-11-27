@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha256-cpp-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHA-256 in C++",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha256/impl/cpp/sha256.cpp"
+    },
+    {
+      "path": "src/crypto/hash/sha256/impl/cpp/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha-256",
+  "spec_ref": "abc:specification:sha256-fips180-4-2015",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "15e46cbff8cd8ccd5663855958201e87359a4a72dd130699f3b32cd8cac1370c",
+  "path": "src/crypto/hash/sha256/impl/cpp",
+  "languages": [
+    "cpp"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable C++ research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

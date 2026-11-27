@@ -1,0 +1,10 @@
+schema_version = 1
+id = "keccak-p1600-rust"
+owned_paths = ["src/crypto/hash/keccak-p1600/impl/rust"]
+cargo_manifests = ["src/crypto/hash/keccak-p1600/impl/rust/Cargo.toml"]
+
+[tasks.check]
+kind = "build"
+command = ["cargo", "+1.92.0", "check", "--manifest-path", "tools/build/rust/Cargo.toml", "--locked", "--offline", "-p", "abc-keccak-p1600"]
+tools = ["cargo", "rustc", "rustup"]
+timeout_seconds = 120

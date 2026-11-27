@@ -21,7 +21,9 @@ def checked_lean(command, arguments, directory, output):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("module", choices=("foundation", "sha256", "sha3", "hmac", "hkdf"))
+    parser.add_argument("module", choices=(
+        "foundation", "sha256", "sha512", "sha3", "shake256", "hmac", "hkdf", "pbkdf2", "chacha20",
+    ))
     selected = parser.parse_args().module
     elan, lean = shutil.which("elan"), shutil.which("lean")
     if elan:
@@ -39,7 +41,7 @@ def main():
         compiled = output / "Abc/Foundation/Encoding.olean"
         compiled.parent.mkdir(parents=True)
         checked_lean(command, ["-o", compiled, "Abc/Foundation/Encoding.lean"], FOUNDATION, output)
-        if selected in ("sha256", "hmac", "hkdf"):
+        if selected in ("sha256", "hmac", "hkdf", "pbkdf2"):
             directory = ROOT / "src/crypto/hash/sha256/spec"
             checked_lean(command, ["-o", output / "Sha256Spec.olean", "Sha256Spec.lean"], directory, output)
         if selected == "sha256":
@@ -49,12 +51,24 @@ def main():
         elif selected == "sha3":
             directory = ROOT / "src/crypto/hash/sha3-256/spec"
             checked_lean(command, ["Sha3Encoding.lean"], directory, output)
-        if selected in ("hmac", "hkdf"):
+        elif selected == "sha512":
+            directory = ROOT / "src/crypto/hash/sha512/spec"
+            checked_lean(command, ["Sha512Length.lean"], directory, output)
+        elif selected == "shake256":
+            directory = ROOT / "src/crypto/hash/shake256/spec"
+            checked_lean(command, ["Shake256Encoding.lean"], directory, output)
+        if selected in ("hmac", "hkdf", "pbkdf2"):
             directory = ROOT / "src/crypto/mac/hmac-sha256/spec"
             checked_lean(command, ["-o", output / "HmacSpec.olean", "HmacSpec.lean"], directory, output)
         if selected == "hkdf":
             directory = ROOT / "src/crypto/kdf/hkdf-sha256/spec"
             checked_lean(command, ["HkdfSpec.lean"], directory, output)
+        if selected == "pbkdf2":
+            directory = ROOT / "src/crypto/kdf/pbkdf2-hmac-sha256/spec"
+            checked_lean(command, ["Pbkdf2Spec.lean"], directory, output)
+        if selected == "chacha20":
+            directory = ROOT / "src/crypto/cipher/chacha20/spec"
+            checked_lean(command, ["ChaCha20Counter.lean"], directory, output)
 
 
 if __name__ == "__main__":

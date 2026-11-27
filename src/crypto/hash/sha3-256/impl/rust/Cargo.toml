@@ -7,3 +7,6 @@ rust-version = "1.92"
 publish = false
 description = "All-Basket Cryptography research SHA3-256 control module"
 readme = "README.md"
+
+[dependencies]
+abc-keccak-p1600 = { path = "../../../keccak-p1600/impl/rust" }

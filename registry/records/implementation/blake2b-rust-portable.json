@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:blake2b-rust-portable",
+  "record_type": "implementation",
+  "name": "ABC research BLAKE2b in Rust",
+  "sources": [
+    {
+      "path": "src/crypto/hash/blake2b/impl/rust/src/lib.rs"
+    },
+    {
+      "path": "src/crypto/hash/blake2b/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:blake2b",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "1a18273308c217658bacc61a08cbd3a62acc2f4e5a57ae9ceccbfc41fe1c674d",
+  "path": "src/crypto/hash/blake2b/impl/rust/src/lib.rs",
+  "languages": [
+    "rust"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable Rust research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

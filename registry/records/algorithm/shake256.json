@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:algorithm:shake256",
+  "record_type": "algorithm",
+  "name": "SHAKE256",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/pubs/fips/202/final"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "hash-xof",
+  "family_ref": "abc:family:sha-3",
+  "catalog_state": "indexed",
+  "lifecycle": "standardized",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [],
+  "literature_refs": [],
+  "standard_refs": [
+    "abc:standard:fips-202-2015"
+  ],
+  "finding_refs": [],
+  "use_cases": [
+    "Extendable output for independently specified constructions"
+  ],
+  "limitations": [
+    "Output size is selected by the caller and must match the using protocol."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified"
+}

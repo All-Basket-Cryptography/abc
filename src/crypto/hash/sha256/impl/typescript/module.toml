@@ -1,0 +1,11 @@
+schema_version = 1
+id = "sha256-typescript-portable"
+owned_paths = ["src/crypto/hash/sha256/impl/typescript"]
+dependencies = [{ module = "sha256-spec", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/hash/sha256/impl/typescript/sha256.test.mts"]
+tools = ["node"]
+target = "portable"
+timeout_seconds = 120

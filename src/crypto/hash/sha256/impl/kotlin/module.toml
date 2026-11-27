@@ -1,0 +1,11 @@
+schema_version = 1
+id = "sha256-kotlin"
+owned_paths = ["src/crypto/hash/sha256/impl/kotlin"]
+dependencies = [{ module = "sha256-spec", type = "implements" }]
+
+[tasks.jvm-tests]
+kind = "test"
+command = ["python", "-B", "src/crypto/hash/sha256/impl/kotlin/check.py"]
+tools = ["python", "java"]
+target = "kotlin-jvm-jdk17"
+timeout_seconds = 180

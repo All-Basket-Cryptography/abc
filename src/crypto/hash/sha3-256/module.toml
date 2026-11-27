@@ -1,6 +1,7 @@
 schema_version = 1
 id = "sha3-256"
 owned_paths = ["src/crypto/hash/sha3-256"]
+cargo_manifests = ["src/crypto/hash/sha3-256/impl/rust/Cargo.toml"]
 
 [tasks.test]
 kind = "test"

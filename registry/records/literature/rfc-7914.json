@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "id": "abc:literature:rfc-7914",
+  "record_type": "literature",
+  "name": "The scrypt Password-Based Key Derivation Function",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc7914.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "RFC 7914",
+  "authors": [
+    "C. Percival",
+    "S. Josefsson"
+  ],
+  "publisher": "RFC Editor",
+  "published": "2016-08",
+  "accessed": "2026-11-28",
+  "license": "See RFC copyright notice.",
+  "redistribution": "link-only",
+  "sections": [
+    "Section 11"
+  ],
+  "errata_urls": [
+    "https://www.rfc-editor.org/info/rfc7914/"
+  ],
+  "citation_refs": [],
+  "doi": "10.17487/RFC7914"
+}

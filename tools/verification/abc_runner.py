@@ -18,11 +18,12 @@ from tools.catalog.abc_status import read_json
 
 
 DOMAINS = {"local", "untrusted-pr"}
-PROGRAMS = {"python", "cargo", "rustc", "rustup", "git", "node", "npm", "go", "javac", "java", "clang", "lean", "lake", "charon", "aeneas", "bash"}
+PROGRAMS = {"python", "cargo", "rustc", "rustup", "git", "node", "npm", "go", "javac", "java", "jar",
+            "clang", "dotnet", "swift", "lean", "lake", "charon", "aeneas", "bash"}
 ENVIRONMENT_KEYS = {
     "PATH", "SYSTEMROOT", "WINDIR", "USERPROFILE", "HOME", "HOMEDRIVE", "HOMEPATH", "TEMP", "TMP", "TMPDIR",
     "PATHEXT", "APPDATA", "LOCALAPPDATA", "COMSPEC", "PROGRAMFILES", "PROGRAMFILES(X86)", "PROGRAMDATA",
-    "JAVA_HOME", "ABC_JAVA_HOME", "ABC_DOTNET", "CARGO_HOME", "RUSTUP_HOME", "RUSTUP_TOOLCHAIN",
+    "JAVA_HOME", "ABC_JAVA_HOME", "ABC_KOTLIN_HOME", "ABC_DOTNET", "CARGO_HOME", "RUSTUP_HOME", "RUSTUP_TOOLCHAIN",
     "LIB", "LIBPATH", "INCLUDE", "VCTOOLSINSTALLDIR", "WINDOWSSDKDIR", "WINDOWSSDKVERSION",
     "UCRTVERSION", "UNIVERSALCRTSDKDIR", "VSCMD_ARG_TGT_ARCH", "VSCMD_ARG_HOST_ARCH",
 }

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha256-csharp-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHA-256 in C#",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha256/impl/csharp/Sha256Hasher.cs"
+    },
+    {
+      "path": "src/crypto/hash/sha256/impl/csharp/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha-256",
+  "spec_ref": "abc:specification:sha256-fips180-4-2015",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "ffa3ffe7488daeb696623585ff55dbfcfbcb3f887b3a4ae391c944c7ed93c49b",
+  "path": "src/crypto/hash/sha256/impl/csharp",
+  "languages": [
+    "csharp"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable C# research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

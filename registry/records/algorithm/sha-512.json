@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:algorithm:sha-512",
+  "record_type": "algorithm",
+  "name": "SHA-512",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/pubs/fips/180-4/upd1/final"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "hash-xof",
+  "family_ref": "abc:family:sha-2",
+  "catalog_state": "indexed",
+  "lifecycle": "standardized",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [],
+  "literature_refs": [],
+  "standard_refs": [
+    "abc:standard:fips-180-4-2015"
+  ],
+  "finding_refs": [],
+  "use_cases": [
+    "Fixed-length digest computation"
+  ],
+  "limitations": [
+    "The byte-oriented input must fit the 128-bit bit length."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified"
+}

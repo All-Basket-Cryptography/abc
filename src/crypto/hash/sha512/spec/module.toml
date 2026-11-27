@@ -1,0 +1,10 @@
+schema_version = 1
+id = "sha512-spec"
+owned_paths = ["src/crypto/hash/sha512/spec"]
+lean_sources = { Sha512Length = "src/crypto/hash/sha512/spec" }
+
+[tasks.check]
+kind = "formal"
+command = ["python", "src/lean/check.py", "sha512"]
+tools = ["python", "lean"]
+timeout_seconds = 120
