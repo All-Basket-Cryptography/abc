@@ -3,6 +3,8 @@ id = "chacha20-rust"
 owned_paths = ["src/crypto/cipher/chacha20/impl/rust"]
 cargo_manifests = ["src/crypto/cipher/chacha20/impl/rust/Cargo.toml"]
 dependencies = [{ module = "chacha20-spec", type = "implements" }]
+lean_sources = { ChaCha20QuarterRoundRefinement = "src/crypto/cipher/chacha20/impl/rust/formal" }
+lean_external_imports = { "Abc.ChaCha20.Extracted" = "tools/verification/chacha20/check.mjs" }
 
 [tasks.test]
 kind = "test"

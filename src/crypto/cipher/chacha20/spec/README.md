@@ -14,4 +14,12 @@ require separate evidence. [RFC 8439 § 4](https://www.rfc-editor.org/rfc/rfc843
 The tests exercise the RFC block and multi-block cipher vectors and the last
 counter boundary. Lean checks block-count coverage, that every admitted
 counter index fits 32 bits, and the single-block limit at the last
-counter. Full Rust source refinement is open.
+counter.
+
+Lean also checks `Abc.Refine.ChaCha20.quarter_round_refines` against the actual
+Rust `quarter_round` extracted by pinned Charon and Aeneas. For every
+16-word state and every four distinct in-range indices, the extracted
+function succeeds and returns the RFC quarter-round state. This covers the
+four updated words and the twelve preserved words. The specification
+checks the RFC quarter-round known answer. Refinement of the block and
+keystream API remains open. [Reproduction and scope](../../../../../tools/verification/chacha20/README.md)
