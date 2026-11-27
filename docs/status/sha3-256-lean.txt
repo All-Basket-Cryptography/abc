@@ -1,0 +1,11 @@
+Observed UTC: 2026-11-27T17:34:30Z
+Command: python -B foundation/lean/check.py sha3
+Exit: 0
+Lean (version 4.31.0, x86_64-w64-windows-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)
+Sha3Encoding.lean SHA-256: 165d10d6feafb552fae920d1750d504aecc462c5a35b17a759b66194c6bc3ae5
+Encoding.lean SHA-256: 1e4e51f3430cd6262cabedc9b6a7db80bb8e6f2a4f12af64a842f5e4ef7c32e9
+
+Axiom audit from Lean #print axioms
+'Abc.Spec.Sha3Encoding.encodeLane_example' does not depend on any axioms
+'Abc.Spec.Sha3Encoding.decodeLane_example' does not depend on any axioms
+'Abc.Spec.Sha3Encoding.paddedTail_rateBoundary' depends on axioms: [propext]
