@@ -1,0 +1,86 @@
+name: ABC independent Swift SHA3-256 and SHAKE256
+
+on:
+  pull_request:
+    paths:
+      - 'src/crypto/hash/keccak-p1600/impl/cpp/check.py'
+      - 'src/crypto/hash/keccak-p1600/impl/swift/**'
+      - 'src/crypto/hash/sha3-256/impl/swift/**'
+      - 'src/crypto/hash/shake256/impl/swift/**'
+      - '.github/workflows/sha3-shake-independent-swift.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-swift:
+    name: Swift 6.1.2 macOS ${{ matrix.profile }}
+    runs-on: macos-15
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - profile: keccak-p1600
+            package: AbcKeccakP1600Swift
+            source: KeccakP1600
+            known: 1
+            oracle: 16
+            splits: 0
+          - profile: sha3-256
+            package: AbcSha3256Swift
+            source: Sha3256
+            known: 3
+            oracle: 41
+            splits: 2145
+          - profile: shake256
+            package: AbcShake256Swift
+            source: Shake256
+            known: 3
+            oracle: 59
+            splits: 3952
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+      ABC_PROFILE: ${{ matrix.profile }}
+      ABC_PACKAGE: ${{ matrix.package }}
+      ABC_SOURCE: ${{ matrix.source }}
+      ABC_KNOWN: ${{ matrix.known }}
+      ABC_ORACLE: ${{ matrix.oracle }}
+      ABC_SPLITS: ${{ matrix.splits }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13.14'
+      - name: Validate fixtures and exercise the native Swift core
+        shell: bash
+        run: |
+          set -euo pipefail
+          package="src/crypto/hash/$ABC_PROFILE/impl/swift/$ABC_PACKAGE"
+          core="src/crypto/hash/keccak-p1600/impl/swift/AbcKeccakP1600Swift"
+          evidence="dist/swift-keccak"
+          mkdir -p "$evidence"
+          python -B src/crypto/hash/keccak-p1600/impl/swift/make_fixtures.py "$ABC_PROFILE" --check \
+            | tee "$evidence/fixture.log"
+          swift --version | tee "$evidence/toolchain.txt"
+          grep -E 'Apple Swift version 6\.1\.2([[:space:]]|$)' "$evidence/toolchain.txt"
+          grep -E '^Target: arm64-apple-macosx' "$evidence/toolchain.txt"
+          swift test --package-path "$package" --scratch-path "$RUNNER_TEMP/$ABC_PACKAGE" \
+            --configuration release -Xswiftc -warnings-as-errors 2>&1 | tee "$evidence/swift-test.log"
+          grep -E 'Executed 1 test, with 0 failures' "$evidence/swift-test.log"
+          grep -Fx "known_answers=$ABC_KNOWN" "$evidence/swift-test.log"
+          grep -Fx "oracle_comparisons=$ABC_ORACLE" "$evidence/swift-test.log"
+          grep -Fx "streaming_splits=$ABC_SPLITS" "$evidence/swift-test.log"
+          shasum -a 256 "$package/Sources/$ABC_PACKAGE/$ABC_SOURCE.swift" \
+            "$core/Sources/AbcKeccakP1600Swift/KeccakP1600.swift" \
+            "$package/Tests/${ABC_PACKAGE}Tests/${ABC_SOURCE}Tests.swift" \
+            "$package/Tests/${ABC_PACKAGE}Tests/oracle.json" > "$evidence/source-sha256.txt"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: abc-swift-${{ matrix.profile }}-macos-arm64
+          path: dist/swift-keccak/
+          if-no-files-found: error
+          retention-days: 7
