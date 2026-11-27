@@ -9,6 +9,9 @@
     },
     {
       "path": "src/crypto/hash/sha3-256/impl/go/README.md"
+    },
+    {
+      "path": "src/crypto/hash/keccak-p1600/impl/go/keccak.go"
     }
   ],
   "owner": {

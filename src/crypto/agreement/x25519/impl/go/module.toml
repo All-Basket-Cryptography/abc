@@ -1,0 +1,17 @@
+schema_version = 1
+id = "x25519-go-native"
+owned_paths = ["src/crypto/agreement/x25519/impl/go"]
+
+[tasks.test]
+kind = "test"
+command = ["go", "test", "-C", "src/crypto/agreement/x25519/impl/go", "-count=1", "./..."]
+tools = ["go"]
+target = "portable"
+timeout_seconds = 120
+
+[tasks.openssl]
+kind = "test"
+command = ["go", "test", "-C", "src/crypto/agreement/x25519/impl/go", "-count=1", "-run", "^TestOpenSSL$", "./..."]
+tools = ["go", "node"]
+target = "node-openssl"
+timeout_seconds = 120

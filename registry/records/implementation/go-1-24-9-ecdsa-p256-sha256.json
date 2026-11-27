@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:go-1-24-9-ecdsa-p256-sha256",
+  "record_type": "implementation",
+  "name": "Go standard library deterministic ECDSA P-256",
+  "sources": [
+    {
+      "url": "https://github.com/golang/go/blob/go1.24.9/src/crypto/ecdsa/ecdsa.go"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/go/ecdsa_p256_sha256.go"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/go/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ecdsa-p256-sha256",
+  "origin": "upstream",
+  "revision": "go1.24.9",
+  "source_sha256": "59762b66c9f6893648ce2407a30e124590e8419cadd8a6d48961bc13490bcc7f",
+  "path": "src/crypto/signature/ecdsa-p256-sha256/impl/go",
+  "languages": [
+    "go"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "Go standard library",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "BSD-3-Clause"
+}

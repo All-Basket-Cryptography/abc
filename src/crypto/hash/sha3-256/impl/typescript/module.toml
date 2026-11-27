@@ -1,0 +1,10 @@
+schema_version = 1
+id = "sha3-256-typescript-portable"
+owned_paths = ["src/crypto/hash/sha3-256/impl/typescript"]
+dependencies = [{ module = "keccak-p1600-typescript", type = "imports" }, { module = "sha3-encoding-spec", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/hash/sha3-256/impl/typescript/sha3_256.test.mts"]
+tools = ["node"]
+timeout_seconds = 60

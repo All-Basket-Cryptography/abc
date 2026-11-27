@@ -1,0 +1,18 @@
+schema_version = 1
+id = "argon2id-go-portable"
+owned_paths = ["src/crypto/kdf/argon2id/impl/go"]
+dependencies = [{ module = "blake2b-go-portable", type = "imports" }]
+
+[tasks.test]
+kind = "test"
+command = ["go", "test", "-C", "src/crypto/kdf/argon2id/impl/go", "-count=1", "./..."]
+tools = ["go"]
+target = "portable"
+timeout_seconds = 120
+
+[tasks.differential]
+kind = "test"
+command = ["node", "src/crypto/kdf/argon2id/impl/go/verify.mjs"]
+tools = ["node", "go"]
+target = "portable"
+timeout_seconds = 180

@@ -27,3 +27,20 @@ The result, build command, compiler version, measurement log, binary digest, and
 For a secret-bearing optimized path, require a target-specific source/model review, explicit compiler and feature pins, and inspection or analyzed evidence for the actual emitted code and dispatch closure. Record trust boundaries for assembly, FFI, external models, and target-specific dependencies. Require review of every eligible hardware and portable fallback path under its own profile. Where the model omits effects such as speculation, shared cache contention, power, interrupts, or allocator activity, retain that scope in the evidence and policy decision.
 
 A timing test complements that analysis. Use generated test-only input classes with the same public parameters. Fix the measurement environment, warmup, sample budget, interleaving, and statistical decision rule before collecting data. Randomize the order of classes, validate the harness on controls, and record raw run metadata, sample counts, CPU and OS state, and uncertainty. A Welch two-sample test can flag differences in mean time under the selected setup. Shared CI timings are coarse diagnostics. The public-input benchmark supplies no timing-validation evidence for HMAC, HKDF, keys, or optimized implementations. [Dudect methodology](https://eprint.iacr.org/2016/1123)
+
+## JavaScript and TypeScript hashes
+
+`node tools/benchmarks/javascript-hashes.mjs` checks the exact outputs
+against Node's OpenSSL provider and measures one-shot hashes of 64 and
+4,096 bytes. SHAKE256 emits 32 bytes. Each measurement takes the median
+of nine 96-operation batches after 384 warm-up operations. The pipeline
+includes input handling, initialization and output allocation.
+
+On Windows x64 with an Intel Core i7-12700K, Node 24.12.0 and
+OpenSSL 3.5.4, the 4,096-byte medians were as follows.
+
+| Hash | JavaScript | TypeScript | Node/OpenSSL |
+| --- | ---: | ---: | ---: |
+| SHA-512 | 178.161 µs | 180.391 µs | 5.360 µs |
+| SHA3-256 | 157.648 µs | 158.080 µs | 7.098 µs |
+| SHAKE256 | 152.824 µs | 152.724 µs | 6.946 µs |

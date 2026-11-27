@@ -1,0 +1,17 @@
+schema_version = 1
+id = "ecdsa-p256-sha256-go"
+owned_paths = ["src/crypto/signature/ecdsa-p256-sha256/impl/go"]
+
+[tasks.test]
+kind = "test"
+command = ["go", "test", "-C", "src/crypto/signature/ecdsa-p256-sha256/impl/go", "-count=1", "./..."]
+tools = ["go"]
+target = "go1.24"
+timeout_seconds = 120
+
+[tasks.openssl-interop]
+kind = "test"
+command = ["go", "test", "-C", "src/crypto/signature/ecdsa-p256-sha256/impl/go", "-count=1", "-tags", "interop", "-run", "^TestOpenSSLInterop$", "./..."]
+tools = ["go", "node"]
+target = "go1.24"
+timeout_seconds = 150

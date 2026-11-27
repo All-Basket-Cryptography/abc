@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:go-1-24-9-ed25519-strict",
+  "record_type": "implementation",
+  "name": "Go standard library Ed25519 with strict point admission",
+  "sources": [
+    {
+      "url": "https://github.com/golang/go/blob/go1.24.9/src/crypto/internal/fips140/ed25519/ed25519.go"
+    },
+    {
+      "url": "https://github.com/FiloSottile/edwards25519/tree/b182a6575cfd9f4fbb1d1d4e487a6b00a3ec06f7"
+    },
+    {
+      "path": "src/crypto/signature/ed25519/impl/go/ed25519.go"
+    },
+    {
+      "path": "src/crypto/signature/ed25519/impl/go/README.md"
+    },
+    {
+      "path": "src/crypto/signature/ed25519/impl/go/go.sum"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ed25519",
+  "origin": "upstream",
+  "revision": "go1.24.9 with edwards25519 v1.2.0",
+  "source_sha256": "a9f71d91f3fc0228524b3ea58208e89937f34cd68eb7ae2e7933664104399550",
+  "path": "src/crypto/signature/ed25519/impl/go",
+  "languages": [
+    "go"
+  ],
+  "features": [],
+  "external_calls": [
+    "filippo.io/edwards25519 v1.2.0"
+  ],
+  "target_refs": [],
+  "provider": "Go standard library",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "BSD-3-Clause"
+}

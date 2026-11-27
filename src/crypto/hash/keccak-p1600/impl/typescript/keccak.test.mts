@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
+import { permute } from './keccak.mts';
+
+test('XKCP Keccak-p[1600,24] zero state', () => {
+  const expected = Uint32Array.of(
+    0x40e1dde7,0xf1258f79,0x33c0478a,0x84d5ccf9,0xa65aa9ee,0xd598261e,
+    0x6f80494d,0xbd154730,0x6253d057,0x8b284e05,0x7f8e6fd4,0xff97a42d,
+    0xa44647c4,0x90fee5a0,0xd6192e76,0x8c5bda0c,0x1b19059c,0xad30a6f7,
+    0xd08ffc64,0x30935ab7,0x2317d635,0xeb5aa93f,0x0d712103,0xa9a6e626,
+    0xdbcf555f,0x81a57c16,0x0347c826,0x43b831cd,0x11a5569f,0x01f22f1a,
+    0x21d9ae61,0x05e5635a,0x8cc970f2,0x64befef2,0x7bc46611,0x61367095,
+    0x4fd00ecb,0xb87c5a55,0x1ccf32c8,0x8c3ee88a,0xae3a2614,0x940c7922,
+    0xa2c509e4,0x1841f924,0xe70465c2,0x16f53526,0x7f30a13b,0x75f644e9,
+    0x5ceca249,0xeaf1ff7b,
+  );
+  const working = new Uint32Array(50);
+  permute(working);
+  assert.deepEqual(working, expected);
+  assert.throws(() => permute(new Uint32Array(49)), TypeError);
+});

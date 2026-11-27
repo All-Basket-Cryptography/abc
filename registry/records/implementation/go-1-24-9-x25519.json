@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:go-1-24-9-x25519",
+  "record_type": "implementation",
+  "name": "Go standard library X25519",
+  "sources": [
+    {
+      "url": "https://github.com/golang/go/blob/go1.24.9/src/crypto/ecdh/x25519.go"
+    },
+    {
+      "path": "src/crypto/agreement/x25519/impl/go/x25519.go"
+    },
+    {
+      "path": "src/crypto/agreement/x25519/impl/go/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:x25519",
+  "origin": "upstream",
+  "revision": "go1.24.9",
+  "source_sha256": "7d0987369fd91551ff8da8ba08e2b551058301f3132d9da67a763bcc4696454d",
+  "path": "src/crypto/agreement/x25519/impl/go",
+  "languages": [
+    "go"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "Go standard library",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "BSD-3-Clause"
+}

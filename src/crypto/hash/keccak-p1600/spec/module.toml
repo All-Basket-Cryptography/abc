@@ -1,10 +1,16 @@
 schema_version = 1
 id = "keccak-p1600-spec"
 owned_paths = ["src/crypto/hash/keccak-p1600/spec"]
-lean_sources = { KeccakRound = "src/crypto/hash/keccak-p1600/spec" }
+lean_sources = { KeccakRound = "src/crypto/hash/keccak-p1600/spec", KeccakSplitWord = "src/crypto/hash/keccak-p1600/spec" }
 
 [tasks.round]
 kind = "formal"
 command = ["lean", "-DwarningAsError=true", "src/crypto/hash/keccak-p1600/spec/KeccakRound.lean"]
 tools = ["lean"]
 timeout_seconds = 120
+
+[tasks.split-word]
+kind = "formal"
+command = ["lean", "-DwarningAsError=true", "src/crypto/hash/keccak-p1600/spec/KeccakSplitWord.lean"]
+tools = ["lean"]
+timeout_seconds = 60

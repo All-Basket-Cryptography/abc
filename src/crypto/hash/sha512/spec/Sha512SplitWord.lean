@@ -42,9 +42,18 @@ theorem five_limb_addends_fit (a b c d e : Nat)
   unfold radix at *
   constructor <;> omega
 
+theorem final_round_additions_fit (firstHigh secondHigh savedHigh carry : Nat)
+    (firstFits : firstHigh < 5 * radix) (secondFits : secondHigh < 2 * radix)
+    (savedFits : savedHigh < radix) (carryFits : carry ≤ 1) :
+    firstHigh + secondHigh + carry < 2^53 ∧
+      firstHigh + savedHigh + carry < 2^53 := by
+  unfold radix at *
+  constructor <;> omega
+
 #print axioms rotations
 #print axioms shifts
 #print axioms limb_carry
 #print axioms five_limb_addends_fit
+#print axioms final_round_additions_fit
 
 end Abc.Spec.Sha512SplitWord

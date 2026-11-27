@@ -9,6 +9,9 @@
     },
     {
       "path": "src/crypto/hash/sha3-256/impl/cpp/README.md"
+    },
+    {
+      "path": "src/crypto/hash/keccak-p1600/impl/cpp/keccak_p1600.cpp"
     }
   ],
   "owner": {

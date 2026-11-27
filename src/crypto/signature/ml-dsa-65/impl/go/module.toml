@@ -1,0 +1,11 @@
+schema_version = 1
+id = "ml-dsa-65-go"
+owned_paths = ["src/crypto/signature/ml-dsa-65/impl/go"]
+shared_inputs = ["src/crypto/signature/ml-dsa-65/spec/acvp-fips204-sample.json"]
+
+[tasks.test]
+kind = "test"
+command = ["go", "test", "-C", "src/crypto/signature/ml-dsa-65/impl/go", "-count=1", "./..."]
+tools = ["go"]
+target = "go1.27"
+timeout_seconds = 150
