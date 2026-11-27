@@ -18,7 +18,7 @@ const theorem = 'Abc.Refine.ChaCha20.quarter_round_refines';
 const allowedAxioms = new Set(['propext', 'Classical.choice', 'Quot.sound']);
 const target = 'x86_64-unknown-linux-gnu';
 const cargo = ['--locked', '--offline', '--lib', '--no-default-features', '--target', target];
-const charonArgs = ['--preset=aeneas', '--start-from', 'crate::quarter_round'];
+const charonArgs = ['--preset=aeneas', '--start-from', 'crate::block_words'];
 const aeneasArgs = ['-backend', 'lean', '-split-files', '-no-progress-bar', '-subdir', subdir,
   '-namespace', namespace];
 const officialBinaries = {

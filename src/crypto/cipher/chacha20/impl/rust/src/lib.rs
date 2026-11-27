@@ -42,34 +42,48 @@ fn initial_state(key: &[u8; KEY_BYTES], nonce: &[u8; NONCE_BYTES]) -> [u32; 16] 
     state
 }
 
-fn block(mut initial: [u32; 16], counter: u32) -> [u8; BLOCK_BYTES] {
+fn double_round(mut state: [u32; 16]) -> [u32; 16] {
+    quarter_round(&mut state, [0, 4, 8, 12]);
+    quarter_round(&mut state, [1, 5, 9, 13]);
+    quarter_round(&mut state, [2, 6, 10, 14]);
+    quarter_round(&mut state, [3, 7, 11, 15]);
+    quarter_round(&mut state, [0, 5, 10, 15]);
+    quarter_round(&mut state, [1, 6, 11, 12]);
+    quarter_round(&mut state, [2, 7, 8, 13]);
+    quarter_round(&mut state, [3, 4, 9, 14]);
+    state
+}
+
+// Spell out the fixed call schedule so each step is visible to extraction.
+fn rounds_20(mut state: [u32; 16]) -> [u32; 16] {
+    state = double_round(state);
+    state = double_round(state);
+    state = double_round(state);
+    state = double_round(state);
+    state = double_round(state);
+    state = double_round(state);
+    state = double_round(state);
+    state = double_round(state);
+    state = double_round(state);
+    double_round(state)
+}
+
+fn block_words(mut initial: [u32; 16], counter: u32) -> [u32; 16] {
     initial[12] = counter;
-    let mut state = initial;
-    for _ in 0..10 {
-        for index in 0..4 {
-            quarter_round(&mut state, [index, index + 4, index + 8, index + 12]);
-        }
-        for index in 0..4 {
-            quarter_round(
-                &mut state,
-                [
-                    index,
-                    4 + (index + 1) % 4,
-                    8 + (index + 2) % 4,
-                    12 + (index + 3) % 4,
-                ],
-            );
-        }
+    let state = rounds_20(initial);
+    macro_rules! add_initial {
+        ($($lane:literal),+) => {
+            [$(state[$lane].wrapping_add(initial[$lane])),+]
+        };
     }
+    add_initial!(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+}
+
+fn block(initial: [u32; 16], counter: u32) -> [u8; BLOCK_BYTES] {
+    let words = block_words(initial, counter);
     let mut bytes = [0; BLOCK_BYTES];
-    for ((chunk, working), original) in bytes
-        .as_chunks_mut::<4>()
-        .0
-        .iter_mut()
-        .zip(state)
-        .zip(initial)
-    {
-        *chunk = working.wrapping_add(original).to_le_bytes();
+    for (chunk, word) in bytes.as_chunks_mut::<4>().0.iter_mut().zip(words) {
+        *chunk = word.to_le_bytes();
     }
     bytes
 }
