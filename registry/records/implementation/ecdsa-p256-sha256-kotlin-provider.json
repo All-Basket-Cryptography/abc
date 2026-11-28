@@ -9,6 +9,9 @@
     },
     {
       "path": "src/crypto/signature/ecdsa-p256-sha256/impl/kotlin/README.md"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/java/bcprov.toml"
     }
   ],
   "owner": {
@@ -18,7 +21,7 @@
   "subject_ref": "abc:algorithm:ecdsa-p256-sha256",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "8ee910cff3d0265301f19f9c82178d847a1d3d024d569f3dfb9669a7f8d648c6",
+  "source_sha256": "15136cb165ba87d0328e626ff34206e38992f0dfe7857efc1d0f8d87cbc9dbc3",
   "path": "src/crypto/signature/ecdsa-p256-sha256/impl/kotlin",
   "languages": [
     "kotlin"

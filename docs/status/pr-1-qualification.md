@@ -22,4 +22,10 @@ The HMAC-SHA-256 and HKDF-SHA-256 refinements compose with the same SHA-256 proo
 
 ## Upstream and research profiles
 
+The 20-profile matrix links per-language SDKs to provider versions, primary
+specifications, conformance vectors, available runtime receipts and proof
+obligations. The new Lean checks prove ML-KEM wire-key canonicality and X25519
+input-coordinate normalization over their full fixed-width model domains.
+[Qualification matrix](../plan/multi-language-qualification.md) · [Provider tests and benchmarks](../plan/remaining-profiles-evidence.md)
+
 The exact pinned CPython source closure for HACL* SHA-256 built in the original C, and 34 one-shot and streaming comparisons passed. The local advisory query, source catalog import, checkpoint replay, ChaCha20-Poly1305 and Ed25519 research profiles each have bounded, independent evidence. Secret-bearing production release claims require their own correctness, leakage and review results. [Original C pilot](abc-036-upstream-route.md) · [Research profile scope](../../src/runtime/research-profiles/README.md)

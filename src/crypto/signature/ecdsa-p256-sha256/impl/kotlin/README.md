@@ -9,9 +9,11 @@ fixed-width big-endian `r || s`. Both must be in `1..n-1`.
 [RFC 6979 Appendix A.2.5](https://www.rfc-editor.org/rfc/rfc6979.html#appendix-A.2.5),
 [NIST P-256 domain parameters](https://csrc.nist.gov/pubs/sp/800/186/final)
 
-The SDK hashes the supplied message with SHA-256 and signs
-using Bouncy Castle's deterministic HMAC nonce generator and pinned
-P-256 arithmetic. Signing keeps the RFC 6979 `s` value. Verification
+The SDK hashes the supplied message with SHA-256 and manages the
+RFC 6979 HMAC state over pinned Bouncy Castle HMAC and P-256 arithmetic.
+If signing needs another nonce after a zero signature component, it
+applies the RFC 6979 rejection update before generating the next
+candidate. Signing keeps the original `s` value. Verification
 accepts `s` and its alternate representative. Returned bytes belong
 to the caller. The provider holds immutable scalar temporaries
 during an operation.
@@ -35,8 +37,8 @@ On JDK 17.0.12, both RFC signature vectors and the RFC public key
 matched. The consumer repeated 50 signatures deterministically and
 checked each public key and both signature directions against Node
 24.12.0/OpenSSL 3.5.4. It also checked the first and last private
-scalars, malformed points, malformed signature scalars, and incorrect
-messages.
+scalars, malformed points, malformed signature scalars, incorrect
+messages, and two forced transitions in the nonce sequence.
 
 Lean checks scalar bounds and how the two P1363 fields split.
 Exact source refinement, compiled leakage and comparative

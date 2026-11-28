@@ -35,7 +35,7 @@ def verify(invoke):
     if invoke("verify", wire=wire) != str(len(rows)):
         raise ValueError("Provider did not verify every independent signature")
     return {"openssl_bidirectional_cases": len(rows), "deterministic_repeats": len(rows),
-            "rfc_signatures": 2, "node": oracle["node"], "openssl": oracle["openssl"]}
+            "rfc_signatures": 2, "nonce_retry_transitions": 2, "node": oracle["node"], "openssl": oracle["openssl"]}
 
 
 if __name__ == "__main__":

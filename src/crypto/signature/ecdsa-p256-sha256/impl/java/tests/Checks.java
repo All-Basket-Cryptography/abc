@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.HexFormat;
 
@@ -96,11 +97,35 @@ public final class Checks {
         require(!EcdsaP256Sha256.verify(pub, msg, sig), "Changed signature accepted");
     }
 
+    private static void nonceRetries() throws Exception {
+        var type = Class.forName(EcdsaP256Sha256.class.getName() + "$Nonce");
+        var constructor = type.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        try (var nonce = (AutoCloseable) constructor.newInstance()) {
+            var init = type.getMethod("init", BigInteger.class, BigInteger.class, byte[].class);
+            var next = type.getMethod("nextK");
+            init.setAccessible(true);
+            next.setAccessible(true);
+            byte[] digest = MessageDigest.getInstance("SHA-256").digest("sample".getBytes(StandardCharsets.US_ASCII));
+            init.invoke(nonce, new BigInteger(1, ORDER), new BigInteger(1, PRIVATE), digest);
+            // The first candidate is from RFC 6979. The next two use the h.3
+            // transition after rejecting an otherwise in-range candidate.
+            for (String expected : new String[]{
+                "a6e3c57dd01abe90086538398355dd4c3b17aa873382b0f24d6129493d8aad60",
+                "8e83dc490bc5fc4d5992bd63cd87f254adffcb930f8a8011702a88870f638fdb",
+                "7b8dc9ad8ce159abca1b9915fc1470e91d5ad2443b3032557e78f47e180ab702",
+            }) {
+                require(new BigInteger(expected, 16).equals(next.invoke(nonce)), "RFC nonce retry transcript");
+            }
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         boolean sign = args[0].equals("sign");
         if (sign) {
             vectors();
             malformed();
+            nonceRetries();
         }
         int cases = 0;
         try (var input = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.US_ASCII))) {

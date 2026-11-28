@@ -1,4 +1,9 @@
 """Deterministic RFC 6979 P-256/SHA-256 with raw P1363 signatures."""
+import ctypes as C
+from functools import lru_cache
+import os
+from pathlib import Path
+
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec, utils
@@ -21,10 +26,46 @@ def public_key(key) -> bytes:
         serialization.Encoding.X962, serialization.PublicFormat.UncompressedPoint)
 
 
+class DeterministicSigner:
+    """Sign through a trusted build of the ABC C ECDSA engine."""
+
+    def __init__(self, library):
+        path = Path(library)
+        if not path.is_absolute():
+            raise ValueError("The ABC ECDSA library path must be absolute")
+        try:
+            handle = C.CDLL(str(path.resolve(strict=True)))
+            self._sign = handle.abc_ecdsa_p256_sha256_c_sign
+        except (OSError, AttributeError) as error:
+            raise RuntimeError("Unable to load the ABC C ECDSA signing engine") from error
+        self._sign.argtypes = [C.c_char_p, C.c_char_p, C.c_size_t, C.c_void_p]
+        self._sign.restype = C.c_int
+        self._library = handle
+
+    def sign(self, key, message) -> bytes:
+        scalar = fixed(key, 32)
+        data = snapshot(message)
+        output = (C.c_ubyte * 64)()
+        status = self._sign(scalar, data, len(data), output)
+        if status == 1:
+            raise ValueError("Invalid P-256 private scalar")
+        if status == 5:
+            raise RuntimeError("The RFC 6979 candidate limit was exhausted")
+        if status != 0:
+            raise RuntimeError("The ABC C ECDSA signing engine failed")
+        return bytes(output)
+
+
+@lru_cache(maxsize=4)
+def _configured_signer(library: str) -> DeterministicSigner:
+    return DeterministicSigner(library)
+
+
 def sign(key, message) -> bytes:
-    result = _private(key).sign(snapshot(message), ec.ECDSA(hashes.SHA256(), deterministic_signing=True))
-    r, s = utils.decode_dss_signature(result)
-    return r.to_bytes(32, "big") + s.to_bytes(32, "big")
+    library = os.environ.get("ABC_ECDSA_P256_LIBRARY")
+    if not library:
+        raise RuntimeError("Set ABC_ECDSA_P256_LIBRARY or use DeterministicSigner")
+    return _configured_signer(library).sign(key, message)
 
 
 def verify(key, message, signature) -> bool:

@@ -1,0 +1,22 @@
+schema_version = 1
+id = "argon2id-csharp-bc"
+owned_paths = ["src/crypto/kdf/argon2id/impl/csharp"]
+shared_inputs = [
+  "src/crypto/providers/csharp/check.py",
+  "src/crypto/providers/csharp/provider.toml",
+  "src/crypto/providers/csharp/global.json",
+  "src/crypto/kdf/argon2id/impl/java/check.py",
+  "src/crypto/kdf/argon2id/impl/java/bc_provider.py",
+  "src/crypto/kdf/argon2id/impl/java/bcprov.toml",
+]
+dependencies = [
+  { module = "csharp-bouncycastle-provider", type = "calls" },
+  { module = "argon2id-rust", type = "implements" },
+]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/providers/csharp/check.py", "--profile", "argon2id"]
+tools = ["python", "dotnet", "node"]
+target = "net10.0"
+timeout_seconds = 240

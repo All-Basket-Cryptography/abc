@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:x25519-csharp-provider",
+  "record_type": "implementation",
+  "name": "X25519 in C# (Bouncy Castle .NET 2.7.0)",
+  "sources": [
+    {
+      "path": "src/crypto/agreement/x25519/impl/csharp/X25519.cs"
+    },
+    {
+      "path": "src/crypto/agreement/x25519/impl/csharp/README.md"
+    },
+    {
+      "path": "src/crypto/agreement/x25519/impl/csharp/packages.lock.json"
+    },
+    {
+      "path": "src/crypto/providers/csharp/provider.toml"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:x25519",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "9475b9e45270d022adacb42625a517af028d6eab1f465238cd4277837207e0a2",
+  "path": "src/crypto/agreement/x25519/impl/csharp",
+  "languages": [
+    "csharp"
+  ],
+  "features": [],
+  "external_calls": [
+    "Bouncy Castle .NET 2.7.0"
+  ],
+  "target_refs": [],
+  "provider": "Bouncy Castle .NET 2.7.0",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

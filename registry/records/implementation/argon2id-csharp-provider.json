@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:argon2id-csharp-provider",
+  "record_type": "implementation",
+  "name": "Argon2id in C# (Bouncy Castle .NET 2.7.0)",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/argon2id/impl/csharp/Argon2id.cs"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/csharp/README.md"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/csharp/packages.lock.json"
+    },
+    {
+      "path": "src/crypto/providers/csharp/provider.toml"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:argon2id",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "3481df27c01b6b187781ddb21a3615b2d89929d0d5e8d3edd372e3f9d4531079",
+  "path": "src/crypto/kdf/argon2id/impl/csharp",
+  "languages": [
+    "csharp"
+  ],
+  "features": [],
+  "external_calls": [
+    "Bouncy Castle .NET 2.7.0"
+  ],
+  "target_refs": [],
+  "provider": "Bouncy Castle .NET 2.7.0",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -13,7 +13,7 @@ ABC is a research monorepo for a source-traceable cryptography catalog, portable
 
 For example, [SHA-256](src/crypto/hash/sha256) keeps its [specification](src/crypto/hash/sha256/spec), [implementations](src/crypto/hash/sha256/impl), and [SDKs](src/crypto/hash/sha256/sdk) together. Rust users install the algorithm crate directly. The current SHA-256 SDKs use the Rust backend. Additional cores have their own test and verification scope.
 
-The [native qualification matrix](docs/plan/multi-language-qualification.md) tracks 20 algorithm profiles, their primary references, and their implementation and proof requirements.
+The qualification matrix tracks 20 algorithm profiles across 11 languages and identifies each implementation, provider, and proof scope. [Qualification matrix](docs/plan/multi-language-qualification.md)
 
 Use Python 3.12 or newer and Git for the repository tools. The CLI lives in `tools/` and the shared Rust workspace lives in `tools/build/rust/`. Cargo 1.92.0 builds the research SHA-256 core. The npm package also needs Node, npm, and the `wasm32-unknown-unknown` target for this Rust release.
 

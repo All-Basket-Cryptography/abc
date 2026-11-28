@@ -4,6 +4,8 @@ The [repository audit](repository-audit.md) records the handoff integrity check,
 
 ## Local checks
 
+- The 20-profile qualification matrix records the native and provider-backed SDKs across 11 languages, their independent conformance evidence, and which theorem statements have run in Lean. [Qualification matrix](../plan/multi-language-qualification.md) · [Recent evidence and benchmarks](../plan/remaining-profiles-evidence.md)
+
 - The relocated workspace passed 14 Rust tests, including NIST SHA-256 and SHA3-256 vectors, SHA-256 streaming and length boundaries, RFC HMAC and HKDF vectors, and the WASI streaming adapter. Run `cargo +1.92.0 test --manifest-path tools/build/rust/Cargo.toml --workspace --locked --offline`.
 - Five registry fixture groups, sixteen Git and planner tests, and four runner tests passed. The local suites verify real Git revision planning, timeout and dependency handling, receipt authentication, cache reuse, and the final gate. The baseline CI CLI passed in a committed scratch repo and rejected a missing worker receipt. [Graph evidence](graph.md)
 - The arithmetic probe executed 10,000 native fuzz inputs and rejected a faulty implementation. The extracted SHA-256 revision passed 102,672 differential inputs against RustCrypto with coverage of 227 of 237 LLVM source regions and rejected a deliberately wrong digest. The Windows run used no sanitizer or edge counters. [Formal and fuzz evidence](formal-and-fuzz.md)

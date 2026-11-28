@@ -1,0 +1,9 @@
+schema_version = 1
+id = "csharp-bouncycastle-provider"
+owned_paths = ["src/crypto/providers/csharp"]
+
+[tasks.syntax]
+kind = "lint"
+command = ["python", "-B", "src/crypto/providers/csharp/check.py", "--help"]
+tools = ["python"]
+timeout_seconds = 60

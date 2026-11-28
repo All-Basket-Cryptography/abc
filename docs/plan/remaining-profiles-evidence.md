@@ -22,11 +22,14 @@ lockfiles are listed with the adapter where applicable. See the
 
 ## Provider and runtime evidence
 
-- Java and Kotlin build separate consumer JARs against Bouncy Castle Java 1.87. Per language, Argon2id compares 101 cases with OpenSSL. P-256 checks both exact RFC answers and 50 OpenSSL interoperability cases. ML-KEM adds 7 sampled ACVP checks, 12 two-way OpenSSL exchanges and exact implicit rejection. ML-DSA adds 4 sampled ACVP checks, 16 two-way OpenSSL checks and 12 exact deterministic comparisons. [Provider source](https://github.com/bcgit/bc-java/tree/dd1e61c26066d0793d3f348bf6b4d9b73b701e77) · [Package pin](../../src/crypto/agreement/ml-kem-768/impl/java/bcprov.toml)
+- Java and Kotlin build separate consumer JARs against Bouncy Castle Java 1.87. Per language, Argon2id compares 101 cases with OpenSSL. P-256 checks both exact RFC answers, 50 OpenSSL interoperability cases and two forced nonce-state transitions. ML-KEM adds 7 sampled ACVP checks, 12 two-way OpenSSL exchanges and exact implicit rejection. ML-DSA adds 4 sampled ACVP checks, 16 two-way OpenSSL checks and 12 exact deterministic comparisons. [Provider source](https://github.com/bcgit/bc-java/tree/dd1e61c26066d0793d3f348bf6b4d9b73b701e77) · [Package pin](../../src/crypto/kdf/argon2id/impl/java/bcprov.toml)
+- C and C++ use the pinned Windows x64 OpenSSL 3.5.4 profile and pass the release and UBSan suites. C and C++ each exercise Argon2id, both Curve25519 profiles and RFC 6979. They share the C P-256 signing engine. C++ also exercises ML-KEM and ML-DSA against ACVP samples. [Argon2id C SDK](../../src/crypto/kdf/argon2id/impl/c) · [ECDSA C SDK](../../src/crypto/signature/ecdsa-p256-sha256/impl/c) · [ML-KEM C++ SDK](../../src/crypto/agreement/ml-kem-768/impl/cpp) · [ML-DSA C++ SDK](../../src/crypto/signature/ml-dsa-65/impl/cpp)
+- C# packages install from a dedicated offline NuGet feed into independent consumers. The test harness verifies the consumed DLL bytes and dependency closure for each package. Bouncy Castle .NET 2.7.0 supplies the primitive implementation, with OpenSSL used for strict Ed25519 verification. The selected Argon2id, X25519, Ed25519, P-256, ML-KEM and ML-DSA wire tests cover their recorded RFC or ACVP inputs and independent OpenSSL comparisons. [Provider and offline test procedure](../../src/crypto/providers/csharp/README.md)
 - JavaScript and TypeScript each passed six Node 24.12.0 test suites on Windows x64. Noble supplies an independent curve oracle for X25519 and Ed25519. Portable Rust supplies the Argon2id differential oracle. Noble and OpenSSL exercise post-quantum interoperation. [Versions and lock](../../src/crypto/providers/ecmascript/README.md)
-- Python passed six CPython suites on Windows x64. The platform lock verifies the cryptography wheel. Its OpenSSL-backed ML-KEM and ML-DSA compare with independently maintained Noble implementations, including exact deterministic signatures under three contexts. [Wheel and library pin](../../src/crypto/providers/python/README.md)
+- Python passed six CPython suites on Windows x64. The platform lock verifies the cryptography wheel. The ECDSA adapter signs through the shared C RFC 6979 engine and checks signatures independently with PyCA, Node OpenSSL and 48 exact RustCrypto outputs. ML-KEM and ML-DSA compare with independently maintained Noble implementations, including exact deterministic signatures under three contexts. [Wheel and library pin](../../src/crypto/providers/python/README.md) · [P-256 native build and checks](../../src/crypto/signature/ecdsa-p256-sha256/impl/python/README.md)
 - The two RustCrypto-backed Rust crates passed release-mode ACVP and input boundary suites on Windows x64 with Rust 1.92.0. Cargo locks the dependency closure. [ML-KEM Rust tests](../../src/crypto/agreement/ml-kem-768/impl/rust/tests/conformance.rs) · [ML-DSA Rust tests](../../src/crypto/signature/ml-dsa-65/impl/rust/tests/conformance.rs)
-- Swift runs independent SwiftPM consumers on macOS arm64 using CryptoKit and pinned OpenSSL 3.5.9 where recorded. Portable Go and ACVP supply Argon2id and post-quantum oracles. [Curve25519 run](https://github.com/All-Basket-Cryptography/abc/actions/runs/46093224346) · [Argon2id and post-quantum run](https://github.com/All-Basket-Cryptography/abc/actions/runs/46093693090)
+- All 20 Go profiles and the shared Keccak permutation passed their offline Go 1.27.4 test pass with interoperation enabled. The independent Node/OpenSSL Ed25519 check passed 96 cases. [Go reproduction](multi-language-qualification.md#go-portfolio)
+- All six Swift packages passed independent SwiftPM consumer runs at `908ee29` on macOS arm64. They use CryptoKit and pinned OpenSSL 3.5.9 where recorded. Portable Go and ACVP supply Argon2id and post-quantum oracles. P-256 has two simulated retry transitions and 48 two-way CryptoKit comparisons. [Curve25519 run](https://github.com/All-Basket-Cryptography/abc/actions/runs/46094417463) · [Four OpenSSL-backed profiles](https://github.com/All-Basket-Cryptography/abc/actions/runs/46094417856)
 
 ## Checked proofs and remaining obligations
 
@@ -37,7 +40,7 @@ full public-key canonicality check and decode/re-encode identity.
 The X25519 result proves the high-bit rule, one-subtraction reduction
 and the exact alias classes of all 256-bit encodings. JVM leaves also
 carry profile model lemmas for arithmetic and encoding bounds.
-[Lean sources and exact scope](../../src/crypto/providers/formal/README.md)
+[Lean sources and exact scope](../../src/crypto/providers/formal/README.md) · [Theorem and source digest receipt](../status/provider-input-models.json)
 
 The earlier Rust SHA-256, HMAC, HKDF and ChaCha20-block source-refinement
 results retain their original theorem statements. The open obligations
@@ -45,8 +48,9 @@ for this update are per-language adapter and provider source refinement,
 cryptographic security assumptions and reductions, entropy, compiled-code
 side-channel behaviour, and deployment qualification for each target.
 OpenSSL deterministic ECDSA needs explicit zero-r/s handling when the
-underlying API cannot provide the full RFC state transition. The affected
-provider and evidence boundary are documented with each implementation.
+underlying API cannot provide the full RFC state transition. The revised
+candidate loops exercise rejection and state advancement separately from
+ordinary known-answer and interoperability tests.
 [Existing refinement evidence](../status/pr-1-qualification.md#formal-evidence)
 
 ## Reproducible performance sample

@@ -1,4 +1,4 @@
-# Native cryptography implementation and qualification plan
+# Cryptography implementation and qualification matrix
 
 This plan identifies 20 initial algorithm profiles and the work needed to make
 each available in every selected implementation language. The starting SDK
@@ -12,7 +12,11 @@ papers, verified statements and measured workloads.
 
 The AES, JVM curve and scrypt update records native provider boundaries,
 the full Rust RFC 8439 block refinement and measured work profiles.
-[Current evidence](aes-curves-and-block-evidence.md)
+[Previous qualification evidence](aes-curves-and-block-evidence.md)
+
+The remaining Argon2id, elliptic-curve and post-quantum profiles have a
+separate index of provider pins, formal results, literature and measured
+workloads. [Current qualification evidence](remaining-profiles-evidence.md)
 
 ## Languages and targets
 
@@ -22,13 +26,15 @@ Python, Swift, Kotlin, and C#. This maps the existing and extended SDK scope to
 WASI, browser WASM, and embedded are build or deployment targets. Add them to
 the per-language target record where the toolchain and API support them.
 
-A native-language cell requires the algorithm body in that language and an
-independently installable consumer. A pinned upstream implementation in the
-same language can qualify if its exact source, transitive dependencies, and
-proof scope are available for review. An FFI or WASM client is recorded as
-binding evidence for its provider. JavaScript and TypeScript each need their
-own maintained algorithm body to qualify two cells. Compiler-emitted
-JavaScript is an artifact of its TypeScript implementation.
+The SDK coverage table counts maintained entry points in each language,
+including provider-backed entry points. For native source qualification,
+the algorithm body must use that language and have an independently
+installable consumer. A pinned same-language upstream implementation can
+qualify with exact source, transitive dependencies and reviewable proof
+scope. Entries that use an FFI or WASM provider track the shared provider
+as a dependency. For JavaScript and TypeScript, the counts reflect distinct
+maintained sources. Compiler-emitted JavaScript belongs to the TypeScript
+entry's build artifacts.
 
 | Language | Starting evidence and first target |
 | --- | --- |
@@ -67,17 +73,17 @@ can corroborate interoperability. [CAVP vector scope](https://csrc.nist.gov/Proj
 | 7 | HKDF-SHA-256, extract-and-expand KDF | RFC 5869 §§ 2–3 and Appendix A.1–A.3. [RFC 5869](https://www.rfc-editor.org/rfc/rfc5869.html#section-2) | Prove extract, empty salt behavior, expand chaining, truncation, 255-block limit, and output ownership and errors. | Independent cores in all 11 languages. Native tests cover RFC vectors, output bounds and 255th-block behavior. Runtime evidence is scoped per leaf. Exact Rust extract/expand/derive refinement remains checked. [Native implementations](../../src/crypto/kdf/hkdf-sha256/impl) |
 | 8 | PBKDF2-HMAC-SHA-256, password KDF | RFC 8018 § 5.2 and HMAC-SHA-256 PRF definition. RFC 7914 § 11 examples. [RFC 8018](https://www.rfc-editor.org/rfc/rfc8018.html#section-5.2) · [RFC 7914 vectors](https://www.rfc-editor.org/rfc/rfc7914.html#section-11) | Prove block indices, PRF iteration and XOR accumulation, admissible positive iteration count and output length, overflow-safe work caps, and error behavior. | Independent cores in all 11 languages. Portable Rust includes checked normalization equivalence and accumulator/index lemmas. Native tests cover standard vectors, validation and independent differential inputs. Exact implementation refinement remains open. [Native implementations](../../src/crypto/kdf/pbkdf2-hmac-sha256/impl) |
 | 9 | scrypt, memory-hard password KDF | RFC 7914 §§ 2–6 and component/full vectors in §§ 8–12. [RFC 7914](https://www.rfc-editor.org/rfc/rfc7914.html) | Prove Salsa20/8, BlockMix, ROMix, PBKDF2 composition, legal parameters, and representable memory/work bounds. | Implementations in 11 languages compose their Salsa20/8, BlockMix and ROMix with PBKDF2. RFC and OpenSSL suites exercise parameter and workspace boundaries. Lean checks BlockMix, Integerify and workspace arithmetic. Exact source and deployment qualification remain open. [scrypt evidence](../../src/crypto/kdf/scrypt) |
-| 10 | Argon2id v1.3, memory-hard password KDF | RFC 9106 § 3 and § 5.3 Argon2id vector with secret and associated data. [RFC 9106](https://www.rfc-editor.org/rfc/rfc9106.html#section-5.3) | Prove variable-length BLAKE2b expansion, indexing, slice/lane scheduling, reductions, and allocation bounds. Treat parameter guidance and encoded password strings as separate API scope. | Independent Rust and Go cores match RFC 9106 H0, per-pass checkpoint words and the final tag with secret and associated data. Both pass 110 OpenSSL cases. Lean checks workspace rounding and lane, reference and flat index bounds. Exact source refinement remains open. [Go results](../../src/crypto/kdf/argon2id/impl/go) |
+| 10 | Argon2id v1.3, memory-hard password KDF | RFC 9106 § 3 and § 5.3 Argon2id vector with secret and associated data. [RFC 9106](https://www.rfc-editor.org/rfc/rfc9106.html#section-5.3) | Prove variable-length BLAKE2b expansion, indexing, slice/lane scheduling, reductions, and allocation bounds. Treat parameter guidance and encoded password strings as separate API scope. | Portable Rust and Go plus separately scoped provider SDKs. RFC 9106 and differential tests cover secret and associated data, cost rounding and budgets. Lean models memory and indexing bounds. [SDK evidence](../../src/crypto/kdf/argon2id) |
 | 11 | AES-256 encrypt/decrypt, 128-bit block primitive | May 2023 FIPS 197 update and AES-256 encrypt/decrypt KATs. [FIPS 197](https://csrc.nist.gov/pubs/fips/197/final) · [AESAVS vectors](https://csrc.nist.gov/Projects/Cryptographic-Algorithm-Validation-Program/Block-Ciphers) | Prove key expansion and forward/inverse rounds. Provide the block primitive to reviewed modes. Hardware and portable backends each need correspondence and leakage evidence. | Implementations in 11 languages cover portable arithmetic, C/C++ AES-NI and adapters for SunJCE, .NET and Apple CommonCrypto. NIST vectors and independent comparisons pass. Lean checks byte substitution and squaring. Exact provider and source refinement, leakage and other target qualification remain open. [AES-256 evidence](../../src/crypto/cipher/aes256) |
 | 12 | AES-256-GCM, AEAD with 96-bit nonce and 128-bit tag | November 2007 SP 800-38D and applicable AES-256 GCMVS vectors. [SP 800-38D](https://csrc.nist.gov/pubs/sp/800/38/d/final) · [GCMVS vectors](https://csrc.nist.gov/Projects/cryptographic-algorithm-validation-program/cavp-testing-block-cipher-modes) | Prove counter limits, GHASH, associated-data encoding, seal/open, and no plaintext output on authentication failure. Record unique-nonce assumption or verified nonce allocation policy. | Implementations in 11 languages cover portable cores, native AES-NI and separately measured RustCrypto, SunJCE, .NET and CryptoKit providers. Tests check authenticated output preservation, NIST answers and OpenSSL interoperability. Lean checks length and tag reduction. Complete composition and target leakage remain open. [AES-256-GCM evidence](../../src/crypto/aead/aes256-gcm) |
 | 13 | ChaCha20, IETF 96-bit-nonce stream primitive | RFC 8439 block and cipher vectors in §§ 2.3.2 and 2.4.2. [RFC 8439](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.3.2) | Prove ARX and little-endian encoding, 32-bit counter exhaustion and stream offsets. Keep this primitive separate from the authenticated public API. | Implementations in 11 languages pass RFC answers and independent comparisons. The exact Rust extraction proves the 32-byte key, 12-byte nonce and counter yield the RFC 64-byte block. The public stream loop, error preservation, C/C++ whole block and target leakage remain open. [Rust block refinement](../../tools/verification/chacha20) |
 | 14 | Poly1305, full one-time MAC | RFC 8439 § 2.5.2 and Appendix A.3. [RFC 8439](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.5.2) | Prove clamping, polynomial reduction, padding and output encoding. Record one-time-key scope and cover partial blocks. | Implementations in 11 languages pass RFC vectors and independent integer-oracle comparisons. Lean checks the Go limb model across finite traces, 13-bit carry normalization and JVM word bounds. Parsing, source extraction and leakage refinements remain open. [Poly1305 evidence](../../src/crypto/mac/poly1305) |
 | 15 | ChaCha20-Poly1305, IETF AEAD | RFC 8439 § 2.8.2 and Appendix A.5. [RFC 8439](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.8.2) | Prove one-time-key derivation, padded AEAD encoding and lengths, counter bounds, successful seal/open, and no plaintext on failure. State the nonce uniqueness policy. | Implementations in 11 languages pass RFC vectors and OpenSSL interoperability. Their APIs preserve or withhold output on authentication failure. Lean checks padding and length/counter bounds. Whole-source composition and target leakage remain open. [AEAD evidence](../../src/crypto/aead/chacha20-poly1305) |
-| 16 | X25519, 32-byte Diffie–Hellman primitive | RFC 7748 §§ 5.2 and 6.1 vectors. [RFC 7748](https://www.rfc-editor.org/rfc/rfc7748.html#section-5.2) | Prove scalar decoding/clamping, RFC u-coordinate rules, ladder and field implementation. The shared-secret API rejects an all-zero result. Protocol transcript binding needs a separate proof. | Implementations in 4 languages cover Rust, the pinned Go provider and SunEC on Java and Kotlin. Known answers and interoperability include noncanonical input and low-order cases. Lean checks Rust field arithmetic and the JVM coordinate decoding model. Complete source refinement remains open. [X25519 evidence](../../src/crypto/agreement/x25519) |
-| 17 | Ed25519, pure signature profile | RFC 8032 §§ 5.1 and 7.1. [RFC 8032](https://www.rfc-editor.org/rfc/rfc8032.html#section-7.1) | Prove seed/key derivation, point/scalar encoding, signature and verification. Specify strict decoding and small-order-point policies, including their interoperability effects. Ed25519ctx and Ed25519ph have separate scope. | Implementations in 4 languages cover Dalek, Go and SunEC on Java and Kotlin. The JVM adapters check canonical A/R/S and reject small-order A and R. Lean checks coordinate relations and public cofactor arithmetic at the recorded scopes. Complete source refinement and target leakage remain open. [Ed25519 evidence](../../src/crypto/signature/ed25519) |
-| 18 | Deterministic ECDSA P-256 with SHA-256 | FIPS 186-5, SP 800-186 P-256, and RFC 6979 Appendix A.2.5 SHA-256 examples. [FIPS 186-5](https://csrc.nist.gov/pubs/fips/186-5/final) · [SP 800-186](https://csrc.nist.gov/pubs/sp/800/186/final) · [RFC 6979 vectors](https://www.rfc-editor.org/rfc/rfc6979.html#appendix-A.2.5) | Prove scalar and point range checks, deterministic nonce generation, signing and verification over fixed-width `r` and `s`. DER, recovery, and protocol-specific low-S policy are separate profiles. | RustCrypto and the pinned Go native provider match both RFC 6979 SHA-256 signatures, fixed-width validation and independent OpenSSL interoperability. Source refinement and deployment qualification remain open. [Rust evidence](../../src/crypto/signature/ecdsa-p256-sha256/spec) · [Go results](../../src/crypto/signature/ecdsa-p256-sha256/impl/go) |
-| 19 | ML-KEM-768, key encapsulation | August 2024 FIPS 203 with recorded errata disposition. NIST ACVP keyGen and encapDecap vectors at the pinned revision below. [FIPS 203](https://csrc.nist.gov/pubs/fips/203/final) · [ACVP keyGen](https://github.com/usnistgov/ACVP-Server/tree/975de31eb83d87039ec88934fdc47d8c312b892d/gen-val/json-files/ML-KEM-keyGen-FIPS203) · [ACVP encapDecap](https://github.com/usnistgov/ACVP-Server/tree/975de31eb83d87039ec88934fdc47d8c312b892d/gen-val/json-files/ML-KEM-encapDecap-FIPS203) | Prove sampling and ring/NTT arithmetic, encoding, keyGen, encapsulation and implicit rejection for correctly sized invalid ciphertexts. Qualify randomness and constant-time selection separately. | Pinned AWS-LC 5.5.0 C and Go 1.24.9 native profiles pass selected NIST ACVP data, independent OpenSSL interoperability and implicit rejection. C uses expanded private-key bytes and Go accepts the seed representation. Exact source refinement and deployment qualification remain open. [C evidence](../../src/crypto/agreement/ml-kem-768/spec) · [Go evidence](../../src/crypto/agreement/ml-kem-768/impl/go) |
-| 20 | ML-DSA-65, pure deterministic signature profile | August 2024 FIPS 204 with recorded errata disposition. NIST ACVP keyGen, sigGen and sigVer vectors at the pinned revision below. [FIPS 204](https://csrc.nist.gov/pubs/fips/204/final) · [ACVP sample vectors](https://github.com/usnistgov/ACVP-Server/tree/975de31eb83d87039ec88934fdc47d8c312b892d/gen-val/json-files) | Prove sampling, ring/NTT arithmetic, encodings, context and rejection checks, keyGen/sign/verify, and the admitted termination behavior of rejection sampling. Hedge and prehash modes are separate profiles. | Pinned AWS-LC 5.5.0 C and Go 1.27.4 native profiles pass selected NIST ACVP cases and exact deterministic OpenSSL interoperability with Pure ML-DSA context. Go imports seeds. Exact source refinement, sampler termination and deployment qualification remain open. [C evidence](../../src/crypto/signature/ml-dsa-65/spec) · [Go evidence](../../src/crypto/signature/ml-dsa-65/impl/go) |
+| 16 | X25519, 32-byte Diffie–Hellman primitive | RFC 7748 §§ 5.2 and 6.1 vectors. [RFC 7748](https://www.rfc-editor.org/rfc/rfc7748.html#section-5.2) | Prove scalar decoding/clamping, RFC u-coordinate rules, ladder and field implementation. The shared-secret API rejects an all-zero result. Protocol transcript binding needs a separate proof. | Portable and provider routes across the language set. RFC vectors and independent exchanges exercise clamping, low-order rejection and noncanonical aliases. Lean proves the full input normalization alias classes. [SDK evidence](../../src/crypto/agreement/x25519) |
+| 17 | Ed25519, pure signature profile | RFC 8032 §§ 5.1 and 7.1. [RFC 8032](https://www.rfc-editor.org/rfc/rfc8032.html#section-7.1) | Prove seed/key derivation, point/scalar encoding, signature and verification. Specify strict decoding and small-order-point policies, including their interoperability effects. Ed25519ctx and Ed25519ph have separate scope. | Pure Ed25519 SDKs with exact deterministic answers and strict A/R/S decoding evidence. Independent comparisons and negative vectors cover canonical and small-order points under each leaf's stated provider contract. [SDK evidence](../../src/crypto/signature/ed25519) |
+| 18 | Deterministic ECDSA P-256 with SHA-256 | FIPS 186-5, SP 800-186 P-256, and RFC 6979 Appendix A.2.5 SHA-256 examples. [FIPS 186-5](https://csrc.nist.gov/pubs/fips/186-5/final) · [SP 800-186](https://csrc.nist.gov/pubs/sp/800/186/final) · [RFC 6979 vectors](https://www.rfc-editor.org/rfc/rfc6979.html#appendix-A.2.5) | Prove scalar and point range checks, deterministic nonce generation, signing and verification over fixed-width `r` and `s`. DER, recovery, and protocol-specific low-S policy are separate profiles. | Deterministic signing in every SDK language, with RFC 6979 SHA-256 answers and fixed-width public and signature validation. The new candidate loops exercise rejection and nonce-state updates. Complete code refinement and compiled leakage are open. [SDK evidence](../../src/crypto/signature/ecdsa-p256-sha256) |
+| 19 | ML-KEM-768, key encapsulation | August 2024 FIPS 203 with recorded errata disposition. NIST ACVP keyGen and encapDecap vectors at the pinned revision below. [FIPS 203](https://csrc.nist.gov/pubs/fips/203/final) · [ACVP keyGen](https://github.com/usnistgov/ACVP-Server/tree/975de31eb83d87039ec88934fdc47d8c312b892d/gen-val/json-files/ML-KEM-keyGen-FIPS203) · [ACVP encapDecap](https://github.com/usnistgov/ACVP-Server/tree/975de31eb83d87039ec88934fdc47d8c312b892d/gen-val/json-files/ML-KEM-encapDecap-FIPS203) | Prove sampling and ring/NTT arithmetic, encoding, keyGen, encapsulation and implicit rejection for correctly sized invalid ciphertexts. Qualify randomness and constant-time selection separately. | Pinned providers and isolated adapters exercise ACVP samples, public-key canonicality and implicit rejection. Lean proves canonical re-encoding for the complete encapsulation-key model. Source refinement and deployment qualification remain open. [SDK evidence](../../src/crypto/agreement/ml-kem-768) |
+| 20 | ML-DSA-65, pure deterministic signature profile | August 2024 FIPS 204 with recorded errata disposition. NIST ACVP keyGen, sigGen and sigVer vectors at the pinned revision below. [FIPS 204](https://csrc.nist.gov/pubs/fips/204/final) · [ACVP sample vectors](https://github.com/usnistgov/ACVP-Server/tree/975de31eb83d87039ec88934fdc47d8c312b892d/gen-val/json-files) | Prove sampling, ring/NTT arithmetic, encodings, context and rejection checks, keyGen/sign/verify, and the admitted termination behavior of rejection sampling. Hedge and prehash modes are separate profiles. | Pure deterministic SDKs exercise ACVP inputs, context bounds and deterministic provider interoperability. Complete source refinement, sampler behavior and target leakage remain open. [SDK evidence](../../src/crypto/signature/ml-dsa-65) |
 
 The post-quantum sample revision is NIST ACVP Server `v1.1.0.43` at
 `975de31eb83d87039ec88934fdc47d8c312b892d`. Keep the ACVP revision, operation,
@@ -86,23 +92,27 @@ Test-only randomness must stay outside released APIs. [Pinned ACVP revision](htt
 
 ## Language coverage
 
-The repository contains 170 of 220 implementation combinations across these 20 profiles and 11 languages. 50 combinations remain. The count includes native cores and explicitly identified provider-backed profiles. The evidence files record proofs, native execution and deployment scope.
+The 20 initial profiles have SDK implementations in all 11 selected
+languages. This is 220 of 220 profile and language combinations, up
+from 170 in `a67485e`. The total includes separately maintained native
+cores and named upstream-provider adapters. The source, execution,
+packaging, proof and performance scopes are recorded per leaf.
 
-| Language | Profiles with implementations |
+| Language | Profiles with SDK implementations |
 | --- | ---: |
-| Rust | 18 / 20 |
-| C | 16 / 20 |
-| C++ | 14 / 20 |
+| Rust | 20 / 20 |
+| C | 20 / 20 |
+| C++ | 20 / 20 |
 | Go | 20 / 20 |
-| Java | 16 / 20 |
-| JavaScript | 14 / 20 |
-| TypeScript | 14 / 20 |
-| Python | 14 / 20 |
-| Swift | 14 / 20 |
-| Kotlin | 16 / 20 |
-| C# | 14 / 20 |
+| Java | 20 / 20 |
+| JavaScript | 20 / 20 |
+| TypeScript | 20 / 20 |
+| Python | 20 / 20 |
+| Swift | 20 / 20 |
+| Kotlin | 20 / 20 |
+| C# | 20 / 20 |
 
-14 profiles have native execution evidence in all 11 languages. SHA-256, SHA-512, SHA3-256, SHAKE256, BLAKE2b, HMAC-SHA-256, HKDF-SHA-256, PBKDF2-HMAC-SHA-256, scrypt, AES-256, AES-256-GCM, ChaCha20, Poly1305 and ChaCha20-Poly1305. [Standards, qualification and performance evidence](aes-curves-and-block-evidence.md)
+[Latest test, literature and proof evidence](remaining-profiles-evidence.md)
 
 ## Go portfolio
 
@@ -165,8 +175,10 @@ if ($LASTEXITCODE -ne 0) { throw 'Ed25519 interoperability failed' }
    optimized dispatch path with equivalence, failure, leakage, and consumer
    evidence before putting it in a production profile.
 
-Track each cell through implementation, conformance, refinement, target
-qualification, and independent release review. The current proof success
-covers only the named Rust implementations of SHA-256, HMAC-SHA-256, and
-HKDF-SHA-256. The initial 20-by-11 backlog includes the remaining language
-implementations and unqualified parts of the existing ones. [Formal and fuzz evidence](../status/formal-and-fuzz.md) · [Assurance policy](../security/trust-and-source-policy.md)
+Track each cell through conformance, refinement, target qualification and
+independent release review. The complete Rust API refinements cover SHA-256,
+HMAC-SHA-256 and HKDF-SHA-256. ChaCha20 has an exact Rust block refinement.
+Other checked statements include the ML-KEM and X25519 input models and the
+per-profile bounds documented above. Remaining work includes code-to-spec
+refinement, compiled leakage evidence and production qualification.
+[Formal and fuzz evidence](../status/formal-and-fuzz.md) · [Assurance policy](../security/trust-and-source-policy.md)

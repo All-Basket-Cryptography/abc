@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "abc:implementation:ecdsa-p256-sha256-python-provider",
   "record_type": "implementation",
-  "name": "ECDSA P-256 in Python (cryptography 50.0.2 with OpenSSL 4.0.3)",
+  "name": "ECDSA P-256 in Python (cryptography 50.0.2 with OpenSSL 4.0.3 and the ABC OpenSSL-backed C RFC 6979 signing engine)",
   "sources": [
     {
       "path": "src/crypto/signature/ecdsa-p256-sha256/impl/python/abc_ecdsa_p256.py"
@@ -15,6 +15,12 @@
     },
     {
       "path": "src/crypto/providers/python/bytes_input.py"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/c/abc_ecdsa_p256_sha256_c.c"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/c/ecdsa_p256_nonce.c"
     }
   ],
   "owner": {
@@ -24,17 +30,17 @@
   "subject_ref": "abc:algorithm:ecdsa-p256-sha256",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "6930111bd2f51da24fde857d9b06a2f0213e49ede04d5954f1fa667056b56eb9",
+  "source_sha256": "b33c32453b83373b66ea7568b4c6fbfebf6b54b73bf1f358d1ae2e1096c75c20",
   "path": "src/crypto/signature/ecdsa-p256-sha256/impl/python",
   "languages": [
     "python"
   ],
   "features": [],
   "external_calls": [
-    "cryptography 50.0.2 with OpenSSL 4.0.3"
+    "cryptography 50.0.2 with OpenSSL 4.0.3 and the ABC OpenSSL-backed C RFC 6979 signing engine"
   ],
   "target_refs": [],
-  "provider": "cryptography 50.0.2 with OpenSSL 4.0.3",
+  "provider": "cryptography 50.0.2 with OpenSSL 4.0.3 and the ABC OpenSSL-backed C RFC 6979 signing engine",
   "maintenance": {
     "state": "unknown"
   },

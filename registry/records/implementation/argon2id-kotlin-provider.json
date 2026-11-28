@@ -9,6 +9,9 @@
     },
     {
       "path": "src/crypto/kdf/argon2id/impl/kotlin/README.md"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/java/bcprov.toml"
     }
   ],
   "owner": {

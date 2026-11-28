@@ -1,13 +1,16 @@
 package org.allbasket.abc.signature.ecdsap256sha256.kotlin
 
 import java.math.BigInteger
+import java.security.SecureRandom
 import org.bouncycastle.crypto.digests.SHA256Digest
 import org.bouncycastle.crypto.ec.CustomNamedCurves
+import org.bouncycastle.crypto.macs.HMac
 import org.bouncycastle.crypto.params.ECDomainParameters
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters
 import org.bouncycastle.crypto.params.ECPublicKeyParameters
+import org.bouncycastle.crypto.params.KeyParameter
+import org.bouncycastle.crypto.signers.DSAKCalculator
 import org.bouncycastle.crypto.signers.ECDSASigner
-import org.bouncycastle.crypto.signers.HMacDSAKCalculator
 import org.bouncycastle.math.ec.FixedPointCombMultiplier
 import org.bouncycastle.util.BigIntegers
 
@@ -28,14 +31,81 @@ object EcdsaP256Sha256 {
     @JvmStatic
     fun sign(scalar: ByteArray, message: ByteArray): ByteArray {
         val key = ECPrivateKeyParameters(privateScalar(scalar), domain)
-        val signer = ECDSASigner(HMacDSAKCalculator(SHA256Digest()))
-        signer.init(true, key)
-        val signature = signer.generateSignature(hash(message))
+        val signature = Nonce().use { nonce ->
+            val signer = ECDSASigner(nonce)
+            signer.init(true, key)
+            signer.generateSignature(hash(message))
+        }
         val output = ByteArray(SIGNATURE_BYTES)
         for (i in signature.indices) {
             BigIntegers.asUnsignedByteArray(PRIVATE_KEY_BYTES, signature[i]).copyInto(output, i * PRIVATE_KEY_BYTES)
         }
         return output
+    }
+
+    private class Nonce : DSAKCalculator, AutoCloseable {
+        private val mac = HMac(SHA256Digest())
+        private val key = ByteArray(PRIVATE_KEY_BYTES)
+        private val value = ByteArray(PRIVATE_KEY_BYTES)
+        private lateinit var order: BigInteger
+        private var issued = false
+
+        override fun isDeterministic(): Boolean = true
+
+        override fun init(n: BigInteger, random: SecureRandom) {
+            throw UnsupportedOperationException("Only deterministic signing is supported")
+        }
+
+        override fun init(n: BigInteger, scalar: BigInteger, digest: ByteArray) {
+            order = n
+            issued = false
+            key.fill(0)
+            value.fill(1)
+            val secret = BigIntegers.asUnsignedByteArray(PRIVATE_KEY_BYTES, scalar)
+            val hashed = BigIntegers.asUnsignedByteArray(PRIVATE_KEY_BYTES, BigInteger(1, digest).mod(n))
+            try {
+                mac.init(KeyParameter(key))
+                updateKey(0, secret, hashed)
+                updateKey(1, secret, hashed)
+            } finally {
+                secret.fill(0)
+            }
+        }
+
+        private fun updateKey(separator: Byte, vararg suffix: ByteArray) {
+            mac.update(value, 0, value.size)
+            mac.update(separator)
+            for (part in suffix) mac.update(part, 0, part.size)
+            mac.doFinal(key, 0)
+            mac.init(KeyParameter(key))
+            advanceValue()
+        }
+
+        private fun advanceValue() {
+            mac.update(value, 0, value.size)
+            mac.doFinal(value, 0)
+        }
+
+        override fun nextK(): BigInteger {
+            // A repeated request means the signer produced zero r or s.
+            // Apply the same RFC 6979 §3.2(h.3) update as for an invalid k.
+            if (issued) updateKey(0)
+            while (true) {
+                advanceValue()
+                val candidate = BigInteger(1, value)
+                if (candidate.signum() > 0 && candidate < order) {
+                    issued = true
+                    return candidate
+                }
+                updateKey(0)
+            }
+        }
+
+        override fun close() {
+            value.fill(0)
+            key.fill(0)
+            mac.init(KeyParameter(key))
+        }
     }
 
     @JvmStatic

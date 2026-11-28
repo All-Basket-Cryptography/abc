@@ -1,0 +1,5 @@
+package = "BouncyCastle.Cryptography"
+version = "2.7.0"
+size = 8730569
+sha256 = "f091ffccab4d03993e660bace277659a79dee0972f54d7f1f4bd46d680966241"
+source_commit = "4007498b13582d90ee1eda5d9920c324428b98b3"
