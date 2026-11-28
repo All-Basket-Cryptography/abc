@@ -64,29 +64,54 @@ impl Poly1305 {
             self.absorb(self.pending, 0);
         }
 
-        // Absorption finishes by carrying any excess from limb 0 into limb 1.
-        self.h = carry_upper(self.h);
-
-        // Adding 5 produces a carry out of limb 4 exactly when h >= 2^130 - 5.
-        let mut reduced = self.h;
-        reduced[0] += 5;
-        for index in 0..4 {
-            reduced[index + 1] += reduced[index] >> RADIX_BITS;
-            reduced[index] &= LIMB_MASK;
-        }
-        let select = 0u64.wrapping_sub(reduced[4] >> RADIX_BITS);
-        reduced[4] &= LIMB_MASK;
-        let mut low = 0u128;
-        for (index, (word, choice)) in self.h.into_iter().zip(reduced).enumerate() {
-            low |=
-                (u128::from((word & !select) | (choice & select))) << (index * RADIX_BITS as usize);
-        }
-        low.wrapping_add(self.pad).to_le_bytes()
+        finish_tag(self.h, self.pad)
     }
 
     fn absorb(&mut self, block: [u8; BLOCK_BYTES], high_bit: u64) {
         self.h = absorb_bytes(self.h, self.r, self.r_times_five, block, high_bit);
     }
+}
+
+fn select_reduced(original: u64, reduced: u64, mask: u64) -> u64 {
+    (original & !mask) | (reduced & mask)
+}
+
+fn reduce_final(words: [u64; 5]) -> [u64; 5] {
+    let [h0, h1, h2, h3, h4] = words;
+    // Adding 5 produces a carry out of limb 4 exactly when h >= 2^130 - 5.
+    let (r0, c1) = carry_pair(h0 + 5, h1);
+    let (r1, c2) = carry_pair(c1, h2);
+    let (r2, c3) = carry_pair(c2, h3);
+    let (r3, c4) = carry_pair(c3, h4);
+    let mask = 0u64.wrapping_sub(c4 >> RADIX_BITS);
+    let r4 = c4 & LIMB_MASK;
+    [
+        select_reduced(h0, r0, mask),
+        select_reduced(h1, r1, mask),
+        select_reduced(h2, r2, mask),
+        select_reduced(h3, r3, mask),
+        select_reduced(h4, r4, mask),
+    ]
+}
+
+fn pack_low128(words: [u64; 5]) -> u128 {
+    let [h0, h1, h2, h3, h4] = words;
+    (h0 as u128)
+        | ((h1 as u128) << RADIX_BITS)
+        | ((h2 as u128) << (2 * RADIX_BITS))
+        | ((h3 as u128) << (3 * RADIX_BITS))
+        | ((h4 as u128) << (4 * RADIX_BITS))
+}
+
+fn add_pad_and_serialize(low: u128, pad: u128) -> [u8; TAG_BYTES] {
+    low.wrapping_add(pad).to_le_bytes()
+}
+
+fn finish_tag(words: [u64; 5], pad: u128) -> [u8; TAG_BYTES] {
+    // Absorption finishes by carrying any excess from limb 0 into limb 1.
+    let normalized = carry_upper(words);
+    let reduced = reduce_final(normalized);
+    add_pad_and_serialize(pack_low128(reduced), pad)
 }
 
 fn load_block(block: [u8; BLOCK_BYTES]) -> u128 {
@@ -112,7 +137,13 @@ fn absorb_bytes(
     absorb_encoded(h, r, r_five, load_block(block), high_bit)
 }
 
-fn absorb_encoded(h: [u64; 5], r: [u64; 5], r_five: [u64; 4], value: u128, high_bit: u64) -> [u64; 5] {
+fn absorb_encoded(
+    h: [u64; 5],
+    r: [u64; 5],
+    r_five: [u64; 4],
+    value: u128,
+    high_bit: u64,
+) -> [u64; 5] {
     let mut message = limbs(value);
     message[4] |= high_bit;
     absorb_limbs(h, r, r_five, message)
