@@ -1,0 +1,5 @@
+module CAbcArgon2idOpenSSL [system] {
+    header "shim.h"
+    link "crypto"
+    export *
+}
