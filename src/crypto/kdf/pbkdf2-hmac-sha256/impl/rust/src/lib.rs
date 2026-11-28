@@ -3,12 +3,8 @@
 
 //! RFC 8018 PBKDF2 instantiated with the ABC HMAC-SHA-256 core.
 
-use abc_hmac_sha256::{
-    authenticate, HmacError, HmacSha256, MAX_INPUT_BYTES, MAX_KEY_BYTES, TAG_BYTES,
-};
+use abc_hmac_sha256::{HmacError, HmacSha256, MAX_INPUT_BYTES, MAX_KEY_BYTES, TAG_BYTES};
 use core::{fmt, num::NonZeroU32};
-
-const HMAC_KEY_BLOCK_BYTES: usize = 64;
 
 /// Maximum length when the block index is encoded as a 32-bit integer.
 pub const MAX_OUTPUT_BYTES: u64 = u32::MAX as u64 * TAG_BYTES as u64;
@@ -67,35 +63,30 @@ pub fn derive(
         salt.len() as u64,
         output.len() as u64,
     )?;
-    // HMAC normalizes long passwords to their SHA-256 digest before applying
-    // the pads. Reuse that same key for every PRF call in the derivation.
-    let hashed;
-    let password = if password.len() > HMAC_KEY_BLOCK_BYTES {
-        hashed = abc_sha256::digest(password).map_err(|_| Error::PasswordTooLong)?;
-        &hashed[..]
-    } else {
-        password
-    };
+    // Every PRF starts from the same normalized, precompressed key pads.
+    let prepared_key = HmacSha256::new(password)?;
     for (index, target) in output.chunks_mut(TAG_BYTES).enumerate() {
-        let block = derive_block(password, salt, iterations, index as u32 + 1)?;
+        let block = derive_block(&prepared_key, salt, iterations, index as u32 + 1)?;
         target.copy_from_slice(&block[..target.len()]);
     }
     Ok(())
 }
 
 fn derive_block(
-    password: &[u8],
+    prepared_key: &HmacSha256,
     salt: &[u8],
     iterations: NonZeroU32,
     index: u32,
 ) -> Result<[u8; TAG_BYTES], Error> {
-    let mut mac = HmacSha256::new(password)?;
+    let mut mac = prepared_key.fork();
     mac.update(salt)?;
     mac.update(&index.to_be_bytes())?;
     let mut previous = mac.finalize()?;
     let mut block = previous;
     for _ in 1..iterations.get() {
-        previous = authenticate(password, &previous)?;
+        let mut mac = prepared_key.fork();
+        mac.update(&previous)?;
+        previous = mac.finalize()?;
         for (byte, term) in block.iter_mut().zip(previous) {
             *byte ^= term;
         }

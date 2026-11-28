@@ -70,3 +70,22 @@ fn key_block_boundaries() {
         "b613679a0814d9ec772f95d778c35fc5ff1697c493715653c6c712144292c5ad",
     );
 }
+#[cfg(feature = "prepared-key")]
+#[test]
+fn fork_copies_both_key_states_and_the_partial_message() {
+    let key = [0xd2; 131];
+    let prefix = b"shared HMAC prefix";
+    let mut prefix_state = abc_hmac_sha256::HmacSha256::new(&key).unwrap();
+    prefix_state.update(prefix).unwrap();
+    for suffix in [&b""[..], &[0x5a; 64], b"independent bytes"] {
+        let mut branch = prefix_state.fork();
+        branch.update(suffix).unwrap();
+        let message = [&prefix[..], suffix].concat();
+        let expected = abc_hmac_sha256::authenticate(&key, &message).unwrap();
+        assert_eq!(branch.finalize().unwrap(), expected);
+    }
+    assert_eq!(
+        prefix_state.finalize().unwrap(),
+        abc_hmac_sha256::authenticate(&key, prefix).unwrap(),
+    );
+}

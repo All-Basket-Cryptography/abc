@@ -8,5 +8,4 @@ publish = false
 description = "All-Basket Cryptography research PBKDF2-HMAC-SHA-256"
 
 [dependencies]
-abc-hmac-sha256 = { version = "0.1.0", path = "../../../../mac/hmac-sha256/impl/rust" }
-abc-sha256 = { version = "0.1.0", path = "../../../../hash/sha256/impl/rust" }
+abc-hmac-sha256 = { version = "0.1.0", path = "../../../../mac/hmac-sha256/impl/rust", features = ["prepared-key"] }

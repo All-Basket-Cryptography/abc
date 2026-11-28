@@ -9,5 +9,8 @@ description = "All-Basket Cryptography research HMAC-SHA-256 construction"
 readme = "README.md"
 include = ["/src/lib.rs", "/tests/vectors.rs", "/README.md"]
 
+[features]
+prepared-key = []
+
 [dependencies]
 abc-sha256 = { version = "0.1.0", path = "../../../../hash/sha256/impl/rust" }

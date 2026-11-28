@@ -20,7 +20,7 @@
   "spec_ref": "abc:specification:hmac-sha-256-rfc2104",
   "origin": "first-party",
   "revision": "0.1.0",
-  "source_sha256": "b9be56d2cc809e6b3998e76ec53edcaf4ccb98f19e3c2f643678f224a9f09425",
+  "source_sha256": "8be080b1fb4ff4a4b7e04474778265f0626bf2cad0d049af8cbf041466db55e6",
   "path": "src/crypto/mac/hmac-sha256/impl/rust/src/lib.rs",
   "languages": [
     "rust"

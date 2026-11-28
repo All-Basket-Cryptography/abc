@@ -72,6 +72,15 @@ impl HmacSha256 {
         Ok(Self { inner, outer })
     }
 
+    /// Copy the current HMAC context into an independent computation.
+    #[cfg(feature = "prepared-key")]
+    pub fn fork(&self) -> Self {
+        Self {
+            inner: self.inner.clone(),
+            outer: self.outer.clone(),
+        }
+    }
+
     /// Append bytes to the authenticated message. An overflow preserves the state.
     pub fn update(&mut self, input: &[u8]) -> Result<(), HmacError> {
         match self.inner.update(input) {

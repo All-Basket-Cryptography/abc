@@ -16,3 +16,10 @@ kind = "test"
 command = ["cargo", "+1.92.0", "test", "--manifest-path", "tools/build/rust/Cargo.toml", "--locked", "-p", "abc-hmac-sha256"]
 tools = ["cargo"]
 timeout_seconds = 120
+
+[tasks.prepared-key]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "tools/build/rust/Cargo.toml", "--locked", "-p", "abc-hmac-sha256", "--features", "prepared-key"]
+tools = ["cargo", "rustc", "rustup"]
+features = ["prepared-key"]
+timeout_seconds = 120

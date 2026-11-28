@@ -18,7 +18,7 @@
   "subject_ref": "abc:construction:pbkdf2-hmac-sha-256",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "1ef9bf3f76a3a507e5a5d3a8fb900891814bf8afaf6dd57362b5ba75c52bfae9",
+  "source_sha256": "82ed11c0f018d0f626014776a86e7afc5ca87f1b1dcce675a7216864801a6515",
   "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/rust/src/lib.rs",
   "languages": [
     "rust"
