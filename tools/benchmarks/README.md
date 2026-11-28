@@ -116,3 +116,40 @@ node tools/benchmarks/chacha20-ecmascript.mjs baseline
 ```
 
 [Recorded Windows x64 comparison](../../docs/status/chacha20-word-output-benchmark.json)
+
+## Paired Poly1305 measurements
+
+The ECMAScript runner compares standalone tags with an independent
+arbitrary-precision formula and AEAD seal outputs with Node OpenSSL.
+The two revisions alternate across 11 samples over public 0-, 17-,
+1,024- and 16,387-byte payloads. Each call includes setup and tag
+calculation. AEAD uses 27 bytes of associated data. Results record raw
+samples and source fingerprints.
+
+```sh
+mkdir -p .abc/poly-baseline
+git archive --output=.abc/poly-baseline.tar d1b008c src/crypto/cipher/chacha20 \
+  src/crypto/mac/poly1305 src/crypto/aead/chacha20-poly1305 src/crypto/inputs
+tar -xf .abc/poly-baseline.tar -C .abc/poly-baseline
+node tools/benchmarks/poly1305-ecmascript.mjs .abc/poly-baseline
+```
+
+The C++ fixture links both versions into one executable. In a Windows
+x64 Visual Studio developer shell with Clang 21.1.8, prepare a scratch
+directory with `paired.cpp` from [the benchmark fixture](poly1305-paired.cpp).
+Copy `poly1305.cpp` and `poly1305.hpp` from
+`src/crypto/mac/poly1305/impl/cpp` at `d1b008c` into a `baseline`
+subdirectory. Copy the working versions into `columns`.
+
+```sh
+clang++ -std=c++17 -O2 -Wall -Wextra -Werror -Dnative_poly1305=native_poly1305_baseline -c baseline/poly1305.cpp -o baseline.obj
+clang++ -std=c++17 -O2 -Wall -Wextra -Werror -c columns/poly1305.cpp -o columns.obj
+clang++ -std=c++17 -O2 -Wall -Wextra -Werror -fuse-ld=lld paired.cpp baseline.obj columns.obj -o paired.exe
+./paired.exe
+```
+
+Each row has input size, the two medians in nanoseconds, and the median,
+minimum and maximum of the baseline-to-candidate ratios across nine
+alternating batches. The fixture checks both implementations on 16 view
+offsets for each message size.
+[ECMAScript evidence](../../docs/status/poly1305-window-benchmark.json) · [C++ evidence](../../docs/status/poly1305-cpp-benchmark.json)

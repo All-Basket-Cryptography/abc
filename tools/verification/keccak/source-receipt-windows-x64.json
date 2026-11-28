@@ -15,15 +15,15 @@
     "src/crypto/hash/keccak-p1600/spec/KeccakRound.lean": "73f5cb603334b2d310e67dd674b83d2676f8fe680d3c7e0fa7429fb05ce3be99",
     "src/crypto/hash/keccak-p1600/spec/KeccakSourceRefinement.lean": "e957f9568dee455c0abe9b8f8135f1556dd1c0b9f58101d7f59addca25c9529d",
     "tools/verification/keccak/llbc.py": "a71a02fd13ee906be1d484a334c5c3f82ff2eb32e9c03a5ed3343d0b3425a75f",
-    "tools/verification/keccak/check_source.py": "08603732d1b29b0e079916a9657d125205da94a95ef980f170bfbe2854fc0249"
+    "tools/verification/keccak/check_source.py": "b0f7a015fc7d7511f25b0c0c2b2547aecef4b969c6b8cf4e473cdab12eb093ea"
   },
   "extractions": [
     {
-      "sha256": "aae79f01baef350c3becc2071782a044c340a511a7476678b7206d0d5e098895",
+      "sha256": "034cb48d65fa9dd23ab57d5c9b0a35d314c859d3b65f253ff6ae48cd6326c21b",
       "used_default_sysroot_fallback": true
     },
     {
-      "sha256": "a11ec2163ab5780248a239bc23ca88b58768f01ad4dd1ff183eee2b5c7360462",
+      "sha256": "cad8b7c611429b977f3a8db8d4959cde37a49da97eda1e052d0c3dbae8046f14",
       "used_default_sysroot_fallback": true
     }
   ],
@@ -74,19 +74,19 @@
   "negative_controls": {
     "theta_rotation": {
       "rust_sha256": "7801e744ce21fa3e4d375dc6a07aa9660a526b0244da4415513a3e9aa9817934",
-      "llbc_sha256": "71f58e4eff77c1d6a5d17a50538d9930a410650b0562053c19e225acbce1d873",
+      "llbc_sha256": "7595003c3e534c7787fa03cbb4ab2f4ff84353fbfcd54c9e87f267bee9ff6650",
       "lean_sha256": "7e2980458f6c184dd2909d2fc689410489c30f00b1d42da9a4dc6f58f76b552a",
       "rejected_theorem": "sourceRound_refines"
     },
     "absorb_endianness": {
       "rust_sha256": "87d8896a5d6c8962eabd9b3459907a869b01c9d7a2993028e4bd96de043e0878",
-      "llbc_sha256": "190c8dc600a3b890a36e5a9a1f12ec8fcc284d093902d243304f5429e721c21f",
+      "llbc_sha256": "61c99bd79090a68840a3c6956b8fe5825b54118050ffe6f4ba4ee5f86a98bdd3",
       "lean_sha256": "74307713eb3639aacbd24e59d2ba59c67ba0f817cb26399b9cb3f304263e3ee6",
       "rejected_theorem": "sourceAbsorbMix_refines"
     },
     "iota_constant": {
       "rust_sha256": "df0c518c435100bcec1dd2561dba7ce0ae6f1e2d121066b59aff99727028f8b1",
-      "llbc_sha256": "fb5e70cb07ef6d730781ece5d9b40922206b08fd2635f558fe44aed79db504d6",
+      "llbc_sha256": "67296a64b2f2f7062bfe25148226c9de26bb313b128dd5c7e0b15e369da26845",
       "lean_sha256": "e20638a7849272956515c3ff10126048b95b1f25c4437d1dbc475d4995b7ea6a",
       "rejected_theorem": "sourceConstants_refine"
     }

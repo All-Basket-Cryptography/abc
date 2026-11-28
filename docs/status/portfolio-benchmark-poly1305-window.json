@@ -1,0 +1,500 @@
+{
+  "node": "v24.12.0",
+  "openssl": "3.5.4",
+  "cpu": "12th Gen Intel(R) Core(TM) i7-12700K",
+  "platform": "win32",
+  "arch": "x64",
+  "units": "microseconds per operation",
+  "runnerSha256": "088d462814704475c4ae808d89c7b5bf07d3a6732698ef0be6a1aad71371d2f4",
+  "warmupCalls": 8,
+  "samples": 7,
+  "checksum": 103848391,
+  "results": [
+    {
+      "profile": "sha256",
+      "workload": "1024 input bytes, 32 output bytes",
+      "results": {
+        "javascript": {
+          "count": 286,
+          "median": 6.06,
+          "min": 5.81,
+          "max": 12.4
+        },
+        "typescript": {
+          "count": 276,
+          "median": 11.29,
+          "min": 11,
+          "max": 16.71
+        },
+        "node_openssl": {
+          "count": 1612,
+          "median": 1.53,
+          "min": 1.49,
+          "max": 2.35
+        }
+      }
+    },
+    {
+      "profile": "sha512",
+      "workload": "1024 input bytes, 64 output bytes",
+      "results": {
+        "javascript": {
+          "count": 124,
+          "median": 29.65,
+          "min": 23.87,
+          "max": 43.51
+        },
+        "typescript": {
+          "count": 34,
+          "median": 28.54,
+          "min": 27.45,
+          "max": 55.17
+        },
+        "node_openssl": {
+          "count": 2048,
+          "median": 2.01,
+          "min": 1.98,
+          "max": 2.17
+        }
+      }
+    },
+    {
+      "profile": "sha3-256",
+      "workload": "1024 input bytes, 32 output bytes",
+      "results": {
+        "javascript": {
+          "count": 88,
+          "median": 35.68,
+          "min": 31.5,
+          "max": 52.67
+        },
+        "typescript": {
+          "count": 89,
+          "median": 32.53,
+          "min": 31.38,
+          "max": 35.18
+        },
+        "node_openssl": {
+          "count": 1768,
+          "median": 2.51,
+          "min": 2.39,
+          "max": 3.22
+        }
+      }
+    },
+    {
+      "profile": "shake256",
+      "workload": "1024 input bytes, 32 output bytes",
+      "results": {
+        "javascript": {
+          "count": 203,
+          "median": 32.52,
+          "min": 32.21,
+          "max": 36.16
+        },
+        "typescript": {
+          "count": 239,
+          "median": 32.54,
+          "min": 32.17,
+          "max": 37.09
+        },
+        "node_openssl": {
+          "count": 1527,
+          "median": 2.77,
+          "min": 2.68,
+          "max": 3.17
+        }
+      }
+    },
+    {
+      "profile": "blake2b",
+      "workload": "1024 input bytes, 64 output bytes",
+      "results": {
+        "javascript": {
+          "count": 105,
+          "median": 17.44,
+          "min": 16.79,
+          "max": 26
+        },
+        "typescript": {
+          "count": 108,
+          "median": 18.22,
+          "min": 17.12,
+          "max": 30.83
+        },
+        "node_openssl": {
+          "count": 2048,
+          "median": 1.65,
+          "min": 1.61,
+          "max": 2.61
+        }
+      }
+    },
+    {
+      "profile": "hmac-sha256",
+      "workload": "32-byte key, 1024-byte message",
+      "results": {
+        "javascript": {
+          "count": 435,
+          "median": 9.24,
+          "min": 8.56,
+          "max": 9.31
+        },
+        "typescript": {
+          "count": 386,
+          "median": 15.33,
+          "min": 14.47,
+          "max": 17.06
+        },
+        "node_openssl": {
+          "count": 1159,
+          "median": 2.36,
+          "min": 2.17,
+          "max": 2.73
+        }
+      }
+    },
+    {
+      "profile": "hkdf-sha256",
+      "workload": "32-byte input key, 64-byte output",
+      "results": {
+        "javascript": {
+          "count": 316,
+          "median": 11.58,
+          "min": 10.3,
+          "max": 15.23
+        },
+        "typescript": {
+          "count": 278,
+          "median": 18.16,
+          "min": 15.71,
+          "max": 19.93
+        },
+        "node_openssl": {
+          "count": 541,
+          "median": 6.63,
+          "min": 6.1,
+          "max": 7.17
+        }
+      }
+    },
+    {
+      "profile": "pbkdf2-hmac-sha256",
+      "workload": "256 iterations, 32-byte output",
+      "results": {
+        "javascript": {
+          "count": 17,
+          "median": 386.34,
+          "min": 365.55,
+          "max": 481.24
+        },
+        "typescript": {
+          "count": 15,
+          "median": 539,
+          "min": 527.21,
+          "max": 578.37
+        },
+        "node_openssl": {
+          "count": 202,
+          "median": 33.15,
+          "min": 32.44,
+          "max": 40.74
+        }
+      }
+    },
+    {
+      "profile": "scrypt",
+      "workload": "N=1024, r=8, p=1, 32-byte output",
+      "results": {
+        "javascript": {
+          "count": 1,
+          "median": 6416.4,
+          "min": 6279.5,
+          "max": 7110.2
+        },
+        "typescript": {
+          "count": 1,
+          "median": 6542.5,
+          "min": 6318.2,
+          "max": 6809.7
+        },
+        "node_openssl": {
+          "count": 5,
+          "median": 1442.36,
+          "min": 1417.12,
+          "max": 1514.38
+        }
+      }
+    },
+    {
+      "profile": "argon2id",
+      "workload": "1024 KiB, two passes, one lane, 32-byte output",
+      "results": {
+        "javascript": {
+          "count": 3,
+          "median": 2496.4,
+          "min": 2454.07,
+          "max": 2604.7
+        },
+        "typescript": {
+          "count": 3,
+          "median": 2480.8,
+          "min": 2424.53,
+          "max": 2800.5
+        },
+        "node_openssl": {
+          "count": 3,
+          "median": 2492.3,
+          "min": 2451.93,
+          "max": 2661.63
+        }
+      }
+    },
+    {
+      "profile": "aes256",
+      "workload": "one 16-byte block including key schedule",
+      "results": {
+        "javascript": {
+          "count": 113,
+          "median": 20.8,
+          "min": 18.83,
+          "max": 28.99
+        },
+        "typescript": {
+          "count": 80,
+          "median": 21.06,
+          "min": 19.05,
+          "max": 31.22
+        },
+        "node_openssl": {
+          "count": 535,
+          "median": 2.36,
+          "min": 2.25,
+          "max": 3.96
+        }
+      }
+    },
+    {
+      "profile": "aes256-gcm",
+      "workload": "seal 1024 bytes, 25-byte AAD, 16-byte tag",
+      "results": {
+        "javascript": {
+          "count": 8,
+          "median": 1017.32,
+          "min": 1007.34,
+          "max": 1043.17
+        },
+        "typescript": {
+          "count": 8,
+          "median": 1017.44,
+          "min": 1008.46,
+          "max": 1046.48
+        },
+        "node_openssl": {
+          "count": 840,
+          "median": 3.93,
+          "min": 3.53,
+          "max": 5.35
+        },
+        "javascript_node": {
+          "count": 937,
+          "median": 4.3,
+          "min": 3.81,
+          "max": 5.34
+        },
+        "typescript_node": {
+          "count": 1002,
+          "median": 4.36,
+          "min": 4.22,
+          "max": 5.07
+        }
+      }
+    },
+    {
+      "profile": "chacha20-poly1305",
+      "workload": "seal 1024 bytes, 25-byte AAD, 16-byte tag",
+      "results": {
+        "javascript": {
+          "count": 76,
+          "median": 39.71,
+          "min": 35.32,
+          "max": 52.43
+        },
+        "typescript": {
+          "count": 78,
+          "median": 39.76,
+          "min": 34.27,
+          "max": 50.33
+        },
+        "node_openssl": {
+          "count": 1397,
+          "median": 4.15,
+          "min": 3.84,
+          "max": 4.33
+        }
+      }
+    },
+    {
+      "profile": "chacha20",
+      "workload": "XOR 1024 bytes, IETF counter starts at 1",
+      "results": {
+        "javascript": {
+          "count": 804,
+          "median": 9.07,
+          "min": 8.93,
+          "max": 9.61
+        },
+        "typescript": {
+          "count": 883,
+          "median": 9.01,
+          "min": 8.74,
+          "max": 9.4
+        },
+        "node_openssl": {
+          "count": 2048,
+          "median": 2.7,
+          "min": 2.55,
+          "max": 2.95
+        }
+      }
+    },
+    {
+      "profile": "poly1305",
+      "workload": "one-time MAC on 1024 bytes",
+      "results": {
+        "javascript": {
+          "count": 352,
+          "median": 20.08,
+          "min": 19.8,
+          "max": 22.1
+        },
+        "typescript": {
+          "count": 358,
+          "median": 20.22,
+          "min": 19.93,
+          "max": 22.24
+        }
+      }
+    },
+    {
+      "profile": "x25519",
+      "workload": "shared secret including key import",
+      "results": {
+        "javascript": {
+          "count": 104,
+          "median": 64.38,
+          "min": 61.72,
+          "max": 90.88
+        },
+        "typescript": {
+          "count": 118,
+          "median": 63.47,
+          "min": 63.14,
+          "max": 66.53
+        },
+        "node_openssl": {
+          "count": 114,
+          "median": 68.93,
+          "min": 63.04,
+          "max": 87.69
+        }
+      }
+    },
+    {
+      "profile": "ed25519",
+      "workload": "verify 1024-byte message including key import",
+      "results": {
+        "javascript": {
+          "count": 22,
+          "median": 238.94,
+          "min": 228.8,
+          "max": 252.73
+        },
+        "typescript": {
+          "count": 31,
+          "median": 239.27,
+          "min": 236.04,
+          "max": 260.47
+        },
+        "node_openssl": {
+          "count": 88,
+          "median": 86.8,
+          "min": 86.13,
+          "max": 90.25
+        }
+      }
+    },
+    {
+      "profile": "ecdsa-p256-sha256",
+      "workload": "verify 1024-byte message including key import",
+      "results": {
+        "javascript": {
+          "count": 5,
+          "median": 1561,
+          "min": 1524.5,
+          "max": 1668.32
+        },
+        "typescript": {
+          "count": 5,
+          "median": 1492.44,
+          "min": 1443.4,
+          "max": 1651.16
+        },
+        "node_openssl": {
+          "count": 85,
+          "median": 78.25,
+          "min": 77.55,
+          "max": 79.54
+        }
+      }
+    },
+    {
+      "profile": "ml-kem-768",
+      "workload": "decapsulate 1088-byte ciphertext from 64-byte seed",
+      "results": {
+        "javascript": {
+          "count": 8,
+          "median": 812.43,
+          "min": 784.05,
+          "max": 872.55
+        },
+        "typescript": {
+          "count": 10,
+          "median": 807.16,
+          "min": 786.58,
+          "max": 906.23
+        },
+        "node_openssl": {
+          "count": 105,
+          "median": 61.15,
+          "min": 59.45,
+          "max": 65
+        }
+      }
+    },
+    {
+      "profile": "ml-dsa-65",
+      "workload": "verify 1024-byte message, empty context, including key import",
+      "results": {
+        "javascript": {
+          "count": 6,
+          "median": 1282.08,
+          "min": 1252.58,
+          "max": 1356.63
+        },
+        "typescript": {
+          "count": 6,
+          "median": 1273.47,
+          "min": 1261.67,
+          "max": 1326.08
+        },
+        "node_openssl": {
+          "count": 60,
+          "median": 120.19,
+          "min": 118.82,
+          "max": 123.3
+        }
+      }
+    }
+  ]
+}
