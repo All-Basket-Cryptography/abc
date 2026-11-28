@@ -19,6 +19,29 @@ chunks and the empty message.
 
 ## Checked refinement
 
+### Reusable key states
+
+The portable JavaScript and TypeScript contexts compress the inner and
+outer key blocks once per key. A reset restores the saved inner prefix.
+Taking a tag resumes a working copy of the outer prefix with the inner
+digest. The saved chaining words have the same secrecy requirements as
+the key. [RFC 2104 § 4](https://www.rfc-editor.org/rfc/rfc2104.html#section-4)
+
+[HmacPrepared.lean](HmacPrepared.lean) checks that rewriting the inner pad
+produces the outer pad for every byte, restoring a saved SHA-256 state
+preserves every admissible subsequent chunk, and rejected length updates
+preserve state. The final tag and length errors agree with the independent
+specification for every key and admissible message partition. The proof
+uses the SHA-256 streaming model. ECMAScript source correspondence, JIT
+leakage and erasure remain open. The public-input comparison records all
+measured runs and source fingerprints. [Benchmark instructions](../../../../../tools/benchmarks/README.md#paired-sha-256-and-hmac-key-state-measurements)
+
+```sh
+python -B src/lean/check.py hmac
+```
+
+### Rust extraction
+
 The independent [Lean specification](HmacSpec.lean) implements the RFC
 construction and the two byte-length errors. The checked implementation
 theorems compose the exact extracted HMAC code with the separately verified

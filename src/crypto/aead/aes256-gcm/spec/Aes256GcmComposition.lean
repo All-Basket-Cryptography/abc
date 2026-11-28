@@ -14,7 +14,7 @@ def aadLimit : Nat := (2^64 - 1) / 8
 
 private def reduction : Block := 0xe1000000000000000000000000000000
 
-private abbrev ProductState := Block × Block
+abbrev ProductState := Block × Block
 
 -- SP 800-38D Algorithm 1 scans the first operand from its most significant bit.
 private def nistMultiplyStep (input : Block) (bit : Nat) (state : ProductState) : ProductState :=
@@ -22,7 +22,7 @@ private def nistMultiplyStep (input : Block) (bit : Nat) (state : ProductState) 
   (if input.getLsbD bit then z ^^^ v else z,
    if v.getLsbD 0 then (v >>> 1) ^^^ reduction else v >>> 1)
 
-private def maskMultiplyStep (input : Block) (bit : Nat) (state : ProductState) : ProductState :=
+def maskMultiplyStep (input : Block) (bit : Nat) (state : ProductState) : ProductState :=
   let (z, v) := state
   (z ^^^ (v &&& (0 - ((input >>> bit) &&& 1))),
    (v >>> 1) ^^^ (reduction &&& (0 - (v &&& 1))))
@@ -51,7 +51,7 @@ private theorem mask_step_refines (input : Block) (bit : Nat) (state : ProductSt
     · rw [if_pos h, if_pos h]
     · rw [if_neg h, if_neg h, BitVec.xor_zero]
 
-private def descendingLoop (step : Nat → ProductState → ProductState) :
+def descendingLoop (step : Nat → ProductState → ProductState) :
     Nat → ProductState → ProductState
   | 0, state => state
   | n + 1, state => descendingLoop step n (step n state)

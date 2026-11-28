@@ -74,3 +74,25 @@ outputs that cover both short reads and multiple rate blocks.
 ```sh
 node tools/benchmarks/keccak-ecmascript.mjs /absolute/path/to/baseline
 ```
+
+## Paired SHA-256 and HMAC key-state measurements
+
+Pass a baseline checkout or extract the six relevant source directories
+from revision `50db178`. The runner compares both versions to Node
+OpenSSL before collecting 11 alternating public-input timing samples.
+The same-key case keeps a context per version across all samples. The
+Node comparator creates a new HMAC for each message. The samples cover
+both portable languages and include one-shot HMAC, SHA-256, four-block
+HKDF, PBKDF2 and scrypt. These workloads use fixed test-only parameters.
+The result includes source fingerprints, raw timings and runtime details.
+
+```sh
+git archive 50db178 src/crypto/hash/sha256 src/crypto/mac/hmac-sha256 \
+  src/crypto/kdf/hkdf-sha256 src/crypto/kdf/pbkdf2-hmac-sha256 \
+  src/crypto/kdf/scrypt src/crypto/inputs > baseline.tar
+mkdir baseline
+tar -xf baseline.tar -C baseline
+node tools/benchmarks/hmac-prepared-ecmascript.mjs baseline
+```
+
+[Recorded Windows x64 comparison](../../docs/status/hmac-prepared-ecmascript-benchmark.json)

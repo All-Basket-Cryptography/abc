@@ -61,3 +61,24 @@ test('snapshot, rejected types, caller-buffer ownership and reset', () => {
   context.reset();
   assert.equal(hex(context.digest()), reference(new Uint8Array()));
 });
+
+test('copied prefix state owns its pending bytes, chaining words and length', () => {
+  const referenceHash = reference;
+  for (const size of [0, 1, 55, 56, 63, 64, 65, 120, 128, 129]) {
+    const prefix = Uint8Array.from({ length: size }, (_, i) => 67 * i + 11);
+    const left = Uint8Array.of(3, 5, 7);
+    const right = new Uint8Array(69).fill(23);
+    const source = new Sha256().update(prefix);
+    const copy = new Sha256().update(new Uint8Array(127).fill(19));
+    assert.equal(copy.copyFrom(source), copy);
+    assert.equal(hex(copy.digest()), referenceHash(prefix));
+    assert.throws(() => copy.copyFrom({}), TypeError);
+    source.update(left);
+    copy.copyFrom(copy).update(right);
+    assert.equal(hex(source.digest()), referenceHash(Uint8Array.of(...prefix, ...left)));
+    assert.equal(hex(copy.digest()), referenceHash(Uint8Array.of(...prefix, ...right)));
+    source.reset();
+    copy.copyFrom(source);
+    assert.equal(hex(copy.digest()), referenceHash(new Uint8Array()));
+  }
+});

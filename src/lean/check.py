@@ -44,9 +44,10 @@ def main():
         if selected in ("sha256", "hmac", "hkdf", "pbkdf2"):
             directory = ROOT / "src/crypto/hash/sha256/spec"
             checked_lean(command, ["-o", output / "Sha256Spec.olean", "Sha256Spec.lean"], directory, output)
-        if selected == "sha256":
+        if selected in ("sha256", "hmac"):
             for module in ("CompressionRefinement", "StreamingRefinement"):
                 checked_lean(command, ["-o", output / f"{module}.olean", f"{module}.lean"], directory, output)
+        if selected == "sha256":
             checked_lean(command, ["--run", "Checks.lean"], directory, output)
         elif selected == "sha3":
             directory = ROOT / "src/crypto/hash/sha3-256/spec"
@@ -66,6 +67,8 @@ def main():
         if selected in ("hmac", "hkdf", "pbkdf2"):
             directory = ROOT / "src/crypto/mac/hmac-sha256/spec"
             checked_lean(command, ["-o", output / "HmacSpec.olean", "HmacSpec.lean"], directory, output)
+        if selected == "hmac":
+            checked_lean(command, ["-DwarningAsError=true", "HmacPrepared.lean"], directory, output)
         if selected == "hkdf":
             directory = ROOT / "src/crypto/kdf/hkdf-sha256/spec"
             checked_lean(command, ["HkdfSpec.lean"], directory, output)

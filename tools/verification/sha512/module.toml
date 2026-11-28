@@ -18,3 +18,9 @@ kind = "formal"
 command = ["python", "-B", "tools/verification/sha512/check_source.py", "--negative-controls"]
 tools = ["python", "lean", "cargo", "rustup", "charon"]
 timeout_seconds = 180
+
+[tasks.source-stream-gate-and-padding]
+kind = "formal"
+command = ["python", "-B", "tools/verification/sha512/check_stream_source.py", "--negative-controls"]
+tools = ["python", "lean", "cargo", "rustup", "charon"]
+timeout_seconds = 180

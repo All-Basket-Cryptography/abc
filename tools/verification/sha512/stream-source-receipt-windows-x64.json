@@ -1,0 +1,91 @@
+{
+  "status": "sha512_llbc_stream_gate_and_padding_checked",
+  "target": "x86_64-pc-windows-msvc",
+  "charon": "0.1.254 (b104e24fea7d721b71e6c39fd70f26ff20bc0980)",
+  "charon_executable_sha256": "38ec811d2402a6ada748665486111192de9cfb5c3571d57aeb94f57b62b3ab02",
+  "rust": "rustc 1.100.0-nightly (8fa1c96cf 2026-08-17)\nbinary: rustc\ncommit-hash: 8fa1c96cfd489e4c27654c144ae871ce2c4db6c6\ncommit-date: 2026-08-17\nhost: x86_64-pc-windows-msvc\nrelease: 1.100.0-nightly\nLLVM version: 23.1.0",
+  "lean": "Lean (version 4.31.0, x86_64-w64-windows-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)",
+  "sources": {
+    "tools/verification/probe/toolchain-candidate.json": "6953b42492bff08a40479725fec7ce922002bfdbe715afcaedf4f817f7621249",
+    "src/lean/lean-toolchain": "efac0b94923b2d8b6840cd35be9177ad0fc5ab2332f4f4311c98712cee92fdee",
+    "src/crypto/hash/sha512/impl/rust/src/lib.rs": "f714292a3e778f4c1c01397f303183fbf1a3dcfbb78ad40ef6949c7850a005d9",
+    "src/crypto/hash/sha512/impl/rust/Cargo.toml": "bc11e007ac0044c6cb70a6e20105aa026b8ebbe843511858f033e0a6ae036308",
+    "tools/build/rust/Cargo.toml": "9e8dd7579ad780836ce80f3a00639b171926d3435e15e3eb274c4fd67eb0d8f4",
+    "tools/build/rust/Cargo.lock": "a3ee8405943bef38fef4f8127d96032013d10bc082ae0cb6ff9ccbd855178b5c",
+    "src/lean/Abc/Foundation/Encoding.lean": "1e4e51f3430cd6262cabedc9b6a7db80bb8e6f2a4f12af64a842f5e4ef7c32e9",
+    "src/crypto/hash/sha512/spec/Sha512Spec.lean": "7bafda0adb4584c465bef6c9d5fcf0fcf09024bbb06e448be748a4e89ec3c6bf",
+    "src/crypto/hash/sha512/spec/Sha512Compression.lean": "b9a094c309f3cf4205c165449921918f5a62154e3813b4d3451c2aa41eac6e5a",
+    "src/crypto/hash/sha512/spec/Sha512Streaming.lean": "213d36165361b03b6d2778054169afdfcc6439ba9f3dd4b30552ae354b28af91",
+    "src/crypto/hash/sha512/spec/Sha512StreamSourceRefinement.lean": "33776203eb058f39292ff64376079e596d5face3d9ef45603a6dfeb0e3f820e8",
+    "tools/verification/sha512/check.py": "bb727ef102e94f69cec7c3caed026bd8a64d171bc58868b9cf8a3ecebfc85794",
+    "tools/verification/sha512/llbc.py": "5aaef69716a24af3f3f331374202cfcb765b40cb4a5e6d89f32adda31cd9efb6",
+    "tools/verification/sha512/check_source.py": "dabf1eb4296fd92e85bd916466ed6934e1bce4451dd1f9c328d777f09f7d1625",
+    "tools/verification/sha512/stream_llbc.py": "15cec3133f80bcda846d474afc1f83fb1233b591df61422b0ad96248915fce96",
+    "tools/verification/sha512/check_stream_source.py": "321b13e249ce47d712a5c783a4b7093ca67fa54deca594cbfaf08eb6759a9c5f"
+  },
+  "extractions": [
+    {
+      "sha256": "e1ec210056b60139f80c63dce37547e11b3579811288ae39db50aeb7fd25abab",
+      "used_default_sysroot_fallback": true
+    },
+    {
+      "sha256": "24cef75ea9b1917f657b9a2c4c8aa508fced680e88d2228d5fba066437618eb6",
+      "used_default_sysroot_fallback": true
+    }
+  ],
+  "generated_lean_sha256": "498192abf159d31d1047c6c6442efdc8e7c998fa67fb70577e7d9abe4f9bdb3b",
+  "audited_theorems": {
+    "sourceRejects_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "sourceCount_refines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "acceptedCounterFits": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "updateWithSourceGate_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "rejectedUpdate_preservesView": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "sourceBitLengthFits": [],
+    "emittedBlocks_refines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "emittedBlocks_byte_contract": [
+      "propext",
+      "Quot.sound"
+    ],
+    "finalizeWithSourcePadding_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "negative_controls": {
+    "reject_exact_boundary": {
+      "rust_sha256": "2253f72c232ee721d70950d2e6ee998c50269b697d90243aa4a25fc39c3979e7",
+      "llbc_sha256": "78e2b6fa348b46988c3673be385e32fe097f99dd8174ef33d57345e1d4f870e2",
+      "lean_sha256": "b97cb1b73ae06cdfe5e1b6efa3b7f275d6e9866a149ddf4fb5238998a90657ce",
+      "rejected_theorem": "sourceRejects_refines"
+    },
+    "alter_marker": {
+      "rust_sha256": "aadd07e4beb35a666b58666020a1944eaaf3f0bcc41991676dd7ce580a67f360",
+      "llbc_sha256": "98607718d65f8dfdf1e78e2bd720d7ee534a0f50d1b2456a56cfaadaa39a25c8",
+      "lean_sha256": "4cc6b631cba97877544533cd008f66caf1b25c3b16fd10bb5d20f0a76afe7d53",
+      "rejected_theorem": "emittedBlocks_refines"
+    }
+  }
+}

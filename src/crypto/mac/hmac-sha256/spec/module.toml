@@ -1,7 +1,7 @@
 schema_version = 1
 id = "hmac-sha256-spec"
 owned_paths = ["src/crypto/mac/hmac-sha256/spec"]
-lean_sources = { HmacSpec = "src/crypto/mac/hmac-sha256/spec" }
+lean_sources = { HmacPrepared = "src/crypto/mac/hmac-sha256/spec", HmacSpec = "src/crypto/mac/hmac-sha256/spec" }
 
 [tasks.check]
 kind = "formal"

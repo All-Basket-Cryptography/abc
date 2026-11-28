@@ -73,5 +73,37 @@ reviewed iterator drivers that supply the four loop inputs. For example,
 the parser validates the normal-path `Option` branches and the extracted
 values that each iteration writes. It takes the iterations' exact
 sequence and pairing from the separately reviewed driver model.
-The streaming source bridge, general Rust memory and unwind semantics,
-compiler output and target leakage remain separate verification work.
+General Rust memory and unwind semantics, compiler output and target
+leakage remain separate verification work.
+
+## Charon streaming length and padding replay
+
+Starting from the exact Rust crate's public `digest` symbol, Charon
+also produces the reachable `Sha512::update` and `Sha512::finalize` bodies.
+The restricted interpreter follows the length cast and guard, checks
+that the rejecting branch returns `MessageTooLong` without a data write,
+and generates the successful counter expression. It also checks the
+order and destinations of the finalizer's marker store, suffix fill,
+optional extra compression and reset, big-endian bit-length write,
+and final compression. Lean checks the generated terms against the
+accepted byte-length domain and FIPS padding, including arbitrary stale
+bytes in the underlying 128-byte buffer.
+[Source-linked statements](../../../src/crypto/hash/sha512/spec/Sha512StreamSourceRefinement.lean) · [FIPS 180-4 § 5.1.2](https://doi.org/10.6028/NIST.FIPS.180-4)
+
+```sh
+python -B tools/verification/sha512/check_stream_source.py --negative-controls
+```
+
+Two fresh crate extractions produce identical Lean terms. The source
+replay audits nine theorems and recompiles two actual Rust controls,
+one rejecting the maximum allowed incoming count and one changing the
+padding marker. Both altered proof obligations fail. The replay
+accepts the same executable options as the compression replay.
+[Windows x64 stream source receipt](stream-source-receipt-windows-x64.json)
+
+The trusted lowering and Rust standard-library contracts cover the
+supported integer, slice and byte-conversion operations. The Lean
+update theorem attaches the generated gate to the reviewed block
+driver, and the finalized digest theorem uses the reviewed encoder.
+The update's successful copy-and-compress loop, digest serialization
+and public wrapper still have distinct source-refinement obligations.

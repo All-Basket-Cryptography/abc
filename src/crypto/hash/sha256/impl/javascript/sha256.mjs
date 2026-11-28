@@ -26,7 +26,8 @@ function compress(state, input, offset, schedule) {
     const index = offset + 4 * slot;
     schedule[slot] = (input[index] << 24) | (input[index + 1] << 16) | (input[index + 2] << 8) | input[index + 3];
   }
-  let [a, b, c, d, e, f, g, h] = state;
+  let a = state[0], b = state[1], c = state[2], d = state[3];
+  let e = state[4], f = state[5], g = state[6], h = state[7];
   for (let round = 0; round < 64; round += 1) {
     const slot = round & 15;
     if (round >= 16) {
@@ -43,24 +44,44 @@ function compress(state, input, offset, schedule) {
     h = g; g = f; f = e; e = (d + first) >>> 0;
     d = c; c = b; b = a; a = (first + second) >>> 0;
   }
-  for (const [i, word] of [a, b, c, d, e, f, g, h].entries()) state[i] += word;
+  state[0] += a; state[1] += b; state[2] += c; state[3] += d;
+  state[4] += e; state[5] += f; state[6] += g; state[7] += h;
+}
+
+function digestScratch() {
+  const trailer = new Uint8Array(2 * BLOCK_SIZE);
+  return { state: new Uint32Array(8), trailer, bits: new DataView(trailer.buffer) };
 }
 
 export class Sha256 {
   #state = INITIAL.slice();
   #tail = new Uint8Array(BLOCK_SIZE);
   #schedule = new Uint32Array(16);
+  #digestScratch;
   #used = 0;
   #length = 0n;
 
   reset() {
     this.#state.set(INITIAL);
+    this.#tail.fill(0, 0, this.#used);
     this.#used = 0;
     this.#length = 0n;
   }
 
+  /** Restore an independent copy of a prefix state. */
+  copyFrom(source) {
+    const used = source.#used;
+    this.#state.set(source.#state);
+    if (used > 0) this.#tail.set(source.#tail.subarray(0, used));
+    if (used < this.#used) this.#tail.fill(0, used, this.#used);
+    this.#used = used;
+    this.#length = source.#length;
+    return this;
+  }
+
   update(input) {
     input = asUint8Array(input);
+    if (input.length === 0) return this;
     const length = this.#length + BigInt(input.length);
     if (length > MAX_MESSAGE_BYTES) throw new RangeError('SHA-256 input exceeds the bit-length domain');
     this.#length = length;
@@ -83,16 +104,20 @@ export class Sha256 {
   }
 
   digest() {
-    const state = this.#state.slice();
-    const trailer = new Uint8Array(this.#used < 56 ? BLOCK_SIZE : 2 * BLOCK_SIZE);
+    const { state, trailer, bits } = this.#digestScratch ??= digestScratch();
+    state.set(this.#state);
+    const paddedLength = this.#used < 56 ? BLOCK_SIZE : 2 * BLOCK_SIZE;
+    trailer.fill(0, this.#used, paddedLength);
     trailer.set(this.#tail.subarray(0, this.#used));
     trailer[this.#used] = 0x80;
-    new DataView(trailer.buffer).setBigUint64(trailer.length - 8, this.#length * 8n);
-    const schedule = new Uint32Array(16);
-    for (let offset = 0; offset < trailer.length; offset += BLOCK_SIZE) compress(state, trailer, offset, schedule);
+    bits.setBigUint64(paddedLength - 8, this.#length << 3n);
+    for (let offset = 0; offset < paddedLength; offset += BLOCK_SIZE) {
+      compress(state, trailer, offset, this.#schedule);
+    }
     const output = new Uint8Array(32);
     const view = new DataView(output.buffer);
     for (let i = 0; i < state.length; i += 1) view.setUint32(4 * i, state[i]);
+    trailer.fill(0, 0, paddedLength);
     return output;
   }
 }

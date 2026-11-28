@@ -39,3 +39,25 @@ test('bad inputs and mutable caller buffers', () => {
   assert.throws(() => stream.update(new Uint16Array(4) as unknown as Uint8Array), TypeError);
   assert.equal(hex(stream.digest()), expected);
 });
+
+test('prepared state survives repeated snapshots, resets and independent keys', () => {
+  const keyA = new Uint8Array(131).fill(13);
+  const keyB = new Uint8Array(64).fill(29);
+  const first = new HmacSha256(keyA);
+  const second = new HmacSha256(keyB);
+  for (const size of [127, 0, 56, 1, 55, 256, 64]) {
+    const part = Uint8Array.from({ length: size }, (_, i) => 17 * i + size);
+    const suffix = Uint8Array.of(2, 3, 5, 7);
+    first.reset().update(part);
+    second.reset().update(suffix);
+    const expectedA = createHmac('sha256', keyA).update(part).digest('hex');
+    assert.equal(hex(first.digest()), expectedA);
+    first.digest().fill(0);
+    assert.equal(hex(first.digest()), expectedA);
+    assert.equal(hex(second.digest()), createHmac('sha256', keyB).update(suffix).digest('hex'));
+    first.update(suffix);
+    second.update(part);
+    assert.equal(hex(first.digest()), createHmac('sha256', keyA).update(part).update(suffix).digest('hex'));
+    assert.equal(hex(second.digest()), createHmac('sha256', keyB).update(suffix).update(part).digest('hex'));
+  }
+});

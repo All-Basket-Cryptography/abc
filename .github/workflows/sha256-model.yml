@@ -25,6 +25,8 @@ on:
       - 'src/crypto/aead/chacha20-poly1305/spec/**'
       - 'src/crypto/cipher/aes256/spec/**'
       - 'src/crypto/aead/aes256-gcm/spec/**'
+      - 'src/crypto/aead/aes256-gcm/impl/rust/**'
+      - 'tools/verification/aes256-gcm/**'
       - 'tools/verification/probe/toolchain-candidate.json'
       - 'tools/verification/hmac-hkdf/**'
       - 'tools/verification/sha512/**'
@@ -94,7 +96,7 @@ jobs:
           printf '%s\n' "$RUNNER_TEMP/lean-4.31.0-linux/bin" >> "$GITHUB_PATH"
       - name: Check new arithmetic and encoding lemmas
         run: |
-          for algorithm in sha512 shake256 chacha20 pbkdf2; do
+          for algorithm in sha512 shake256 chacha20 hmac pbkdf2; do
             python3 src/lean/check.py "$algorithm"
           done
           lean src/crypto/hash/blake2b/spec/Blake2bBuffer.lean
@@ -127,6 +129,23 @@ jobs:
         env:
           ABC_FORMAL_USE_MATHLIB_CACHE: '1'
         run: node tools/verification/hmac-hkdf/check.mjs .abc/sha256-extraction/run-*/result.json
+      - name: Replay source-derived SHA-512 and GHASH proofs
+        run: |
+          export ABC_CHARON="$ABC_AENEAS_ROOT/charon/bin/charon"
+          python3 -B tools/verification/sha512/check_stream_source.py --negative-controls \
+            --output .abc/sha512-stream-llbc.json
+          python3 -B tools/verification/aes256-gcm/check.py --check-mutant
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ always() }}
+        with:
+          name: sha512-ghash-source-evidence-untrusted-pr
+          path: |
+            .abc/sha512-stream-llbc.json
+            .abc/aes256-gcm-extraction/run-*/result.json
+            .abc/aes256-gcm-extraction/run-*/*.log
+            .abc/aes256-gcm-extraction/run-*/*/GhashLlbc.lean
+          if-no-files-found: warn
+          retention-days: 7
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: ${{ always() }}
         with:

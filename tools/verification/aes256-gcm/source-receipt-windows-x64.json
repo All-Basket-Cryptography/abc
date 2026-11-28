@@ -1,0 +1,61 @@
+{
+  "status": "source_llbc_refinement_checked",
+  "target": "x86_64-pc-windows-msvc",
+  "charon": "0.1.254 (b104e24fea7d721b71e6c39fd70f26ff20bc0980)",
+  "rust": "rustc 1.100.0-nightly (8fa1c96cf 2026-08-17)\nbinary: rustc\ncommit-hash: 8fa1c96cfd489e4c27654c144ae871ce2c4db6c6\ncommit-date: 2026-08-17\nhost: x86_64-pc-windows-msvc\nrelease: 1.100.0-nightly\nLLVM version: 23.1.0",
+  "lean": "Lean (version 4.31.0, x86_64-w64-windows-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)",
+  "selection": [
+    "--preset=aeneas",
+    "--start-from",
+    "crate::multiply"
+  ],
+  "cargo": [
+    "--locked",
+    "--offline",
+    "--lib",
+    "--no-default-features",
+    "--target",
+    "x86_64-pc-windows-msvc"
+  ],
+  "source_digests": {
+    "tools/verification/probe/toolchain-candidate.json": "6953b42492bff08a40479725fec7ce922002bfdbe715afcaedf4f817f7621249",
+    "src/crypto/aead/aes256-gcm/spec/Aes256GcmComposition.lean": "578a7494dc952964b40c47f41cdb61a823238f909a8c57651af0beb488a9dfcb",
+    "tools/verification/aes256-gcm/GhashSourceRefinement.lean": "b7542800ea8a558fe3d1bda1bfa1476d992a20a0db89140f83211aaae9577f84",
+    "tools/verification/aes256-gcm/translate.py": "6408d083211e4e8bc291047273ae6a85b6a2c0df2c48dc71c332b0c99eae37c0",
+    "tools/verification/aes256-gcm/check.py": "ec69157e6ee2ce118e3a55ff9bcce3dc8ade390d2c68eb8ec87744949b918b75",
+    "tools/build/rust/Cargo.toml": "9e8dd7579ad780836ce80f3a00639b171926d3435e15e3eb274c4fd67eb0d8f4",
+    "tools/build/rust/Cargo.lock": "a3ee8405943bef38fef4f8127d96032013d10bc082ae0cb6ff9ccbd855178b5c",
+    "src/crypto/aead/aes256-gcm/impl/rust/Cargo.toml": "bccad3abefdf7faa1d969bc42399af0ed20cb1e7dc83857cdfc8f798342f09a6",
+    "src/crypto/aead/aes256-gcm/impl/rust/src/lib.rs": "e986016e35e1127e91d61e9392db41a8181c9e2342049457f58c98221ce071e9"
+  },
+  "first": {
+    "llbc_sha256": "75da71dd8410068f8d7e2907b44849b38296f40b9d792ade58692b288e88beb6",
+    "lean_model_sha256": "8903179e136aee9ca3339462b5afd08649daf02147373b49fb4ec97e29dcd309"
+  },
+  "second": {
+    "llbc_sha256": "448683c41db9056b700611ee79e00595ccc8c6eb15cb9259ed0ca0d83393e1f6",
+    "lean_model_sha256": "8903179e136aee9ca3339462b5afd08649daf02147373b49fb4ec97e29dcd309"
+  },
+  "theorems": {
+    "Abc.Refine.Ghash.extracted_round_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.extracted_loop_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.source_multiply_returns_nist": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "negative_check": {
+    "status": "rejected",
+    "changed_model_sha256": "62e25ded95bd971b45f8e2a18831142eacbfe6959c7811543935529d42d1aee0",
+    "log": "reject-mutant.log"
+  }
+}

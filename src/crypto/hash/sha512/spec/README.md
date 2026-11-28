@@ -18,11 +18,11 @@ separate FIPS model for every block, one-shot byte list and admitted finite
 stream partition. It checks both padding branches and models rejection as
 preservation of the stream view. The runner records the reviewed Rust
 source, independently derives the constants and audits the Lean statements
-and axioms. A second replay extracts the four compression loop bodies from
-Rust through Charon and checks their composition against the same FIPS
-model. The iterator drivers and the streaming source bridge have separate
-review obligations.
-[Length lemmas](Sha512Length.lean) · [Schedule model](Sha512Ring.lean) · [FIPS model](Sha512Spec.lean) · [Compression theorem](Sha512Compression.lean) · [Charon refinement](Sha512LlbcRefinement.lean) · [Stream theorems](Sha512Streaming.lean) · [Reproduction and receipts](../../../../../tools/verification/sha512/README.md)
+and axioms. Charon replays the compression loop bodies, the update
+length decision and the final padding effects from the Rust source.
+Lean checks their generated terms against the FIPS model. The update
+block driver and digest encoding still rely on reviewed models.
+[Length lemmas](Sha512Length.lean) · [Schedule model](Sha512Ring.lean) · [FIPS model](Sha512Spec.lean) · [Charon compression](Sha512LlbcRefinement.lean) · [Charon length and padding](Sha512StreamSourceRefinement.lean) · [Reproduction and receipts](../../../../../tools/verification/sha512/README.md)
 
 The Rust tests check empty and `abc` known answers, failed updates, and
 all split points against independent CPython `hashlib.sha512` digests for

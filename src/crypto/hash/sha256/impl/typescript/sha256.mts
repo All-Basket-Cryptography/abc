@@ -1,6 +1,6 @@
 import { asUint8Array } from '../../../../inputs/bytes.mts';
 
-/** Byte-oriented FIPS 180-4 SHA-256 with a rotating working register index. */
+/** Byte-oriented FIPS 180-4 SHA-256 with an expanded message schedule. */
 const bytesPerBlock = 64;
 export const MAX_MESSAGE_BYTES = (1n << 61n) - 1n;
 
@@ -24,8 +24,7 @@ function ror(word: number, distance: number): number {
   return (word >>> distance) | (word << (32 - distance));
 }
 
-function wordSchedule(input: DataView, offset: number): Uint32Array {
-  const words = new Uint32Array(64);
+function wordSchedule(input: DataView, offset: number, words: Uint32Array): void {
   for (let i = 0; i < 16; ++i) words[i] = input.getUint32(offset + i * 4, false);
   for (let i = 16; i < words.length; ++i) {
     const earlier = words[i - 15];
@@ -34,48 +33,59 @@ function wordSchedule(input: DataView, offset: number): Uint32Array {
     const sigma1 = ror(later, 17) ^ ror(later, 19) ^ (later >>> 10);
     words[i] = words[i - 16] + words[i - 7] + sigma0 + sigma1;
   }
-  return words;
 }
 
-function absorbBlock(chaining: Uint32Array, input: DataView, offset: number): void {
-  const words = wordSchedule(input, offset);
-  const working = chaining.slice();
-  let head = 0;
+function absorbBlock(chaining: Uint32Array, input: DataView, offset: number, words: Uint32Array): void {
+  wordSchedule(input, offset, words);
+  let a = chaining[0], b = chaining[1], c = chaining[2], d = chaining[3];
+  let e = chaining[4], f = chaining[5], g = chaining[6], h = chaining[7];
   for (let round = 0; round < roundWords.length; ++round) {
-    const a = working[head];
-    const b = working[(head + 1) & 7];
-    const c = working[(head + 2) & 7];
-    const d = (head + 3) & 7;
-    const e = working[(head + 4) & 7];
-    const f = working[(head + 5) & 7];
-    const g = working[(head + 6) & 7];
-    const nextHead = (head + 7) & 7;
     const sigma0 = ror(a, 2) ^ ror(a, 13) ^ ror(a, 22);
     const sigma1 = ror(e, 6) ^ ror(e, 11) ^ ror(e, 25);
     const choose = (e & f) | (~e & g);
     const majority = (a & b) ^ (a & c) ^ (b & c);
-    const first = working[nextHead] + sigma1 + choose + roundWords[round] + words[round];
-    // Moving the head rotates six words. The retired h and d slots receive a′ and e′.
-    working[nextHead] = first + sigma0 + majority;
-    working[d] += first;
-    head = nextHead;
+    const first = h + sigma1 + choose + roundWords[round] + words[round];
+    h = g; g = f; f = e; e = (d + first) >>> 0;
+    d = c; c = b; b = a; a = (first + sigma0 + majority) >>> 0;
   }
-  for (let i = 0; i < chaining.length; ++i) chaining[i] += working[(head + i) & 7];
+  chaining[0] += a; chaining[1] += b; chaining[2] += c; chaining[3] += d;
+  chaining[4] += e; chaining[5] += f; chaining[6] += g; chaining[7] += h;
 }
 
 function byteView(bytes: Uint8Array): DataView {
   return new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
 }
 
+function digestScratch() {
+  const bytes = new Uint8Array(2 * bytesPerBlock);
+  return { state: new Uint32Array(8), bytes, view: byteView(bytes) };
+}
+
 export class Sha256 {
   #chaining = Uint32Array.from(initialWords);
-  #pending: Uint8Array = new Uint8Array(0);
+  #pending = new Uint8Array(bytesPerBlock);
+  #pendingView = byteView(this.#pending);
+  #used = 0;
   #length = 0n;
+  #schedule = new Uint32Array(64);
+  #digestScratch?: ReturnType<typeof digestScratch>;
 
   reset(): void {
     this.#chaining.set(initialWords);
-    this.#pending = new Uint8Array(0);
+    this.#pending.fill(0, 0, this.#used);
+    this.#used = 0;
     this.#length = 0n;
+  }
+
+  /** Restore an independent copy of a prefix state. */
+  copyFrom(source: Sha256): this {
+    const used = source.#used;
+    this.#chaining.set(source.#chaining);
+    if (used > 0) this.#pending.set(source.#pending.subarray(0, used));
+    if (used < this.#used) this.#pending.fill(0, used, this.#used);
+    this.#used = used;
+    this.#length = source.#length;
+    return this;
   }
 
   update(bytes: Uint8Array): this {
@@ -86,43 +96,42 @@ export class Sha256 {
     this.#length = total;
 
     let consumed = 0;
-    if (this.#pending.length > 0) {
-      consumed = Math.min(bytesPerBlock - this.#pending.length, bytes.byteLength);
-      const head = new Uint8Array(this.#pending.length + consumed);
-      head.set(this.#pending);
-      head.set(bytes.subarray(0, consumed), this.#pending.length);
-      if (head.length < bytesPerBlock) {
-        this.#pending = head;
-        return this;
-      }
-      absorbBlock(this.#chaining, byteView(head), 0);
+    if (this.#used > 0) {
+      consumed = Math.min(bytesPerBlock - this.#used, bytes.byteLength);
+      this.#pending.set(bytes.subarray(0, consumed), this.#used);
+      this.#used += consumed;
+      if (this.#used < bytesPerBlock) return this;
+      absorbBlock(this.#chaining, this.#pendingView, 0, this.#schedule);
     }
 
-    const input = byteView(bytes);
-    for (; consumed + bytesPerBlock <= input.byteLength; consumed += bytesPerBlock) {
-      absorbBlock(this.#chaining, input, consumed);
+    if (consumed + bytesPerBlock <= bytes.byteLength) {
+      const input = byteView(bytes);
+      for (; consumed + bytesPerBlock <= input.byteLength; consumed += bytesPerBlock) {
+        absorbBlock(this.#chaining, input, consumed, this.#schedule);
+      }
     }
-    this.#pending = Uint8Array.from(bytes.subarray(consumed));
+    this.#pending.set(bytes.subarray(consumed));
+    this.#used = bytes.byteLength - consumed;
     return this;
   }
 
   digest(): Uint8Array {
-    const state = this.#chaining.slice();
-    const count = this.#pending.length;
-    const tail = new Uint8Array(Math.ceil((count + 9) / bytesPerBlock) * bytesPerBlock);
-    tail.set(this.#pending);
-    tail[count] = 0x80;
-    let bitLength = this.#length << 3n;
-    for (let i = tail.length - 1; i >= tail.length - 8; --i) {
-      tail[i] = Number(bitLength & 255n);
-      bitLength >>= 8n;
+    const { state, bytes, view } = this.#digestScratch ??= digestScratch();
+    state.set(this.#chaining);
+    const paddedLength = this.#used < 56 ? bytesPerBlock : 2 * bytesPerBlock;
+    bytes.fill(0, this.#used, paddedLength);
+    bytes.set(this.#pending.subarray(0, this.#used));
+    bytes[this.#used] = 0x80;
+    view.setBigUint64(paddedLength - 8, this.#length << 3n, false);
+    for (let offset = 0; offset < paddedLength; offset += bytesPerBlock) {
+      absorbBlock(state, view, offset, this.#schedule);
     }
-    const padding = byteView(tail);
-    for (let offset = 0; offset < tail.length; offset += bytesPerBlock) absorbBlock(state, padding, offset);
 
-    const digest = byteView(new Uint8Array(32));
-    for (let i = 0; i < state.length; ++i) digest.setUint32(i * 4, state[i], false);
-    return new Uint8Array(digest.buffer);
+    const digest = new Uint8Array(32);
+    const output = byteView(digest);
+    for (let i = 0; i < state.length; ++i) output.setUint32(i * 4, state[i], false);
+    bytes.fill(0, 0, paddedLength);
+    return digest;
   }
 }
 

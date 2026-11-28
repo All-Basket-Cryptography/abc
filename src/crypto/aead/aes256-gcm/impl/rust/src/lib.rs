@@ -121,11 +121,13 @@ fn hash_padded(hash_key: u128, state: &mut u128, input: &[u8]) {
 }
 
 fn multiply(input: u128, mut key: u128) -> u128 {
-    const REDUCTION: u128 = 0xe1 << 120;
     let mut product = 0;
-    for bit in (0..128).rev() {
+    let mut bit = 128u32;
+    while bit != 0 {
+        bit -= 1;
         product ^= key & 0u128.wrapping_sub((input >> bit) & 1);
-        key = (key >> 1) ^ (REDUCTION & 0u128.wrapping_sub(key & 1));
+        // The high byte contains the reflected reduction polynomial.
+        key = (key >> 1u32) ^ (0xe1000000000000000000000000000000 & 0u128.wrapping_sub(key & 1));
     }
     product
 }

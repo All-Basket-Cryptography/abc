@@ -42,11 +42,13 @@ caller bytes on errors even without the AES contract. Lean also checks
 the GHASH value, ciphertext, tag and decrypted plaintext of NIST
 example 5 using its published AES block outputs.
 
-The GCM theorem checks the handwritten source-shaped model. The Rust
-translation and proof of the concrete AES provider contract remain open.
-The result covers functional equality and buffer preservation.
-Compiler timing, binary correspondence, key erasure, nonce allocation
-and cryptographic security games require separate evidence.
+The GCM theorem checks the handwritten source-shaped model. Charon
+and Lean separately check the actual portable Rust GHASH multiply
+function for all 128-bit inputs. The source-level translation of the
+remaining GCM wrapper and proof of the concrete AES provider contract
+remain open. Compiler timing, binary correspondence, key erasure, nonce
+allocation and cryptographic security games require separate evidence.
+[Rust source refinement and replay](../../../../../tools/verification/aes256-gcm/README.md)
 
 Run the models with Lean 4.31.0. The 20 composition results report only
 the standard axioms `propext`, `Classical.choice` and `Quot.sound`.

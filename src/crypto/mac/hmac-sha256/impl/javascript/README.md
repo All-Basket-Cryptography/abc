@@ -1,14 +1,16 @@
-# HMAC-SHA-256 in Javascript
+# HMAC-SHA-256 in JavaScript
 
-`hmac.mjs` implements HMAC with the ABC javascript SHA-256 core. It
+`hmac.mjs` implements HMAC with the ABC JavaScript SHA-256 core. It
 normalizes keys larger than the 64-byte SHA-256 block with the local hash.
 `authenticate` returns the full 32-byte tag. `HmacSha256` supports incremental
 updates, non-destructive tag snapshots and reset under the same key.
-[RFC 2104](https://www.rfc-editor.org/rfc/rfc2104.html)
+It precomputes the compressed inner and outer key states once per context
+and copies them when resuming. Treat a saved state as key material.
+[RFC 2104 § 4](https://www.rfc-editor.org/rfc/rfc2104.html#section-4)
 
 The tests use RFC 4231 cases 1 and 6 and compare 35 key/message length pairs
 with the host cryptographic library. They include empty and split updates,
-caller-buffer mutation and invalid input.
+caller-buffer mutation, invalid input, and repeated snapshots with interleaved keys.
 [RFC 4231](https://www.rfc-editor.org/rfc/rfc4231.html#section-4)
 
 ```sh
@@ -20,6 +22,6 @@ qualification remain open.
 
 ## Public-input timing
 
-On Node 24.12.0 and a Windows x64 i7-12700K workstation, the median of five
-warmed batches was 15.7 µs per call with a 64-byte key and 1,024-byte message.
-The median for Node's native comparator on the same workload was 2.43 µs.
+The paired benchmark gives timings for one-shot and same-key workloads
+against the previous portable implementation and Node OpenSSL.
+[Public-input data](../../../../../../docs/status/hmac-prepared-ecmascript-benchmark.json)

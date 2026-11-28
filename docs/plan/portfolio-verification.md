@@ -12,10 +12,11 @@ and the [per-language runtime replay](../status/portfolio-replay.json).
 
 | Profile | Checked result | Remaining boundary |
 | --- | --- | --- |
-| SHA-512 | Two Charon extractions of the real Rust compressor produce identical Lean bodies for big-endian loading, schedule indexing, all eight round outputs and feed-forward. Lean composes these bodies with the fixed-array driver model and proves equality to FIPS 180-4 for every 128-byte block and initial state. Recompiling a changed rotation breaks the Lean check. [Source replay](../../tools/verification/sha512/README.md) · [FIPS 180-4](https://doi.org/10.6028/NIST.FIPS.180-4) | Rust iterator order, the restricted LLBC translator and its primitive semantics remain in the trust boundary. The Rust streaming source bridge, general memory semantics and compiled leakage remain open. |
+| SHA-512 | Charon and Lean link the Rust compression loop bodies, update length decision and counter store, and both padding branches to FIPS 180-4. The generated padding effects produce the correct blocks for any represented 128-byte buffer. Recompiling changed Rust rotations, limits and padding markers breaks the corresponding Lean checks. [Source replay](../../tools/verification/sha512/README.md) · [FIPS 180-4](https://doi.org/10.6028/NIST.FIPS.180-4) | The restricted LLBC translator and primitive semantics remain in the trust boundary. The accepted-update byte driver, digest serialization, public wrapper linkage and compiled leakage remain open. |
 | ChaCha20 | The extracted public Rust stream API terminates and agrees with the RFC byte model and the ABC exhaustion rule for every typed input. The proof covers returned status, length and every byte, including preservation of the whole caller slice after rejection. [Source refinement and replay](../../tools/verification/chacha20) · [RFC 8439](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.4) | The claim is scoped to the extracted Rust model and its declared trust base. Compiled leakage and source correspondence for other SDKs remain open. |
 | SHA3-256 and SHAKE256 | The Keccak word-row proof shows that the new linear chi indexing agrees with modulo indexing. The squeeze proof covers arbitrary finite read partitions and connects every returned bit to the FIPS bit sponge. [Reader and composition proofs](../../src/crypto/hash/keccak-p1600/spec) · [FIPS 202](https://doi.org/10.6028/NIST.FIPS.202) | The ECMAScript buffer and permutation source correspondence remains open. |
-| AES-256-GCM | The 128-round mask-based GHASH model agrees with the published arithmetic. Separate theorems cover padding, length packing, CTR chunking, complete tag equality and rejection. The sealing and opening theorems use an explicit AES block contract, and Lean recomputes the NIST example. [GCM proofs and vectors](../../src/crypto/aead/aes256-gcm/spec) · [SP 800-38D](https://doi.org/10.6028/NIST.SP.800-38D) | The source extraction and the actual provider's block contract remain open. |
+| AES-256-GCM | Two extractions generate the same Lean loop for Rust GHASH multiplication. Lean proves termination within 128 rounds and agreement with SP 800-38D Algorithm 1 on all 128-bit inputs. Separate composition theorems cover padding, length packing, CTR chunking, complete tag equality and rejection under the AES block contract. [Source replay](../../tools/verification/aes256-gcm) · [GCM composition](../../src/crypto/aead/aes256-gcm/spec) · [SP 800-38D](https://doi.org/10.6028/NIST.SP.800-38D) | The GHASH wrapper and the actual provider's block contract still need source linkage. Full seal/open source refinement and compiled leakage remain open. |
+| HMAC-SHA-256 | Lean proves the prepared inner and outer prefix state model preserves RFC 2104 outputs on arbitrary admissible chunk partitions and preserves the context after a rejected update. The one-shot function and reusable contexts share the pad normalization and tag logic in both JavaScript and TypeScript. [Prepared-state proof](../../src/crypto/mac/hmac-sha256/spec/HmacPrepared.lean) · [RFC 2104 § 4](https://www.rfc-editor.org/rfc/rfc2104.html#section-4) | The proof uses the byte-level SHA-256 state model. ECMAScript source refinement, JIT leakage and key-state erasure remain open. |
 | scrypt | The two ROMix passes agree with the RFC model for admitted power-of-two costs. Lean checks table row indexing and truncation followed by masking. The KDF composition uses explicit Salsa20/8 and PBKDF2 contracts. [ROMix and KDF proof](../../src/crypto/kdf/scrypt/spec) · [RFC 7914](https://www.rfc-editor.org/rfc/rfc7914.html#section-5) | Source extraction, provider correspondence, erasure and failure paths remain open. |
 | ML-KEM-768 | Lean checks integral rounding, decode bounds and recompression of every valid wire value. The sharp cyclic coefficient errors are 104 for 4-bit compression and 2 for 10-bit compression. [Coefficient proofs](../../src/crypto/agreement/ml-kem-768/spec) · [FIPS 203](https://doi.org/10.6028/NIST.FIPS.203) | Provider correspondence for coefficient operations and the full key encapsulation refinement remain open. |
 
@@ -68,6 +69,27 @@ language, authentication failure and handling of temporary plaintext.
 [JavaScript Node entry](../../src/crypto/aead/aes256-gcm/impl/javascript) · [TypeScript Node entry](../../src/crypto/aead/aes256-gcm/impl/typescript)
 
 ## Measured performance
+
+The current 20-profile ECMAScript replay measures 40 SDK workloads and
+19 directly available Node OpenSSL operations. Both language results are
+compared before timing. The prepared HMAC update was also measured with
+both revisions in the same process, against Node OpenSSL, on Windows x64
+with an Intel Core i7-12700K and Node 24.12.0. The table shows medians in
+microseconds per operation. Small scrypt differences are sensitive to
+run-to-run noise. [All 20 workloads](../status/portfolio-benchmark-prepared-hmac.json) · [Raw paired samples and source digests](../status/hmac-prepared-ecmascript-benchmark.json)
+
+| Public workload | JavaScript `50db178` → current | TypeScript `50db178` → current |
+| --- | ---: | ---: |
+| SHA-256, 1,024-byte message | 11.89 → 6.04 | 15.70 → 10.97 |
+| HMAC, one-shot 32-byte message | 5.04 → 3.83 | 6.76 → 5.73 |
+| HMAC, repeated key with reset | 5.16 → 1.84 | 6.56 → 2.58 |
+| HKDF-SHA-256, 128-byte output | 27.88 → 14.92 | 34.51 → 21.36 |
+| PBKDF2-HMAC-SHA-256, 2,048 iterations | 13,048.08 → 2,989.17 | 11,597.15 → 4,202.00 |
+| scrypt, test cost `N=1024`, `r=1`, `p=1` | 847.09 → 820.85 | 898.00 → 862.84 |
+
+Direct Node OpenSSL had lower measured latency on all six workloads.
+The native HMAC comparator creates a new context for every message.
+[HMAC key state optimization](https://www.rfc-editor.org/rfc/rfc2104.html#section-4) · [HKDF](https://www.rfc-editor.org/rfc/rfc5869.html#section-2) · [PBKDF2](https://www.rfc-editor.org/rfc/rfc8018.html#section-5.2) · [scrypt](https://www.rfc-editor.org/rfc/rfc7914.html#section-6)
 
 Rust 1.92.0 PBKDF2 release runs on Windows x64 measured a drop from
 3.401 ms to 1.916 ms for a 32-byte password, 4,096 iterations and a
