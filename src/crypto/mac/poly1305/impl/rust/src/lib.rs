@@ -66,7 +66,7 @@ impl Poly1305 {
         }
 
         // Absorption finishes by carrying any excess from limb 0 into limb 1.
-        self.h = carry(self.h, false);
+        self.h = carry_upper(self.h);
 
         // Adding 5 produces a carry out of limb 4 exactly when h >= 2^130 - 5.
         let mut reduced = self.h;
@@ -105,7 +105,7 @@ fn absorb_limbs(h: [u64; 5], r: [u64; 5], r_five: [u64; 4], message: [u64; 5]) -
     let [h0, h1, h2, h3, h4] = h;
     let [m0, m1, m2, m3, m4] = message;
     let input = [h0 + m0, h1 + m1, h2 + m2, h3 + m3, h4 + m4];
-    carry(multiply(input, r, r_five), true)
+    carry(multiply(input, r, r_five))
 }
 
 fn multiply(h: [u64; 5], r: [u64; 5], r_five: [u64; 4]) -> [u64; 5] {
@@ -137,13 +137,14 @@ fn carry_pair(low: u64, high: u64) -> (u64, u64) {
     (low & LIMB_MASK, high + (low >> RADIX_BITS))
 }
 
-fn carry(words: [u64; 5], carry_first: bool) -> [u64; 5] {
+fn carry(words: [u64; 5]) -> [u64; 5] {
     let [h0, h1, h2, h3, h4] = words;
-    let (h0, h1) = if carry_first {
-        carry_pair(h0, h1)
-    } else {
-        (h0, h1)
-    };
+    let (h0, h1) = carry_pair(h0, h1);
+    carry_upper([h0, h1, h2, h3, h4])
+}
+
+fn carry_upper(words: [u64; 5]) -> [u64; 5] {
+    let [h0, h1, h2, h3, h4] = words;
     let (h1, h2) = carry_pair(h1, h2);
     let (h2, h3) = carry_pair(h2, h3);
     let (h3, h4) = carry_pair(h3, h4);
