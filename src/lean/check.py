@@ -65,10 +65,13 @@ def main():
             checked_lean(command, ["HkdfSpec.lean"], directory, output)
         if selected == "pbkdf2":
             directory = ROOT / "src/crypto/kdf/pbkdf2-hmac-sha256/spec"
-            checked_lean(command, ["Pbkdf2Spec.lean"], directory, output)
+            checked_lean(command, ["-DwarningAsError=true", "Pbkdf2Spec.lean"], directory, output)
         if selected == "chacha20":
             directory = ROOT / "src/crypto/cipher/chacha20/spec"
-            checked_lean(command, ["ChaCha20Counter.lean"], directory, output)
+            for module in ("ChaCha20Counter", "ChaCha20QuarterRound"):
+                checked_lean(command, ["-DwarningAsError=true", "-o", output / f"{module}.olean",
+                                       f"{module}.lean"], directory, output)
+            checked_lean(command, ["-DwarningAsError=true", "ChaCha20Stream.lean"], directory, output)
 
 
 if __name__ == "__main__":

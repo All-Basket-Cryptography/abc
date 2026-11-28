@@ -1,4 +1,4 @@
-# ChaCha20 byte block refinement
+# ChaCha20 byte block refinement and stream model
 
 The verifier selects `crate::initial_state` and `crate::block` from
 `abc-chacha20` on the locked Cargo workspace with default features disabled.
@@ -20,6 +20,8 @@ node tools/verification/chacha20/check.mjs
 The report under `.abc/chacha20-extraction/` records the Rust subject,
 proof files, tool versions, binary digests, extracted file digests and
 axiom audit. The generated Lean files must match between the two runs.
+The `theorems` field retains the byte block audit. The `streamModel`
+field audits the stream specification and its block-provider composition.
 [Recorded Linux source hashes and nine-theorem result](../../../docs/status/chacha20-byte-block-ea05776.json)
 
 ## Checked scope
@@ -40,5 +42,36 @@ and all sixteen feedforward additions for any input state and counter.
 and its little-endian inputs. `serialize_refines` checks all 64 output
 bytes. `block_refines` and `block_from_bytes_refines` connect the active
 byte functions to the RFC's input-to-output block transform for every
-key, nonce and counter. The public stream loop, rejected input preservation,
-and compiled-target leakage remain open.
+key, nonce and counter.
+
+## Stream model
+
+The independent RFC stream specification indexes each input byte by its
+quotient and remainder on division by 64. The separate loop model tracks an
+incrementing block cursor and makes one logical write per byte. Lean checks
+that every prefix transforms just its processed bytes, the cursor advances at
+block boundaries, and the preflight accepts exactly the messages for which
+every byte has a valid 32-bit counter. Rejection returns the original buffer.
+The model covers the empty input and a shortened final block. Its complete
+result equals the RFC formula on every byte and the ABC exhaustion policy on
+the return status. [RFC 8439 § 2.4.1](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.4.1)
+
+Three further theorems connect the logical loop to the exact extracted
+block provider. Each provider result is witnessed by successful extracted
+`initial_state` and `block` calls. Replacing the model's block provider with
+this one preserves the full logical loop result. All eleven new theorems use
+the same standard-axiom audit.
+
+The loop proof uses a logical model of the traversal. Charon extracts the
+Rust public function but its standard-library `ChunksMut`, `Enumerate` and
+`Zip` types are opaque in that extraction. Proof of their traversal and
+mutation correspondence at the public Rust entry point, compiled-target
+leakage, and AEAD composition remain open.
+[Rust slice documentation](https://doc.rust-lang.org/1.92.0/std/primitive.slice.html#method.chunks_mut)
+
+For the standalone arithmetic and logical stream proof, use pinned Lean
+4.31.0 on `PATH` or available through `elan`.
+
+```sh
+python -B src/lean/check.py chacha20
+```

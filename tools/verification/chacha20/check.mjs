@@ -13,10 +13,19 @@ const namespace = 'Abc.ChaCha20.Extracted';
 const subdir = namespace.replaceAll('.', '/');
 const modelFiles = [`${subdir}/Funs.lean`, `${subdir}/Types.lean`];
 const specFile = 'ChaCha20QuarterRound.lean';
+const counterSpecFile = 'ChaCha20Counter.lean';
+const streamSpecFile = 'ChaCha20Stream.lean';
 const proofFile = 'ChaCha20QuarterRoundRefinement.lean';
+const streamProofFile = 'ChaCha20StreamRefinement.lean';
 const theorems = ['quarter_round_refines', 'double_round_refines', 'rounds_20_refines',
   'block_words_refines', 'load_word_refines', 'initial_state_refines', 'serialize_refines',
   'block_refines', 'block_from_bytes_refines'].map((name) => `Abc.Refine.ChaCha20.${name}`);
+const streamSpecTheorems = ['stream_position_exact', 'stream_counter_in_range', 'stream_count_exact',
+  'stream_write_prefix', 'stream_guard_exact', 'chunked_stream_refines', 'stream_rejection_preserves',
+  'stream_involution'].map((name) => `Abc.Spec.ChaCha20.${name}`);
+const streamRefinementTheorems = ['extracted_block_provider_observes_result',
+  'extracted_block_provider_refines', 'extracted_chunked_stream_refines']
+  .map((name) => `Abc.Refine.ChaCha20.${name}`);
 const allowedAxioms = new Set(['propext', 'Classical.choice', 'Quot.sound']);
 const target = 'x86_64-unknown-linux-gnu';
 const cargo = ['--locked', '--offline', '--lib', '--no-default-features', '--target', target];
@@ -30,12 +39,26 @@ const officialBinaries = {
 const sourceFiles = [
   pinPath, 'tools/build/rust/Cargo.toml', 'tools/build/rust/Cargo.lock',
   `${scope}/impl/rust/src/lib.rs`, `${scope}/impl/rust/Cargo.toml`,
-  `${scope}/spec/${specFile}`, `${scope}/impl/rust/formal/${proofFile}`,
-  'tools/verification/chacha20/check.mjs',
+  `${scope}/spec/${specFile}`, `${scope}/spec/${counterSpecFile}`, `${scope}/spec/${streamSpecFile}`,
+  `${scope}/impl/rust/formal/${proofFile}`, 'tools/verification/chacha20/check.mjs',
+  `tools/verification/chacha20/${streamProofFile}`,
 ];
 const hash = (file) => createHash('sha256').update(readFileSync(file)).digest('hex');
 const hashes = (root, files) => Object.fromEntries(files.map((file) => [file, hash(join(root, file))]));
 const same = (left, right) => JSON.stringify(left) === JSON.stringify(right);
+
+function auditTheorems(output, expected) {
+  const reports = [...output.matchAll(/^'([^']+)' (?:depends on axioms:\s*\[([^\]]+)\]|does not depend on any axioms)\r?$/gm)];
+  const audit = {};
+  for (const theorem of expected) {
+    const entry = reports.filter((match) => match[1] === theorem);
+    if (entry.length !== 1) throw new Error(`Missing or ambiguous axiom report for ${theorem}`);
+    const axioms = entry[0][2]?.split(',').map((name) => name.trim()) ?? [];
+    if (axioms.some((name) => !allowedAxioms.has(name))) throw new Error(`Unapproved axiom in ${theorem}`);
+    audit[theorem] = axioms;
+  }
+  return audit;
+}
 
 function check(toolRoot) {
   if (!toolRoot) throw new Error('Set ABC_AENEAS_ROOT to the pinned Aeneas checkout');
@@ -118,21 +141,19 @@ function check(toolRoot) {
     const model = join(work, 'first');
     compile(model, `${subdir}/Types.lean`);
     compile(model, `${subdir}/Funs.lean`);
-    compile(join(repo, scope, 'spec'), specFile);
-    const audit = compile(join(crate, 'formal'), proofFile);
-    const reports = [...audit.matchAll(/^'([^']+)' (?:depends on axioms:\s*\[([^\]]+)\]|does not depend on any axioms)\r?$/gm)];
-    const auditByTheorem = {};
-    for (const theorem of theorems) {
-      const entry = reports.filter((match) => match[1] === theorem);
-      if (entry.length !== 1) throw new Error(`Missing or ambiguous axiom report for ${theorem}`);
-      const axioms = entry[0][2]?.split(',').map((name) => name.trim()) ?? [];
-      if (axioms.some((name) => !allowedAxioms.has(name))) throw new Error(`Unapproved axiom in ${theorem}`);
-      auditByTheorem[theorem] = axioms;
-    }
+    const spec = join(repo, scope, 'spec');
+    compile(spec, specFile);
+    compile(spec, counterSpecFile);
+    const blockAudit = auditTheorems(compile(join(crate, 'formal'), proofFile), theorems);
+    const streamSpecAudit = auditTheorems(compile(spec, streamSpecFile), streamSpecTheorems);
+    const streamRefinementAudit = auditTheorems(
+      compile(dirname(fileURLToPath(import.meta.url)), streamProofFile), streamRefinementTheorems);
     if (!same(hashes(repo, sourceFiles), report.sources) || !same(hashes(model, modelFiles), report.first.files)) {
       throw new Error('Source or generated model changed during verification');
     }
-    report.theorems = auditByTheorem;
+    report.theorems = blockAudit;
+    report.streamModel = { scope: 'logical_mutations_with_extracted_block',
+      theorems: { ...streamSpecAudit, ...streamRefinementAudit } };
     report.status = 'block_from_bytes_refinement_checked';
   } catch (error) {
     report.error = error.message;

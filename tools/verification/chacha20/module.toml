@@ -1,6 +1,7 @@
 schema_version = 1
 id = "chacha20-formal"
 owned_paths = ["tools/verification/chacha20"]
+lean_sources = { ChaCha20StreamRefinement = "tools/verification/chacha20" }
 
 [tasks.runner-syntax]
 kind = "lint"

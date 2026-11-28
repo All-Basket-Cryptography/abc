@@ -1,7 +1,7 @@
 schema_version = 1
 id = "chacha20-spec"
 owned_paths = ["src/crypto/cipher/chacha20/spec"]
-lean_sources = { ChaCha20Counter = "src/crypto/cipher/chacha20/spec", ChaCha20QuarterRound = "src/crypto/cipher/chacha20/spec" }
+lean_sources = { ChaCha20Counter = "src/crypto/cipher/chacha20/spec", ChaCha20QuarterRound = "src/crypto/cipher/chacha20/spec", ChaCha20Stream = "src/crypto/cipher/chacha20/spec" }
 
 [tasks.check]
 kind = "formal"

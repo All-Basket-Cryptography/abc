@@ -21,6 +21,10 @@ Rust keystream implementation. Lean proves that every 32-byte key,
 12-byte nonce and 32-bit counter produce the exact 64-byte RFC block.
 The proof covers little-endian input decoding, constants, all twenty
 rounds, counter placement, sixteen wrapping additions and every output
-byte. The stream loop, rejection preservation, target leakage and
-AEAD composition have separate proof obligations.
+byte. A sequential stream model proves that each prefix changes precisely
+its traversed bytes, that counter exhaustion is exact and preserves caller
+bytes, and that the complete buffer matches the RFC byte-address formula.
+The model composes with the exact extracted block theorem. The Rust
+standard-library iterator correspondence, target leakage and AEAD
+composition have separate proof obligations.
 [Reproduction and scope](../../../../../tools/verification/chacha20/README.md)
