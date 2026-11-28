@@ -1,0 +1,5 @@
+module CAbcEd25519OpenSSL [system] {
+    header "shim.h"
+    link "crypto"
+    export *
+}

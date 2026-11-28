@@ -79,7 +79,8 @@ def check(swift, selected):
             if observed != want:
                 raise ValueError(f"Incomplete Swift {profile} conformance evidence: {observed}")
             source = package / "Sources" / target / f"{name}.swift"
-            results[profile] = {"checks": observed, "provider": "Apple CryptoKit",
+            provider = "Apple CryptoKit" if profile == "x25519" else "Apple CryptoKit and OpenSSL EVP"
+            results[profile] = {"checks": observed, "provider": provider,
                                 "oracle": {key: oracle[key] for key in ("node", "openssl")},
                                 "source_sha256": fingerprint(source), "consumer_sha256": fingerprint(test),
                                 "fixture_sha256": fingerprint(fixture)}

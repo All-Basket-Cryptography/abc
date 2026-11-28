@@ -16,7 +16,10 @@ func rows() throws -> [[Data]] {
 }
 
 func ensure(_ condition: Bool, _ description: String) {
-    precondition(condition, description)
+    if !condition {
+        FileHandle.standardError.write(Data((description + "\n").utf8))
+        exit(1)
+    }
 }
 
 func rejects<T: Error & Equatable>(_ expected: T, _ body: () throws -> Void) {

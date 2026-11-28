@@ -1,9 +1,11 @@
 # Strict Ed25519 in Swift
 
-`AbcEd25519Swift` provides pure Ed25519 via Apple CryptoKit. A 32-byte seed
-derives the 32-byte compressed public key or signs an arbitrary message
-to a 64-byte signature. Invalid seed widths throw. `verifyStrict`
-returns false on a rejected public key or signature.
+`AbcEd25519Swift` provides pure Ed25519. Apple CryptoKit derives a
+32-byte compressed public key from a 32-byte seed. OpenSSL 3.5 EVP
+produces the profile's deterministic 64-byte signatures. Invalid seed
+widths throw. `verifyStrict` returns false on a rejected public key or
+signature.
+[OpenSSL Ed25519](https://docs.openssl.org/3.5/man7/EVP_SIGNATURE-ED25519/)
 
 Verification checks a canonical scalar `S < L` and a canonical
 compressed `y < p` for each of the public key A and commitment R. It
@@ -18,10 +20,11 @@ The offline SwiftPM consumer checks 99 exact matches with OpenSSL,
 including three RFC examples, and 12 invalid encodings in both A and R.
 The existing Lean model covers field constants, the scalar bound and
 a mathematical cofactor schedule. Complete Swift field refinement and
-CryptoKit source and compiled-target proofs remain open.
+provider source and compiled-target proofs remain open.
 [Lean Ed25519 model](../java/Ed25519JvmModel.lean)
 
-Use Xcode 16.4, Swift 6.1.2 and Node/OpenSSL on macOS arm64.
+Use Xcode 16.4, Swift 6.1.2 and Node on macOS arm64. Set
+`PKG_CONFIG_PATH` to the OpenSSL 3.5 library's pkg-config directory.
 
 ```sh
 python -B src/crypto/agreement/x25519/impl/swift/check.py ed25519

@@ -36,6 +36,10 @@ jobs:
           sw_vers | tee "$evidence/macos.txt"
           xcodebuild -version | tee "$evidence/xcode.txt"
           node --version | tee "$evidence/node.txt"
+          openssl="$(brew --prefix openssl@3)"
+          export PKG_CONFIG_PATH="$openssl/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
+          pkg-config --modversion libcrypto | tee "$evidence/libcrypto.txt"
+          grep -Fx 3.5.9 "$evidence/libcrypto.txt"
           python -B src/crypto/agreement/x25519/impl/swift/check.py all | tee "$evidence/results.json"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

@@ -1,8 +1,10 @@
+import CAbcEd25519OpenSSL
 import CryptoKit
 import Foundation
 
 public enum Ed25519Error: Error, Equatable {
     case invalidSeedSize
+    case signingProviderFailure
 }
 
 public enum Ed25519 {
@@ -15,7 +17,17 @@ public enum Ed25519 {
     }
 
     public static func sign(seed: Data, message: Data) throws -> Data {
-        try decodeSeed(seed).signature(for: message)
+        guard seed.count == seedBytes else { throw Ed25519Error.invalidSeedSize }
+        var signature = Data(repeating: 0, count: signatureBytes)
+        let ok = seed.withUnsafeBytes { seedBytes in
+            message.withUnsafeBytes { (payload: UnsafeRawBufferPointer) in
+                signature.withUnsafeMutableBytes { (output: UnsafeMutableRawBufferPointer) in
+                    abc_ed25519_sign(seedBytes.baseAddress, payload.baseAddress, payload.count, output.baseAddress)
+                }
+            }
+        }
+        guard ok == 1 else { throw Ed25519Error.signingProviderFailure }
+        return signature
     }
 
     public static func verifyStrict(publicKey: Data, message: Data, signature: Data) -> Bool {

@@ -7,6 +7,6 @@ dependencies = [{ module = "ed25519-rust", type = "implements" }]
 [tasks.conformance]
 kind = "test"
 command = ["python", "-B", "src/crypto/agreement/x25519/impl/swift/check.py", "ed25519"]
-tools = ["python", "swift", "node"]
+tools = ["python", "swift", "node", "pkg-config"]
 target = "macos-arm64"
 timeout_seconds = 180
