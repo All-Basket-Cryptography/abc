@@ -30,16 +30,39 @@ fn quarter_round(state: &mut [u32; 16], indices: [usize; 4]) {
     state[b] = (state[b] ^ state[c]).rotate_left(7);
 }
 
+fn load_word(a: u8, b: u8, c: u8, d: u8) -> u32 {
+    (a as u32) | ((b as u32) << 8u32) | ((c as u32) << 16u32) | ((d as u32) << 24u32)
+}
+
 fn initial_state(key: &[u8; KEY_BYTES], nonce: &[u8; NONCE_BYTES]) -> [u32; 16] {
-    let mut state = [0; 16];
-    state[..4].copy_from_slice(&[0x61707865, 0x3320646e, 0x79622d32, 0x6b206574]);
-    for (word, bytes) in state[4..12].iter_mut().zip(key.as_chunks::<4>().0) {
-        *word = u32::from_le_bytes(*bytes);
+    macro_rules! load {
+        ($input:ident, $offset:literal) => {
+            load_word(
+                $input[$offset],
+                $input[$offset + 1],
+                $input[$offset + 2],
+                $input[$offset + 3],
+            )
+        };
     }
-    for (word, bytes) in state[13..].iter_mut().zip(nonce.as_chunks::<4>().0) {
-        *word = u32::from_le_bytes(*bytes);
-    }
-    state
+    [
+        0x61707865,
+        0x3320646e,
+        0x79622d32,
+        0x6b206574,
+        load!(key, 0),
+        load!(key, 4),
+        load!(key, 8),
+        load!(key, 12),
+        load!(key, 16),
+        load!(key, 20),
+        load!(key, 24),
+        load!(key, 28),
+        0,
+        load!(nonce, 0),
+        load!(nonce, 4),
+        load!(nonce, 8),
+    ]
 }
 
 fn double_round(mut state: [u32; 16]) -> [u32; 16] {
@@ -79,13 +102,22 @@ fn block_words(mut initial: [u32; 16], counter: u32) -> [u32; 16] {
     add_initial!(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
 }
 
-fn block(initial: [u32; 16], counter: u32) -> [u8; BLOCK_BYTES] {
-    let words = block_words(initial, counter);
-    let mut bytes = [0; BLOCK_BYTES];
-    for (chunk, word) in bytes.as_chunks_mut::<4>().0.iter_mut().zip(words) {
-        *chunk = word.to_le_bytes();
+fn serialize(words: [u32; 16]) -> [u8; BLOCK_BYTES] {
+    macro_rules! bytes {
+        ($($lane:literal),+) => {
+            [$(
+                words[$lane] as u8,
+                (words[$lane] >> 8u32) as u8,
+                (words[$lane] >> 16u32) as u8,
+                (words[$lane] >> 24u32) as u8,
+            )+]
+        };
     }
-    bytes
+    bytes!(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+}
+
+fn block(initial: [u32; 16], counter: u32) -> [u8; BLOCK_BYTES] {
+    serialize(block_words(initial, counter))
 }
 
 /// XOR an entire message with its keystream. Counter exhaustion preserves the
