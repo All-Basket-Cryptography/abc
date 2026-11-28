@@ -63,6 +63,7 @@ def parser():
     run.add_argument("--cache", type=Path, help="directory for authenticated log-only cache entries")
     evidence = commands.add_parser("evidence").add_subparsers(dest="action", required=True).add_parser("verify")
     evidence.add_argument("--plan", type=Path, required=True)
+    evidence.add_argument("--target", help="verify a receipt for this selected task and its prerequisites")
     evidence.add_argument("--run", type=Path, required=True)
     evidence.add_argument("--key-file", type=Path, required=True)
     evidence.add_argument("--domain", choices=("local", "untrusted-pr", "reviewed-main", "release"), default="local")
@@ -116,7 +117,7 @@ def main():
             return 0 if result["status"] == "passed" else 1
         elif args.command == "evidence":
             from tools.verification.abc_runner import verify_receipt
-            output(verify_receipt(repo, args.plan, args.run, args.domain, args.key_file))
+            output(verify_receipt(repo, args.plan, args.run, args.domain, args.key_file, target=args.target))
         elif args.command == "status":
             output(task_board(repo))
         elif args.command == "package":

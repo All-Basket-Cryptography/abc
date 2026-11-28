@@ -30,8 +30,8 @@ The [repository audit](repository-audit.md) records the handoff integrity check,
 
 ## Remaining acceptance
 
-- M0 has a passing pinned Rust-to-Lean bounded probe. M1 candidate fixtures passed on GitHub. The hosted required gate awaits an independently reviewed Git baseline.
-- M2 has checked SHA-256, HMAC-SHA-256 and HKDF-SHA-256 implementation refinements and browser WASM coverage. The three refinements await independent review. The SHA3-256 implementation proof scope remains open. [Formal evidence](formal-and-fuzz.md) · [HMAC and HKDF checks](../../tools/verification/hmac-hkdf/README.md)
+- M0 has a passing pinned Rust-to-Lean bounded probe. M1 candidate fixtures and the same-revision planner, worker and receipt rehearsal passed on GitHub. The hosted required gate awaits an independently reviewed Git baseline. [CI baseline procedure](../../.github/README.md#first-baseline)
+- M2 has checked Rust SHA-256, HMAC-SHA-256, HKDF-SHA-256 and SHA3-256 implementation refinements and browser WASM coverage. Independent review remains open. [Formal evidence](formal-and-fuzz.md) · [Portfolio proof scopes](../plan/portfolio-verification.md)
 - M3 through M5 have local research packages, a Rust/npm research replay path, and initial governance and upstream tooling. Production approval, broader platform evidence, previous-version compatibility, and backlog expansion remain open. The [acceptance review](acceptance.md) records each check.
 
 The Rust and npm research set passed exact-byte replay from clean build directories. Use `python -m tools.abc_cli release prepare --profile research --output dist/research` and `python -m tools.abc_cli release verify --manifest dist/research/release-set.json` to repeat the check. The manifest records the source snapshot and local consumer results. Production eligibility requires a reviewed source revision, independent review, and checked assurance evidence.

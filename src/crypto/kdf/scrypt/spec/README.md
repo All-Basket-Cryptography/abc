@@ -69,25 +69,30 @@ Colin Percival, *Stronger Key Derivation via Sequential Memory-Hard
 Functions*, 2009, gives the motivation and formal cost model for ROMix.
 [Original paper](https://www.tarsnap.com/scrypt/scrypt.pdf)
 
-## Rust Salsa20/8 source refinement
+## Rust BlockMix and Salsa20/8 source refinement
 
-The pinned Charon replay extracts the active `salsa8` and `salsa_quarter`
-functions. The lowering checks the concrete range and array operations and
+The pinned Charon replay extracts the active `block_mix`, `salsa8` and
+`salsa_quarter` functions. The lowering checks the concrete range and array operations and
 emits the double round, number of iterations, and feed-forward operations
 from that extraction. Lean proves the equality with the RFC core for all
 16 input words, then applies it to every 64-byte input under the model's
-little-endian byte encoding. The construction theorem now supplies the
-Salsa20/8 contract from that proof. It continues to assume PBKDF2 and
-uses the alternating ROMix and BlockMix models. Rust's byte loads and
-stores in BlockMix and the public `derive` source remain to be verified.
-[RFC 7914 §§ 3–4](https://www.rfc-editor.org/rfc/rfc7914.html#section-3) · [The Salsa20 family](https://cr.yp.to/snuffle/salsafamily-20071225.pdf) · [Lean statements](ScryptSalsaSource.lean)
+little-endian byte encoding. The BlockMix lowering symbolically replays
+the outer iteration, tracking every seed load, XOR, Salsa call and byte
+store. Lean checks the iteration count, seed position, byte values and
+write offsets. For a lane of length `128*r` with positive `r` and a
+temporary buffer of the same length, it proves that the unique writes
+cover every slot and that the stored bytes equal RFC 7914 BlockMix.
+[RFC 7914 §§ 3–4](https://www.rfc-editor.org/rfc/rfc7914.html#section-3) · [The Salsa20 family](https://cr.yp.to/snuffle/salsafamily-20071225.pdf) · [Salsa20/8 proof](ScryptSalsaSource.lean) · [BlockMix proof](ScryptBlockMixSource.lean)
 
 ```sh
 python -B -m tools.verification.scrypt.check --negative-controls
 ```
 
 The runner expects the pinned x86-64 Charon and Lean toolchains and
-performs two extractions. Changing the rotation distance or reducing the
-number of rounds produces a recompiled Rust model that Lean rejects. The
-proof trusts the restricted LLBC lowering and the documented Rust
-primitive and iterator semantics. [Replay record](../../../../../tools/verification/scrypt/source-receipt-windows-x64.json)
+performs two extractions. Lean rejects the separately recompiled models
+with a changed rotation, fewer rounds, a shifted BlockMix destination or
+big-endian output bytes. The proof relies on the restricted normal-path
+LLBC lowering and Rust's primitive and iterator semantics. The Rust ROMix
+driver and public `derive` still need source correspondence. The higher-level
+construction proof uses the alternating ROMix model and a PBKDF2
+provider contract. [Replay record](../../../../../tools/verification/scrypt/source-receipt-windows-x64.json)

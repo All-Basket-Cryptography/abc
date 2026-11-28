@@ -10,7 +10,8 @@ class SalsaCrate(Crate):
         require(artifact["has_errors"] is False, "Charon reported Salsa20/8 extraction errors")
         self.data = artifact["translated"]
         targets = self.data["target_information"]
-        require(self.data["crate_name"] == "abc_scrypt" and self.data["options"]["start_from"] == ["crate::salsa8"] and
+        require(self.data["crate_name"] == "abc_scrypt" and
+                self.data["options"]["start_from"] in (["crate::salsa8"], ["crate::block_mix"]) and
                 len(targets) == 1 and targets[0]["key"] == target and targets[0]["value"]["target_pointer_size"] == 8,
                 "Expected the x86-64 scrypt Salsa20/8 closure")
         self.constants = {}

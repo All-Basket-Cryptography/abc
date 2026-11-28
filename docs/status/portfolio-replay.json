@@ -1610,5 +1610,153 @@
         }
       ]
     }
+  },
+  "ci_baseline_and_refinement_update": {
+    "scope": "Advisory execution and pinned source proof replays. No independent approval recorded.",
+    "passed_cells": 220,
+    "windows_cells": 200,
+    "windows_suite_commands": 207,
+    "windows_matrix_result_sha256": "01f6644db7fc9183534bcadf739b73a32d0cc7d8dfb5bc78791ccd45f2ffa642",
+    "windows_matrix_reported_revision": "892fbb5e61d65de9c32ef1aee66be1cb3dd0809b",
+    "native_c_pq_receipt_sha256": "062601e32092cbf9324f388bdb4c5957e8aed0000394d5bcac92c0430a0239b1",
+    "source_replays": {
+      "aes256": {
+        "windows_receipt": "tools/verification/aes256/source-receipt-windows-x64.json",
+        "windows_sha256": "cc4b73df773035bcff2feb2ffa5aab014aa137596b29de3aa8a7f206bf69f831",
+        "audited_theorems": 5,
+        "rejected_changes": 3
+      },
+      "aes256-gcm": {
+        "windows_receipt": "tools/verification/aes256-gcm/source-receipt-windows-x64.json",
+        "windows_sha256": "c35db69a703a5122857c209423c732271c1746ace17ab63ab54a41094167b74e",
+        "audited_theorems": 34,
+        "rejected_changes": 11
+      },
+      "scrypt": {
+        "windows_receipt": "tools/verification/scrypt/source-receipt-windows-x64.json",
+        "windows_sha256": "b4dd15c17eab9a5d7657b21b98b09c75f562db575e11163d381cbd6241a8b0b7",
+        "audited_theorems": 13,
+        "rejected_changes": 4
+      }
+    },
+    "swift": {
+      "checkpoint": "e5020428889e0a6698380861c4bae840fe8dc192",
+      "target": "macOS 15 arm64 with Swift 6.1.2",
+      "cells": 20,
+      "jobs": [
+        {
+          "profiles": [
+            "aes256",
+            "aes256-gcm"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292758/job/140893851175"
+        },
+        {
+          "profiles": [
+            "argon2id"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292784/job/140893851667"
+        },
+        {
+          "profiles": [
+            "blake2b"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292797/job/140893851412"
+        },
+        {
+          "profiles": [
+            "chacha20",
+            "poly1305",
+            "chacha20-poly1305"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292674/job/140893851027"
+        },
+        {
+          "profiles": [
+            "ecdsa-p256-sha256"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292784/job/140893851739"
+        },
+        {
+          "profiles": [
+            "hkdf-sha256"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292868/job/140893851803"
+        },
+        {
+          "profiles": [
+            "hmac-sha256"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292801/job/140893851286"
+        },
+        {
+          "profiles": [
+            "ml-dsa-65"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292784/job/140893851472"
+        },
+        {
+          "profiles": [
+            "ml-kem-768"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292784/job/140893851710"
+        },
+        {
+          "profiles": [
+            "pbkdf2-hmac-sha256"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292868/job/140893851559"
+        },
+        {
+          "profiles": [
+            "scrypt"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292934/job/140893851679"
+        },
+        {
+          "profiles": [
+            "sha256"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292913/job/140893851637"
+        },
+        {
+          "profiles": [
+            "sha3-256"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292831/job/140893851389"
+        },
+        {
+          "profiles": [
+            "sha512"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292788/job/140893851322"
+        },
+        {
+          "profiles": [
+            "shake256"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292831/job/140893851709"
+        },
+        {
+          "profiles": [
+            "x25519",
+            "ed25519"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292627/job/140893851144"
+        }
+      ]
+    },
+    "ci_rehearsal": {
+      "checkpoint": "e5020428889e0a6698380861c4bae840fe8dc192",
+      "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292819/job/140893906811",
+      "advisory": "passed",
+      "plan_sha256": "cdb32329224faea3dc7e0c009aba341779155a662d47538786b1ab30d4c19a0e",
+      "receipts_sha256": {
+        "repository-assurance:registry": "b749ef5727011aeff404aa07af03a765844a3dceeb40365beae105f0a6bdcaf3",
+        "repository-assurance:status": "806df449bee787adad13388763209484ba6ccedacf59fc96ac03398ee1ef371c"
+      },
+      "required_job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292819/job/140894009736",
+      "required_result": "independent-review-required"
+    }
   }
 }

@@ -1,4 +1,4 @@
-"""Extract the active Rust Salsa20/8 core and replay its RFC 7914 proofs."""
+"""Extract the active Rust BlockMix and Salsa20/8 and replay their RFC 7914 proofs."""
 
 import argparse
 from hashlib import sha256
@@ -10,7 +10,8 @@ import shutil
 import subprocess
 import tempfile
 
-from tools.verification.scrypt.salsa_llbc import lean_module, require
+from tools.verification.scrypt.blockmix_llbc import lean_body
+from tools.verification.scrypt.salsa_llbc import SalsaCrate, lean_module, require
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -19,14 +20,22 @@ SPEC = ROOT / "src/crypto/kdf/scrypt/spec"
 TOOLCHAIN = ROOT / "tools/verification/probe/toolchain-candidate.json"
 LEAN_PIN = ROOT / "src/lean/lean-toolchain"
 PROOF = "ScryptSalsaSource.lean"
+BLOCKMIX_PROOF = "ScryptBlockMixSource.lean"
 SUPPORTED = {"x86_64-pc-windows-msvc", "x86_64-unknown-linux-gnu"}
 ALLOWED_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
 THEOREMS = {"sourceDoubleRound_refines", "sourceFeed_refines", "sourceSalsa8_refines", "sourceSalsaBytes_refines",
-            "alternatingWithSourceSalsa_refines"}
+            "alternatingWithSourceSalsa_refines", "sourceBlockMixSeed_refines", "sourceBlockMixInput_refines",
+            "sourceBlockMixSerialize_refines", "sourceBlockMixWordTrace_refines", "sourceBlockMixTraversal_refines",
+            "sourceBlockMixBlocks_refines", "sourceBlockMixScatter_refines", "sourceBlockMixBytes_refines"}
 CONTROLS = {
-    "rotation": (".rotate_left(7)", ".rotate_left(6)", "sourceDoubleRound_refines"),
+    "rotation": (".rotate_left(7)", ".rotate_left(6)", PROOF, "sourceDoubleRound_refines"),
     "round_count": ("let mut words = *state;\n    for _ in 0..4 {", "let mut words = *state;\n    for _ in 0..3 {",
-                    "sourceSalsa8_refines"),
+                    PROOF, "sourceSalsa8_refines"),
+    "blockmix_destination": ("let destination = index / 2 + (index % 2) * (blocks / 2);",
+                             "let destination = index / 2 + (index % 2) * (blocks / 2) + 1;",
+                             BLOCKMIX_PROOF, "sourceBlockMixTraversal_refines"),
+    "blockmix_serialization": ("*bytes = word.to_le_bytes();", "*bytes = word.to_be_bytes();",
+                               BLOCKMIX_PROOF, "sourceBlockMixSerialize_refines"),
 }
 
 
@@ -68,17 +77,18 @@ def audit(text):
 
 def verify(charon, lean, negative_controls):
     charon, version, rust, compiler, target, lean, lean_version = toolchain(charon, lean)
-    models = ["ScryptFunctional.lean", "ScryptAlternating.lean", PROOF]
+    models = ["ScryptBounds.lean", "ScryptFunctional.lean", "ScryptAlternating.lean", PROOF, BLOCKMIX_PROOF]
     src = CRATE / "src/lib.rs"
     inputs = [TOOLCHAIN, LEAN_PIN, src, CRATE / "Cargo.toml", ROOT / "tools/build/rust/Cargo.toml",
               ROOT / "tools/build/rust/Cargo.lock", ROOT / "tools/verification/keccak/llbc.py",
-              Path(__file__), Path(__file__).with_name("salsa_llbc.py"), *(SPEC / model for model in models)]
+              Path(__file__), Path(__file__).with_name("salsa_llbc.py"), Path(__file__).with_name("blockmix_llbc.py"),
+              *(SPEC / model for model in models)]
 
     def hashes():
         return {path.resolve().relative_to(ROOT).as_posix(): digest(path) for path in inputs}
 
     before = hashes()
-    with tempfile.TemporaryDirectory(prefix="abc-scrypt-salsa-") as scratch:
+    with tempfile.TemporaryDirectory(prefix="abc-scrypt-blockmix-") as scratch:
         work = Path(scratch)
 
         def extract(label, crate=CRATE):
@@ -86,13 +96,13 @@ def verify(charon, lean, negative_controls):
             env = {**os.environ, "RUSTUP_TOOLCHAIN": rust, "CARGO_NET_OFFLINE": "true",
                    "CARGO_TARGET_DIR": str(work / f"{label}-target")}
             locked = ["--locked"] if crate == CRATE else []
-            _, stderr = run([str(charon), "cargo", "--preset=aeneas", "--start-from", "crate::salsa8", "--dest-file",
+            _, stderr = run([str(charon), "cargo", "--preset=aeneas", "--start-from", "crate::block_mix", "--dest-file",
                              str(ir), "--", *locked, "--offline", "--lib", "--no-default-features", "--target", target],
                             crate, env)
             artifact = json.loads(ir.read_bytes())
             require(artifact["charon_version"] == version.split()[0], "Unexpected Salsa20/8 LLBC release")
-            return lean_module(artifact, target), {"sha256": digest(ir),
-                                                    "used_default_sysroot_fallback": "falling back to rustc" in stderr}
+            model = lean_module(artifact, target) + lean_body(SalsaCrate(artifact, target))
+            return model, {"sha256": digest(ir), "used_default_sysroot_fallback": "falling back to rustc" in stderr}
 
         def compile_lean(path, success=True):
             command = [*lean, f"--root={work}", "-DwarningAsError=true", "-o", str(path.with_suffix(".olean")), str(path)]
@@ -100,17 +110,17 @@ def verify(charon, lean, negative_controls):
 
         model, first = extract("first")
         repeat, second = extract("second")
-        require(model == repeat, "Fresh Salsa20/8 extractions changed generated Lean")
+        require(model == repeat, "Fresh scrypt extractions changed generated Lean")
         generated = work / "SalsaLlbc.lean"
         generated.write_text(model, encoding="utf-8", newline="\n")
         generated_hash = digest(generated)
         for filename in models:
             shutil.copyfile(SPEC / filename, work / filename)
-        for path in (work / models[0], work / models[1], generated):
+        for path in (*(work / path for path in models[:-2]), generated):
             compile_lean(path)
-        theorems = audit(compile_lean(work / PROOF))
+        theorems = audit(compile_lean(work / PROOF)) | audit(compile_lean(work / BLOCKMIX_PROOF))
         require(set(theorems) == THEOREMS and all(set(axioms) <= ALLOWED_AXIOMS for axioms in theorems.values()),
-                f"Unexpected Salsa20/8 Lean audit {theorems}")
+                f"Unexpected scrypt Lean audit {theorems}")
 
         controls = {}
         if negative_controls:
@@ -118,25 +128,27 @@ def verify(charon, lean, negative_controls):
             pbkdf2 = ROOT / "src/crypto/kdf/pbkdf2-hmac-sha256/impl/rust"
             manifest = ('[package]\nname = "abc-scrypt"\nversion = "0.1.0"\nedition = "2021"\n'
                         f'[dependencies]\nabc-pbkdf2-hmac-sha256 = {{ path = {json.dumps(pbkdf2.as_posix())} }}\n')
-            for label, (old, new, theorem) in CONTROLS.items():
-                require(original.count(old) == 1, f"Expected one Salsa20/8 mutation site for {label}")
+            for label, (old, new, proof, theorem) in CONTROLS.items():
+                require(original.count(old) == 1, f"Expected one scrypt mutation site for {label}")
                 crate = work / label
                 mutant = crate / "src/lib.rs"
                 mutant.parent.mkdir(parents=True)
                 mutant.write_text(original.replace(old, new, 1), encoding="utf-8", newline="\n")
                 (crate / "Cargo.toml").write_text(manifest, encoding="utf-8", newline="\n")
                 altered, ir = extract(label, crate)
-                require(altered != model, f"Salsa20/8 mutation produced no change for {label}")
+                require(altered != model, f"scrypt mutation produced no change for {label}")
                 generated.write_text(altered, encoding="utf-8", newline="\n")
                 compile_lean(generated)
-                rejected = audit(compile_lean(work / PROOF, success=False))
+                if proof == BLOCKMIX_PROOF:
+                    compile_lean(work / PROOF)
+                rejected = audit(compile_lean(work / proof, success=False))
                 require("sorryAx" in rejected.get(theorem, []),
-                        "Changed source failed outside the Salsa20/8 word refinement")
+                        "Changed source failed outside the targeted scrypt refinement")
                 controls[label] = {"rust_sha256": digest(mutant), "llbc_sha256": ir["sha256"],
                                    "lean_sha256": digest(generated), "rejected_theorem": theorem}
 
-    require(hashes() == before, "Salsa20/8 verification inputs changed during replay")
-    return {"status": "scrypt_salsa8_source_checked", "target": target, "charon": version,
+    require(hashes() == before, "scrypt verification inputs changed during replay")
+    return {"status": "scrypt_salsa8_and_blockmix_source_checked", "target": target, "charon": version,
             "charon_executable_sha256": digest(charon), "rust": compiler, "lean": lean_version, "sources": before,
             "extractions": [first, second], "generated_lean_sha256": generated_hash,
             "audited_theorems": theorems, "negative_controls": controls}

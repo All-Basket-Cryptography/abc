@@ -22,7 +22,7 @@ This report covers the [handoff checks](../plan/abc/ACCEPTANCE.md). The scope of
 | AC-20 | Native and managed consumers cover declared byte, error, and context boundaries. Broader target testing is pending. |
 | AC-21 | The first package set establishes the compatibility baseline. There are no earlier release artifacts. |
 | AC-22–24 | Secret-bearing release profiles and production dependency-closure tests are pending. |
-| AC-25 | Local gate fixtures reject missing and failed work. The hosted candidate fixtures passed and the required gate rejected the unreviewed base. Hosted cancellation and a reviewed baseline are pending. |
+| AC-25 | Local gate fixtures reject missing and failed work. The hosted rehearsal executed both metadata workers and verified their receipts at the exact candidate revision. The required gate still rejects an unreviewed base. Hosted cancellation and independent installation of a reviewed baseline remain open. [Candidate rehearsal](https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292819/job/140893906811) |
 | AC-26 | A live scoped OSV query, synthetic advisory drill and installed consumer comparison ran locally. Scheduled feeds and actual release lineage are pending. |
 | AC-27 | Rust, npm, Go, and JVM package checks validate expected archive contents. Isolated native and Python consumers exercise required headers and libraries. |
 | AC-28 | Research Rust and npm replay emits exact-byte digests, an SBOM, and local provenance. Production attestations are pending. |

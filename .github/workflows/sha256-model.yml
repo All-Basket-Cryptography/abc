@@ -31,6 +31,8 @@ on:
       - 'src/crypto/hash/sha512/spec/**'
       - 'src/crypto/aead/chacha20-poly1305/spec/**'
       - 'src/crypto/cipher/aes256/spec/**'
+      - 'src/crypto/cipher/aes256/impl/rust/**'
+      - 'tools/verification/aes256/**'
       - 'src/crypto/aead/aes256-gcm/spec/**'
       - 'src/crypto/aead/aes256-gcm/impl/rust/**'
       - 'tools/verification/aes256-gcm/**'
@@ -134,7 +136,7 @@ jobs:
           lean src/crypto/kdf/argon2id/spec/Argon2idBounds.lean
           lean src/crypto/cipher/aes256/spec/Aes256Byte.lean
           lean src/crypto/aead/aes256-gcm/spec/Aes256GcmBounds.lean
-      - name: Replay source-derived SHA-512, Keccak, AES-GCM and Salsa20/8 proofs
+      - name: Replay source-derived SHA-512, Keccak, AES, AES-GCM and scrypt proofs
         run: |
           export ABC_CHARON="$ABC_AENEAS_ROOT/charon/bin/charon"
           python3 -B tools/verification/sha512/check_stream_source.py --negative-controls \
@@ -145,6 +147,7 @@ jobs:
             --output .abc/keccak-source-llbc.json
           python3 -B tools/verification/keccak/check_wrappers.py --negative-controls \
             --output .abc/keccak-wrappers-llbc.json
+          python3 -B tools/verification/aes256/check.py --check-mutants
           python3 -B tools/verification/aes256-gcm/check.py --check-mutant
           python3 -B -m tools.verification.scrypt.check --negative-controls \
             --output .abc/scrypt-salsa-llbc.json
@@ -158,6 +161,9 @@ jobs:
             .abc/keccak-source-llbc.json
             .abc/keccak-wrappers-llbc.json
             .abc/scrypt-salsa-llbc.json
+            .abc/aes256-extraction/run-*/result.json
+            .abc/aes256-extraction/run-*/*.log
+            .abc/aes256-extraction/run-*/*/Aes256Llbc.lean
             .abc/aes256-gcm-extraction/run-*/result.json
             .abc/aes256-gcm-extraction/run-*/*.log
             .abc/aes256-gcm-extraction/run-*/*/GhashLlbc.lean

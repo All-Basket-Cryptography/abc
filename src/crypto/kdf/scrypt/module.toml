@@ -2,7 +2,7 @@ schema_version = 1
 id = "scrypt-rust"
 owned_paths = ["src/crypto/kdf/scrypt"]
 cargo_manifests = ["src/crypto/kdf/scrypt/impl/rust/Cargo.toml"]
-lean_sources = { ScryptBounds = "src/crypto/kdf/scrypt/spec", ScryptFunctional = "src/crypto/kdf/scrypt/spec", ScryptAlternating = "src/crypto/kdf/scrypt/spec", ScryptSalsaSource = "src/crypto/kdf/scrypt/spec" }
+lean_sources = { ScryptBounds = "src/crypto/kdf/scrypt/spec", ScryptFunctional = "src/crypto/kdf/scrypt/spec", ScryptAlternating = "src/crypto/kdf/scrypt/spec", ScryptSalsaSource = "src/crypto/kdf/scrypt/spec", ScryptBlockMixSource = "src/crypto/kdf/scrypt/spec" }
 lean_external_imports = { SalsaLlbc = "tools/verification/scrypt/salsa_llbc.py" }
 
 [tasks.test]

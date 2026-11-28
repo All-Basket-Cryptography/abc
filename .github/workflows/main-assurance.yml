@@ -47,6 +47,7 @@ jobs:
         env:
           ABC_FUZZ_TASK: ${{ matrix.task }}
         run: |
+          ulimit -c 0
           python -B -m tools.abc_cli plan --head "$GITHUB_SHA" --output .abc/main-plan.json
           python -B -m tools.abc_cli run --plan .abc/main-plan.json --target "$ABC_FUZZ_TASK" --output .abc/main-run
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -54,6 +55,7 @@ jobs:
         with:
           name: abc-main-fuzz-${{ matrix.artifact }}
           path: |
+            .abc/main-plan.json
             .abc/main-run
             .abc/probe-fuzz/run-*/result.json
             .abc/sha256-fuzz/run-*/result.json

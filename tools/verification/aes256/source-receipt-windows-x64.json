@@ -1,0 +1,79 @@
+{
+  "status": "source_llbc_refinement_checked",
+  "target": "x86_64-pc-windows-msvc",
+  "rust": "rustc 1.100.0-nightly (8fa1c96cf 2026-08-17)\nbinary: rustc\ncommit-hash: 8fa1c96cfd489e4c27654c144ae871ce2c4db6c6\ncommit-date: 2026-08-17\nhost: x86_64-pc-windows-msvc\nrelease: 1.100.0-nightly\nLLVM version: 23.1.0",
+  "charon": "0.1.254 (b104e24fea7d721b71e6c39fd70f26ff20bc0980)",
+  "lean": "Lean (version 4.31.0, x86_64-w64-windows-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)",
+  "selection": [
+    "--preset=aeneas",
+    "--consts",
+    "values",
+    "--start-from",
+    "crate"
+  ],
+  "cargo": [
+    "--locked",
+    "--offline",
+    "--no-default-features",
+    "--lib",
+    "--target",
+    "x86_64-pc-windows-msvc"
+  ],
+  "source_digests": {
+    "tools/verification/probe/toolchain-candidate.json": "6953b42492bff08a40479725fec7ce922002bfdbe715afcaedf4f817f7621249",
+    "tools/verification/aes256/Aes256SourceRefinement.lean": "3b08c331151c87108d59a1bb7c785deef6648c39cf924e0e1118333b60b1fb29",
+    "tools/verification/aes256/translate.py": "7c43bdbb4378adada784032fec695669bfee05d5b6c5ed42269a9cc21217af7b",
+    "tools/verification/aes256/check.py": "83a14c48041df071a8e4cca0cff4d26d8eeb707ddedb657208aebd09817d3522",
+    "src/crypto/cipher/aes256/impl/rust/Cargo.toml": "6e8fe1b462a21fcb105c7dc04fe08e6bfd5fceceb49bab14017d2f80f14ac671",
+    "src/crypto/cipher/aes256/impl/rust/src/lib.rs": "d41eb0be25e3e779d6b5be5855b419ce1a516bc11cf7336fe45595ee7ed61599",
+    "tools/build/rust/Cargo.toml": "9e8dd7579ad780836ce80f3a00639b171926d3435e15e3eb274c4fd67eb0d8f4",
+    "tools/build/rust/Cargo.lock": "a3ee8405943bef38fef4f8127d96032013d10bc082ae0cb6ff9ccbd855178b5c"
+  },
+  "first": {
+    "llbc_sha256": "b4ef5e829526171d0276dd45c45cc5c6a60c473f249288d5e4852e447319bf30",
+    "lean_model_sha256": "72177f117ebc06f060b48e08d96d2366214609adb9476d67004447d5f4ffa2ac"
+  },
+  "second": {
+    "llbc_sha256": "a6f47ddd25274032e3e18a2cb2e1d51cb8d4cb7783b2ba7c12c9484a24405b15",
+    "lean_model_sha256": "72177f117ebc06f060b48e08d96d2366214609adb9476d67004447d5f4ffa2ac"
+  },
+  "theorems": {
+    "Abc.Refine.Aes256.source_mul_x_refines_fips": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Aes256.source_square_refines_field": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Aes256.source_field_examples": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Aes256.source_mix_column_refines_fips": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Aes256.source_mix_column_example": [
+      "propext",
+      "Quot.sound"
+    ]
+  },
+  "negative_checks": {
+    "reduction": {
+      "status": "rejected",
+      "model_sha256": "491612c74592b6931dd60bcf60a25717bd5f373a8837d6b32c1b6008ef141c93",
+      "log": "reject-reduction.log"
+    },
+    "spread": {
+      "status": "rejected",
+      "model_sha256": "e1115186dc90f5eff029438d0332d3090430a6e834b6b530d515cdeb9ba1adb3",
+      "log": "reject-spread.log"
+    },
+    "column-order": {
+      "status": "rejected",
+      "model_sha256": "10561c789cc7522bd4f748d9c87b8860ae424584feed859b154a2a661d1621a0",
+      "log": "reject-column-order.log"
+    }
+  }
+}

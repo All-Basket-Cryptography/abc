@@ -1,0 +1,18 @@
+schema_version = 1
+id = "aes256-rust-field-formal"
+owned_paths = ["tools/verification/aes256"]
+lean_sources = { Aes256SourceRefinement = "tools/verification/aes256" }
+lean_external_imports = { Aes256Llbc = "tools/verification/aes256/translate.py" }
+shared_inputs = [
+  "src/crypto/cipher/aes256/impl/rust/src/lib.rs",
+  "src/crypto/cipher/aes256/impl/rust/Cargo.toml",
+  "tools/build/rust/Cargo.toml",
+  "tools/build/rust/Cargo.lock",
+  "tools/verification/probe/toolchain-candidate.json",
+]
+
+[tasks.refinement]
+kind = "formal"
+command = ["python", "-B", "tools/verification/aes256/check.py", "--check-mutants"]
+tools = ["python", "charon", "lean", "cargo", "rustc", "rustup"]
+timeout_seconds = 240
