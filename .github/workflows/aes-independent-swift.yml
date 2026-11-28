@@ -1,0 +1,45 @@
+name: ABC independent Swift AES
+
+on:
+  pull_request:
+    paths:
+      - 'src/crypto/cipher/aes256/impl/swift/**'
+      - 'src/crypto/cipher/aes256/impl/java/check.py'
+      - 'src/crypto/aead/aes256-gcm/impl/swift/**'
+      - '.github/workflows/aes-independent-swift.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-swift:
+    name: Swift 6.1.2 macOS AES-256 and AES-256-GCM
+    runs-on: macos-15
+    timeout-minutes: 10
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13.14'
+      - name: Test independent SwiftPM consumers against NIST and OpenSSL
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence=dist/swift-aes
+          mkdir -p "$evidence"
+          sw_vers | tee "$evidence/macos.txt"
+          xcodebuild -version | tee "$evidence/xcode.txt"
+          sysctl -n machdep.cpu.brand_string | tee "$evidence/cpu.txt"
+          node --version | tee "$evidence/node.txt"
+          python -B src/crypto/cipher/aes256/impl/swift/check.py all --benchmark | tee "$evidence/results.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: abc-swift-aes-macos-arm64
+          path: dist/swift-aes/
+          if-no-files-found: error
+          retention-days: 7

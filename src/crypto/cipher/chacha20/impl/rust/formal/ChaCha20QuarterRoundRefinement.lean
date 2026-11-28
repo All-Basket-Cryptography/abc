@@ -165,4 +165,138 @@ theorem block_words_refines (state : StateArray) (counter : U32) :
 #print axioms rounds_20_refines
 #print axioms block_words_refines
 
+def byteView {n : Usize} (bytes : Aeneas.Std.Array U8 n) : Bytes n.val :=
+  fun i => bytes.val[i.val]!.bv
+
+private theorem shl_ok (word count : U32) (bound : count.val < 32) :
+    (word <<< count) = .ok (⟨word.bv.shiftLeft count.val⟩ : U32) := by
+  change (if count.val < 32 then Result.ok (⟨word.bv.shiftLeft count.val⟩ : U32)
+    else Result.fail .integerOverflow) = _
+  rw [if_pos bound]
+
+private theorem shr_ok (word count : U32) (bound : count.val < 32) :
+    (word >>> count) = .ok (⟨word.bv.ushiftRight count.val⟩ : U32) := by
+  change (if count.val < 32 then Result.ok (⟨word.bv.ushiftRight count.val⟩ : U32)
+    else Result.fail .integerOverflow) = _
+  rw [if_pos bound]
+
+private theorem load_word_bits (a b c d : BitVec 8) :
+    ((a.setWidth 32 ||| (b.setWidth 32).shiftLeft 8) ||| (c.setWidth 32).shiftLeft 16)
+      ||| (d.setWidth 32).shiftLeft 24 = loadLe a b c d := by
+  let decoded := ((a.setWidth 32 ||| (b.setWidth 32).shiftLeft 8) ||| (c.setWidth 32).shiftLeft 16)
+    ||| (d.setWidth 32).shiftLeft 24
+  change decoded = loadLe a b c d
+  apply BitVec.eq_of_getLsbD_eq
+  suffices h : ∀ i : Fin 32, decoded.getLsbD i.val = (loadLe a b c d).getLsbD i.val by
+    exact fun i hi => h ⟨i, hi⟩
+  intro i
+  simp only [loadLe, BitVec.getLsbD_append]
+  fin_cases i <;> simp (disch := decide) [decoded]
+
+theorem load_word_refines (a b c d : U8) :
+    Abc.ChaCha20.Extracted.load_word a b c d = .ok ⟨loadLe a.bv b.bv c.bv d.bv⟩ := by
+  simp (disch := decide) only [Abc.ChaCha20.Extracted.load_word, shl_ok, lift, Aeneas.Std.bind_tc_ok]
+  apply congrArg (Result.ok : U32 → Result U32)
+  apply (UScalar.eq_equiv_bv_eq _ _).mpr
+  simp only [UScalar.bv_or, UScalar.cast_bv_eq]
+  exact load_word_bits a.bv b.bv c.bv d.bv
+
+private theorem add_index (a b result : Usize) (h : a.val + b.val = result.val) :
+    (a + b : Result Usize) = .ok result := by
+  change UScalar.tryMk .Usize (a.val + b.val) = _
+  rw [h]
+  have bound : result.val < 2 ^ System.Platform.numBits := result.bv.isLt
+  simp [UScalar.tryMk, UScalar.tryMkOpt, bound, Result.ofOption, UScalar.ofNatCore]
+  exact UScalar.eq_of_val_eq rfl
+
+set_option maxHeartbeats 800000 in
+/-- The extracted initial-state function interprets every valid key/nonce byte
+array according to the RFC word layout, including the four constants. -/
+theorem initial_state_refines (key : Aeneas.Std.Array U8 32#usize)
+    (nonce : Aeneas.Std.Array U8 12#usize) :
+    ∃ out, Abc.ChaCha20.Extracted.initial_state key nonce = .ok out ∧
+      stateView out = initialFromBytes (byteView key) (byteView nonce) := by
+  have add0_1 := add_index 0#usize 1#usize 1#usize (by decide)
+  have add0_2 := add_index 0#usize 2#usize 2#usize (by decide)
+  have add0_3 := add_index 0#usize 3#usize 3#usize (by decide)
+  have add4_1 := add_index 4#usize 1#usize 5#usize (by decide)
+  have add4_2 := add_index 4#usize 2#usize 6#usize (by decide)
+  have add4_3 := add_index 4#usize 3#usize 7#usize (by decide)
+  have add8_1 := add_index 8#usize 1#usize 9#usize (by decide)
+  have add8_2 := add_index 8#usize 2#usize 10#usize (by decide)
+  have add8_3 := add_index 8#usize 3#usize 11#usize (by decide)
+  have add12_1 := add_index 12#usize 1#usize 13#usize (by decide)
+  have add12_2 := add_index 12#usize 2#usize 14#usize (by decide)
+  have add12_3 := add_index 12#usize 3#usize 15#usize (by decide)
+  have add16_1 := add_index 16#usize 1#usize 17#usize (by decide)
+  have add16_2 := add_index 16#usize 2#usize 18#usize (by decide)
+  have add16_3 := add_index 16#usize 3#usize 19#usize (by decide)
+  have add20_1 := add_index 20#usize 1#usize 21#usize (by decide)
+  have add20_2 := add_index 20#usize 2#usize 22#usize (by decide)
+  have add20_3 := add_index 20#usize 3#usize 23#usize (by decide)
+  have add24_1 := add_index 24#usize 1#usize 25#usize (by decide)
+  have add24_2 := add_index 24#usize 2#usize 26#usize (by decide)
+  have add24_3 := add_index 24#usize 3#usize 27#usize (by decide)
+  have add28_1 := add_index 28#usize 1#usize 29#usize (by decide)
+  have add28_2 := add_index 28#usize 2#usize 30#usize (by decide)
+  have add28_3 := add_index 28#usize 3#usize 31#usize (by decide)
+  simp (disch := decide) only [Abc.ChaCha20.Extracted.initial_state, index_ok, load_word_refines,
+    add0_1, add0_2, add0_3, add4_1, add4_2, add4_3,
+    add8_1, add8_2, add8_3, add12_1, add12_2, add12_3,
+    add16_1, add16_2, add16_3, add20_1, add20_2, add20_3,
+    add24_1, add24_2, add24_3, add28_1, add28_2, add28_3,
+    Aeneas.Std.bind_tc_ok]
+  refine ⟨_, rfl, ?_⟩
+  funext i
+  fin_cases i <;> simp only [stateView, initialFromBytes, byteView,
+    Aeneas.Std.Array.getElem!_Usize_eq] <;> rfl
+
+private theorem cast_shift_byte (word : U32) (count : Nat) :
+    (UScalar.cast .U8 (⟨word.bv.ushiftRight count⟩ : U32)).bv =
+      word.bv.extractLsb' count 8 := by
+  simp only [UScalar.cast_bv_eq, BitVec.extractLsb', BitVec.setWidth]
+  rfl
+
+set_option maxHeartbeats 1800000 in
+set_option maxRecDepth 4096 in
+/-- Each of the 64 extracted bytes matches the corresponding little-endian
+coordinate of all sixteen input words. -/
+theorem serialize_refines (words : StateArray) :
+    ∃ out, Abc.ChaCha20.Extracted.serialize words = .ok out ∧
+      byteView out = serializeBytes (stateView words) := by
+  simp (disch := decide) only [Abc.ChaCha20.Extracted.serialize, index_ok, shr_ok,
+    lift, Aeneas.Std.bind_tc_ok]
+  refine ⟨_, rfl, ?_⟩
+  funext i
+  fin_cases i <;>
+    simp only [byteView, serializeBytes, stateView, Aeneas.Std.Array.getElem!_Usize_eq,
+      ← cast_shift_byte] <;> rfl
+
+theorem block_refines (initial : StateArray) (counter : U32) :
+    ∃ out, Abc.ChaCha20.Extracted.block initial counter = .ok out ∧
+      byteView out = serializeBytes (blockWords (stateView initial) counter.bv) := by
+  obtain ⟨words, hwords, wordView⟩ := block_words_refines initial counter
+  obtain ⟨out, hout, outView⟩ := serialize_refines words
+  refine ⟨out, ?_, ?_⟩
+  · simp only [Abc.ChaCha20.Extracted.block, hwords, Aeneas.Std.bind_tc_ok, hout]
+  · rw [outView, wordView]
+
+/-- Exact byte-to-byte refinement of the two extracted functions that implement
+the RFC block transform along the active Rust keystream path. -/
+theorem block_from_bytes_refines (key : Aeneas.Std.Array U8 32#usize)
+    (nonce : Aeneas.Std.Array U8 12#usize) (counter : U32) :
+    ∃ initial out, Abc.ChaCha20.Extracted.initial_state key nonce = .ok initial ∧
+      Abc.ChaCha20.Extracted.block initial counter = .ok out ∧
+      byteView out = blockBytes (byteView key) (byteView nonce) counter.bv := by
+  obtain ⟨initial, hinit, iniView⟩ := initial_state_refines key nonce
+  obtain ⟨out, hout, outView⟩ := block_refines initial counter
+  refine ⟨initial, out, hinit, hout, ?_⟩
+  simpa only [blockBytes, iniView] using outView
+
+#print axioms load_word_refines
+#print axioms initial_state_refines
+#print axioms serialize_refines
+#print axioms block_refines
+#print axioms block_from_bytes_refines
+
 end Abc.Refine.ChaCha20

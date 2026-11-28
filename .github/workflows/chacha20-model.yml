@@ -1,4 +1,4 @@
-name: ABC ChaCha20 block word refinement (advisory)
+name: ABC ChaCha20 byte block refinement (advisory)
 
 on:
   pull_request:
@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   refine-quarter-round:
-    name: Extract and prove the Rust ChaCha20 block words
+    name: Extract and prove the Rust ChaCha20 byte block
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:

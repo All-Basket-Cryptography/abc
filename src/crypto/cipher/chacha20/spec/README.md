@@ -16,11 +16,11 @@ counter boundary. Lean checks block-count coverage, that every admitted
 counter index fits 32 bits, and the single-block limit at the last
 counter.
 
-Pinned Charon and Aeneas extract the Rust `block_words` called by the active
-block function. Lean checks the indexed quarter round, all eight quarter
-rounds in each column and diagonal pair, and all ten consecutive pairs.
-`Abc.Refine.ChaCha20.block_words_refines` proves success and equality with
-the RFC word result for every 16-word state and 32-bit counter, including
-counter placement and all 16 wrapping additions of the initial state.
-Key and nonce decoding, little-endian serialization, stream XOR and
-compiled-target leakage remain open. [Reproduction and scope](../../../../../tools/verification/chacha20/README.md)
+Pinned Charon and Aeneas extract `initial_state` and `block` from the active
+Rust keystream implementation. Lean proves that every 32-byte key,
+12-byte nonce and 32-bit counter produce the exact 64-byte RFC block.
+The proof covers little-endian input decoding, constants, all twenty
+rounds, counter placement, sixteen wrapping additions and every output
+byte. The stream loop, rejection preservation, target leakage and
+AEAD composition have separate proof obligations.
+[Reproduction and scope](../../../../../tools/verification/chacha20/README.md)

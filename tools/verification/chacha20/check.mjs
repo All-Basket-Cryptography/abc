@@ -15,7 +15,8 @@ const modelFiles = [`${subdir}/Funs.lean`, `${subdir}/Types.lean`];
 const specFile = 'ChaCha20QuarterRound.lean';
 const proofFile = 'ChaCha20QuarterRoundRefinement.lean';
 const theorems = ['quarter_round_refines', 'double_round_refines', 'rounds_20_refines',
-  'block_words_refines'].map((name) => `Abc.Refine.ChaCha20.${name}`);
+  'block_words_refines', 'load_word_refines', 'initial_state_refines', 'serialize_refines',
+  'block_refines', 'block_from_bytes_refines'].map((name) => `Abc.Refine.ChaCha20.${name}`);
 const allowedAxioms = new Set(['propext', 'Classical.choice', 'Quot.sound']);
 const target = 'x86_64-unknown-linux-gnu';
 const cargo = ['--locked', '--offline', '--lib', '--no-default-features', '--target', target];
@@ -45,7 +46,7 @@ function check(toolRoot) {
   const output = join(repo, '.abc/chacha20-extraction');
   mkdirSync(output, { recursive: true });
   const work = mkdtempSync(join(output, 'run-'));
-  const report = { status: 'failed', scope: 'block_words', pins, target, features: [], cargo,
+  const report = { status: 'failed', scope: 'block_from_bytes', pins, target, features: [], cargo,
     charonArgs, aeneasArgs };
 
   function run(label, program, args, cwd, env = {}) {
@@ -132,7 +133,7 @@ function check(toolRoot) {
       throw new Error('Source or generated model changed during verification');
     }
     report.theorems = auditByTheorem;
-    report.status = 'block_words_refinement_checked';
+    report.status = 'block_from_bytes_refinement_checked';
   } catch (error) {
     report.error = error.message;
     process.exitCode = 1;
