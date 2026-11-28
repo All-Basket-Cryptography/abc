@@ -7,7 +7,7 @@
   "selection": [
     "--preset=aeneas",
     "--start-from",
-    "crate::authenticate"
+    "crate::open_in_place"
   ],
   "cargo": [
     "--locked",
@@ -19,22 +19,22 @@
   ],
   "source_digests": {
     "tools/verification/probe/toolchain-candidate.json": "6953b42492bff08a40479725fec7ce922002bfdbe715afcaedf4f817f7621249",
-    "src/crypto/aead/aes256-gcm/spec/Aes256GcmComposition.lean": "578a7494dc952964b40c47f41cdb61a823238f909a8c57651af0beb488a9dfcb",
-    "tools/verification/aes256-gcm/GhashSourceRefinement.lean": "d6bffce66faae9a8a17b37a7cf75fbd2ee016062217ee7c41080196dfae0fb30",
-    "tools/verification/aes256-gcm/translate.py": "b841058f51bc2d60c73a34d5812ae3a805fb20f7ad359b8209b257afb28b327d",
-    "tools/verification/aes256-gcm/check.py": "64e744ebff38295f06e9fdd1a84c2bf3e0cf45ae00872bcbe8f9bda033344566",
+    "src/crypto/aead/aes256-gcm/spec/Aes256GcmComposition.lean": "bf3907a9707fa526a80da4ae57b79e6afc7ae33a0ab15a3cbda51f5e3fe612b3",
+    "tools/verification/aes256-gcm/GhashSourceRefinement.lean": "47d4b5513bea9903556c847915e2d722777896ddccfe0ca779c8364375a204e8",
+    "tools/verification/aes256-gcm/translate.py": "70a6eebccf58de2b018713eb7321f67bfad898db69ffb78c1a82b6381cc14d3c",
+    "tools/verification/aes256-gcm/check.py": "571153b588ea980cb77ca93237ad5b8277036777222541d363249bc8a3170712",
     "tools/build/rust/Cargo.toml": "9e8dd7579ad780836ce80f3a00639b171926d3435e15e3eb274c4fd67eb0d8f4",
     "tools/build/rust/Cargo.lock": "a3ee8405943bef38fef4f8127d96032013d10bc082ae0cb6ff9ccbd855178b5c",
     "src/crypto/aead/aes256-gcm/impl/rust/Cargo.toml": "bccad3abefdf7faa1d969bc42399af0ed20cb1e7dc83857cdfc8f798342f09a6",
-    "src/crypto/aead/aes256-gcm/impl/rust/src/lib.rs": "c05aaf98045e224f07f694713c35a2012293a2beda6170f1ea020a5c44395aca"
+    "src/crypto/aead/aes256-gcm/impl/rust/src/lib.rs": "9f99dc4ce2bdc4a8627b2bef8b7c3fc23c75cceda6c1478e8f779de452d8af6b"
   },
   "first": {
-    "llbc_sha256": "dbd49b7b5e2f4230e8b1c6e88115fe3dea199afc88d4c6f5efcb0c013993b753",
-    "lean_model_sha256": "ec278138fae8a6f5614daad91ac8d9dd33668d854c691dff928c6a6bcc80dc5b"
+    "llbc_sha256": "1d0996ee7fe678d7021ecbf4a960b4fe7884e5efcefab1773210b673a585960e",
+    "lean_model_sha256": "0299a4fcd7bc0f69e98b6ae712434a8cc1ce50680b3b8302837e7a52a9d85230"
   },
   "second": {
-    "llbc_sha256": "fc274fde5142536119617a11e0efebd616454653632a895010e5713acf1bab8e",
-    "lean_model_sha256": "ec278138fae8a6f5614daad91ac8d9dd33668d854c691dff928c6a6bcc80dc5b"
+    "llbc_sha256": "b52dc98e84363874cb0cd1d7ac2f34a9b7d68d1fc20a04d917c4348c101e4ee6",
+    "lean_model_sha256": "0299a4fcd7bc0f69e98b6ae712434a8cc1ce50680b3b8302837e7a52a9d85230"
   },
   "theorems": {
     "Abc.Refine.Ghash.extracted_round_refines": [
@@ -90,16 +90,49 @@
       "propext",
       "Classical.choice",
       "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.source_tags_match_iff": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.source_tags_match_full_width": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.source_open_gate_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.source_open_reject_preserves": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.source_authentication_gate_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
     ]
   },
   "negative_check": {
     "status": "rejected",
-    "changed_model_sha256": "194a37785db47ff1e1a287ede89be2137b3295587aa51217824887b302a1468b",
+    "changed_model_sha256": "71b1b0f686bb11ef23b031b60ef293ebe608d4e0ab9b87ee26afed13df990b22",
     "log": "reject-mutant.log"
   },
   "footer_negative_check": {
     "status": "rejected",
-    "changed_model_sha256": "65c62f757cf65c3aca78ce16ac7b5e0a90e6159e2b8dbee4c0ab18957e9cd30e",
+    "changed_model_sha256": "0a617c58664319471203b5d3805bbda8569c152e3356fc9e7afbe9a8f5d622f5",
     "log": "reject-footer-mutant.log"
+  },
+  "tag_negative_check": {
+    "status": "rejected",
+    "changed_model_sha256": "06e2ebd3a339ba6c53b499057251685e9820002243fc3a0fe23001185c1f739b",
+    "log": "reject-tag-mutant.log"
+  },
+  "gate_negative_check": {
+    "status": "rejected",
+    "changed_model_sha256": "4896b2e90afcdf90073400f61061734b379cc87b87cb7f8400462a779594aab6",
+    "log": "reject-gate-mutant.log"
   }
 }

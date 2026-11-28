@@ -1,4 +1,4 @@
-"""Extract portable Rust GHASH word operations and check their Lean refinement."""
+"""Replay the portable Rust GHASH and authentication gate refinements."""
 
 import argparse
 from hashlib import sha256
@@ -36,6 +36,11 @@ THEOREMS = {
     "Abc.Refine.Ghash.source_hash_words_refines",
     "Abc.Refine.Ghash.source_tag_word_refines_nist",
     "Abc.Refine.Ghash.source_tag_bytes_under_aes_contract",
+    "Abc.Refine.Ghash.source_tags_match_iff",
+    "Abc.Refine.Ghash.source_tags_match_full_width",
+    "Abc.Refine.Ghash.source_open_gate_refines",
+    "Abc.Refine.Ghash.source_open_reject_preserves",
+    "Abc.Refine.Ghash.source_authentication_gate_refines",
 }
 ALLOWED = {"propext", "Classical.choice", "Quot.sound"}
 AXIOM_LINE = re.compile(r"^'([^']+)' (?:depends on axioms:\s*\[([^\]]*)\]|does not depend on any axioms)$", re.M)
@@ -104,13 +109,13 @@ def check(options, run):
     target = next(line.removeprefix("host: ") for line in rust.splitlines() if line.startswith("host: "))
     lean = exec_local("lean-version", [options.lean, "--version"]).stdout.strip()
     require(f"version {pins['lean'].split(':v')[-1]}," in lean, "Lean version does not match the repository pin")
-    selections = ["--preset=aeneas", "--start-from", "crate::authenticate"]
+    selections = ["--preset=aeneas", "--start-from", "crate::open_in_place"]
     cargo = ["--locked", "--offline", "--lib", "--no-default-features", "--target", target]
 
     def extract(label):
         directory = run / label
         directory.mkdir()
-        ir = directory / "authenticate.llbc"
+        ir = directory / "open-in-place.llbc"
         exec_local(f"{label}-charon",
                    [options.charon, "cargo", *selections, "--dest-file", ir, "--", *cargo],
                    cwd=CRATE, environment={**env, "CARGO_TARGET_DIR": str(directory / "target")})
@@ -151,7 +156,7 @@ def check(options, run):
                 f"Lean did not reject the {label} at {theorem}")
         return {"status": "rejected", "changed_model_sha256": digest(source), "log": f"reject-{label}.log"}
 
-    negative = footer_negative = None
+    negative = footer_negative = tag_negative = gate_negative = None
     if options.check_mutant:
         reduction = list(locate(llbc, ["U128", REDUCTION]))
         require(len(reduction) == 1, "Expected one extracted reduction literal")
@@ -166,6 +171,28 @@ def check(options, run):
         footer_shift[0]["Shr"] = "Panic"
         footer_negative = test_negative("footer-mutant", "Tactic `decide` proved that the proposition",
                                         "source_nist_example_footer")
+        footer_shift[0].clear()
+        footer_shift[0]["Shl"] = "Panic"
+
+        closure = ScalarLoop(llbc)
+        comparator = closure.local_function("tags_match")["body"]["Structured"]["body"]
+        assignments = [stmt["kind"]["Assign"][1] for stmt in comparator["statements"]
+                       if isinstance(stmt["kind"], dict) and "Assign" in stmt["kind"]]
+        equality = [node["BinaryOp"] for node in assignments
+                    if "BinaryOp" in node and node["BinaryOp"][0] == "Eq"]
+        require(len(equality) == 1, "Expected one equality in the extracted comparator")
+        equality[0][0] = "Ne"
+        tag_negative = test_negative("tag-mutant", "Tactic `decide` proved that the proposition",
+                                     "source_tags_match_full_width")
+        equality[0][0] = "Eq"
+
+        body = closure.local_function("open_in_place")["body"]["Structured"]["body"]
+        (gate,) = [stmt["kind"]["Switch"]["data"] for stmt in body["statements"]
+                   if isinstance(stmt["kind"], dict) and "Switch" in stmt["kind"]
+                   and "Value" in stmt["kind"]["Switch"]["data"]["scrutinee"]]
+        (_, explicit), = gate["branches"]
+        gate["branches"][0][1], gate["fallback"] = gate["fallback"], explicit
+        gate_negative = test_negative("gate-mutant", "unsolved goals", "source_open_gate_refines")
 
     return {
         "status": "source_llbc_refinement_checked", "target": target, "charon": charon,
@@ -173,6 +200,7 @@ def check(options, run):
         "source_digests": original_inputs,
         "first": first, "second": second, "theorems": provenance, "negative_check": negative,
         "footer_negative_check": footer_negative,
+        "tag_negative_check": tag_negative, "gate_negative_check": gate_negative,
     }
 
 

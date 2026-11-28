@@ -10,6 +10,8 @@ Each distinct message requires a fresh 32-byte one-time key. Finalization
 closes the stream, returns a fixed 16-byte tag and can be repeated.
 Arithmetic uses five radix-`2^26` limbs, fixed-width multiplication,
 and mask selection for the final reduction.
+The block multiplier writes five explicit folded columns with cached
+key multiples. [Paired Windows measurements](../../../../../../docs/status/poly1305-cpp-benchmark.json)
 
 Tests cover eight RFC examples at all split points, 512 independent
 integer comparisons and 32 direct OpenSSL 3.5.4 comparisons. The

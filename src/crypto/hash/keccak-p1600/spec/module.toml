@@ -1,7 +1,8 @@
 schema_version = 1
 id = "keccak-p1600-spec"
 owned_paths = ["src/crypto/hash/keccak-p1600/spec"]
-lean_sources = { KeccakRound = "src/crypto/hash/keccak-p1600/spec", KeccakSplitWord = "src/crypto/hash/keccak-p1600/spec", KeccakReader = "src/crypto/hash/keccak-p1600/spec", KeccakSpongeRead = "src/crypto/hash/keccak-p1600/spec" }
+lean_sources = { KeccakRound = "src/crypto/hash/keccak-p1600/spec", KeccakSplitWord = "src/crypto/hash/keccak-p1600/spec", KeccakReader = "src/crypto/hash/keccak-p1600/spec", KeccakSpongeRead = "src/crypto/hash/keccak-p1600/spec", KeccakSourceRefinement = "src/crypto/hash/keccak-p1600/spec" }
+lean_external_imports = { KeccakLlbc = "tools/verification/keccak/llbc.py" }
 
 [tasks.round]
 kind = "formal"

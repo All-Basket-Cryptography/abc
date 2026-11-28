@@ -141,6 +141,42 @@ theorem source_tag_bytes_under_aes_contract (encrypt : Block → Block) (nonce :
   rw [source_tag_word_refines_nist _ _ _ _ aadFits cipherFits]
   rfl
 
+theorem source_tags_match_iff (actual expected : Block) :
+    Ghash.tags_match actual expected = true ↔ actual = expected := by
+  simp only [Ghash.tags_match, beq_iff_eq, BitVec.xor_eq_zero_iff]
+
+theorem source_tags_match_full_width :
+    Ghash.tags_match 0 0 = true ∧ Ghash.tags_match 0 1 = false ∧
+    Ghash.tags_match 0 0x80000000000000000000000000000000 = false := by
+  decide +kernel
+
+theorem source_open_gate_refines (applyPayload : α → α) (ciphertext : α)
+    (actual : Block) (provided : Tag) :
+    Ghash.open_gate applyPayload ciphertext actual (asBlock provided.toList) =
+      if asTag actual = provided then (true, applyPayload ciphertext) else (false, ciphertext) := by
+  have words : actual = asBlock provided.toList ↔ asTag actual = provided := by
+    constructor
+    · intro equal
+      rw [equal, asTag_asBlock]
+    · intro equal
+      rw [← equal, asBlock_asTag]
+  simp only [Ghash.open_gate, beq_iff_eq, source_tags_match_iff, words]
+
+theorem source_open_reject_preserves (applyPayload : α → α) (ciphertext : α)
+    (actual : Block) (provided : Tag) (wrong : asTag actual ≠ provided) :
+    Ghash.open_gate applyPayload ciphertext actual (asBlock provided.toList) = (false, ciphertext) := by
+  rw [source_open_gate_refines, if_neg wrong]
+
+theorem source_authentication_gate_refines (encrypt : Block → Block) (nonce : Nonce)
+    (aad ciphertext : List Byte) (provided : Tag) (applyPayload : List Byte → List Byte)
+    (aadFits : 8 * aad.length < 2^64) (cipherFits : 8 * ciphertext.length < 2^64) :
+    (sourceTagWord (encrypt 0) (encrypt (counterBlock nonce 1)) aad ciphertext).map
+        (fun actual => Ghash.open_gate applyPayload ciphertext actual (asBlock provided.toList)) =
+      some (if authenticate encrypt nonce aad ciphertext = provided then (true, applyPayload ciphertext)
+            else (false, ciphertext)) := by
+  rw [source_tag_word_refines_nist _ _ _ _ aadFits cipherFits]
+  simp only [Option.map_some, source_open_gate_refines, authenticate] <;> rfl
+
 #print axioms extracted_round_refines
 #print axioms extracted_loop_refines
 #print axioms source_multiply_returns_nist
@@ -152,5 +188,10 @@ theorem source_tag_bytes_under_aes_contract (encrypt : Block → Block) (nonce :
 #print axioms source_hash_words_refines
 #print axioms source_tag_word_refines_nist
 #print axioms source_tag_bytes_under_aes_contract
+#print axioms source_tags_match_iff
+#print axioms source_tags_match_full_width
+#print axioms source_open_gate_refines
+#print axioms source_open_reject_preserves
+#print axioms source_authentication_gate_refines
 
 end Abc.Refine.Ghash

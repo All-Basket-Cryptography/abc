@@ -125,6 +125,43 @@ def asTag (block : Block) : Tag :=
   let bytes := bigEndian 16 block.toNat
   ⟨bytes.toArray, by simp [bytes]⟩
 
+private theorem decodeLittleEndian_bound (bytes : List Byte) :
+    decodeLittleEndian bytes < 256^bytes.length := by
+  induction bytes with
+  | nil => decide
+  | cons byte bytes ih =>
+    have bound := byte.isLt
+    simp only [decodeLittleEndian, List.length_cons, Nat.pow_succ']
+    omega
+
+private theorem littleEndian_decodeLittleEndian (bytes : List Byte) :
+    littleEndian bytes.length (decodeLittleEndian bytes) = bytes := by
+  induction bytes with
+  | nil => rfl
+  | cons byte bytes ih =>
+    have bound := byte.isLt
+    have lower : (byte.toNat + 256 * decodeLittleEndian bytes) % 256 = byte.toNat := by omega
+    have upper : (byte.toNat + 256 * decodeLittleEndian bytes) / 256 = decodeLittleEndian bytes := by omega
+    simp only [List.length_cons, littleEndian, decodeLittleEndian, upper, ih]
+    congr 1
+    apply BitVec.eq_of_toNat_eq
+    rw [BitVec.toNat_ofNat, lower]
+
+theorem asBlock_asTag (word : Block) : asBlock (asTag word).toList = word := by
+  apply BitVec.eq_of_toNat_eq
+  simp only [asBlock, asTag, Vector.toList_mk, decodeBigEndian_bigEndian, BitVec.toNat_ofNat]
+  have bound := word.isLt
+  change (word.toNat % 2^128) % 2^128 = word.toNat
+  rw [Nat.mod_eq_of_lt bound, Nat.mod_eq_of_lt bound]
+
+theorem asTag_asBlock (tag : Tag) : asTag (asBlock tag.toList) = tag := by
+  apply Vector.toList_inj.mp
+  have bounds : decodeBigEndian tag.toList < 2^128 := by
+    simpa [decodeBigEndian] using decodeLittleEndian_bound tag.toList.reverse
+  simp only [asTag, asBlock, Vector.toList_mk, BitVec.toNat_ofNat, Nat.mod_eq_of_lt bounds]
+  have encoded := congrArg List.reverse (littleEndian_decodeLittleEndian tag.toList.reverse)
+  simpa [bigEndian, decodeBigEndian] using encoded
+
 def lengthBytes (aadLength cipherLength : Nat) : List Byte :=
   bigEndian 8 (8 * aadLength) ++ bigEndian 8 (8 * cipherLength)
 

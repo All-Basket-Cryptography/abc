@@ -254,6 +254,146 @@ theorem source_final_carry_refines (d : Words) (state : live (columns d)) :
   rw [exactCarry, agrees]
   exact ⟨Abc.Spec.Poly1305.Go.carry_normalizes _ state, Abc.Spec.Poly1305.Go.carry_congruence _⟩
 
+private theorem wrapping_select_zero (x y : U64) : select_reduced x y 0#u64 = .ok x := by
+  unfold select_reduced
+  simp only [lift, Aeneas.Std.bind_tc_ok]
+  apply congrArg Result.ok
+  apply UScalar.eq_of_val_eq
+  have selected : x.bv &&& ~~~(0#64) ||| y.bv &&& (0#64) = x.bv := by bv_decide
+  exact congrArg BitVec.toNat selected
+
+private theorem wrapping_select_ones (x y : U64) : select_reduced x y 18446744073709551615#u64 = .ok y := by
+  unfold select_reduced
+  simp only [lift, Aeneas.Std.bind_tc_ok]
+  apply congrArg Result.ok
+  apply UScalar.eq_of_val_eq
+  have selected : x.bv &&& ~~~(18446744073709551615#64) |||
+      y.bv &&& (18446744073709551615#64) = y.bv := by bv_decide
+  exact congrArg BitVec.toNat selected
+
+/-- The exact final reduction returns the unique residue below the prime.
+The input fits 130 bits, so the top carry is either zero or one. -/
+theorem source_reduce_final_refines (d : Words) (fit : bounded (columns d) base) :
+    reduce_final d ⦃ out => bounded (columns out) base ∧
+      value (columns out) = value (columns d) % modulus ⦄ := by
+  have inputValue := Abc.Spec.Poly1305.Go.normalized_value_bounded _ fit
+  have bounds := fit
+  simp only [bounded, columns] at bounds
+  rcases bounds with ⟨f0, f1, f2, f3, f4⟩
+  simp (disch := decide) only [reduce_final, index0, index1, index2, index3, index4, Aeneas.Std.bind_tc_ok]
+  have sumFits : d.val[0]!.val + (5#u64).val ≤ UScalar.max .U64 := by
+    simp only [base, UScalar.max_UScalarTy_U64_eq, U64.max_eq, show (5#u64).val = 5 by decide] at f0 ⊢
+    omega
+  step with (UScalar.add_spec sumFits) as ⟨col0, w0⟩
+  step with (source_carry_pair_refines col0 d.val[1]! (by simp only [base] at f0 f1 ⊢; omega))
+    as ⟨r0, col1, lo0, w1⟩
+  step with (source_carry_pair_refines col1 d.val[2]! (by simp only [base] at *; omega))
+    as ⟨r1, col2, lo1, w2⟩
+  step with (source_carry_pair_refines col2 d.val[3]! (by simp only [base] at *; omega))
+    as ⟨r2, col3, lo2, w3⟩
+  step with (source_carry_pair_refines col3 d.val[4]! (by simp only [base] at *; omega))
+    as ⟨r3, col4, lo3, w4⟩
+  simp only [RADIX_BITS, shift26, limb_mask_exact, lift, Aeneas.Std.bind_tc_ok]
+  let top : U64 := ⟨col4.bv.ushiftRight 26⟩
+  have topEq : top.val = col4.val / base := shift26_value col4
+  let r4 := col4 &&& 67108863#u64
+  let reduced := Aeneas.Std.Array.make 5#usize [r0, r1, r2, r3, r4]
+  have reducedEq : columns reduced = ⟨col0.val % base, col1.val % base, col2.val % base,
+      col3.val % base, col4.val % base⟩ := by
+    simp only [reduced, r4, columns, lo0, lo1, lo2, lo3, low_bits, Aeneas.Std.Array.make_val,
+      List.getElem!_cons_zero, List.getElem!_cons_succ]
+  have reducedBound : bounded (columns reduced) base := by
+    rw [reducedEq]
+    exact ⟨Nat.mod_lt _ (by decide), Nat.mod_lt _ (by decide), Nat.mod_lt _ (by decide),
+      Nat.mod_lt _ (by decide), Nat.mod_lt _ (by decide)⟩
+  have reducedValue := Abc.Spec.Poly1305.Go.normalized_value_bounded _ reducedBound
+  have decomposition : value (columns d) + 5 = value (columns reduced) + base^5 * top.val := by
+    rw [reducedEq, topEq]
+    simp only [value, columns, base, show (5#u64).val = 5 by decide] at *
+    omega
+  have range : top.val ≤ 1 := by simp only [base] at decomposition inputValue; omega
+  have canonical : Abc.Spec.Poly1305.Go.subtractIfNeeded (value (columns d)) = value (columns d) % modulus :=
+    Abc.Spec.Poly1305.Go.canonical_residue _ inputValue
+  by_cases overflow : top.val = 0
+  · have zero : top = 0#u64 := UScalar.eq_of_val_eq overflow
+    change (do
+      let a ← select_reduced d.val[0]! r0 (core.num.U64.wrapping_sub 0#u64 top)
+      let b ← select_reduced d.val[1]! r1 (core.num.U64.wrapping_sub 0#u64 top)
+      let c ← select_reduced d.val[2]! r2 (core.num.U64.wrapping_sub 0#u64 top)
+      let e ← select_reduced d.val[3]! r3 (core.num.U64.wrapping_sub 0#u64 top)
+      let f ← select_reduced d.val[4]! r4 (core.num.U64.wrapping_sub 0#u64 top)
+      .ok (Aeneas.Std.Array.make 5#usize [a,b,c,e,f])) ⦃ out => _ ⦄
+    have noSubtract : ¬ base^5 ≤ value (columns d) + 5 := by rw [overflow] at decomposition; omega
+    have originalVal : value (columns d) = value (columns d) % modulus := by
+      rwa [Abc.Spec.Poly1305.Go.subtractIfNeeded, if_neg noSubtract] at canonical
+    simp only [zero, show core.num.U64.wrapping_sub 0#u64 0#u64 = 0#u64 by rfl,
+      wrapping_select_zero, Aeneas.Std.bind_tc_ok, WP.spec_ok, columns, Aeneas.Std.Array.make_val,
+      List.getElem!_cons_zero, List.getElem!_cons_succ]
+    exact ⟨fit, originalVal⟩
+  · have topOne : top.val = 1 := by omega
+    have one : top = 1#u64 := UScalar.eq_of_val_eq topOne
+    have doSubtract : base^5 ≤ value (columns d) + 5 := by rw [topOne] at decomposition; omega
+    have reducedVal : value (columns reduced) = value (columns d) % modulus := by
+      rw [← canonical, Abc.Spec.Poly1305.Go.subtractIfNeeded, if_pos doSubtract]
+      rw [topOne] at decomposition
+      omega
+    have exactMask : core.num.U64.wrapping_sub 0#u64 top = 18446744073709551615#u64 := by rw [one]; rfl
+    simp only [show core.num.U64.wrapping_sub 0#u64 (⟨col4.bv.ushiftRight 26⟩ : U64) =
+        18446744073709551615#u64 from exactMask, wrapping_select_ones, Aeneas.Std.bind_tc_ok, WP.spec_ok]
+    exact ⟨reducedBound, reducedVal⟩
+
+private theorem shift_left_128 (word : U128) (count : U32) (fits : count.val < 128) :
+    (word <<< count) = .ok (⟨word.bv <<< count.val⟩ : U128) := by
+  change (if count.val < 128 then Result.ok (⟨word.bv <<< count.val⟩ : U128)
+    else Result.fail .integerOverflow) = _
+  rw [if_pos fits]
+
+private theorem shift_left_128_val (word : U128) (count : Nat) :
+    (⟨word.bv <<< count⟩ : U128).val = (2^count * word.val) % 2^128 := by
+  change (word.bv <<< count).toNat = _
+  rw [BitVec.toNat_shiftLeft, Nat.shiftLeft_eq]
+  exact congrArg (fun n => n % 2^128) (Nat.mul_comm word.bv.toNat (2^count))
+
+private theorem wide_cast (word : U64) : (UScalar.cast .U128 word).val = word.val := by
+  rw [UScalar.cast_val_eq]
+  exact Nat.mod_eq_of_lt (by scalar_tac)
+
+private theorem or128_val (low high : U128) : (low ||| high).val = low.val ||| high.val :=
+  BitVec.toNat_or _ _
+
+private theorem or_radix_digit {low digit bits : Nat} (fits : low < 2^bits) :
+    low ||| (2^bits * digit) = low + 2^bits * digit := by
+  rw [Nat.or_comm, Nat.add_comm]
+  exact (Nat.two_pow_add_eq_or_of_lt fits digit).symm
+
+/-- Packing normalized limbs keeps exactly the low 128 bits, including
+truncation of the upper two bits of the final limb. -/
+theorem source_pack_low128_refines (d : Words) (fit : bounded (columns d) base) :
+    pack_low128 d ⦃ out => out.val = value (columns d) % 2^128 ⦄ := by
+  simp only [bounded, columns, base] at fit
+  rcases fit with ⟨f0, f1, f2, f3, f4⟩
+  have times2 : (2#u32 * 26#u32 : Result U32) = .ok 52#u32 := by rfl
+  have times3 : (3#u32 * 26#u32 : Result U32) = .ok 78#u32 := by rfl
+  have times4 : (4#u32 * 26#u32 : Result U32) = .ok 104#u32 := by rfl
+  simp (disch := decide) only [pack_low128, index0, index1, index2, index3, index4, RADIX_BITS,
+    times2, times3, times4, lift, Aeneas.Std.bind_tc_ok, WP.spec_ok, or128_val, wide_cast,
+    shift_left_128, shift_left_128_val, show (26#u32).val = 26 by decide,
+    show (52#u32).val = 52 by decide, show (78#u32).val = 78 by decide,
+    show (104#u32).val = 104 by decide]
+  have s1 : 2^26 * d.val[1]!.val < 2^128 := by omega
+  have s2 : 2^52 * d.val[2]!.val < 2^128 := by omega
+  have s3 : 2^78 * d.val[3]!.val < 2^128 := by omega
+  have top : (2^104 * d.val[4]!.val) % 2^128 = 2^104 * (d.val[4]!.val % 2^24) := by
+    rw [show 2^128 = 2^104 * 2^24 by decide, Nat.mul_mod_mul_left]
+  have l2 : d.val[0]!.val + 2^26 * d.val[1]!.val < 2^52 := by omega
+  have l3 : d.val[0]!.val + 2^26 * d.val[1]!.val + 2^52 * d.val[2]!.val < 2^78 := by omega
+  have l4 : d.val[0]!.val + 2^26 * d.val[1]!.val + 2^52 * d.val[2]!.val +
+      2^78 * d.val[3]!.val < 2^104 := by omega
+  rw [Nat.mod_eq_of_lt s1, Nat.mod_eq_of_lt s2, Nat.mod_eq_of_lt s3, top,
+    or_radix_digit f0, or_radix_digit l2, or_radix_digit l3, or_radix_digit l4]
+  simp only [value, columns, base]
+  omega
+
 /-- Adding decoded message limbs, folded multiplication and carry form the
 exact unbounded recurrence on every admitted accumulator, key and block. -/
 theorem source_absorb_limbs_refines (h r : Words) (rFive : Multiples) (message : Words)
@@ -303,6 +443,8 @@ theorem source_absorb_polynomial_step (h r : Words) (rFive : Multiples) (message
 #print axioms source_carry_upper_refines
 #print axioms source_carry_refines
 #print axioms source_final_carry_refines
+#print axioms source_reduce_final_refines
+#print axioms source_pack_low128_refines
 #print axioms source_key_multiples_refines
 #print axioms source_multiply_refines
 #print axioms source_absorb_limbs_refines

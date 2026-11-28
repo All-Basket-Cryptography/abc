@@ -71,22 +71,20 @@ void Mac::erase() noexcept {
 }
 
 void Mac::absorb(const std::uint8_t* block, std::uint64_t high_bit) noexcept {
-    auto h = unpack(block);
-    for (std::size_t i = 0; i < h.size(); ++i) {
-        h[i] += h_[i];
-    }
-    h[4] += high_bit;
-    h_.fill(0);
-    for (std::size_t i = 0; i < h.size(); ++i) {
-        for (std::size_t j = 0; j < r_.size(); ++j) {
-            const auto column = i + j;
-            if (column < h_.size()) {
-                h_[column] += h[i] * r_[j];
-            } else {
-                h_[column - h_.size()] += h[i] * folded_[j];
-            }
-        }
-    }
+    const auto message = unpack(block);
+    const auto h0 = h_[0] + message[0];
+    const auto h1 = h_[1] + message[1];
+    const auto h2 = h_[2] + message[2];
+    const auto h3 = h_[3] + message[3];
+    const auto h4 = h_[4] + message[4] + high_bit;
+
+    // Terms beyond the fifth limb wrap with a factor of five modulo 2^130 - 5.
+    const auto d0 = h0 * r_[0] + h1 * folded_[4] + h2 * folded_[3] + h3 * folded_[2] + h4 * folded_[1];
+    const auto d1 = h0 * r_[1] + h1 * r_[0] + h2 * folded_[4] + h3 * folded_[3] + h4 * folded_[2];
+    const auto d2 = h0 * r_[2] + h1 * r_[1] + h2 * r_[0] + h3 * folded_[4] + h4 * folded_[3];
+    const auto d3 = h0 * r_[3] + h1 * r_[2] + h2 * r_[1] + h3 * r_[0] + h4 * folded_[4];
+    const auto d4 = h0 * r_[4] + h1 * r_[3] + h2 * r_[2] + h3 * r_[1] + h4 * r_[0];
+    h_ = {d0, d1, d2, d3, d4};
     carry(h_);
 }
 

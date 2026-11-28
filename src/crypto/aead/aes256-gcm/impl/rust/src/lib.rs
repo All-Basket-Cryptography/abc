@@ -39,7 +39,7 @@ pub fn seal_in_place(
     check_lengths(aad.len() as u64, data.len() as u64)?;
     let aes = Aes256::new(key);
     apply_payload(&aes, nonce, data);
-    Ok(authenticate(&aes, nonce, aad, data))
+    Ok(authenticate(&aes, nonce, aad, data).to_be_bytes())
 }
 
 /// Verify the tag before decrypting the payload. Rejection preserves the input.
@@ -53,15 +53,15 @@ pub fn open_in_place(
     check_lengths(aad.len() as u64, data.len() as u64)?;
     let aes = Aes256::new(key);
     let actual = authenticate(&aes, nonce, aad, data);
-    let mut diff = 0u8;
-    for (a, b) in actual.into_iter().zip(tag) {
-        diff |= a ^ b;
-    }
-    if core::hint::black_box(diff) != 0 {
+    if !tags_match(actual, u128::from_be_bytes(*tag)) {
         return Err(Error::AuthenticationFailed);
     }
     apply_payload(&aes, nonce, data);
     Ok(())
+}
+
+fn tags_match(actual: u128, expected: u128) -> bool {
+    core::hint::black_box(actual ^ expected) == 0
 }
 
 fn check_lengths(aad: u64, data: u64) -> Result<(), Error> {
@@ -91,12 +91,7 @@ fn apply_payload(aes: &Aes256, nonce: &[u8; NONCE_BYTES], data: &mut [u8]) {
     }
 }
 
-fn authenticate(
-    aes: &Aes256,
-    nonce: &[u8; NONCE_BYTES],
-    aad: &[u8],
-    data: &[u8],
-) -> [u8; TAG_BYTES] {
+fn authenticate(aes: &Aes256, nonce: &[u8; NONCE_BYTES], aad: &[u8], data: &[u8]) -> u128 {
     let mut zero = [0; BLOCK_BYTES];
     aes.encrypt(&mut zero);
     let hash_key = u128::from_be_bytes(zero);
@@ -105,7 +100,7 @@ fn authenticate(
     hash_padded(hash_key, &mut state, data);
     let lengths = pack_lengths(aad.len() as u64, data.len() as u64);
     let tag_mask = u128::from_be_bytes(encrypt_counter(aes, nonce, 1));
-    finish_tag(hash_key, state, lengths, tag_mask).to_be_bytes()
+    finish_tag(hash_key, state, lengths, tag_mask)
 }
 
 fn hash_padded(hash_key: u128, state: &mut u128, input: &[u8]) {

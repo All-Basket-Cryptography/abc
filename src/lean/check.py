@@ -23,6 +23,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("module", choices=(
         "foundation", "sha256", "sha512", "sha3", "shake256", "keccak-reader", "hmac", "hkdf", "pbkdf2", "chacha20",
+        "poly1305",
     ))
     selected = parser.parse_args().module
     elan, lean = shutil.which("elan"), shutil.which("lean")
@@ -82,6 +83,11 @@ def main():
                                        f"{module}.lean"], directory, output)
             checked_lean(command, ["-DwarningAsError=true", "ChaCha20Stream.lean"], directory, output)
             checked_lean(command, ["-DwarningAsError=true", "ChaCha20WordOutput.lean"], directory, output)
+        if selected == "poly1305":
+            directory = ROOT / "src/crypto/mac/poly1305/spec"
+            checked_lean(command, ["-DwarningAsError=true", "-o", output / "Poly1305Radix13.olean",
+                                   "Poly1305Radix13.lean"], directory, output)
+            checked_lean(command, ["-DwarningAsError=true", "Poly1305Window.lean"], directory, output)
 
 
 if __name__ == "__main__":

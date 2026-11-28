@@ -21,7 +21,7 @@
   "subject_ref": "abc:algorithm:poly1305",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "2bc6e1da8f0f868a5377416ce9fe5766f08546faab75998cbfc08296dd8876e5",
+  "source_sha256": "271fd2a126c3ed97d2032650000053045e4ad5d950406402bd9f060bf1661532",
   "path": "src/crypto/mac/poly1305/impl/javascript",
   "languages": [
     "javascript"

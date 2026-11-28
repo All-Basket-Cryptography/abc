@@ -63,3 +63,22 @@ test('owns key bytes and rejects a detached update before changing its state', (
   assert.deepEqual(mac.digest(), expected);
   assert.throws(() => new Poly1305(key.subarray(1)), RangeError);
 });
+
+test('straddled byte views and repeated snapshots with maximal clamped limbs', () => {
+  const key = new Uint8Array(32).fill(255);
+  for (const end of [16, 17, 31, 32, 33, 127, 128, 129]) {
+    const storage = fixture(end + 11);
+    const input = storage.subarray(5, 5 + end);
+    input.fill(255);
+    const initial = storage.slice();
+    const mac = new Poly1305(key).update(input.subarray(0, 15));
+    const first = mac.digest();
+    assert.deepEqual(first, reference(key, input.subarray(0, 15)));
+    first.fill(0);
+    assert.deepEqual(mac.digest(), reference(key, input.subarray(0, 15)));
+    mac.update(input.subarray(15));
+    assert.deepEqual(mac.digest(), reference(key, input));
+    assert.deepEqual(authenticate(key, input), reference(key, input));
+    assert.deepEqual(storage, initial);
+  }
+});

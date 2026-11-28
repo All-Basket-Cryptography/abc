@@ -97,6 +97,10 @@ def fingerprints(cells):
     return fingerprints_by_cell
 
 
+def log_name(language, profile, number):
+    return f"{language}-{profile.split('/')[-1]}-{number}.log"
+
+
 def run_cell(language, profile, checks, output):
     env = dict(os.environ)
     if (language == "rust" and profile in ("agreement/ml-kem-768", "signature/ml-dsa-65")
@@ -107,7 +111,7 @@ def run_cell(language, profile, checks, output):
 
     results = []
     for number, check in enumerate(checks, start=1):
-        name = f"{language}-{profile.split('/')[-1]}-{number}.log"
+        name = log_name(language, profile, number)
         log = output / name
         executable = which(check.command[0], path=env.get("PATH"))
         code = None
@@ -130,9 +134,44 @@ def run_cell(language, profile, checks, output):
     return results
 
 
+def verify(receipt_dir, cells):
+    receipt = json.loads((receipt_dir / "result.json").read_text(encoding="utf-8"))
+    if receipt["status"] != "passed" or receipt["inputs_unchanged"] is not True:
+        raise ValueError("The receipt does not report a successful replay with unchanged inputs")
+    results = receipt["results"]
+    by_cell = {(row["language"], row["profile"]): row for row in results}
+    chosen = {language for language, _ in by_cell}
+    selected = [cell for cell in cells if cell[0] in chosen]
+    expected = {(language, profile) for language, profile, _ in selected}
+    if not results or len(results) != len(by_cell) or set(by_cell) != expected:
+        raise ValueError("The receipt must contain each profile exactly once for each claimed language")
+    if len(results) != receipt["cells"] or len(results) != receipt["passed_cells"]:
+        raise ValueError("The receipt totals differ from the selected matrix")
+
+    current = fingerprints(selected)
+    for language, profile, checks in selected:
+        row = by_cell[language, profile]
+        if row["passed"] is not True or row["inputs_sha256"] != current[language, profile]:
+            raise ValueError(f"Result or source inputs changed for {language}/{profile}")
+        if len(row["checks"]) != len(checks):
+            raise ValueError(f"Missing test command results for {language}/{profile}")
+        for number, (observed, check) in enumerate(zip(row["checks"], checks), start=1):
+            name = log_name(language, profile, number)
+            if (observed["task"] != check.name or observed["command"] != check.command
+                    or observed["status"] != "passed" or type(observed["exit_code"]) is not int
+                    or observed["exit_code"] != 0 or observed["log"] != name):
+                raise ValueError(f"Result fields differ for {check.name}")
+            log = receipt_dir / name
+            if log.is_symlink() or sha256(log.read_bytes()).hexdigest() != observed["log_sha256"]:
+                raise ValueError(f"Log changed for {check.name}")
+    return len(results)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--inventory", action="store_true", help="list every profile/language without executing tools")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--inventory", action="store_true", help="list every profile/language without executing tools")
+    mode.add_argument("--verify", type=Path, help="check an advisory receipt's commands, inputs and log digests")
     parser.add_argument("--languages", nargs="+", choices=LANGUAGES,
                         default=LANGUAGES if platform.system() == "Darwin" else tuple(x for x in LANGUAGES if x != "swift"))
     parser.add_argument("--workers", type=int, default=1, help="run this many language lanes concurrently")
@@ -142,6 +181,13 @@ def main():
     if args.inventory:
         print(json.dumps([{"language": language, "profile": profile, "checks": [check.name for check in checks]}
                           for language, profile, checks in cells], indent=2))
+        return 0
+    if args.verify:
+        try:
+            count = verify(args.verify, cells)
+        except (OSError, KeyError, TypeError, ValueError) as error:
+            parser.exit(1, f"Receipt verification failed: {error}\n")
+        print(f"Verified {count} advisory matrix cells against current source and saved logs.")
         return 0
     if not args.output or args.workers < 1:
         parser.error("execution requires --output and a positive --workers value")

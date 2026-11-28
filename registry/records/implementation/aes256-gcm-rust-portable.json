@@ -18,7 +18,7 @@
   "subject_ref": "abc:construction:aes-256-gcm",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "c05aaf98045e224f07f694713c35a2012293a2beda6170f1ea020a5c44395aca",
+  "source_sha256": "9f99dc4ce2bdc4a8627b2bef8b7c3fc23c75cceda6c1478e8f779de452d8af6b",
   "path": "src/crypto/aead/aes256-gcm/impl/rust",
   "languages": [
     "rust"

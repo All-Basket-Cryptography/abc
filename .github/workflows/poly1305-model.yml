@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   extract-poly1305:
-    name: Extract the active Rust Poly1305 block arithmetic
+    name: Extract the active Rust Poly1305 block and tag arithmetic
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:

@@ -17,11 +17,14 @@ const replayInputs = [foundationEncoding, radixModel, 'tools/verification/poly13
 const audits = {
   Poly1305EncodingRefinement: ['Abc.Refine.Poly1305.Encoding.source_limbs_refines'],
   Poly1305SourceRefinement: ['source_carry_pair_refines', 'source_carry_upper_refines',
-    'source_carry_refines', 'source_final_carry_refines', 'source_key_multiples_refines', 'source_multiply_refines',
+    'source_carry_refines', 'source_final_carry_refines', 'source_reduce_final_refines', 'source_pack_low128_refines',
+    'source_key_multiples_refines', 'source_multiply_refines',
     'source_absorb_limbs_refines', 'source_absorb_polynomial_step'].map((name) => `Abc.Refine.Poly1305.${name}`),
   Poly1305ByteRefinement: ['source_limbs_columns', 'source_load_block_refines', 'source_clamped_key_refines',
     'source_absorb_encoded_refines', 'source_absorb_full_block_refines', 'source_absorb_padded_final_block_refines']
     .map((name) => `Abc.Refine.Poly1305.Bytes.${name}`),
+  Poly1305FinalRefinement: ['source_add_pad_and_serialize_refines', 'source_finish_tag_refines', 'source_finish_tag_value']
+    .map((name) => `Abc.Refine.Poly1305.Final.${name}`),
 };
 const permittedAxioms = new Set(['propext', 'Classical.choice', 'Quot.sound']);
 const digest = (file) => createHash('sha256').update(readFileSync(file)).digest('hex');
@@ -31,7 +34,7 @@ function runReplay(artifactPath) {
   if (!process.env.LEAN_PATH) throw new Error('Set LEAN_PATH to the built pinned Aeneas backend and package libraries');
   const artifact = resolve(artifactPath);
   const receipt = JSON.parse(readFileSync(join(artifact, 'result.json'), 'utf8'));
-  if (receipt.status !== 'poly1305_model_extracted' || receipt.scope !== 'poly1305_block_absorption' ||
+  if (receipt.status !== 'poly1305_model_extracted' || receipt.scope !== 'poly1305_block_and_tag_arithmetic' ||
       receipt.target !== 'x86_64-unknown-linux-gnu' || receipt.features?.length !== 0) {
     throw new Error('Expected a successful Poly1305 Linux extraction receipt');
   }

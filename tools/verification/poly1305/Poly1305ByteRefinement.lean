@@ -100,7 +100,7 @@ private abbrev Bytes16 := Aeneas.Std.Array U8 16#usize
 def blockValue (block : Bytes16) : Nat :=
   Abc.Foundation.decodeLittleEndian (block.val.map U8.bv)
 
-private theorem decode_bytes (bytes : List (BitVec 8)) :
+theorem fromLEBytes_toNat (bytes : List (BitVec 8)) :
     (BitVec.fromLEBytes bytes).toNat = Abc.Foundation.decodeLittleEndian bytes := by
   induction bytes with
   | nil => rfl
@@ -126,7 +126,7 @@ theorem source_load_block_refines (block : Bytes16) :
   simp only [load_block, WP.spec_ok]
   have width : 8 * (block.val.map U8.bv).length = UScalarTy.U128.numBits := by simp
   change ((BitVec.fromLEBytes (block.val.map U8.bv)).cast width).toNat = _
-  rw [BitVec.toNat_cast, decode_bytes]
+  rw [BitVec.toNat_cast, fromLEBytes_toNat]
 
 /-- The exact lower-half key decoder applies the RFC clamp mask and emits
 bounded radix limbs for the multiplication cache. -/

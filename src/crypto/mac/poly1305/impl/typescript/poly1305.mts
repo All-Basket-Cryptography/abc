@@ -6,14 +6,15 @@ const LIMBS = 10;
 const RADIX = 8192;
 const MASK = RADIX - 1;
 
-function decode(bytes: Uint8Array, size: number, blockMarker: boolean, out: Uint32Array) {
+function decode(bytes: Uint8Array, offset: number, size: number, blockMarker: boolean, out: Uint32Array) {
   out.fill(0);
   for (let i = 0; i < size; i += 1) {
     const bit = i * 8;
     const limb = Math.floor(bit / 13);
     const shift = bit % 13;
-    out[limb] |= (bytes[i] << shift) & MASK;
-    if (shift > 5) out[limb + 1] |= bytes[i] >>> (13 - shift);
+    const byte = bytes[offset + i];
+    out[limb] |= (byte << shift) & MASK;
+    if (shift > 5) out[limb + 1] |= byte >>> (13 - shift);
   }
   if (blockMarker) {
     const highBit = size * 8;
@@ -22,20 +23,19 @@ function decode(bytes: Uint8Array, size: number, blockMarker: boolean, out: Uint
 }
 
 function absorb(
-  h: Uint32Array, r: Uint32Array, bytes: Uint8Array, size: number,
+  h: Uint32Array, keyWindow: Uint32Array, bytes: Uint8Array, offset: number, size: number,
   scratch: Float64Array, digits: Uint32Array,
 ) {
-  decode(bytes, size, true, digits);
+  decode(bytes, offset, size, true, digits);
   for (let i = 0; i < LIMBS; i += 1) digits[i] += h[i];
-  // x^10 = 5 (mod 2^130 - 5), with x = 2^13.
-  scratch.fill(0);
-  for (let i = 0; i < LIMBS; i += 1) {
-    for (let j = 0; j < LIMBS; j += 1) {
-      const index = i + j;
-      const term = digits[i] * r[j];
-      if (index < LIMBS) scratch[index] += term;
-      else scratch[index - LIMBS] += 5 * term;
+  // Each column reads ten positions. The wrapped positions already include the factor of 5.
+  for (let column = 0; column < LIMBS; column += 1) {
+    const last = column + LIMBS - 1;
+    let sum = 0;
+    for (let input = 0; input < LIMBS; input += 1) {
+      sum += digits[input] * keyWindow[last - input];
     }
+    scratch[column] = sum;
   }
   for (let pass = 0; pass < 3; pass += 1) {
     for (let i = 0; i < LIMBS - 1; i += 1) {
@@ -50,8 +50,7 @@ function absorb(
   h.set(scratch);
 }
 
-function serialize(h: Uint32Array, pad: Uint8Array) {
-  const candidate = new Uint32Array(LIMBS);
+function serialize(h: Uint32Array, pad: Uint8Array, candidate: Uint32Array) {
   let carry = 5;
   for (let i = 0; i < LIMBS; i += 1) {
     const total = h[i] + carry;
@@ -76,38 +75,43 @@ function serialize(h: Uint32Array, pad: Uint8Array) {
 }
 
 export class Poly1305 {
-  #r = new Uint32Array(LIMBS);
+  #keyWindow = new Uint32Array(2 * LIMBS - 1);
   #h = new Uint32Array(LIMBS);
   #scratch = new Float64Array(LIMBS);
   #digits = new Uint32Array(LIMBS);
   #pending = new Uint8Array(BLOCK_BYTES);
   #pad: Uint8Array;
   #used = 0;
+  #hasInput = false;
 
   constructor(key: Uint8Array) {
     const bytes = asUint8Array(key);
     if (bytes.length !== 32) throw new RangeError('Poly1305 requires a 32-byte one-time key');
-    const clipped = Uint8Array.from(bytes.subarray(0, 16));
-    for (const i of [3, 7, 11, 15]) clipped[i] &= 15;
-    for (const i of [4, 8, 12]) clipped[i] &= 252;
-    decode(clipped, 16, false, this.#r);
-    this.#pad = Uint8Array.from(bytes.subarray(16));
+    const clipped = bytes.slice(0, 16);
+    for (let i = 3; i < 16; i += 4) clipped[i] &= 15;
+    for (let i = 4; i < 16; i += 4) clipped[i] &= 252;
+    // Store [5*r1, …, 5*r9, r0, …, r9] for the folded radix-2^13 convolution.
+    const limbs = this.#keyWindow.subarray(LIMBS - 1);
+    decode(clipped, 0, 16, false, limbs);
+    for (let i = 1; i < LIMBS; i += 1) this.#keyWindow[i - 1] = 5 * limbs[i];
+    this.#pad = bytes.slice(16);
     clipped.fill(0);
   }
 
   update(input: Uint8Array) {
     const bytes = asUint8Array(input);
+    if (bytes.length === 0) return this;
+    this.#hasInput = true;
     let offset = 0;
     if (this.#used > 0) {
       offset = Math.min(BLOCK_BYTES - this.#used, bytes.length);
       this.#pending.set(bytes.subarray(0, offset), this.#used);
       this.#used += offset;
       if (this.#used < BLOCK_BYTES) return this;
-      absorb(this.#h, this.#r, this.#pending, BLOCK_BYTES, this.#scratch, this.#digits);
+      absorb(this.#h, this.#keyWindow, this.#pending, 0, BLOCK_BYTES, this.#scratch, this.#digits);
     }
     while (bytes.length - offset >= BLOCK_BYTES) {
-      absorb(this.#h, this.#r, bytes.subarray(offset, offset + BLOCK_BYTES),
-        BLOCK_BYTES, this.#scratch, this.#digits);
+      absorb(this.#h, this.#keyWindow, bytes, offset, BLOCK_BYTES, this.#scratch, this.#digits);
       offset += BLOCK_BYTES;
     }
     this.#pending.set(bytes.subarray(offset));
@@ -117,11 +121,12 @@ export class Poly1305 {
 
   // Passing a snapshot to an adversary counts as using the one-time key.
   digest() {
+    if (!this.#hasInput) return this.#pad.slice();
     const h = this.#h.slice();
     if (this.#used > 0) {
-      absorb(h, this.#r, this.#pending, this.#used, this.#scratch, this.#digits);
+      absorb(h, this.#keyWindow, this.#pending, 0, this.#used, this.#scratch, this.#digits);
     }
-    return serialize(h, this.#pad);
+    return serialize(h, this.#pad, this.#digits);
   }
 }
 

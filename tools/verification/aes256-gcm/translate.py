@@ -47,6 +47,7 @@ class ScalarLoop:
         self.collect_definitions(crate)
         functions = [entry for entry in crate["fun_decls"] if entry is not None]
         self.functions = {entry["def_id"]: entry for entry in functions}
+        self.type_declarations = {entry["def_id"]: entry for entry in crate["type_decls"] if entry is not None}
         self.load("multiply", [128, 128])
         named = {local["name"]: local["index"] for local in self.body["locals"]["locals"]
                  if local["name"] is not None}
@@ -62,15 +63,15 @@ class ScalarLoop:
                 f"Expected one local {name} function")
         return matches[0]
 
-    def load(self, name, widths):
+    def load(self, name, widths, output=128):
         source = self.local_function(name)
-        self.signature(source, widths, 128)
+        self.signature(source, widths, output)
         self.body = source["body"]["Structured"]
         require(self.body["bound_body_regions"] == 0 and self.body["locals"]["arg_count"] == len(widths),
                 "Unexpected function body arguments")
         locals_ = self.body["locals"]["locals"]
         self.locals = {local["index"]: self.scalar_type(local["ty"]) for local in locals_}
-        require([self.locals[k] for k in range(1 + len(widths))] == [128, *widths],
+        require([self.locals[k] for k in range(1 + len(widths))] == [output, *widths],
                 "Function argument locals do not match the signature")
 
     def collect_definitions(self, term):
@@ -169,9 +170,9 @@ class ScalarLoop:
             require(overflow == "Panic" and left.ty == 128, "Unexpected checked multiplication")
             checks.append(f"({lval}).toNat * ({rval}).toNat < 2^128")
             return Expression(f"({lval} * {rval})", 128)
-        symbol = {"Ne": "!=", "BitAnd": "&&&", "BitXor": "^^^", "BitOr": "|||"}.get(op)
+        symbol = {"Eq": "==", "Ne": "!=", "BitAnd": "&&&", "BitXor": "^^^", "BitOr": "|||"}.get(op)
         require(overflow is None and symbol is not None, f"Unsupported LLBC operator: {op}")
-        return Expression(f"({lval} {symbol} {rval})", "Bool" if op == "Ne" else left.ty)
+        return Expression(f"({lval} {symbol} {rval})", "Bool" if op in ("Eq", "Ne") else left.ty)
 
     def wrapping_sub(self, env, item):
         call = item["call"]
@@ -244,9 +245,220 @@ class ScalarLoop:
         for name, expected in {
             "authenticate": ["hash_padded", "hash_padded", "pack_lengths", "encrypt_counter", "finish_tag"],
             "hash_padded": ["hash_block", "hash_block"],
+            "open_in_place": ["check_lengths", "authenticate", "tags_match", "apply_payload"],
         }.items():
             found = list(local_calls(self.local_function(name)["body"]))
             require(found == expected, f"Unexpected local call sequence in {name}: {found}")
+
+    def comparison(self):
+        self.load("tags_match", [128, 128], "Bool")
+        statements = self.statements(self.body["body"])
+        require(statements[-1] == ("Return", None), "Expected the comparison return")
+        barriers = []
+
+        def black_box(env, item):
+            call = item["call"]
+            pointer = call["func"]["Regular"]
+            fn = self.functions[pointer["kind"]["Fun"]]
+            require(name_segments(fn) == list(map(ident, ("core", "hint", "black_box")))
+                    and fn["body"] == "Opaque", "Expected core::hint::black_box")
+            generics = pointer["generics"]
+            require([self.scalar_type(ty) for ty in generics["types"]] == [128]
+                    and not any(v for k, v in generics.items() if k != "types"),
+                    "Expected core::hint::black_box specialized at u128")
+            (arg,) = call["args"]
+            value = self.operand(env, arg)
+            require(value.ty == 128, "Wrong black_box operand type")
+            self.verify_cleanup(item)
+            barriers.append(value)
+            # Use the standard library's specified functional identity semantics.
+            return self.local_index(call["dest"]), value
+
+        inputs = {1: Expression("_actual", 128), 2: Expression("_expected", 128)}
+        ended, checks = self.execute(inputs, statements[:-1], black_box)
+        require(len(barriers) == 1 and not checks, "Unexpected tag comparison control flow")
+        return ended[0].code
+
+    def open_gate(self):
+        """Check the straight-line open tail and its two-way result switch."""
+        body = self.local_function("open_in_place")["body"]["Structured"]
+        require(body["locals"]["arg_count"] == 5, "Wrong open arity")
+        local_ids = {local["index"] for local in body["locals"]["locals"]}
+
+        def local(place):
+            index = place["kind"]["Local"]
+            require(index in local_ids, "Unknown open local")
+            return index
+
+        def statements(block):
+            for statement in block["statements"]:
+                tag, args = tagged(statement["kind"])
+                if tag in ("StorageLive", "StorageDead"):
+                    require(args in local_ids, "Storage operation on an unknown open local")
+                elif tag == "Borrowck":
+                    local(args["FakeRead"])
+                else:
+                    yield tag, args
+
+        def callee(item):
+            return self.functions[item["call"]["func"]["Regular"]["kind"]["Fun"]]
+
+        def lookup(env, place):
+            kind, data = tagged(place["kind"])
+            if kind == "Local":
+                return env[local(place)]
+            require(kind == "Projection" and data[1] == "Deref", "Unsupported open projection")
+            reference, target = lookup(env, data[0])
+            require(reference in ("Shared", "TwoPhaseMut"), "Expected an open reference")
+            return target
+
+        def read(env, operand):
+            kind, place = tagged(operand)
+            require(kind in ("Copy", "Move"), "Unsupported open operand")
+            return lookup(env, place)
+
+        def assign(env, item):
+            destination, rvalue = item
+            tag, args = tagged(rvalue)
+            if tag == "Use":
+                require(args[1] == "Yes", "Expected initializing open assignment")
+                value = read(env, args[0])
+            elif tag == "Ref":
+                target = lookup(env, args["place"])
+                if target in ("aad", "ciphertext"):
+                    metadata = args["ptr_metadata"]["Copy"]["kind"]["Projection"]
+                    require(metadata[1] == "PtrMetadata" and lookup(env, metadata[0])[1] == target,
+                            "Expected the complete input slice")
+                value = (args["kind"], target)
+            elif tag == "Aggregate":
+                constructor, operands = args
+                decl, variant, union = constructor["Adt"]
+                require(union is None, "Unsupported open aggregate")
+                if decl["builtin"] == "Tuple" and variant is None and not operands:
+                    value = ("unit",)
+                else:
+                    definition = self.type_declarations[decl["id"]]
+                    ptr = tuple(seg["Ident"][0] for seg in name_segments(definition))
+                    constructor = definition["kind"]["Enum"][variant]
+                    require(len(constructor["fields"]) == len(operands), "Wrong open variant arity")
+                    value = (ptr, constructor["name"], tuple(read(env, operand) for operand in operands))
+            else:
+                raise ValueError(f"Unsupported assignment in open gate: {tag}")
+            index = local(destination)
+            require(index == 0 or index >= 6, "Gate clobbers an open argument")
+            env[index] = value
+
+        def apply_assignments(env, items):
+            for tag, args in items:
+                require(tag == "Assign", "Expected a local assignment in the open gate")
+                assign(env, args)
+
+        def validate_call(env, item, expected_args):
+            require([read(env, arg) for arg in item["call"]["args"]] == expected_args,
+                    "Unexpected open gate argument flow")
+            require(list(statements(item["on_unwind"])) == [("UnwindResume", None)],
+                    "Unexpected cleanup in the open gate")
+            destination = local(item["call"]["dest"])
+            require(destination == 0 or destination >= 6, "Call clobbers an open argument")
+            return destination
+
+        def no_unique_slice_operand(operand):
+            tag, place = tagged(operand)
+            require(tag in ("Copy", "Move") and place["kind"] != {"Local": 4},
+                    "Unexpected mutable ciphertext capability before authentication")
+
+        def check_read_only(items):
+            # Safe Rust can pass a shared reborrow to other functions. The mutable
+            # input slice itself must not be moved, reassigned or mutably reborrowed.
+            for tag, args in items:
+                if tag == "Assign":
+                    place, rvalue = args
+                    index = local(place)
+                    require(index == 0 or index >= 6, "Open prelude clobbers an argument")
+                    kind, value = tagged(rvalue)
+                    if kind == "Ref":
+                        require(value["kind"] == "Shared", "Open prelude takes a mutable borrow")
+                    else:
+                        require(kind in ("Use", "UnaryOp"), "Unsupported open prelude assignment")
+                        no_unique_slice_operand(value[0] if kind == "Use" else value[1])
+                elif tag == "Call":
+                    call = args["call"]
+                    index = local(call["dest"])
+                    require(index == 0 or index >= 6, "Open prelude call clobbers an argument")
+                    for operand in call["args"]:
+                        no_unique_slice_operand(operand)
+                    require(list(statements(args["on_unwind"])) == [("UnwindResume", None)],
+                            "Unexpected cleanup in the open prelude")
+                elif tag == "Switch":
+                    for branch in args["branches"]:
+                        check_read_only(statements(branch))
+                else:
+                    require(tag == "Return", "Unsupported open prelude statement")
+
+        top = list(statements(body["body"]))
+        auth, = [i for i, (tag, item) in enumerate(top)
+                 if tag == "Call" and callee(item) is self.local_function("authenticate")]
+        new_at, = [i for i, (tag, item) in enumerate(top[:auth]) if tag == "Call"
+                   and name_segments(callee(item))[0] == ident("abc_aes256")
+                   and name_segments(callee(item))[-1] == ident("new")]
+        check_read_only(top[:auth + 1])
+        aes = local(top[new_at][1]["call"]["dest"])
+        env = {2: ("Shared", "nonce"), 3: ("Shared", "aad"), 4: ("TwoPhaseMut", "ciphertext"),
+               5: ("Shared", "tag_bytes"), aes: "aes"}
+        apply_assignments(env, top[new_at + 1:auth])
+        authentication = top[auth][1]
+        actual = validate_call(env, authentication, [("Shared", "aes"), ("Shared", "nonce"),
+                                                     ("Shared", "aad"), ("Shared", "ciphertext")])
+        env[actual] = "actual"
+        leading = top[auth + 1:]
+        switch_at, = [i for i, (tag, _) in enumerate(leading) if tag == "Switch"]
+        decode_at, compare_at = [i for i, (tag, _) in enumerate(leading[:switch_at]) if tag == "Call"]
+        apply_assignments(env, leading[:decode_at])
+        decode = leading[decode_at][1]
+        decoder = name_segments(callee(decode))
+        require(decoder[:2] == [ident("core"), ident("num")] and decoder[-1] == ident("from_be_bytes")
+                and self.scalar_type(decoder[2]["Impl"]["Ty"]["skip_binder"]) == 128,
+                "Expected standard u128::from_be_bytes in the open gate")
+        env[validate_call(env, decode, ["tag_bytes"])] = "expected"
+        apply_assignments(env, leading[decode_at + 1:compare_at])
+        compare = leading[compare_at][1]
+        require(callee(compare) is self.local_function("tags_match"), "Expected the extracted tag comparison")
+        env[validate_call(env, compare, ["actual", "expected"])] = "match"
+        apply_assignments(env, leading[compare_at + 1:switch_at])
+        switch = leading[switch_at][1]
+        data = switch["data"]
+        require(read(env, data["scrutinee"]["Value"]) == "match", "Gate must use the extracted comparison result")
+        ((value, explicit),) = data["branches"]
+        fallback = data["fallback"]
+        condition = self.constant(value)
+        require(condition.ty == "Bool" and {explicit, fallback} == {0, 1} and len(switch["branches"]) == 2,
+                "Expected a two-way Boolean application gate")
+
+        result = ("core", "result", "Result")
+        error = ("abc_aes256_gcm", "Error")
+        # Both branches are checked before choosing the fallthrough direction.
+        accept, = [i for i, block in enumerate(switch["branches"]) if not list(statements(block))]
+        reject = 1 - accept
+        rejected = list(statements(switch["branches"][reject]))
+        require(rejected[-1] == ("Return", None), "Authentication failure must return before decryption")
+        failed_env = env.copy()
+        apply_assignments(failed_env, rejected[:-1])
+        require(failed_env[0] == (result, "Err", ((error, "AuthenticationFailed", ()),)),
+                "Wrong authentication error return")
+
+        tail = leading[switch_at + 1:]
+        apply_at, = [i for i, (tag, _) in enumerate(tail) if tag == "Call"]
+        apply_assignments(env, tail[:apply_at])
+        invocation = tail[apply_at][1]
+        require(callee(invocation) is self.local_function("apply_payload"), "Expected accepted-path decryption")
+        destination = validate_call(env, invocation,
+                                    [("Shared", "aes"), ("Shared", "nonce"), ("TwoPhaseMut", "ciphertext")])
+        unit = ("unit",)
+        env[destination] = unit
+        require(tail[-1] == ("Return", None), "Expected the accepted-path return")
+        apply_assignments(env, tail[apply_at + 1:-1])
+        require(env[0] == (result, "Ok", (unit,)), "Wrong successful open return")
+        return condition.code if explicit == accept else ("true" if condition.code == "false" else "false")
 
     def straight_line(self, name, widths, dependencies):
         self.load(name, widths)
@@ -314,6 +526,8 @@ class ScalarLoop:
         checks = " ∧ ".join(step_checks) or "True"
         self.wrapper_links()
         cutpoints = "\n\n".join(self.straight_line(name, *shape) for name, shape in self.CUTPOINTS.items())
+        comparison = self.comparison()
+        accepted = self.open_gate()
         return f"""import Std
 
 namespace Abc.Extracted.Ghash
@@ -347,6 +561,15 @@ def multiply (_input _key : BitVec 128) : Option (BitVec 128) :=
   run _input state.1.toNat state
 
 {cutpoints}
+
+def tags_match (_actual _expected : BitVec 128) : Bool :=
+  {comparison}
+
+-- The validator resolves both returns and the unique mutable payload call.
+def open_gate {{α : Type}} (applyPayload : α → α) (ciphertext : α)
+    (actual expected : BitVec 128) : Bool × α :=
+  if tags_match actual expected == {accepted} then (true, applyPayload ciphertext)
+  else (false, ciphertext)
 
 end Abc.Extracted.Ghash
 """

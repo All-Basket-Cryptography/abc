@@ -19,10 +19,15 @@ the P-256 leaf.
 ```sh
 python -B -m tools.compatibility.portfolio.replay --inventory
 python -B -m tools.compatibility.portfolio.replay --languages rust javascript typescript --workers 3 --output .abc/portfolio-local
+python -B -m tools.compatibility.portfolio.replay --verify .abc/portfolio-local
 python -B -m tools.compatibility.portfolio.replay --languages swift --output .abc/portfolio-swift
 ```
 
-Keep the `result.json` and command logs together. Use the documented
+Keep the `result.json` and command logs together. Verification checks the
+complete inventory for each reported language, matches the declared
+commands and source/build digests, and rejects missing or changed logs.
+The receipt describes advisory execution and carries no authenticated
+attestation. Use the documented
 native provider checks for the two C post-quantum profiles as well. The
 regular graph tasks for those two profiles can run without their AWS-LC
 native link. This is a research execution receipt. The release verifier

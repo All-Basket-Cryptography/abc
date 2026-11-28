@@ -18,7 +18,7 @@
   "subject_ref": "abc:algorithm:poly1305",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "566646b3195df6051f675bec0f881ac01a4a3ed5a9c404463ee1d8903f2a0be1",
+  "source_sha256": "f16238406ca646bcb1b4aae817236c7f6321d81667a5364e7e3d63de677eea94",
   "path": "src/crypto/mac/poly1305/impl/cpp",
   "languages": [
     "cpp"

@@ -22,10 +22,13 @@ the appended one bit. It also proves the absorption step for an already
 padded final block and the normalization that precedes final reduction.
 The absorption theorems require a live accumulator and bounded key limbs
 with a correct cache. Each step preserves that limb range and advances the
-RFC polynomial recurrence modulo `2^130 - 5`.
+RFC polynomial recurrence modulo `2^130 - 5`. For any live accumulator
+and 128-bit pad, the extracted `finish_tag` helper used by `finalize`
+performs the final conditional subtraction, packs the low 128 bits, adds
+the pad, and emits the exact 16 little-endian tag bytes.
 
 The public proof still needs to cover key initialization, streaming chunk
-assembly, partial-block padding, and final subtraction and tag emission.
+assembly, partial-block padding, and dispatch to the checked helpers.
 The source replay compiles the exact generated model and audits the theorem
 dependencies. [Source verification](../../../../../tools/verification/poly1305/README.md) ·
 [RFC 8439 Appendix A.3](https://www.rfc-editor.org/rfc/rfc8439.html#appendix-A.3)

@@ -1,8 +1,9 @@
 # Rust Poly1305 source refinement
 
 The pinned Charon and Aeneas tools translate the reachable bodies rooted at
-`crate::absorb_bytes`, `crate::clamped_key` and `crate::key_multiples` from the
-portable Rust slice with default features disabled, targeting `x86_64-unknown-linux-gnu`. The
+`crate::absorb_bytes`, `crate::clamped_key`, `crate::key_multiples` and
+`crate::finish_tag` from the portable Rust slice with default features
+disabled, targeting `x86_64-unknown-linux-gnu`. The
 extraction workflow runs the translation twice and publishes `result.json`,
 both generated models and the tool logs. The workflow reports extraction
 success, and replay checks the Lean theorems.
@@ -24,13 +25,22 @@ transition for a partial block after the caller has put the marker and
 zero padding into the input array. Both block theorems assume a live
 accumulator and bounded key limbs with a correct cache, and both preserve
 the live-limb invariant.
+
+`Poly1305FinalRefinement.lean` links the active `finish_tag` helper called
+by the public finalizer to the RFC tag formula. Starting with any live
+accumulator and 128-bit pad, the exact code returns the 16 little-endian
+bytes of `((h mod (2^130 - 5)) + pad) mod 2^128`. The proof checks the
+conditional subtraction through the source's all-zero or all-one mask,
+limb packing including two-bit truncation, wrapping pad addition, and
+serialization. `source_finish_tag_value` also checks the decoded integer
+using the independent little-endian decoder in `Abc.Foundation.Encoding`.
 [RFC 8439 § 2.5.1](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.5.1)
 
 The proof assumes the standard Lean model of the Rust integer operations
-used by Aeneas. Public key splitting and initialization, streaming chunk
-assembly, partial-block padding, final conditional subtraction and tag
-emission remain outside the checked source result, as does timing behavior
-of the compiled code.
+used by Aeneas. The public key splitting and initialization, streaming
+chunk assembly, partial-block padding, and control flow that dispatches
+from the public APIs to the helpers remain outside the checked source
+result, as does compiled timing behavior.
 
 ## Replay
 

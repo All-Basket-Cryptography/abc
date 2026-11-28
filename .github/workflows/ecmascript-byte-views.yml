@@ -35,3 +35,7 @@ jobs:
           src/crypto/inputs/bytes.test.mjs
           src/crypto/cipher/chacha20/impl/javascript/chacha20.test.mjs
           src/crypto/cipher/chacha20/impl/typescript/chacha20.test.mts
+          src/crypto/mac/poly1305/impl/javascript/poly1305.test.mjs
+          src/crypto/mac/poly1305/impl/typescript/poly1305.test.mts
+          src/crypto/aead/chacha20-poly1305/impl/javascript/chacha20poly1305.test.mjs
+          src/crypto/aead/chacha20-poly1305/impl/typescript/chacha20poly1305.test.mts

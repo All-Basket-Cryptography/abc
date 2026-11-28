@@ -7,8 +7,13 @@ node --test src/crypto/mac/poly1305/impl/typescript/poly1305.test.mts
 ```
 
 Inputs are `Uint8Array` views backed by `ArrayBuffer`. The 13-bit
-radix model proves the congruence, integer bounds, and normalization of
-the three carry sweeps. Original-source and runtime leakage refinements
-remain open. [Lean carry model](../../spec/Poly1305Radix13.lean)
+radix model proves the congruence, integer bounds and normalization of
+the three carry sweeps. Each convolution column reads ten adjacent
+positions from the cached key coefficients in reverse order. Lean
+checks every address against the folded convolution and every partial
+sum against the exact range for IEEE 754 binary64 integers. Full blocks
+are read directly from the caller view using an offset.
+Source refinement and runtime leakage qualification remain open.
+[Lean coefficient model](../../spec/Poly1305Window.lean) · [Lean carry model](../../spec/Poly1305Radix13.lean)
 
 - [RFC 8439](https://www.rfc-editor.org/rfc/rfc8439)

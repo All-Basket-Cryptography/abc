@@ -28,9 +28,9 @@ fn nist_partial_blocks_and_aad() {
         ))
     );
     assert_eq!(tag.as_slice(), hex("e097195f4532da895fb917a5a55c6aa0"));
-    for (index, _) in tag.iter().enumerate() {
+    for bit in 0..tag.len() * u8::BITS as usize {
         let mut changed = tag;
-        changed[index] ^= 1;
+        changed[bit / 8] ^= 1 << (bit % 8);
         let mut preserved = data.clone();
         assert_eq!(
             open_in_place(&key, &nonce, &aad, &mut preserved, &changed),

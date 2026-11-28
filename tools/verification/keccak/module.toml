@@ -1,0 +1,14 @@
+schema_version = 1
+id = "keccak-p1600-source-verification"
+owned_paths = ["tools/verification/keccak"]
+shared_inputs = ["src/lean/lean-toolchain", "tools/verification/probe/toolchain-candidate.json", "tools/build/rust/Cargo.toml", "tools/build/rust/Cargo.lock"]
+dependencies = [
+  { module = "keccak-p1600-spec", type = "imports" },
+  { module = "keccak-p1600-rust", type = "imports" },
+]
+
+[tasks.source-refinement]
+kind = "formal"
+command = ["python", "-B", "tools/verification/keccak/check_source.py", "--negative-controls"]
+tools = ["python", "lean", "cargo", "rustup", "charon"]
+timeout_seconds = 180

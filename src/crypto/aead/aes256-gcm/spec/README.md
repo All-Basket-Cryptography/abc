@@ -9,8 +9,8 @@ Callers own unique nonce allocation for each key.
 [NIST SP 800-38D](https://csrc.nist.gov/pubs/sp/800/38/d/final)
 
 Opening computes and checks the full tag before writing plaintext.
-The Rust tests include NIST GCM-AES256 example 5 with partial blocks,
-empty input, and preservation of ciphertext on rejected authentication.
+The Rust tests cover NIST GCM-AES256 example 5 with partial blocks,
+empty input, and ciphertext preservation for all 128 single-bit tag changes.
 [NIST AES-GCM examples](https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Standards-and-Guidelines/documents/examples/AES_GCM.pdf)
 
 ## Checked composition
@@ -44,10 +44,13 @@ example 5 using its published AES block outputs.
 
 Charon and Lean additionally check the portable Rust source for GHASH
 multiplication, block absorption, length packing and the final tag word.
+They check that the actual open gate compares the whole tag, returns
+`AuthenticationFailed` without decrypting a mismatched tag, and reaches
+payload decryption only after a match.
 The composition uses the Lean slice and padding model to supply the
 blocks, and AES block values to supply the hash key and tag mask.
 Source-level proofs for slice traversal and conversion, the concrete AES
-provider, and the complete seal and open paths remain open. Compiler
+provider, length validation and the payload transformation remain open. Compiler
 timing, binary correspondence, key erasure, nonce allocation and
 cryptographic security games require separate evidence.
 [Rust source refinement and replay](../../../../../tools/verification/aes256-gcm/README.md)

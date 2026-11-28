@@ -26,7 +26,14 @@ axioms `propext`, `Classical.choice` and `Quot.sound`. The theorem
 interface uses typed rate blocks, a tail length below 136 and exact
 word semantics. The Go and Python conformance tests cover their concrete
 streaming buffers and partial reads. A source-to-model refinement for
-those buffers, the permutation loops and compiled timing is still open.
+the Go and Python buffers and compiled timing is still open.
+
+Pinned Charon extracts the Rust Keccak permutation and the 136-byte block
+absorption path. Lean checks the resulting round and absorb expressions
+against the bit-oriented model over every input state and block. The
+proof also composes those two source-linked operations with the rate and
+padding models for SHA3-256 and SHAKE256.
+[Rust source refinement](KeccakSourceRefinement.lean) · [Reproduction and receipt](../../../../../tools/verification/keccak/README.md)
 
 The ECMAScript implementation reuses private permutation work arrays and
 uses three linear parts for each chi row. Lean relates both neighbor
