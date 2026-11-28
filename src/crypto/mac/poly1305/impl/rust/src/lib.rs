@@ -20,15 +20,13 @@ pub struct Poly1305 {
 
 impl Poly1305 {
     pub fn new(key: &[u8; KEY_BYTES]) -> Self {
-        let [low, high] = key.as_chunks::<BLOCK_BYTES>().0 else {
-            unreachable!("Poly1305 key size is fixed");
-        };
-        let r = clamped_key(*low);
+        let (low, high) = split_key(key);
+        let r = clamped_key(low);
         Self {
             r,
             r_times_five: key_multiples(r),
             h: [0; 5],
-            pad: load_block(*high),
+            pad: load_block(high),
             pending: [0; BLOCK_BYTES],
             buffered: 0,
         }
@@ -57,19 +55,38 @@ impl Poly1305 {
     }
 
     /// Consume the context and return its complete 16-byte tag.
-    pub fn finalize(mut self) -> [u8; TAG_BYTES] {
-        if self.buffered != 0 {
-            self.pending[self.buffered..].fill(0);
-            self.pending[self.buffered] = 1;
-            self.absorb(self.pending, 0);
-        }
-
-        finish_tag(self.h, self.pad)
+    pub fn finalize(self) -> [u8; TAG_BYTES] {
+        let h = if self.buffered == 0 {
+            self.h
+        } else {
+            let encoded = encode_partial(self.pending, self.buffered);
+            absorb_encoded(self.h, self.r, self.r_times_five, encoded, 0)
+        };
+        finish_tag(h, self.pad)
     }
 
     fn absorb(&mut self, block: [u8; BLOCK_BYTES], high_bit: u64) {
         self.h = absorb_bytes(self.h, self.r, self.r_times_five, block, high_bit);
     }
+}
+
+fn split_key(key: &[u8; KEY_BYTES]) -> ([u8; BLOCK_BYTES], [u8; BLOCK_BYTES]) {
+    let [r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15] =
+        *key;
+    (
+        [
+            r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15,
+        ],
+        [
+            s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15,
+        ],
+    )
+}
+
+fn encode_partial(block: [u8; BLOCK_BYTES], length: usize) -> u128 {
+    // Clear stale bytes above the logical tail, then append its one bit.
+    let marker = 1u128 << (8 * length);
+    (load_block(block) & (marker - 1)) | marker
 }
 
 fn select_reduced(original: u64, reduced: u64, mask: u64) -> u64 {

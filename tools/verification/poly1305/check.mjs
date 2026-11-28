@@ -15,7 +15,7 @@ const subdir = namespace.replaceAll('.', '/');
 const modelFiles = [`${subdir}/Funs.lean`, `${subdir}/Types.lean`];
 const cargo = ['--locked', '--offline', '--lib', '--no-default-features', '--target', target];
 const charonArgs = ['--preset=aeneas', '--start-from', 'crate::absorb_bytes',
-  '--start-from', 'crate::clamped_key', '--start-from', 'crate::key_multiples', '--start-from', 'crate::finish_tag'];
+  '--start-from', 'crate::_::new', '--start-from', 'crate::_::finalize'];
 const aeneasArgs = ['-backend', 'lean', '-split-files', '-no-progress-bar', '-subdir', subdir,
   '-namespace', namespace];
 const officialBinaries = {
@@ -39,7 +39,7 @@ function check(toolRoot) {
   const output = join(repo, '.abc/poly1305-extraction');
   mkdirSync(output, { recursive: true });
   const work = mkdtempSync(join(output, 'run-'));
-  const report = { status: 'failed', scope: 'poly1305_block_and_tag_arithmetic', pins, target, features: [],
+  const report = { status: 'failed', scope: 'poly1305_constructor_blocks_and_finalizer', pins, target, features: [],
     cargo, charonArgs, aeneasArgs };
 
   function run(label, program, args, cwd, env = {}) {
