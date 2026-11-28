@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-gcm-kotlin-sunjce",
+  "record_type": "implementation",
+  "name": "AES-256-GCM in Kotlin (java.base SunJCE, tested via Oracle JDK 17.0.12+8-LTS-286 on Windows amd64)",
+  "sources": [
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/kotlin/src/Aes256Gcm.kt"
+    },
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/kotlin/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:aes-256-gcm",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "c105e85cb216073a834775e3056df750186d32ccc8fc6dc2e59267840c9503b7",
+  "path": "src/crypto/aead/aes256-gcm/impl/kotlin",
+  "languages": [
+    "kotlin"
+  ],
+  "features": [],
+  "external_calls": [
+    "java.base/com.sun.crypto.provider.SunJCE"
+  ],
+  "target_refs": [],
+  "provider": "java.base SunJCE, tested via Oracle JDK 17.0.12+8-LTS-286 on Windows amd64",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

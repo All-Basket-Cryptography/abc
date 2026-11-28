@@ -1,0 +1,14 @@
+schema_version = 1
+id = "scrypt-javascript-portable"
+owned_paths = ["src/crypto/kdf/scrypt/impl/javascript"]
+dependencies = [
+  { module = "crypto-byte-views-ecmascript", type = "calls" },
+  { module = "pbkdf2-hmac-sha256-javascript-portable", type = "calls" },
+]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/kdf/scrypt/impl/javascript/scrypt.test.mjs"]
+tools = ["node"]
+target = "node24"
+timeout_seconds = 120

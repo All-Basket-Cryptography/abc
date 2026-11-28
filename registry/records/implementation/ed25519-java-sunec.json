@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ed25519-java-sunec",
+  "record_type": "implementation",
+  "name": "Ed25519 in Java (jdk.crypto.ec SunEC, tested via Oracle JDK 17.0.12+8-LTS-286 on Windows amd64)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ed25519/impl/java/src/org/allbasket/abc/signature/ed25519/Ed25519.java"
+    },
+    {
+      "path": "src/crypto/signature/ed25519/impl/java/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ed25519",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "92090fae98c1615570962c7af0d80c8c92ccc4e365db427b58931f0d08d339d2",
+  "path": "src/crypto/signature/ed25519/impl/java",
+  "languages": [
+    "java"
+  ],
+  "features": [],
+  "external_calls": [
+    "jdk.crypto.ec/sun.security.ec.SunEC"
+  ],
+  "target_refs": [],
+  "provider": "jdk.crypto.ec SunEC, tested via Oracle JDK 17.0.12+8-LTS-286 on Windows amd64",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

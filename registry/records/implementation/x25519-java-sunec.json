@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:x25519-java-sunec",
+  "record_type": "implementation",
+  "name": "X25519 in Java (jdk.crypto.ec SunEC, tested via Oracle JDK 17.0.12+8-LTS-286 on Windows amd64)",
+  "sources": [
+    {
+      "path": "src/crypto/agreement/x25519/impl/java/src/org/allbasket/abc/agreement/x25519/X25519.java"
+    },
+    {
+      "path": "src/crypto/agreement/x25519/impl/java/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:x25519",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "05979f3b629c873f0fe0cb33913af241a0352d56b1ee69cd806c8a1861dd1686",
+  "path": "src/crypto/agreement/x25519/impl/java",
+  "languages": [
+    "java"
+  ],
+  "features": [],
+  "external_calls": [
+    "jdk.crypto.ec/sun.security.ec.SunEC"
+  ],
+  "target_refs": [],
+  "provider": "jdk.crypto.ec SunEC, tested via Oracle JDK 17.0.12+8-LTS-286 on Windows amd64",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

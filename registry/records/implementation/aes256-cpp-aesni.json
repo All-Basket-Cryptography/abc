@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-cpp-aesni",
+  "record_type": "implementation",
+  "name": "AES-256 in C++ (ABC C++ AES-NI research core)",
+  "sources": [
+    {
+      "path": "src/crypto/cipher/aes256/impl/cpp/aes256.cpp"
+    },
+    {
+      "path": "src/crypto/cipher/aes256/impl/cpp/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:aes-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "275813fce907c653742ed1a48c9618f3c6fa07070948a19662c9e2614fcacf2b",
+  "path": "src/crypto/cipher/aes256/impl/cpp",
+  "languages": [
+    "cpp"
+  ],
+  "features": [],
+  "external_calls": [
+    "x86-64 AES-NI intrinsics"
+  ],
+  "target_refs": [],
+  "provider": "ABC C++ AES-NI research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

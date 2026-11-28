@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-gcm-java-sunjce",
+  "record_type": "implementation",
+  "name": "AES-256-GCM in Java (java.base SunJCE, tested via Oracle JDK 17.0.12+8-LTS-286 on Windows amd64)",
+  "sources": [
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/java/src/org/allbasket/abc/aead/aes256gcm/Aes256Gcm.java"
+    },
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/java/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:aes-256-gcm",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "a896a651d4f76652a6f210fb97a48d93adcbaaca7e2530b63a29452310b33e16",
+  "path": "src/crypto/aead/aes256-gcm/impl/java",
+  "languages": [
+    "java"
+  ],
+  "features": [],
+  "external_calls": [
+    "java.base/com.sun.crypto.provider.SunJCE"
+  ],
+  "target_refs": [],
+  "provider": "java.base SunJCE, tested via Oracle JDK 17.0.12+8-LTS-286 on Windows amd64",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

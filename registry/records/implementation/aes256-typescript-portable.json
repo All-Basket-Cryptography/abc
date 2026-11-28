@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-typescript-portable",
+  "record_type": "implementation",
+  "name": "AES-256 in TypeScript (ABC TypeScript research core)",
+  "sources": [
+    {
+      "path": "src/crypto/cipher/aes256/impl/typescript/aes256.mts"
+    },
+    {
+      "path": "src/crypto/cipher/aes256/impl/typescript/README.md"
+    },
+    {
+      "path": "src/crypto/inputs/bytes.mts"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:aes-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "1d6991b4932067ff36b99e1d47849833f027c8851290d427f7a32d6bd26e6d8e",
+  "path": "src/crypto/cipher/aes256/impl/typescript",
+  "languages": [
+    "typescript"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC TypeScript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

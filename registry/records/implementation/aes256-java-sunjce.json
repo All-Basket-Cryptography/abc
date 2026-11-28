@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-java-sunjce",
+  "record_type": "implementation",
+  "name": "AES-256 in Java (java.base SunJCE, tested via Oracle JDK 17.0.12+8-LTS-286 on Windows amd64)",
+  "sources": [
+    {
+      "path": "src/crypto/cipher/aes256/impl/java/src/org/allbasket/abc/cipher/aes256/Aes256.java"
+    },
+    {
+      "path": "src/crypto/cipher/aes256/impl/java/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:aes-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "8389f0337ca87aa0e65db081c564fd437ad6de4244ab0a3bc511c4710a819ada",
+  "path": "src/crypto/cipher/aes256/impl/java",
+  "languages": [
+    "java"
+  ],
+  "features": [],
+  "external_calls": [
+    "java.base/com.sun.crypto.provider.SunJCE"
+  ],
+  "target_refs": [],
+  "provider": "java.base SunJCE, tested via Oracle JDK 17.0.12+8-LTS-286 on Windows amd64",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

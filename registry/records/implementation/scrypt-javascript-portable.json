@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:scrypt-javascript-portable",
+  "record_type": "implementation",
+  "name": "scrypt in JavaScript (ABC JavaScript research core)",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/scrypt/impl/javascript/scrypt.mjs"
+    },
+    {
+      "path": "src/crypto/kdf/scrypt/impl/javascript/README.md"
+    },
+    {
+      "path": "src/crypto/inputs/bytes.mjs"
+    },
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/javascript/pbkdf2.mjs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:scrypt",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "37c9d6ff7be88596dacccc710de6c576a23d3d580b2b462167dd8860418d779a",
+  "path": "src/crypto/kdf/scrypt/impl/javascript",
+  "languages": [
+    "javascript"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC JavaScript PBKDF2-HMAC-SHA-256"
+  ],
+  "target_refs": [],
+  "provider": "ABC JavaScript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

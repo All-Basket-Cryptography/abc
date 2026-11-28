@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-gcm-typescript-portable",
+  "record_type": "implementation",
+  "name": "AES-256-GCM in TypeScript (ABC TypeScript research core)",
+  "sources": [
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/typescript/aes256gcm.mts"
+    },
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/typescript/README.md"
+    },
+    {
+      "path": "src/crypto/inputs/bytes.mts"
+    },
+    {
+      "path": "src/crypto/cipher/aes256/impl/typescript/aes256.mts"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:aes-256-gcm",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "b6266f5d19da2005f8e9d0fdab5ac6e7ef236dc40696738c69868c0f9302263b",
+  "path": "src/crypto/aead/aes256-gcm/impl/typescript",
+  "languages": [
+    "typescript"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC TypeScript AES-256"
+  ],
+  "target_refs": [],
+  "provider": "ABC TypeScript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

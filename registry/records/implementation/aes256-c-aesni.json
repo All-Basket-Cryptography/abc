@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-c-aesni",
+  "record_type": "implementation",
+  "name": "AES-256 in C (ABC C AES-NI research core)",
+  "sources": [
+    {
+      "path": "src/crypto/cipher/aes256/impl/c/abc_aes256_c.c"
+    },
+    {
+      "path": "src/crypto/cipher/aes256/impl/c/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:aes-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "ea86b2ab071ea327ef24d475298e8753ad3d88f50aff8aa664d29923018ab5c0",
+  "path": "src/crypto/cipher/aes256/impl/c",
+  "languages": [
+    "c"
+  ],
+  "features": [],
+  "external_calls": [
+    "x86-64 AES-NI intrinsics"
+  ],
+  "target_refs": [],
+  "provider": "ABC C AES-NI research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

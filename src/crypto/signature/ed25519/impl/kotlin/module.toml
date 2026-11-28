@@ -1,0 +1,18 @@
+schema_version = 1
+id = "ed25519-kotlin-sunec"
+owned_paths = ["src/crypto/signature/ed25519/impl/kotlin"]
+shared_inputs = ["src/crypto/signature/ed25519/impl/java/check.py", "src/crypto/signature/ed25519/impl/java/tests/Checks.java", "src/crypto/signature/ed25519/impl/java/Ed25519JvmModel.lean"]
+dependencies = [{ module = "ed25519-rust", type = "implements" }]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/signature/ed25519/impl/java/check.py", "--language", "kotlin"]
+tools = ["python", "java", "javac", "node"]
+target = "kotlin-jvm-jdk17"
+timeout_seconds = 240
+
+[tasks.arithmetic-model]
+kind = "formal"
+command = ["lean", "-DwarningAsError=true", "src/crypto/signature/ed25519/impl/java/Ed25519JvmModel.lean"]
+tools = ["lean"]
+timeout_seconds = 60

@@ -1,0 +1,12 @@
+schema_version = 1
+id = "chacha20-kotlin-portable"
+owned_paths = ["src/crypto/cipher/chacha20/impl/kotlin"]
+shared_inputs = ["src/crypto/aead/chacha20-poly1305/impl/c/check.py","src/crypto/cipher/chacha20/impl/csharp/check.py"]
+dependencies = [{ module = "chacha20-spec", type = "implements" }]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/cipher/chacha20/impl/kotlin/check.py", "chacha20"]
+tools = ["python","java","node"]
+target = "jvm-jdk17"
+timeout_seconds = 180

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-gcm-python-portable",
+  "record_type": "implementation",
+  "name": "AES-256-GCM in Python (ABC Python research core)",
+  "sources": [
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/python/abc_aes256gcm.py"
+    },
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/python/README.md"
+    },
+    {
+      "path": "src/crypto/cipher/aes256/impl/python/abc_aes256.py"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:aes-256-gcm",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "156aa4ba51dfc93fa35feae6eaaae30c33b90e1bcabb694a44fecc79d1241b34",
+  "path": "src/crypto/aead/aes256-gcm/impl/python",
+  "languages": [
+    "python"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Python AES-256"
+  ],
+  "target_refs": [],
+  "provider": "ABC Python research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

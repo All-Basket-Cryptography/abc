@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:chacha20-poly1305-java-portable",
+  "record_type": "implementation",
+  "name": "ChaCha20-Poly1305 in Java (ABC Java research core)",
+  "sources": [
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/java/src/org/allbasket/abc/aead/chacha20poly1305/ChaCha20Poly1305.java"
+    },
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/java/README.md"
+    },
+    {
+      "path": "src/crypto/cipher/chacha20/impl/java/src/org/allbasket/abc/cipher/chacha20/ChaCha20.java"
+    },
+    {
+      "path": "src/crypto/mac/poly1305/impl/java/src/org/allbasket/abc/mac/poly1305/Poly1305.java"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:chacha20-poly1305",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "ec76966492ba41904dac70afd84ca6cb89c5889d3083d27b441f7c3f30955bcb",
+  "path": "src/crypto/aead/chacha20-poly1305/impl/java",
+  "languages": [
+    "java"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Java ChaCha20",
+    "ABC Java Poly1305"
+  ],
+  "target_refs": [],
+  "provider": "ABC Java research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

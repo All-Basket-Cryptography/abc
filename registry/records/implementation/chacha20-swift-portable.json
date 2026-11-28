@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:chacha20-swift-portable",
+  "record_type": "implementation",
+  "name": "ChaCha20 in Swift (ABC Swift research core)",
+  "sources": [
+    {
+      "path": "src/crypto/cipher/chacha20/impl/swift/AbcChaCha20Swift/Sources/AbcChaCha20Swift/ChaCha20.swift"
+    },
+    {
+      "path": "src/crypto/cipher/chacha20/impl/swift/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:chacha20",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "206c553e3840a827c3b84aef2623e008cb2b6d4f504738cdd57a565ed94eac65",
+  "path": "src/crypto/cipher/chacha20/impl/swift",
+  "languages": [
+    "swift"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC Swift research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

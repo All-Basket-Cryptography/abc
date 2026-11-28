@@ -1,0 +1,12 @@
+schema_version = 1
+id = "blake2b-kotlin-portable"
+owned_paths = ["src/crypto/hash/blake2b/impl/kotlin"]
+shared_inputs = ["src/crypto/hash/blake2b/impl/cpp/check.py"]
+dependencies = [{ module = "blake2b", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "src/crypto/hash/blake2b/impl/kotlin/check.py"]
+tools = ["python", "java"]
+target = "kotlin-jvm-jdk17"
+timeout_seconds = 180

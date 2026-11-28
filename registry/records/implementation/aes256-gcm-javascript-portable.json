@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-gcm-javascript-portable",
+  "record_type": "implementation",
+  "name": "AES-256-GCM in JavaScript (ABC JavaScript research core)",
+  "sources": [
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/javascript/aes256gcm.mjs"
+    },
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/javascript/README.md"
+    },
+    {
+      "path": "src/crypto/inputs/bytes.mjs"
+    },
+    {
+      "path": "src/crypto/cipher/aes256/impl/javascript/aes256.mjs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:aes-256-gcm",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "142b136e335cdec072a008b52b4987e37f22888b14406c27ede1824245b7ee7c",
+  "path": "src/crypto/aead/aes256-gcm/impl/javascript",
+  "languages": [
+    "javascript"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC JavaScript AES-256"
+  ],
+  "target_refs": [],
+  "provider": "ABC JavaScript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

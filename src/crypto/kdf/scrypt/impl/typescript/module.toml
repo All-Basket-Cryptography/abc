@@ -1,0 +1,14 @@
+schema_version = 1
+id = "scrypt-typescript-portable"
+owned_paths = ["src/crypto/kdf/scrypt/impl/typescript"]
+dependencies = [
+  { module = "crypto-byte-views-ecmascript", type = "calls" },
+  { module = "pbkdf2-hmac-sha256-typescript-portable", type = "calls" },
+]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/kdf/scrypt/impl/typescript/scrypt.test.mts"]
+tools = ["node"]
+target = "node24"
+timeout_seconds = 120

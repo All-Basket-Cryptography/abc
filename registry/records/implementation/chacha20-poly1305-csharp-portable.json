@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:chacha20-poly1305-csharp-portable",
+  "record_type": "implementation",
+  "name": "ChaCha20-Poly1305 in C# (ABC C# research core)",
+  "sources": [
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/csharp/ChaCha20Poly1305Aead.cs"
+    },
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/csharp/README.md"
+    },
+    {
+      "path": "src/crypto/cipher/chacha20/impl/csharp/ChaCha20Cipher.cs"
+    },
+    {
+      "path": "src/crypto/mac/poly1305/impl/csharp/Poly1305Mac.cs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:chacha20-poly1305",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "327b2aafb23c273d697efb9831928d7f90afb55023f5de05e32894ba913de2a4",
+  "path": "src/crypto/aead/chacha20-poly1305/impl/csharp",
+  "languages": [
+    "csharp"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC C# ChaCha20",
+    "ABC C# Poly1305"
+  ],
+  "target_refs": [],
+  "provider": "ABC C# research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

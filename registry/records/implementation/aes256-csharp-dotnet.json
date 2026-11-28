@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-csharp-dotnet",
+  "record_type": "implementation",
+  "name": "AES-256 in C# (System.Security.Cryptography, tested on .NET 10.0.15 Windows x64)",
+  "sources": [
+    {
+      "path": "src/crypto/cipher/aes256/impl/csharp/Aes256Cipher.cs"
+    },
+    {
+      "path": "src/crypto/cipher/aes256/impl/csharp/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:aes-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "3eb8e733caaf731c2002a909782d7b5fd71d75c4dbd1c20857d6f215eff1574b",
+  "path": "src/crypto/cipher/aes256/impl/csharp",
+  "languages": [
+    "csharp"
+  ],
+  "features": [],
+  "external_calls": [
+    "System.Security.Cryptography"
+  ],
+  "target_refs": [],
+  "provider": "System.Security.Cryptography, tested on .NET 10.0.15 Windows x64",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

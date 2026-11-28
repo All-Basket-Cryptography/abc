@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:chacha20-poly1305-swift-portable",
+  "record_type": "implementation",
+  "name": "ChaCha20-Poly1305 in Swift (ABC Swift research core)",
+  "sources": [
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/swift/AbcChaCha20Poly1305Swift/Sources/AbcChaCha20Poly1305Swift/ChaCha20Poly1305.swift"
+    },
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/swift/README.md"
+    },
+    {
+      "path": "src/crypto/cipher/chacha20/impl/swift/AbcChaCha20Swift/Sources/AbcChaCha20Swift/ChaCha20.swift"
+    },
+    {
+      "path": "src/crypto/mac/poly1305/impl/swift/AbcPoly1305Swift/Sources/AbcPoly1305Swift/Poly1305.swift"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:chacha20-poly1305",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "1f615facfeda2f2905840c654a55e51dfb7908a85fe87ddae038196adcc30f59",
+  "path": "src/crypto/aead/chacha20-poly1305/impl/swift",
+  "languages": [
+    "swift"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Swift ChaCha20",
+    "ABC Swift Poly1305"
+  ],
+  "target_refs": [],
+  "provider": "ABC Swift research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -1,0 +1,11 @@
+schema_version = 1
+id = "aes256-python-portable"
+owned_paths = ["src/crypto/cipher/aes256/impl/python"]
+dependencies = [{ module = "aes256-rust", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "-m", "unittest", "discover", "-s", "src/crypto/cipher/aes256/impl/python", "-p", "test_aes256.py"]
+tools = ["python", "node"]
+target = "portable"
+timeout_seconds = 120

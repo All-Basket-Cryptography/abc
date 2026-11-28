@@ -1,0 +1,12 @@
+schema_version = 1
+id = "aes256-c-x86-aesni"
+owned_paths = ["src/crypto/cipher/aes256/impl/c"]
+shared_inputs = ["src/crypto/cipher/aes256/impl/java/check.py"]
+dependencies = [{ module = "aes256-rust", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "src/crypto/cipher/aes256/impl/c/check.py"]
+tools = ["python", "clang", "node"]
+target = "x86_64-aesni"
+timeout_seconds = 180
