@@ -13,7 +13,7 @@ permissions:
 jobs:
   native-fuzz:
     name: main ${{ matrix.task }}
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     strategy:
@@ -58,7 +58,9 @@ jobs:
             .abc/main-plan.json
             .abc/main-run
             .abc/probe-fuzz/run-*/result.json
+            .abc/probe-fuzz/run-*/*.log
             .abc/sha256-fuzz/run-*/result.json
+            .abc/sha256-fuzz/run-*/*.log
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 7
