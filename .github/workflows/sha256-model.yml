@@ -11,6 +11,8 @@ on:
       - 'src/crypto/inputs/**'
       - 'src/crypto/hash/sha512/spec/**'
       - 'src/crypto/hash/blake2b/spec/**'
+      - 'src/crypto/hash/sha3-256/impl/rust/**'
+      - 'src/crypto/hash/shake256/impl/rust/**'
       - 'src/crypto/hash/shake256/spec/**'
       - 'src/crypto/hash/keccak-p1600/spec/**'
       - 'src/crypto/hash/keccak-p1600/impl/rust/**'
@@ -125,7 +127,7 @@ jobs:
           lean -DwarningAsError=true src/crypto/agreement/ml-kem-768/spec/MlKemCoefficient.lean
           python3 -B tools/verification/sha512/check.py --negative-controls
           lean src/crypto/kdf/scrypt/spec/ScryptBounds.lean
-          lean -DwarningAsError=true src/crypto/kdf/scrypt/spec/ScryptFunctional.lean
+          python3 -B src/lean/check.py scrypt
           lean src/crypto/kdf/argon2id/spec/Argon2idBounds.lean
           lean src/crypto/cipher/aes256/spec/Aes256Byte.lean
           lean src/crypto/aead/aes256-gcm/spec/Aes256GcmBounds.lean
@@ -138,6 +140,8 @@ jobs:
             --output .abc/sha512-api-llbc.json
           python3 -B tools/verification/keccak/check_source.py --negative-controls \
             --output .abc/keccak-source-llbc.json
+          python3 -B tools/verification/keccak/check_wrappers.py --negative-controls \
+            --output .abc/keccak-wrappers-llbc.json
           python3 -B tools/verification/aes256-gcm/check.py --check-mutant
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: ${{ always() }}
@@ -147,6 +151,7 @@ jobs:
             .abc/sha512-stream-llbc.json
             .abc/sha512-api-llbc.json
             .abc/keccak-source-llbc.json
+            .abc/keccak-wrappers-llbc.json
             .abc/aes256-gcm-extraction/run-*/result.json
             .abc/aes256-gcm-extraction/run-*/*.log
             .abc/aes256-gcm-extraction/run-*/*/GhashLlbc.lean

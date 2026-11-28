@@ -2,7 +2,7 @@ schema_version = 1
 id = "scrypt-rust"
 owned_paths = ["src/crypto/kdf/scrypt"]
 cargo_manifests = ["src/crypto/kdf/scrypt/impl/rust/Cargo.toml"]
-lean_sources = { ScryptBounds = "src/crypto/kdf/scrypt/spec", ScryptFunctional = "src/crypto/kdf/scrypt/spec" }
+lean_sources = { ScryptBounds = "src/crypto/kdf/scrypt/spec", ScryptFunctional = "src/crypto/kdf/scrypt/spec", ScryptAlternating = "src/crypto/kdf/scrypt/spec" }
 
 [tasks.test]
 kind = "test"
@@ -24,6 +24,6 @@ timeout_seconds = 120
 
 [tasks.functional-model]
 kind = "formal"
-command = ["lean", "-DwarningAsError=true", "src/crypto/kdf/scrypt/spec/ScryptFunctional.lean"]
-tools = ["lean"]
+command = ["python", "-B", "src/lean/check.py", "scrypt"]
+tools = ["python", "lean"]
 timeout_seconds = 120

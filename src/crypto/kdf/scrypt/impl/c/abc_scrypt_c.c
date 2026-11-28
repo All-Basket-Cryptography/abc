@@ -83,7 +83,7 @@ static void salsa8(uint32_t block[16]) {
     }
 }
 
-static void block_mix(uint8_t *lane, size_t size, uint8_t *temporary) {
+static void block_mix(const uint8_t *lane, size_t size, uint8_t *temporary) {
     uint32_t chain[16];
     for (size_t i = 0; i < 16; ++i) {
         chain[i] = load_word(lane + size - 64 + 4 * i);
@@ -99,13 +99,15 @@ static void block_mix(uint8_t *lane, size_t size, uint8_t *temporary) {
             store_word(output + 4 * i, chain[i]);
         }
     }
-    memcpy(lane, temporary, size);
 }
 
 static void romix(uint8_t *lane, size_t size, uint8_t *table, uint8_t *temporary, size_t n) {
     for (size_t row = 0; row < n; ++row) {
         memcpy(table + row * size, lane, size);
         block_mix(lane, size, temporary);
+        uint8_t *previous = lane;
+        lane = temporary;
+        temporary = previous;
     }
     for (size_t visit = 0; visit < n; ++visit) {
         const uint8_t *last = lane + size - 64;
@@ -115,7 +117,11 @@ static void romix(uint8_t *lane, size_t size, uint8_t *table, uint8_t *temporary
             lane[i] ^= entry[i];
         }
         block_mix(lane, size, temporary);
+        uint8_t *previous = lane;
+        lane = temporary;
+        temporary = previous;
     }
+    /* The two passes perform 2*N swaps, returning the result to the caller's lane. */
 }
 
 static bool overlaps(const uint8_t *left, size_t left_length, const uint8_t *right, size_t right_length) {

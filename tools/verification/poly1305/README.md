@@ -1,12 +1,12 @@
 # Rust Poly1305 source refinement
 
 The pinned Charon and Aeneas tools translate the reachable bodies rooted at
-`crate::absorb_bytes`, `crate::clamped_key`, `crate::key_multiples` and
-`crate::finish_tag` from the portable Rust slice with default features
+the public `Poly1305::new` and `Poly1305::finalize` methods, and the
+`crate::absorb_bytes` helper, from the portable Rust slice with default features
 disabled, targeting `x86_64-unknown-linux-gnu`. The
 extraction workflow runs the translation twice and publishes `result.json`,
-both generated models and the tool logs. The workflow reports extraction
-success, and replay checks the Lean theorems.
+both generated models and the tool logs. The same workflow builds the
+pinned Lean backend, checks the theorems and publishes the replay receipt.
 
 `Poly1305EncodingRefinement.lean` proves the exact `limbs` helper returns
 the first five radix-`2^26` digits of any input `u128` in little-endian order.
@@ -34,13 +34,24 @@ conditional subtraction through the source's all-zero or all-one mask,
 limb packing including two-bit truncation, wrapping pad addition, and
 serialization. `source_finish_tag_value` also checks the decoded integer
 using the independent little-endian decoder in `Abc.Foundation.Encoding`.
+
+`Poly1305ApiRefinement.lean` checks the public constructor and finalizer.
+`source_new_refines` proves the 32 key bytes are split in order, the low
+half sets the clamped multiplier and its cache, and the high half sets the
+pad. It also proves that the initial accumulator and pending buffer are
+zero. `source_finalize_refines` checks both buffered-length cases from any
+state whose key limbs, cache, accumulator and pending length satisfy the
+invariant. A nonempty tail of length `n < 16` contributes its first `n`
+bytes and the marker `256^n` to the recurrence. If the buffer is empty,
+finalization emits a tag directly from the existing accumulator.
 [RFC 8439 § 2.5.1](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.5.1)
 
 The proof assumes the standard Lean model of the Rust integer operations
-used by Aeneas. The public key splitting and initialization, streaming
-chunk assembly, partial-block padding, and control flow that dispatches
-from the public APIs to the helpers remain outside the checked source
-result, as does compiled timing behavior.
+used by Aeneas. Composition through the public `update` loop, including
+its chunk assembly and the connection from the input message to the
+constructor/finalizer invariant, still needs a source proof. That also
+leaves the one-shot `authenticate` entry point and compiled timing
+behavior outside the checked result.
 
 ## Replay
 

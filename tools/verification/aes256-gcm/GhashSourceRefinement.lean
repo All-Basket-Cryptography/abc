@@ -177,6 +177,79 @@ theorem source_authentication_gate_refines (encrypt : Block → Block) (nonce : 
   rw [source_tag_word_refines_nist _ _ _ _ aadFits cipherFits]
   simp only [Option.map_some, source_open_gate_refines, authenticate] <;> rfl
 
+theorem source_length_limits_exact (aad payload : BitVec 64) :
+    Ghash.check_lengths aad payload =
+      if payloadLimit < payload.toNat then .error .messageTooLong
+      else if aadLimit < aad.toNat then .error .associatedDataTooLong
+      else .ok () := by
+  have payloadValue : (68719476704#64).toNat = payloadLimit := by decide +kernel
+  have aadValue : (2305843009213693951#64).toNat = aadLimit := by decide +kernel
+  simp only [Ghash.check_lengths, payloadValue, aadValue, decide_eq_true_eq]
+
+theorem source_length_limit_edges :
+    Ghash.check_lengths 2305843009213693951 68719476704 = .ok () ∧
+    Ghash.check_lengths 2305843009213693952 0 = .error .associatedDataTooLong ∧
+    Ghash.check_lengths 2305843009213693952 68719476705 = .error .messageTooLong := by
+  exact ⟨rfl, rfl, rfl⟩
+
+theorem source_payload_counter_refines (index : Nat) (fits : 2 + index < 2^32) :
+    Ghash.payload_counter index = some (BitVec.ofNat 32 (2 + index)) := by
+  unfold Ghash.payload_counter
+  rw [BitVec.setWidth_ofNat_of_le (by decide)]
+  have valid : (2#32).toNat + (BitVec.ofNat 32 index).toNat < 2^32 := by
+    change 2 + index % 2^32 < 2^32
+    rwa [Nat.mod_eq_of_lt (by omega : index < 2^32)]
+  rw [if_pos valid, BitVec.ofNat_add]
+
+theorem source_payload_counter_edges :
+    Ghash.payload_counter 0 = some 2#32 ∧
+    Ghash.payload_counter (2^32 - 3) = some 0xffffffff#32 ∧
+    Ghash.payload_counter (2^32 - 2) = none := by
+  decide +kernel
+
+theorem source_admitted_counter_safe (aad payload : BitVec 64) (offset : Nat)
+    (admitted : Ghash.check_lengths aad payload = .ok ()) (inside : offset < payload.toNat) :
+    Ghash.payload_counter (offset / 16) = some (BitVec.ofNat 32 (2 + offset / 16)) ∧
+      1 < 2 + offset / 16 ∧ 2 + offset / 16 < 2^32 := by
+  have bounded : payload.toNat ≤ payloadLimit := by
+    rw [source_length_limits_exact] at admitted
+    by_cases oversized : payloadLimit < payload.toNat
+    · simp [oversized] at admitted
+    · omega
+  have domain := payload_counter_in_range payload.toNat offset bounded inside
+  exact ⟨source_payload_counter_refines _ domain.2, domain⟩
+
+def sourceOpenWithModel (encrypt : Block → Block) (nonce : Nonce)
+    (aad ciphertext : List Byte) (provided : Tag) : Option (Outcome Unit) :=
+  match Ghash.check_lengths (BitVec.ofNat 64 aad.length) (BitVec.ofNat 64 ciphertext.length) with
+  | .error .messageTooLong => some ⟨.error .messageTooLong, ciphertext⟩
+  | .error .associatedDataTooLong => some ⟨.error .associatedDataTooLong, ciphertext⟩
+  | .ok () =>
+    (sourceTagWord (encrypt 0) (encrypt (counterBlock nonce 1)) aad ciphertext).map fun actual =>
+      let (valid, bytes) := Ghash.open_gate (gctr encrypt nonce 2) ciphertext actual (asBlock provided.toList)
+      ⟨if valid then .ok () else .error .authenticationFailed, bytes⟩
+
+theorem source_open_with_models_refines (encrypt : Encrypt) (key : Key) (nonce : Nonce)
+    (aad ciphertext : List Byte) (provided : Tag)
+    (aadFits : aad.length < 2^64) (cipherFits : ciphertext.length < 2^64) :
+    sourceOpenWithModel (encrypt key) nonce aad ciphertext provided =
+      some (openReference encrypt key nonce aad ciphertext provided) := by
+  simp only [sourceOpenWithModel, source_length_limits_exact, BitVec.toNat_ofNat,
+    Nat.mod_eq_of_lt aadFits, Nat.mod_eq_of_lt cipherFits, openReference]
+  by_cases payloadTooLong : payloadLimit < ciphertext.length
+  · simp [payloadTooLong]
+  · by_cases aadTooLong : aadLimit < aad.length
+    · simp [payloadTooLong, aadTooLong]
+    · have aBits : 8 * aad.length < 2^64 := by unfold aadLimit at aadTooLong; omega
+      have cBits : 8 * ciphertext.length < 2^64 := by unfold payloadLimit at payloadTooLong; omega
+      rw [if_neg payloadTooLong, if_neg aadTooLong, if_neg payloadTooLong, if_neg aadTooLong]
+      simp only [source_tag_word_refines_nist _ _ _ _ aBits cBits, Option.map_some, source_open_gate_refines]
+      change (some (let (valid, bytes) :=
+          if authenticate (encrypt key) nonce aad ciphertext = provided then
+            (true, gctr (encrypt key) nonce 2 ciphertext) else (false, ciphertext)
+        ({ result := if valid then .ok () else .error .authenticationFailed, bytes } : Outcome Unit))) = _
+      by_cases correct : authenticate (encrypt key) nonce aad ciphertext = provided <;> simp [correct]
+
 #print axioms extracted_round_refines
 #print axioms extracted_loop_refines
 #print axioms source_multiply_returns_nist
@@ -193,5 +266,11 @@ theorem source_authentication_gate_refines (encrypt : Block → Block) (nonce : 
 #print axioms source_open_gate_refines
 #print axioms source_open_reject_preserves
 #print axioms source_authentication_gate_refines
+#print axioms source_length_limits_exact
+#print axioms source_length_limit_edges
+#print axioms source_payload_counter_refines
+#print axioms source_payload_counter_edges
+#print axioms source_admitted_counter_safe
+#print axioms source_open_with_models_refines
 
 end Abc.Refine.Ghash

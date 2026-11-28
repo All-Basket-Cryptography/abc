@@ -116,11 +116,17 @@ pub fn derive(
     Ok(())
 }
 
-fn romix(lane: &mut [u8], table: &mut [u8], temporary: &mut [u8], cost: usize) {
+fn romix<'lane>(
+    mut lane: &'lane mut [u8],
+    table: &mut [u8],
+    mut temporary: &'lane mut [u8],
+    cost: usize,
+) {
     let stride = lane.len();
     for slot in table.chunks_exact_mut(stride) {
         slot.copy_from_slice(lane);
         block_mix(lane, temporary);
+        core::mem::swap(&mut lane, &mut temporary);
     }
     for _ in 0..cost {
         let last_block = &lane[stride - SALSA_BYTES..];
@@ -130,10 +136,12 @@ fn romix(lane: &mut [u8], table: &mut [u8], temporary: &mut [u8], cost: usize) {
             *value ^= sample;
         }
         block_mix(lane, temporary);
+        core::mem::swap(&mut lane, &mut temporary);
     }
+    // The two passes perform 2*N swaps, returning the result to the caller's lane.
 }
 
-fn block_mix(lane: &mut [u8], temporary: &mut [u8]) {
+fn block_mix(lane: &[u8], temporary: &mut [u8]) {
     let blocks = lane.len() / SALSA_BYTES;
     let mut words = [0u32; 16];
     let last = &lane[lane.len() - SALSA_BYTES..];
@@ -156,7 +164,6 @@ fn block_mix(lane: &mut [u8], temporary: &mut [u8]) {
             *bytes = word.to_le_bytes();
         }
     }
-    lane.copy_from_slice(temporary);
 }
 
 fn salsa_quarter(words: &mut [u32; 16], indices: [usize; 4]) {

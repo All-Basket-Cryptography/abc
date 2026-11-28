@@ -21,7 +21,7 @@
   "subject_ref": "abc:construction:scrypt",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "08987d9f5b9dce02d6cf49b530f66df43313868c892b25fe5e700ecd60f86315",
+  "source_sha256": "945652486241d93cf9b507f0afb791fac2800204379c3a0e403a5c048054b774",
   "path": "src/crypto/kdf/scrypt/impl/cpp",
   "languages": [
     "cpp"

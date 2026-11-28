@@ -18,7 +18,7 @@
   "subject_ref": "abc:construction:scrypt",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "2d75748588c49872ddf1505e49834638d21c68b28f6a5084b4af52d259b12494",
+  "source_sha256": "049953eae2d5ea347bf5f2f4cd1f00aba63662964663f87fc382f5d2e6da0424",
   "path": "src/crypto/kdf/scrypt/impl/rust",
   "languages": [
     "rust"

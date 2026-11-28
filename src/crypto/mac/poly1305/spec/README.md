@@ -27,8 +27,12 @@ and 128-bit pad, the extracted `finish_tag` helper used by `finalize`
 performs the final conditional subtraction, packs the low 128 bits, adds
 the pad, and emits the exact 16 little-endian tag bytes.
 
-The public proof still needs to cover key initialization, streaming chunk
-assembly, partial-block padding, and dispatch to the checked helpers.
+The public constructor now has a source proof for key splitting, clamping,
+pad loading and the initial empty state. The source proof of the public
+finalizer covers both an empty pending buffer and a partial final block.
+It verifies that bytes past the buffered prefix have no effect and that
+the RFC marker follows the last live byte. The public `update` loop and
+its composition with one-shot `authenticate` still need a source proof.
 The source replay compiles the exact generated model and audits the theorem
 dependencies. [Source verification](../../../../../tools/verification/poly1305/README.md) ·
 [RFC 8439 Appendix A.3](https://www.rfc-editor.org/rfc/rfc8439.html#appendix-A.3)

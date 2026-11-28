@@ -59,7 +59,30 @@ function blockMix(lane, reordered, state, scratch) {
     const position = (Math.floor(block / 2) + (block % 2) * (blocks / 2)) * STATE_WORDS;
     reordered.set(state, position);
   }
-  lane.set(reordered);
+}
+
+function romix(input, temporary, history,
+  state, scratch, cost) {
+  const words = input.length;
+  let lane = input;
+  let next = temporary;
+  for (let i = 0; i < cost; i += 1) {
+    history.set(lane, i * words);
+    blockMix(lane, next, state, scratch);
+    const previous = lane;
+    lane = next;
+    next = previous;
+  }
+  for (let i = 0; i < cost; i += 1) {
+    // The allocation cap bounds N below 2^32, so Integerify needs only the low word.
+    const slot = (lane[words - STATE_WORDS] & (cost - 1)) * words;
+    for (let j = 0; j < words; j += 1) lane[j] ^= history[slot + j];
+    blockMix(lane, next, state, scratch);
+    const previous = lane;
+    lane = next;
+    next = previous;
+  }
+  // The two passes perform 2*N swaps, returning the result to input.
 }
 
 export function workspaceSize(cost, blockSize, parallel) {
@@ -89,16 +112,7 @@ export function derive(password, salt, options) {
     const views = new DataView(data.buffer, data.byteOffset, data.byteLength);
     for (let offset = 0; offset < lanes; offset += stride) {
       for (let i = 0; i < lane.length; i += 1) lane[i] = views.getUint32(offset + i * 4, true);
-      for (let i = 0; i < cost; i += 1) {
-        history.set(lane, i * lane.length);
-        blockMix(lane, reordered, state, scratch);
-      }
-      for (let i = 0; i < cost; i += 1) {
-        // The allocation cap bounds N below 2^32, so Integerify needs only the low word.
-        const slot = (lane[lane.length - STATE_WORDS] & (cost - 1)) * lane.length;
-        for (let j = 0; j < lane.length; j += 1) lane[j] ^= history[slot + j];
-        blockMix(lane, reordered, state, scratch);
-      }
+      romix(lane, reordered, history, state, scratch, cost);
       for (let i = 0; i < lane.length; i += 1) views.setUint32(offset + i * 4, lane[i], true);
     }
     return pbkdf2(key, data, 1, length);

@@ -40,7 +40,31 @@ correspondence, failed calls, workspace erasure and target leakage
 remain separate obligations.
 
 ```sh
-lean -DwarningAsError=true src/crypto/kdf/scrypt/spec/ScryptFunctional.lean
+python -B src/lean/check.py scrypt
 ```
 
 Lean 4.31.0 audits the seven theorem statements with standard Lean axioms.
+
+## Alternating ROMix buffers
+
+Each BlockMix reads one lane and writes the reordered blocks to the other
+buffer. ROMix exchanges the roles after each BlockMix. There are `N` steps
+in the table-fill pass and `N` steps in the lookup pass. For each admissible
+cost, both passes end with the current value in the original lane. The
+Lean model proves the correspondence of the stored rows, the lookup pass,
+and the result in that original lane. The construction theorem composes
+this result with the existing Salsa20/8 and PBKDF2 contracts.
+[Alternating-buffer model](ScryptAlternating.lean)
+
+C, C++, Go, JavaScript, Python, Rust and TypeScript now use this pattern.
+C#, Java, Kotlin and Swift already used it. The change in the seven
+implementations removes `2*N*p` full-lane copies per derivation, equivalent
+to `256*N*r*p` bytes of explicit copy destinations. The ROMix table still
+uses the same space and data-dependent lookups. The proof covers the model
+and the portable implementations are checked by vectors and differential
+tests. Traffic and elapsed time depend on the target and workload.
+[RFC 7914 § 5](https://www.rfc-editor.org/rfc/rfc7914.html#section-5)
+
+Colin Percival, *Stronger Key Derivation via Sequential Memory-Hard
+Functions*, 2009, gives the motivation and formal cost model for ROMix.
+[Original paper](https://www.tarsnap.com/scrypt/scrypt.pdf)

@@ -81,12 +81,15 @@ func romix(lane, table, temporary []byte, cost int) {
 	for i := 0; i < cost; i++ {
 		copy(table[i*stride:(i+1)*stride], lane)
 		blockMix(lane, temporary)
+		lane, temporary = temporary, lane
 	}
 	for i := 0; i < cost; i++ {
 		index := int(binary.LittleEndian.Uint64(lane[stride-64:]) & uint64(cost-1))
 		subtle.XORBytes(lane, lane, table[index*stride:(index+1)*stride])
 		blockMix(lane, temporary)
+		lane, temporary = temporary, lane
 	}
+	// The two passes perform 2*N swaps, returning the result to the caller's lane.
 }
 
 func blockMix(lane, temporary []byte) {
@@ -105,7 +108,6 @@ func blockMix(lane, temporary []byte) {
 			binary.LittleEndian.PutUint32(temporary[dst+4*i:], word)
 		}
 	}
-	copy(lane, temporary)
 }
 
 func quarter(s *[16]uint32, a, b, c, d int) {

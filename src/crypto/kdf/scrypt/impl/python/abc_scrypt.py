@@ -67,12 +67,15 @@ def _romix(lane: memoryview, table: memoryview, temporary: memoryview, cost: int
     for index in range(cost):
         table[index * stride:(index + 1) * stride] = lane
         _blockmix(lane, temporary)
+        lane, temporary = temporary, lane
     for _ in range(cost):
         index = _INTEGER.unpack_from(lane, stride - _WORDS.size)[0] & (cost - 1)
         start = index * stride
         for offset in range(stride):
             lane[offset] ^= table[start + offset]
         _blockmix(lane, temporary)
+        lane, temporary = temporary, lane
+    # The two passes perform 2*N swaps, returning the result to the caller's lane.
 
 
 def _blockmix(lane: memoryview, temporary: memoryview) -> None:
@@ -84,7 +87,6 @@ def _blockmix(lane: memoryview, temporary: memoryview) -> None:
         _salsa8(state)
         index = i // 2 + (i % 2) * (blocks // 2)
         _WORDS.pack_into(temporary, index * _WORDS.size, *state)
-    lane[:] = temporary
 
 
 def _rotate(word: int, count: int) -> int:

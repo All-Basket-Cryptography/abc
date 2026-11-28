@@ -18,7 +18,7 @@
   "subject_ref": "abc:construction:scrypt",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "41debb0a727ac0486d652dc7dd671fa321155f50328c26c0f813c6f2dc01c82f",
+  "source_sha256": "3e09adaae5ea48d65cf74ae09dbf6cc17383a590be4a317dcd784afba3e2ddde",
   "path": "src/crypto/kdf/scrypt/impl/python",
   "languages": [
     "python"

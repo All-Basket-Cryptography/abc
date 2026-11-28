@@ -23,6 +23,18 @@ def ident(name):
     return {"Ident": [name, 0]}
 
 
+def meaningful(block):
+    ignored = {"StorageLive", "StorageDead", "Borrowck"}
+    return [(tag, value) for tag, value in (tagged(stmt["kind"]) for stmt in block["statements"])
+            if tag not in ignored]
+
+
+def local_operand(operand):
+    tag, place = tagged(operand)
+    require(tag in ("Copy", "Move"), "Expected a local move or copy")
+    return place["kind"]["Local"]
+
+
 @dataclass(frozen=True)
 class Expression:
     code: str
@@ -48,6 +60,10 @@ class ScalarLoop:
         functions = [entry for entry in crate["fun_decls"] if entry is not None]
         self.functions = {entry["def_id"]: entry for entry in functions}
         self.type_declarations = {entry["def_id"]: entry for entry in crate["type_decls"] if entry is not None}
+        self.globals = {entry["def_id"]: entry for entry in crate["global_decls"] if entry is not None}
+        (target,) = crate["target_information"]
+        self.pointer_bits = 8 * target["value"]["target_pointer_size"]
+        require(self.pointer_bits in (32, 64), "Unsupported pointer width")
         self.load("multiply", [128, 128])
         named = {local["name"]: local["index"] for local in self.body["locals"]["locals"]
                  if local["name"] is not None}
@@ -82,7 +98,7 @@ class ScalarLoop:
                     require(index not in self.types or self.types[index] == value, "Conflicting LLBC scalar types")
                     self.types[index] = value
                 if (isinstance(value, list) and len(value) == 2 and isinstance(value[0], dict)
-                        and set(value[0]) in ({"Integer"}, {"Bool"})):
+                        and set(value[0]) in ({"Integer"}, {"Bool"}, {"Discriminant"})):
                     require(index not in self.constants or self.constants[index] == value,
                             "Conflicting LLBC scalar constants")
                     self.constants[index] = value
@@ -100,6 +116,8 @@ class ScalarLoop:
         if scalar == "Bool":
             return "Bool"
         width = scalar["Integer"]["Unsigned"]
+        if width == "Usize":
+            return self.pointer_bits
         require(width in ("U128", "U64", "U32"), f"Unsupported LLBC scalar type {scalar}")
         return int(width[1:])
 
@@ -117,23 +135,37 @@ class ScalarLoop:
         return index
 
     def constant(self, reference):
-        tag, data = tagged(reference)
-        require(tag in ("Value", "Deduplicated"), f"Unsupported constant reference: {tag}")
-        value, reference_type = data[1] if tag == "Value" else self.constants[data]
+        value, reference_type = self.constant_data(reference)
         ty = self.scalar_type(reference_type)
         if ty == "Bool":
             require(type(value["Bool"]) is bool, "Unexpected Boolean literal")
             return Expression(str(value["Bool"]).lower(), ty)
         integer, digits = value["Integer"]["Unsigned"]
         number = int(digits)
-        require(integer == f"U{ty}" and 0 <= number < 2**ty, "Unexpected integer literal")
+        require((integer == f"U{ty}" or integer == "Usize" and ty == self.pointer_bits)
+                and 0 <= number < 2**ty, "Unexpected integer literal")
         return Expression(f"{number}#{ty}", ty)
+
+    def constant_data(self, reference):
+        tag, data = tagged(reference)
+        require(tag in ("Value", "Deduplicated"), f"Unsupported constant reference: {tag}")
+        return data[1] if tag == "Value" else self.constants[data]
 
     def operand(self, env, operand):
         tag, data = tagged(operand)
         if tag == "Const":
             return self.constant(data)
         require(tag in ("Copy", "Move"), f"Unsupported LLBC operand: {tag}")
+        place_kind, place = tagged(data["kind"])
+        if place_kind == "Global":
+            decl = self.globals[place["id"]]
+            require(tag == "Copy" and decl["global_kind"] == "NamedConst"
+                    and not any(decl["generics"].values()) and not any(place["generics"].values()),
+                    "Expected an immutable evaluated constant")
+            value = self.constant(decl["value"])
+            require(value.ty == self.scalar_type(decl["ty"]) == self.scalar_type(data["ty"]),
+                    "Mismatched global scalar type")
+            return value
         index = self.local_index(data)
         require(index in env, f"Use of local {index} outside its translated scope")
         return env[index]
@@ -145,12 +177,14 @@ class ScalarLoop:
             return self.operand(env, data[0])
         if tag == "UnaryOp":
             cast, operand = data
-            require(cast == {"Cast": {"Scalar": [{"Integer": {"Unsigned": "U64"}},
-                                                  {"Integer": {"Unsigned": "U128"}}]}},
-                    "Unsupported integer cast")
+            source, destination = (item["Integer"]["Unsigned"] for item in cast["Cast"]["Scalar"])
             value = self.operand(env, operand)
-            require(value.ty == 64, "Unexpected widening operand")
-            return Expression(f"({value.code}.zeroExtend 128)", 128)
+            if (source, destination) == ("U64", "U128"):
+                require(value.ty == 64, "Unexpected widening operand")
+                return Expression(f"({value.code}.zeroExtend 128)", 128)
+            require((source, destination) == ("Usize", "U32") and value.ty == self.pointer_bits,
+                    "Unsupported integer cast")
+            return Expression(f"({value.code}).setWidth 32", 32)
         require(tag == "BinaryOp", f"Unsupported LLBC expression: {tag}")
         operator, lhs, rhs = data
         op, overflow = tagged(operator)
@@ -161,11 +195,19 @@ class ScalarLoop:
             checks.append(f"({rval}).toNat < 128")
             symbol = ">>>" if op == "Shr" else "<<<"
             return Expression(f"({lval} {symbol} ({rval}).toNat)", 128)
-        require(left.ty == right.ty and left.ty in (32, 128), "Binary operand type mismatch")
+        require(left.ty == right.ty and left.ty in (32, 64, 128), "Binary operand type mismatch")
+        if op in ("Gt", "Ge", "Lt", "Le"):
+            require(overflow is None, "Unexpected checked comparison")
+            rel = {"Gt": ">", "Ge": "≥", "Lt": "<", "Le": "≤"}[op]
+            return Expression(f"(decide (({lval}).toNat {rel} ({rval}).toNat))", "Bool")
         if op == "Sub":
             require(overflow == "Panic" and left.ty == 32, "Unexpected checked subtraction")
             checks.append(f"({rval}).toNat ≤ ({lval}).toNat")
             return Expression(f"({lval} - {rval})", 32)
+        if op == "Add":
+            require(overflow == "Panic" and left.ty == 32, "Unexpected checked addition")
+            checks.append(f"({lval}).toNat + ({rval}).toNat < 2^32")
+            return Expression(f"({lval} + {rval})", 32)
         if op == "Mul":
             require(overflow == "Panic" and left.ty == 128, "Unexpected checked multiplication")
             checks.append(f"({lval}).toNat * ({rval}).toNat < 2^128")
@@ -196,6 +238,21 @@ class ScalarLoop:
     def verify_cleanup(self, item):
         require(self.statements(item["on_unwind"]) == [("UnwindResume", None)],
                 "Unexpected cleanup in scalar call")
+
+    def aggregate(self, args, read):
+        constructor, operands = args
+        decl, variant, union = constructor["Adt"]
+        require(union is None, "Unsupported aggregate")
+        if decl["builtin"] == "Tuple" and variant is None and not operands:
+            return ("unit",)
+        path, constructor = self.enum_variant(decl, variant)
+        require(len(constructor["fields"]) == len(operands), "Wrong enum variant arity")
+        return path, constructor["name"], tuple(read(operand) for operand in operands)
+
+    def enum_variant(self, decl, variant):
+        definition = self.type_declarations[decl["id"]]
+        path = tuple(seg["Ident"][0] for seg in name_segments(definition))
+        return path, definition["kind"]["Enum"][variant]
 
     def statements(self, block):
         result = []
@@ -246,6 +303,7 @@ class ScalarLoop:
             "authenticate": ["hash_padded", "hash_padded", "pack_lengths", "encrypt_counter", "finish_tag"],
             "hash_padded": ["hash_block", "hash_block"],
             "open_in_place": ["check_lengths", "authenticate", "tags_match", "apply_payload"],
+            "seal_in_place": ["check_lengths", "apply_payload", "authenticate"],
         }.items():
             found = list(local_calls(self.local_function(name)["body"]))
             require(found == expected, f"Unexpected local call sequence in {name}: {found}")
@@ -278,6 +336,250 @@ class ScalarLoop:
         ended, checks = self.execute(inputs, statements[:-1], black_box)
         require(len(barriers) == 1 and not checks, "Unexpected tag comparison control flow")
         return ended[0].code
+
+    def length_check(self):
+        check = self.local_function("check_lengths")
+        sig = check["signature"]
+        require(not sig["is_unsafe"] and not sig["is_variadic"] and sig["abi"] == "Rust"
+                and not any(check["generics"].values())
+                and [self.scalar_type(ty) for ty in sig["inputs"]] == [64, 64], "Wrong length check signature")
+        body = check["body"]["Structured"]
+        require(body["bound_body_regions"] == 0 and body["locals"]["arg_count"] == 2,
+                "Unexpected length check arguments")
+        self.locals = {local["index"]: self.scalar_type(local["ty"]) if local["index"] != 0
+                       and self.is_scalar(local["ty"]) else None for local in body["locals"]["locals"]}
+
+        def result(items):
+            expected = ("core", "result", "Result")
+            error = ("abc_aes256_gcm", "Error")
+            locals_ = {}
+            require(items[-1] == ("Return", None), "Expected a length result return")
+            for tag, operands in items[:-1]:
+                require(tag == "Assign", "Unexpected statement in a length return")
+                place, raw_value = operands
+                value = raw_value["Aggregate"]
+
+                def read(operand):
+                    kind, source = tagged(operand)
+                    require(kind in ("Copy", "Move"), "Invalid length result operand")
+                    return locals_[source["kind"]["Local"]]
+
+                locals_[place["kind"]["Local"]] = self.aggregate(value, read)
+            returned = locals_[0]
+            if returned == (expected, "Ok", (("unit",),)):
+                return ".ok ()"
+            for rust, lean in [("MessageTooLong", "messageTooLong"), ("AssociatedDataTooLong", "associatedDataTooLong")]:
+                if returned == (expected, "Err", ((error, rust, ()),)):
+                    return f".error .{lean}"
+            raise ValueError("Unexpected length check result")
+
+        def sequence(env, items, indent):
+            for index, (tag, switch) in enumerate(items):
+                if tag == "Switch":
+                    values, checks = self.execute(env, items[:index])
+                    require(not checks, "Unexpected panic guard in length comparison")
+                    data = switch["data"]
+                    condition = self.operand(values, data["scrutinee"]["Value"])
+                    ((value, explicit),) = data["branches"]
+                    case = self.constant(value)
+                    fallback = data["fallback"]
+                    branches = switch["branches"]
+                    require(case.ty == condition.ty == "Bool" and {explicit, fallback} == {0, 1}
+                            and len(branches) == 2, "Expected two length comparison outcomes")
+
+                    def path(number):
+                        branch = self.statements(branches[number])
+                        return sequence(values, branch if branch and branch[-1] == ("Return", None)
+                                        else branch + items[index + 1:], indent + "  ")
+
+                    success, failure = (explicit, fallback) if case.code == "true" else (fallback, explicit)
+                    return f"{indent}if {condition.code} then\n{path(success)}\n{indent}else\n{path(failure)}"
+            return indent + result(items)
+
+        inputs = {1: Expression("aad", 64), 2: Expression("payload", 64)}
+        return sequence(inputs, self.statements(body["body"]), "  ")
+
+    def is_scalar(self, reference):
+        tag, data = tagged(reference)
+        return tag == "Value" and "Scalar" in data[1] or tag == "Deduplicated" and data in self.types
+
+    def api_length_gate(self, name):
+        """Check that `?` branches on the bounds of the two input slices."""
+        body = self.local_function(name)["body"]["Structured"]["body"]
+
+        def assignment(stmt, shape):
+            tag, (place, operation) = stmt
+            require(tag == "Assign", "Expected a length-gate assignment")
+            return place["kind"]["Local"], operation[shape]
+
+        def invocation(stmt, args):
+            tag, item = stmt
+            require(tag == "Call", "Expected a length-gate call")
+            call = item["call"]
+            require([local_operand(arg) for arg in call["args"]] == args
+                    and meaningful(item["on_unwind"]) == [("UnwindResume", None)],
+                    "Unexpected length gate call dataflow or cleanup")
+            callee = self.functions[call["func"]["Regular"]["kind"]["Fun"]]
+            return call["dest"]["kind"]["Local"], callee
+
+        top = meaningful(body)
+        payload_locals = []
+        for start, source in [(0, 3), (3, 4)]:
+            dst, borrow = assignment(top[start], "Ref")
+            require(borrow["kind"] == "Shared", "Length gate must read a shared slice")
+            for place, projection in [(borrow["place"], "Deref"),
+                                      (borrow["ptr_metadata"]["Copy"], "PtrMetadata")]:
+                origin, field = place["kind"]["Projection"]
+                require(field == projection and origin["kind"]["Local"] == source,
+                        "Length gate must read the complete API slice")
+            native, length = invocation(top[start + 1], [dst])
+            length_path = name_segments(length)
+            require(length_path[:2] == [ident("core"), ident("slice")] and length_path[-1] == ident("len"),
+                    "Expected the standard slice length")
+            cast_to, (cast, value) = assignment(top[start + 2], "UnaryOp")
+            require(cast == {"Cast": {"Scalar": [{"Integer": {"Unsigned": "Usize"}},
+                                                  {"Integer": {"Unsigned": "U64"}}]}}
+                    and local_operand(value) == native, "Expected the usize to u64 length cast")
+            payload_locals.append(cast_to)
+        checked, checker = invocation(top[6], payload_locals)
+        require(checker is self.local_function("check_lengths"), "Wrong bounds function")
+        discriminant, conversion = invocation(top[7], [checked])
+        conversion_path = name_segments(conversion)
+        require(conversion_path[:2] == [ident("core"), ident("result")] and conversion_path[-1] == ident("branch"),
+                "Expected the Result::branch conversion")
+
+        tag, switch = top[8]
+        require(tag == "Switch", "Length validation must branch before payload work")
+        data = switch["data"]
+        require(data["scrutinee"]["Discriminant"]["kind"]["Local"] == discriminant and data["fallback"] is None,
+                "Length gate must branch on the bounds result")
+        routes = {}
+        for pattern, index in data["branches"]:
+            value, _ = self.constant_data(pattern)
+            declaration, variant = value["Discriminant"]
+            path, constructor = self.enum_variant(declaration, variant)
+            require(path == ("core", "ops", "control_flow", "ControlFlow"), "Expected the ControlFlow result")
+            routes[constructor["name"]] = (variant, meaningful(switch["branches"][index]))
+        require(set(routes) == {"Continue", "Break"} and not routes["Continue"][1],
+                "Length success must fall through")
+
+        variant, failed = routes["Break"]
+        require(len(failed) == 4 and failed[-1] == ("Return", None), "Bounds error must return directly")
+        residual, (operand, initial) = assignment(failed[0], "Use")
+        root, field = operand["Copy"]["kind"]["Projection"]
+        require(initial == "Yes" and root["kind"]["Local"] == discriminant and field == {"Field": [variant, 0]},
+                "Wrong error residual projection")
+        moved, (operand, initial) = assignment(failed[1], "Use")
+        require(initial == "Yes" and local_operand(operand) == residual, "Wrong error residual forwarding")
+        returned, failure = invocation(failed[2], [moved])
+        failure_path = name_segments(failure)
+        require(returned == 0 and failure_path[:2] == [ident("core"), ident("result")]
+                and failure_path[-1] == ident("from_residual"), "Expected forwarding the Result's error")
+
+    def payload_counter(self):
+        declaration = self.local_function("apply_payload")
+        body = declaration["body"]["Structured"]
+        require(body["locals"]["arg_count"] == 3, "Wrong payload function arity")
+        self.locals = {local["index"]: self.scalar_type(local["ty"]) for local in body["locals"]["locals"]
+                       if self.is_scalar(local["ty"]) and self.scalar_width_supported(local["ty"])}
+
+        def assignment(stmt, kind):
+            tag, (place, value) = stmt
+            require(tag == "Assign", "Expected a payload-loop assignment")
+            return place["kind"]["Local"], value[kind]
+
+        def reference(stmt, kind, source, projection=None):
+            destination, ref = assignment(stmt, "Ref")
+            expected = {"Local": source}
+            if projection is not None:
+                parent, field = ref["place"]["kind"]["Projection"]
+                require(field == projection and parent["kind"] == expected, "Unexpected payload-loop projection")
+            else:
+                require(ref["place"]["kind"] == expected, "Unexpected payload-loop reborrow")
+            require(ref["kind"] == kind, "Unexpected payload-loop reference kind")
+            return destination, ref
+
+        def call(stmt, expected_prefix, expected_name):
+            tag, item = stmt
+            require(tag == "Call" and meaningful(item["on_unwind"]) == [("UnwindResume", None)],
+                    "Expected a payload-loop call with ordinary cleanup")
+            invoked = item["call"]
+            function = self.functions[invoked["func"]["Regular"]["kind"]["Fun"]]
+            names = name_segments(function)
+            require(names[:len(expected_prefix)] == list(map(ident, expected_prefix))
+                    and names[-1] == ident(expected_name), f"Unexpected payload-loop call: {expected_name}")
+            return invoked["dest"]["kind"]["Local"], invoked["args"]
+
+        def sole_arg(operands, expected):
+            require([local_operand(arg) for arg in operands] == [expected], "Wrong payload-loop input")
+
+        top = meaningful(body["body"])
+        require(len(top) == 9 and top[6][0] == "Loop" and top[-1] == ("Return", None),
+                "Expected one payload-block loop")
+        for position in (0, 7):
+            destination, unit = assignment(top[position], "Aggregate")
+            require(destination == 0 and self.aggregate(unit, local_operand) == ("unit",),
+                    "Expected the payload unit result")
+        retained, buffer = reference(top[1], "TwoPhaseMut", 3, "Deref")
+        metadata, projection = buffer["ptr_metadata"]["Copy"]["kind"]["Projection"]
+        require(metadata["kind"] == {"Local": 3} and projection == "PtrMetadata", "Expected the full input slice")
+        chunked, (slice_, width) = call(top[2], ("core", "slice"), "chunks_mut")
+        require(local_operand(slice_) == retained and self.operand({}, width) == Expression(f"16#{self.pointer_bits}", self.pointer_bits),
+                "Expected the full slice split into 16-byte chunks")
+        enumerated, args = call(top[3], ("core", "iter", "traits", "iterator", "Iterator"), "enumerate")
+        sole_arg(args, chunked)
+        into_iter, args = call(top[4], ("core", "iter", "traits", "collect"), "into_iter")
+        sole_arg(args, enumerated)
+        iter_, (operand, initial) = assignment(top[5], "Use")
+        require(initial == "Yes" and local_operand(operand) == into_iter, "Expected the enumerated chunks iterator")
+
+        loop = meaningful(top[6][1])
+        borrowed, _ = reference(loop[0], "Mut", iter_)
+        arg, _ = reference(loop[1], "TwoPhaseMut", borrowed, "Deref")
+        next_item, args = call(loop[2], ("core", "iter", "adapters", "enumerate"), "next")
+        sole_arg(args, arg)
+        switch = loop[3][1]
+        control = switch["data"]
+        require(loop[3][0] == "Switch" and control["fallback"] is None
+                and control["scrutinee"]["Discriminant"]["kind"] == {"Local": next_item},
+                "Expected the enumerated item switch")
+        routes = {}
+        for pattern, branch in control["branches"]:
+            declaration, variant = self.constant_data(pattern)[0]["Discriminant"]
+            path, constructor = self.enum_variant(declaration, variant)
+            require(path == ("core", "option", "Option"), "Expected the iterator's Option return")
+            routes[constructor["name"]] = variant, meaningful(switch["branches"][branch])
+        require(set(routes) == {"None", "Some"} and routes["None"][1] == [("Break", 0)] and not routes["Some"][1],
+                "Expected processing only an available chunk")
+
+        index, (operand, initial) = assignment(loop[4], "Use")
+        tuple_, component = operand["Copy"]["kind"]["Projection"]
+        option, field = tuple_["kind"]["Projection"]
+        require(initial == "Yes" and component == {"Field": [None, 0]} and option["kind"] == {"Local": next_item}
+                and field == {"Field": [routes["Some"][0], 0]} and self.locals[index] == self.pointer_bits,
+                "Expected the first field of the enumerated chunk")
+        chunk, (operand, initial) = assignment(loop[5], "Use")
+        tuple_, component = operand["Move"]["kind"]["Projection"]
+        option, field = tuple_["kind"]["Projection"]
+        require(initial == "Yes" and component == {"Field": [None, 1]} and option["kind"] == {"Local": next_item}
+                and field == {"Field": [routes["Some"][0], 0]} and chunk not in self.locals,
+                "Expected the second field of the enumerated chunk")
+        aes, _ = reference(loop[6], "Shared", 1, "Deref")
+        nonce, _ = reference(loop[7], "Shared", 2, "Deref")
+        counter_call, = [i for i, (tag, _) in enumerate(loop[8:], 8) if tag == "Call" and
+                         loop[i][1]["call"]["func"]["Regular"]["kind"]["Fun"] == self.local_function("encrypt_counter")["def_id"]]
+        _, (aes_arg, nonce_arg, counter_arg) = call(loop[counter_call], ("abc_aes256_gcm",), "encrypt_counter")
+        require(local_operand(aes_arg) == aes and local_operand(nonce_arg) == nonce, "Wrong CTR block arguments")
+        input_ = Expression(f"(BitVec.ofNat {self.pointer_bits} index)", self.pointer_bits)
+        values, checks = self.execute({index: input_}, loop[8:counter_call])
+        output = self.operand(values, counter_arg)
+        require(output.ty == 32 and checks, "Expected a checked u32 payload counter")
+        return f"if {' ∧ '.join(checks)} then some {output.code} else none"
+
+    def scalar_width_supported(self, reference):
+        tag, data = tagged(reference)
+        scalar = (data[1] if tag == "Value" else self.types[data])["Scalar"]
+        return scalar == "Bool" or scalar.get("Integer", {}).get("Unsigned") in ("Usize", "U32", "U64", "U128")
 
     def open_gate(self):
         """Check the straight-line open tail and its two-way result switch."""
@@ -331,17 +633,7 @@ class ScalarLoop:
                             "Expected the complete input slice")
                 value = (args["kind"], target)
             elif tag == "Aggregate":
-                constructor, operands = args
-                decl, variant, union = constructor["Adt"]
-                require(union is None, "Unsupported open aggregate")
-                if decl["builtin"] == "Tuple" and variant is None and not operands:
-                    value = ("unit",)
-                else:
-                    definition = self.type_declarations[decl["id"]]
-                    ptr = tuple(seg["Ident"][0] for seg in name_segments(definition))
-                    constructor = definition["kind"]["Enum"][variant]
-                    require(len(constructor["fields"]) == len(operands), "Wrong open variant arity")
-                    value = (ptr, constructor["name"], tuple(read(env, operand) for operand in operands))
+                value = self.aggregate(args, lambda operand: read(env, operand))
             else:
                 raise ValueError(f"Unsupported assignment in open gate: {tag}")
             index = local(destination)
@@ -528,6 +820,10 @@ class ScalarLoop:
         cutpoints = "\n\n".join(self.straight_line(name, *shape) for name, shape in self.CUTPOINTS.items())
         comparison = self.comparison()
         accepted = self.open_gate()
+        length_check = self.length_check()
+        for name in ("seal_in_place", "open_in_place"):
+            self.api_length_gate(name)
+        counter = self.payload_counter()
         return f"""import Std
 
 namespace Abc.Extracted.Ghash
@@ -564,6 +860,17 @@ def multiply (_input _key : BitVec 128) : Option (BitVec 128) :=
 
 def tags_match (_actual _expected : BitVec 128) : Bool :=
   {comparison}
+
+inductive LengthError where
+  | messageTooLong
+  | associatedDataTooLong
+  deriving DecidableEq, Repr
+
+def check_lengths (aad payload : BitVec 64) : Except LengthError Unit :=
+{length_check}
+
+def payload_counter (index : Nat) : Option (BitVec 32) :=
+  {counter}
 
 -- The validator resolves both returns and the unique mutable payload call.
 def open_gate {{α : Type}} (applyPayload : α → α) (ciphertext : α)

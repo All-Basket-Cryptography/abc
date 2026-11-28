@@ -35,6 +35,12 @@ proof also composes those two source-linked operations with the rate and
 padding models for SHA3-256 and SHAKE256.
 [Rust source refinement](KeccakSourceRefinement.lean) · [Reproduction and receipt](../../../../../tools/verification/keccak/README.md)
 
+The Rust wrapper replay checks the SHA3-256 byte digest, and the SHAKE256
+finalizer through its first encoded rate block. Lean checks all domain
+padding cases, including a tail of 135 bytes, and proves reads from the
+finalized SHAKE256 state agree with FIPS for every finite read partition.
+[Wrapper refinements](KeccakWrapperSourceRefinement.lean) · [Reader refinements](KeccakReaderSourceRefinement.lean)
+
 The ECMAScript implementation reuses private permutation work arrays and
 uses three linear parts for each chi row. Lean relates both neighbor
 indices in each of those parts to the modulo-ten definition for every

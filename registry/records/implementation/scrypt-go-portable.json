@@ -18,7 +18,7 @@
   "subject_ref": "abc:construction:scrypt",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "deecdd7affbe473d56ebe5dde9b3f5393ce936a08157ccfc1d6e18909ebf42a1",
+  "source_sha256": "6af5c9b17a10ab11edfdeb106e129a3755cc5729e2b8d677a23d1035276882c6",
   "path": "src/crypto/kdf/scrypt/impl/go",
   "languages": [
     "go"

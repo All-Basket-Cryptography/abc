@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <array>
 #include <limits>
+#include <utility>
 
 namespace abc::native_scrypt {
 namespace {
@@ -82,7 +83,7 @@ void salsa8(Words& input) noexcept {
     }
 }
 
-void block_mix(std::uint8_t* lane, std::size_t width, std::uint8_t* temp) noexcept {
+void block_mix(const std::uint8_t* lane, std::size_t width, std::uint8_t* temp) noexcept {
     Words chain;
     const auto last = lane + width - 64;
     for (std::size_t i = 0; i < chain.size(); ++i) {
@@ -99,7 +100,6 @@ void block_mix(std::uint8_t* lane, std::size_t width, std::uint8_t* temp) noexce
             store_le(destination + 4 * i, chain[i]);
         }
     }
-    std::copy_n(temp, width, lane);
 }
 
 void mix_lane(std::uint8_t* lane, std::size_t width, std::uint8_t* table, std::uint8_t* temp,
@@ -107,6 +107,7 @@ void mix_lane(std::uint8_t* lane, std::size_t width, std::uint8_t* table, std::u
     for (std::size_t row = 0; row < n; ++row) {
         std::copy_n(lane, width, table + row * width);
         block_mix(lane, width, temp);
+        std::swap(lane, temp);
     }
     for (std::size_t visit = 0; visit < n; ++visit) {
         const auto last = lane + width - 64;
@@ -117,7 +118,9 @@ void mix_lane(std::uint8_t* lane, std::size_t width, std::uint8_t* table, std::u
             lane[i] ^= selected[i];
         }
         block_mix(lane, width, temp);
+        std::swap(lane, temp);
     }
+    // The two passes perform 2*N swaps, returning the result to the caller's lane.
 }
 
 bool overlap(const std::uint8_t* left, std::size_t left_size,

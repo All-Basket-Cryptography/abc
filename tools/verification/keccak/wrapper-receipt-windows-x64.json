@@ -1,0 +1,149 @@
+{
+  "status": "sha3_digest_and_shake_reader_source_checked",
+  "target": "x86_64-pc-windows-msvc",
+  "charon": "0.1.254 (b104e24fea7d721b71e6c39fd70f26ff20bc0980)",
+  "charon_executable_sha256": "38ec811d2402a6ada748665486111192de9cfb5c3571d57aeb94f57b62b3ab02",
+  "rust": "rustc 1.100.0-nightly (8fa1c96cf 2026-08-17)\nbinary: rustc\ncommit-hash: 8fa1c96cfd489e4c27654c144ae871ce2c4db6c6\ncommit-date: 2026-08-17\nhost: x86_64-pc-windows-msvc\nrelease: 1.100.0-nightly\nLLVM version: 23.1.0",
+  "lean": "Lean (version 4.31.0, x86_64-w64-windows-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)",
+  "sources": {
+    "tools/verification/probe/toolchain-candidate.json": "6953b42492bff08a40479725fec7ce922002bfdbe715afcaedf4f817f7621249",
+    "src/lean/lean-toolchain": "efac0b94923b2d8b6840cd35be9177ad0fc5ab2332f4f4311c98712cee92fdee",
+    "tools/build/rust/Cargo.toml": "9e8dd7579ad780836ce80f3a00639b171926d3435e15e3eb274c4fd67eb0d8f4",
+    "tools/build/rust/Cargo.lock": "a3ee8405943bef38fef4f8127d96032013d10bc082ae0cb6ff9ccbd855178b5c",
+    "src/crypto/hash/keccak-p1600/impl/rust/Cargo.toml": "8abad62da43ddea38d09f5fe123c02a562ea0cf8c3443d5ca0dcab031bc45f5f",
+    "src/crypto/hash/keccak-p1600/impl/rust/src/lib.rs": "d38da0e66e9233f145cd94e39e07ad20f4727a5500229f521de477a0745a32d5",
+    "src/crypto/hash/sha3-256/impl/rust/Cargo.toml": "0a6caa15ca8b4df5aea45978ba6ed0f5234e7303845fc3559e645a49caacfb18",
+    "src/crypto/hash/sha3-256/impl/rust/src/lib.rs": "1e4e4aa525d822a112975386f1ac5d4b35078677e08ad5a594f59f660d0693bc",
+    "src/crypto/hash/shake256/impl/rust/Cargo.toml": "31ef43be19fc7a97b0e1e81dc0c2a6a40faff9ee971fc6452e01b0ab2bc707c8",
+    "src/crypto/hash/shake256/impl/rust/src/lib.rs": "90236a819e4e7f50bd71a78d85707ce0de11ebd95d29af89e74541f62be08969",
+    "src/crypto/hash/keccak-p1600/spec/KeccakRound.lean": "73f5cb603334b2d310e67dd674b83d2676f8fe680d3c7e0fa7429fb05ce3be99",
+    "src/crypto/hash/keccak-p1600/spec/KeccakSourceRefinement.lean": "e957f9568dee455c0abe9b8f8135f1556dd1c0b9f58101d7f59addca25c9529d",
+    "src/crypto/hash/keccak-p1600/spec/KeccakReader.lean": "95fb39e267b3bf99b4c18cce68a24e49771ae3d4069f7ea79d06f9ca222a35f5",
+    "src/crypto/hash/keccak-p1600/spec/KeccakSpongeRead.lean": "a5300ebc07cd398d76aa30f93ef96e01fee562ff78193471126333515f4108ff",
+    "src/crypto/hash/keccak-p1600/spec/KeccakWrapperSourceRefinement.lean": "1747161a793c5dacbe15630de04f80437c7bd010bb0d49e42b6dfe921eb2556f",
+    "src/crypto/hash/keccak-p1600/spec/KeccakReaderSourceRefinement.lean": "5b8985f38a70e459c16baad0a68ebdd87e0de41984458034bdb29d0a01658935",
+    "tools/verification/keccak/llbc.py": "a71a02fd13ee906be1d484a334c5c3f82ff2eb32e9c03a5ed3343d0b3425a75f",
+    "tools/verification/keccak/check_source.py": "b0f7a015fc7d7511f25b0c0c2b2547aecef4b969c6b8cf4e473cdab12eb093ea",
+    "tools/verification/keccak/wrapper_llbc.py": "217ab009f42ebefa71ec2d8e6b9c807673ae1ee889985628492a78b6ded24101",
+    "tools/verification/keccak/reader_llbc.py": "ea4328442952a7484f433b0613cbba40f06ed701d9f87b5180b8bb3fbbab0cd2",
+    "tools/verification/keccak/check_wrappers.py": "7dd41df92c13936113751bfff0830ab89e7fa3d99e2278e1530624dc0292d19d"
+  },
+  "extractions": {
+    "keccak": {
+      "sha256": "2922d9034e5de228c33843ed64af4131e207a22be2bd6836adee584e5e514b73",
+      "used_default_sysroot_fallback": true
+    },
+    "sha3-256": [
+      {
+        "sha256": "d252c2400c23f65d0e1ce54c755606ee59b76a20af2252edf547cab6206c2793",
+        "used_default_sysroot_fallback": true
+      },
+      {
+        "sha256": "f1b6e1369a1e5dc127c40e699b4dcca6fcb085baa57de663f4b439dda4bd6c83",
+        "used_default_sysroot_fallback": true
+      }
+    ],
+    "shake256": [
+      {
+        "sha256": "b5a2f94eca0643e3831b52033b717d467a382760baa6e13907ad411a42496df3",
+        "used_default_sysroot_fallback": true
+      },
+      {
+        "sha256": "ff64f770da793d57aded2655393e72d5f68db4b9395ee358d32ad190b26c1f8c",
+        "used_default_sysroot_fallback": true
+      }
+    ]
+  },
+  "generated_lean_sha256": {
+    "keccak": "7124531af7e37bbe704971afa2688a619e0ae8a77b69876a29c38a06c9d2e9b7",
+    "wrapper": "7e9515f367b815d78b3f7341384e6e32f554ea9a043c87759c3627282a97c663",
+    "reader": "7646f69b3277581e345fdaf46522dfc98f710b238fc40dc1e8532ee78ef8c52b"
+  },
+  "audited_theorems": {
+    "sourceSha3Padding_refines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "sourceShakePadding_refines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "sourceSha3Wire_refines": [
+      "propext"
+    ],
+    "sourceShakeWire_refines": [
+      "propext"
+    ],
+    "sourceSha3Digest_bits": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "sourceShakeFinalize_bits": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "sourceReadRefresh_refines": [],
+    "sourceReady_refines": [],
+    "sourceReadCount_refines": [
+      "propext"
+    ],
+    "sourceReadRange_refines": [
+      "propext"
+    ],
+    "sourceAfter_refines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "sourceSpan_refines": [
+      "propext"
+    ],
+    "sourceRead_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "sourceShakeRead_bits": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "sourceReadTrace_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "sourceShakeReadTrace_bits": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "negative_controls": {
+    "sha3_domain": {
+      "rust_sha256": "ebe78c89d839d444d4e98824ad2e52915365512ce572ee1106eb18ff8bc91936",
+      "llbc_sha256": "4e52ccd438e253bebf82cad90aead9cf375be6a33f21889cd6b9e039d9901c72",
+      "lean_sha256": "80832260cd0fe4cde6dd1b9b4f67bb7187b514cd62cc16b233f70d9d5e3157b5",
+      "rejected_theorem": "sourceSha3Padding_refines"
+    },
+    "shake_domain": {
+      "rust_sha256": "17a1fbfbbed564cf50e3b747acd7c44d1106e223875501e39c2c809b0314dbad",
+      "llbc_sha256": "b538a7c266103ac36ee60330ac3f99951a749cdc3565e9b917bc26f755f389d9",
+      "lean_sha256": "5fcc75bee0fdb3619ca64ee1856a46aba31e049e16bc97171c3de06cbf268665",
+      "rejected_theorem": "sourceShakePadding_refines"
+    },
+    "shake_wire_endianness": {
+      "rust_sha256": "78b78445a4d102de7f1c0623c33baaaed902dfaede570fdf12640a3c452df83b",
+      "llbc_sha256": "fdbc44f6bbc5798681b6eb5d92fe6deefb08df1c64e09ceb5ede38467ad19374",
+      "lean_sha256": "6ae01328aeb5fd15331bfb5205b1b83eb760b226985e7db07f56fcc29c279d98",
+      "rejected_theorem": "sourceShakeWire_refines"
+    },
+    "shake_refresh": {
+      "rust_sha256": "1c808ad9884fdb442bfc516b3841501f418087586dac6ed8b364507a6c963387",
+      "llbc_sha256": "28c851ef230d96cfcbf86bbd3aa48696b30d369cfa0d9809e24c0e14cc3d0db3",
+      "lean_sha256": "5d5545d762ea266f28457883287620995fc73cd184de1d7bc90e1effaff9098e",
+      "rejected_theorem": "sourceReadRefresh_refines"
+    }
+  }
+}

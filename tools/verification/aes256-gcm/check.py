@@ -41,6 +41,12 @@ THEOREMS = {
     "Abc.Refine.Ghash.source_open_gate_refines",
     "Abc.Refine.Ghash.source_open_reject_preserves",
     "Abc.Refine.Ghash.source_authentication_gate_refines",
+    "Abc.Refine.Ghash.source_length_limits_exact",
+    "Abc.Refine.Ghash.source_length_limit_edges",
+    "Abc.Refine.Ghash.source_payload_counter_refines",
+    "Abc.Refine.Ghash.source_payload_counter_edges",
+    "Abc.Refine.Ghash.source_admitted_counter_safe",
+    "Abc.Refine.Ghash.source_open_with_models_refines",
 }
 ALLOWED = {"propext", "Classical.choice", "Quot.sound"}
 AXIOM_LINE = re.compile(r"^'([^']+)' (?:depends on axioms:\s*\[([^\]]*)\]|does not depend on any axioms)$", re.M)
@@ -109,13 +115,14 @@ def check(options, run):
     target = next(line.removeprefix("host: ") for line in rust.splitlines() if line.startswith("host: "))
     lean = exec_local("lean-version", [options.lean, "--version"]).stdout.strip()
     require(f"version {pins['lean'].split(':v')[-1]}," in lean, "Lean version does not match the repository pin")
-    selections = ["--preset=aeneas", "--start-from", "crate::open_in_place"]
+    selections = ["--preset=aeneas", "--consts", "values", "--start-from", "crate::open_in_place",
+                  "--start-from", "crate::seal_in_place"]
     cargo = ["--locked", "--offline", "--lib", "--no-default-features", "--target", target]
 
     def extract(label):
         directory = run / label
         directory.mkdir()
-        ir = directory / "open-in-place.llbc"
+        ir = directory / "portable-api.llbc"
         exec_local(f"{label}-charon",
                    [options.charon, "cargo", *selections, "--dest-file", ir, "--", *cargo],
                    cwd=CRATE, environment={**env, "CARGO_TARGET_DIR": str(directory / "target")})
@@ -156,7 +163,7 @@ def check(options, run):
                 f"Lean did not reject the {label} at {theorem}")
         return {"status": "rejected", "changed_model_sha256": digest(source), "log": f"reject-{label}.log"}
 
-    negative = footer_negative = tag_negative = gate_negative = None
+    negative = footer_negative = tag_negative = gate_negative = length_negative = counter_negative = None
     if options.check_mutant:
         reduction = list(locate(llbc, ["U128", REDUCTION]))
         require(len(reduction) == 1, "Expected one extracted reduction literal")
@@ -193,6 +200,23 @@ def check(options, run):
         (_, explicit), = gate["branches"]
         gate["branches"][0][1], gate["fallback"] = gate["fallback"], explicit
         gate_negative = test_negative("gate-mutant", "unsolved goals", "source_open_gate_refines")
+        gate["branches"][0][1], gate["fallback"] = explicit, gate["branches"][0][1]
+
+        bounds = closure.local_function("check_lengths")["body"]["Structured"]["body"]
+        comparisons = [stmt["kind"]["Assign"][1]["BinaryOp"] for stmt in bounds["statements"]
+                       if isinstance(stmt["kind"], dict) and "Assign" in stmt["kind"]
+                       and "BinaryOp" in stmt["kind"]["Assign"][1]]
+        require(len(comparisons) == 1 and comparisons[0][0] == "Gt", "Expected the leading payload limit test")
+        comparisons[0][0] = "Ge"
+        length_negative = test_negative("length-mutant", "Application type mismatch", "source_length_limit_edges")
+        comparisons[0][0] = "Gt"
+
+        ctr = closure.local_function("apply_payload")["body"]
+        offset = list(locate(ctr, ["U32", "2"]))
+        require(len(offset) == 1, "Expected one start-counter literal in the payload loop")
+        offset[0][1] = "1"
+        counter_negative = test_negative("counter-mutant", "Tactic `decide` proved that the proposition",
+                                         "source_payload_counter_edges")
 
     return {
         "status": "source_llbc_refinement_checked", "target": target, "charon": charon,
@@ -201,6 +225,7 @@ def check(options, run):
         "first": first, "second": second, "theorems": provenance, "negative_check": negative,
         "footer_negative_check": footer_negative,
         "tag_negative_check": tag_negative, "gate_negative_check": gate_negative,
+        "length_negative_check": length_negative, "counter_negative_check": counter_negative,
     }
 
 
