@@ -16,6 +16,7 @@ from tools.catalog.abc_status import read_json
 REQUIRED_METADATA = {"repository-assurance:registry", "repository-assurance:status"}
 SHA = re.compile(r"[a-f0-9]{40}\Z")
 BASELINE_ENTRY = "tools/verification/abc_ci.py"
+REVIEWED_PATHS = {"abc.py", "docs/security/trust-and-source-policy.md"}
 BOOTSTRAP_CHECKS = (
     ("-m", "tools.abc_cli", "registry", "validate", "--strict"),
     ("-m", "unittest", "discover", "-s", "tools/tests/fixtures/registry", "-p", "test_*.py"),
@@ -65,7 +66,7 @@ def _plan(repo, base, head):
     changes = subprocess.check_output(["git", "diff", "--name-only", "-z", "--no-renames", plan["base_revision"], head], cwd=repo)
     guarded = (".github/", "security/", "assurance/", "schemas/", "tools/", "registry/policy/", "registry/schemas/")
     changed = [name for name in changes.decode().split("\0") if name]
-    protected = sorted(name for name in changed if name == "abc.py" or name.startswith(guarded) or name.endswith("module.toml"))
+    protected = sorted(name for name in changed if name in REVIEWED_PATHS or name.startswith(guarded) or name.endswith("module.toml"))
     if protected:
         raise ValueError(f"Independent review required for assurance changes: {', '.join(protected)}")
     if len(plan["selected_tasks"]) > 256:
@@ -97,9 +98,27 @@ def gate(plan, downloaded):
     return {"status": "passed", "domain": "untrusted-pr", "matrix_jobs": len(expected)}
 
 
+def _baseline_smoke(repo, base, head, output):
+    if base != head:
+        raise ValueError("A baseline smoke run requires the same base and head revision")
+    plan = _plan(repo, base, head)
+    output = output.resolve()
+    output.mkdir(parents=True, exist_ok=False)
+    plan_path = output / "plan.json"
+    plan_path.write_text(json.dumps(plan), encoding="utf-8")
+    receipts = output / "receipts"
+    for target in plan["selected_tasks"]:
+        directory = receipts / f"abc-task-{_digest(target)}"
+        receipt = execute(repo, plan_path, directory, "untrusted-pr", target=target)
+        if receipt["status"] != "passed":
+            raise ValueError(f"Baseline smoke task failed: {target}")
+    checked = gate(plan, receipts)
+    return {**checked, "status": "advisory-passed", "revision": head}
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=("bootstrap", "plan", "worker", "gate"))
+    parser.add_argument("mode", choices=("bootstrap", "baseline-smoke", "plan", "worker", "gate"))
     parser.add_argument("--repo", type=Path, required=True)
     parser.add_argument("--base", required=True)
     parser.add_argument("--head", required=True)
@@ -110,6 +129,11 @@ def main():
         repo = args.repo.resolve()
         if args.mode == "bootstrap":
             print(json.dumps(_bootstrap(repo, args.base, args.head)))
+            return 0
+        if args.mode == "baseline-smoke":
+            if args.directory is None:
+                raise ValueError("A baseline smoke run requires an output directory")
+            print(json.dumps(_baseline_smoke(repo, args.base, args.head, args.directory)))
             return 0
         plan = _plan(repo, args.base, args.head)
         if args.mode == "plan":

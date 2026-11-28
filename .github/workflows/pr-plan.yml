@@ -4,17 +4,20 @@ on:
   pull_request:
   merge_group:
     types: [checks_requested]
+  push:
+    branches: [main]
 
 permissions:
   contents: read
 
 concurrency:
-  group: abc-pr-${{ github.event.pull_request.number || github.event.merge_group.head_ref }}
+  group: abc-assurance-${{ github.event.pull_request.number || github.event.merge_group.head_ref || github.ref }}
   cancel-in-progress: true
 
 env:
-  EVENT_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
-  EVENT_HEAD: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
+  # A push verifies the baseline itself. PRs still use their actual base and head.
+  EVENT_BASE: ${{ github.event_name == 'push' && github.sha || github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+  EVENT_HEAD: ${{ github.event_name == 'push' && github.sha || github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
 
 jobs:
   plan:
@@ -71,6 +74,15 @@ jobs:
           python-version: '3.13.14'
       - name: Run candidate registry and standalone fixtures
         run: python -B -m tools.verification.abc_ci bootstrap --repo . --base "$EVENT_BASE" --head "$EVENT_HEAD"
+      - name: Rehearse the initial baseline at the candidate revision
+        run: python -B -m tools.verification.abc_ci baseline-smoke --repo . --base "$EVENT_HEAD" --head "$EVENT_HEAD" --directory "$RUNNER_TEMP/abc-baseline-smoke"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ always() }}
+        with:
+          name: abc-bootstrap-rehearsal
+          path: ${{ runner.temp }}/abc-baseline-smoke
+          if-no-files-found: warn
+          retention-days: 7
 
   modules:
     needs: plan
@@ -81,13 +93,13 @@ jobs:
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     uses: ./.github/workflows/module-check.yml
     with:
-      base: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
-      head: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
+      base: ${{ github.event_name == 'push' && github.sha || github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+      head: ${{ github.event_name == 'push' && github.sha || github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
       target: ${{ matrix.target }}
       artifact: ${{ matrix.artifact }}
 
   abc-required:
-    name: abc-required
+    name: ${{ github.event_name == 'push' && 'abc-main-baseline' || 'abc-required' }}
     if: ${{ always() }}
     needs: [plan, modules, bootstrap-advisory]
     runs-on: ubuntu-24.04

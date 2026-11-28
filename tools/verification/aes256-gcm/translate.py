@@ -872,6 +872,122 @@ class ScalarLoop:
             return "nonce ++ counter"
         return "nonce ++ (counter.extractLsb' 0 8 ++ counter.extractLsb' 8 8 ++\n    counter.extractLsb' 16 8 ++ counter.extractLsb' 24 8)"
 
+    def authenticate_word(self):
+        """Bind AES, GHASH, footer and tag-mask inputs to the actual authentication calls."""
+        function = self.local_function("authenticate")
+        body = function["body"]["Structured"]
+        require(body["locals"]["arg_count"] == 4 and self.scalar_type(function["signature"]["output"]) == 128,
+                "Wrong authentication signature")
+        statements = iter(meaningful(body["body"]))
+        inputs = {3: "aad", 4: "ciphertext"}
+
+        def take(tag):
+            actual, value = next(statements)
+            require(actual == tag, f"Expected authentication {tag}, got {actual}")
+            return value
+
+        def assignment(operation):
+            place, value = take("Assign")
+            return place["kind"]["Local"], value[operation]
+
+        def borrow(kind, source=None, *, deref=False, slice_=False):
+            destination, ref = assignment("Ref")
+            place = ref["place"]
+            if deref:
+                place, field = place["kind"]["Projection"]
+                require(field == "Deref", "Expected authentication dereference")
+            origin = place["kind"]["Local"]
+            require(ref["kind"] == kind and (source is None or origin == source), "Wrong authentication borrow")
+            if slice_:
+                base, metadata = ref["ptr_metadata"]["Copy"]["kind"]["Projection"]
+                require(metadata == "PtrMetadata" and base["kind"] == {"Local": origin} and origin in inputs,
+                        "Expected a full authentication input slice")
+            else:
+                require("Const" in ref["ptr_metadata"], "Expected sized authentication storage")
+            return destination, origin
+
+        def copy(source):
+            destination, (operand, initial) = assignment("Use")
+            require(initial == "Yes" and "Copy" in operand and local_operand(operand) == source,
+                    "Wrong authentication source value")
+            return destination
+
+        def invoke(prefix, method, *, cleanup=(("UnwindResume", None),)):
+            item = take("Call")
+            require(meaningful(item["on_unwind"]) == list(cleanup), "Unexpected authentication cleanup")
+            call = item["call"]
+            pointer = call["func"]["Regular"]
+            name = name_segments(self.functions[pointer["kind"]["Fun"]])
+            require(name[:len(prefix)] == list(map(ident, prefix)) and name[-1] == ident(method),
+                    f"Expected authentication call {method}")
+            return call["dest"]["kind"]["Local"], call["args"], pointer["generics"], name
+
+        def arguments(args, *expected):
+            require([local_operand(arg) for arg in args] == list(expected), "Wrong authentication call arguments")
+
+        def decode(block):
+            result, args, _, name = invoke(("core", "num"), "from_be_bytes")
+            arguments(args, block)
+            require(self.scalar_type(name[2]["Impl"]["Ty"]["skip_binder"]) == 128, "Wrong authentication decode type")
+            return result
+
+        zero, (fill,), generics, _ = invoke(("core", "array"), "repeat", cleanup=(("Abort", "UndefinedBehavior"),))
+        (width,) = generics["const_generics"]
+        require(self.constant(width) == Expression(f"16#{self.pointer_bits}", self.pointer_bits)
+                and self.operand({}, fill) == Expression("0#8", 8), "Expected an all-zero GHASH key input")
+        aes, _ = borrow("Shared", 1, deref=True)
+        target, _ = borrow("Mut", zero)
+        destination, _ = borrow("TwoPhaseMut", target, deref=True)
+        _, args, _, _ = invoke(("abc_aes256",), "encrypt")
+        arguments(args, aes, destination)
+        key = decode(copy(zero))
+        state, (initial_value, initial) = assignment("Use")
+        require(initial == "Yes" and "Const" in initial_value, "Expected constant GHASH initial state")
+        starter = self.operand({}, initial_value)
+        require(starter.ty == 128, "Wrong GHASH state type")
+
+        fragments = []
+        for _ in range(2):
+            hashed_with = copy(key)
+            target, _ = borrow("Mut", state)
+            destination, _ = borrow("TwoPhaseMut", target, deref=True)
+            content, source = borrow("Shared", deref=True, slice_=True)
+            _, args, _, _ = invoke(("abc_aes256_gcm",), "hash_padded")
+            arguments(args, hashed_with, destination, content)
+            fragments.append(inputs[source])
+
+        lengths = {}
+        for _ in range(2):
+            content, source = borrow("Shared", deref=True, slice_=True)
+            length, args, _, _ = invoke(("core", "slice"), "len")
+            arguments(args, content)
+            target, (cast, operand) = assignment("UnaryOp")
+            source_ty, target_ty = cast["Cast"]["Scalar"]
+            require(source_ty == {"Integer": {"Unsigned": "Usize"}} and
+                    target_ty == {"Integer": {"Unsigned": "U64"}} and local_operand(operand) == length,
+                    "Wrong authentication length cast")
+            lengths[target] = inputs[source]
+        footer, args, _, _ = invoke(("abc_aes256_gcm",), "pack_lengths")
+        first_len, second_len = (lengths[local_operand(arg)] for arg in args)
+
+        aes, _ = borrow("Shared", 1, deref=True)
+        nonce, _ = borrow("Shared", 2, deref=True)
+        encrypted, (aes_arg, nonce_arg, counter), _, _ = invoke(("abc_aes256_gcm",), "encrypt_counter")
+        arguments((aes_arg, nonce_arg), aes, nonce)
+        counter = self.operand({}, counter)
+        require(counter.ty == 32, "Wrong tag-mask counter representation")
+        mask = decode(encrypted)
+        expected = [copy(value) for value in (key, state, footer, mask)]
+        output, args, _, _ = invoke(("abc_aes256_gcm",), "finish_tag")
+        arguments(args, *expected)
+        require(output == 0 and list(statements) == [("Return", None)], "Wrong authentication return")
+        first, second = fragments
+        return f"""  let key := encrypt 0
+  let state ← absorb key {starter.code} {first}
+  let state ← absorb key state {second}
+  let footer ← pack_lengths (BitVec.ofNat 64 {first_len}.length) (BitVec.ofNat 64 {second_len}.length)
+  finish_tag key state footer (encrypt (counter_block nonce {counter.code}))"""
+
     def api_tail(self, name):
         """Validate the shared API dataflow and each operation's result."""
         sealing = name == "seal_in_place"
@@ -1148,6 +1264,7 @@ class ScalarLoop:
         counter, byte_update = self.payload_counter()
         counter_serialization = self.counter_serialization()
         ghash_fill = self.hash_padded()
+        authenticate_word = self.authenticate_word()
         return f"""import Std
 
 namespace Abc.Extracted.Ghash
@@ -1209,6 +1326,11 @@ def hash_walk (decode : List (BitVec 8) → BitVec 128) (input : List (BitVec 8)
   else [decode (input ++ List.replicate (16 - input.length) {ghash_fill})]
 termination_by input.length
 decreasing_by simp only [List.length_drop]; omega
+
+def authenticate_word (encrypt : BitVec 128 → BitVec 128)
+    (absorb : BitVec 128 → BitVec 128 → List (BitVec 8) → Option (BitVec 128))
+    (nonce : BitVec 96) (aad ciphertext : List (BitVec 8)) : Option (BitVec 128) := do
+{authenticate_word}
 
 -- The validator resolves both returns and the unique mutable payload call.
 def open_gate {{α : Type}} (applyPayload : α → α) (ciphertext : α)

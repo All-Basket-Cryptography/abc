@@ -52,10 +52,10 @@ and Rust standard library contracts. The open gate compares the whole tag, retur
 payload decryption only after a match. The seal path authenticates the
 ciphertext written by CTR and returns its serialized tag.
 The composition uses Rust standard-library contracts for slice traversal,
-copying and byte conversion, and AES block values to supply the hash
-key and tag mask. Source proofs for the concrete AES provider and
-the dataflow inside `authenticate` beyond the checked ordered calls
-remain open. Compiler
+copying and byte conversion. It checks how `authenticate` derives the
+hash key and tag mask from the AES block provider and threads the GHASH
+state through AAD, ciphertext and the packed lengths. A source proof
+for the concrete AES provider remains open. Compiler
 timing, binary correspondence, key erasure, nonce allocation and
 cryptographic security games require separate evidence.
 [Rust source refinement and replay](../../../../../tools/verification/aes256-gcm/README.md)

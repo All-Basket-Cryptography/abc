@@ -56,6 +56,7 @@ def parser():
     plan.add_argument("--output", type=Path)
     run = commands.add_parser("run", help="recompute a plan and execute its required tasks")
     run.add_argument("--plan", type=Path, required=True)
+    run.add_argument("--target", help="execute this selected task and its prerequisites")
     run.add_argument("--output", type=Path, default=Path(".abc/run"))
     run.add_argument("--domain", choices=("local", "untrusted-pr"), default="local")
     run.add_argument("--key-file", type=Path, help="independently provisioned receipt key for local evidence")
@@ -110,7 +111,7 @@ def main():
             output(create_plan(repo, args.base, args.head, merge_base=args.merge_base), args.output)
         elif args.command == "run":
             from tools.verification.abc_runner import execute
-            result = execute(repo, args.plan, args.output, args.domain, args.key_file, args.cache)
+            result = execute(repo, args.plan, args.output, args.domain, args.key_file, args.cache, target=args.target)
             output(result)
             return 0 if result["status"] == "passed" else 1
         elif args.command == "evidence":

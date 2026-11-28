@@ -312,10 +312,10 @@ command = ["python", "runtime/check.py"]
         work = Path(directory.name)
         output = work / "matrix.txt"
 
-        def ci(mode, *args, check=True):
+        def ci(mode, *args, check=True, event_base=None):
             result = subprocess.run(
-                [sys.executable, "-B", "-m", "tools.verification.abc_ci", mode, "--repo", str(self.repo), "--base", base,
-                 "--head", head, *map(str, args)],
+                [sys.executable, "-B", "-m", "tools.verification.abc_ci", mode, "--repo", str(self.repo),
+                 "--base", event_base or base, "--head", head, *map(str, args)],
                 cwd=approved, env={**os.environ, "GITHUB_OUTPUT": str(output)}, text=True, capture_output=True,
                 timeout=30, check=False,
             )
@@ -342,10 +342,34 @@ command = ["python", "runtime/check.py"]
         self.assertEqual(missing.returncode, 1)
         self.assertIn("Incomplete or unexpected set of CI task artifacts", missing.stderr)
 
+        output.unlink()
+        ci("plan", event_base=head)
+        smoke_matrix = json.loads(output.read_text(encoding="utf-8").removeprefix("matrix="))["include"]
+        self.assertEqual({row["target"] for row in smoke_matrix},
+                         {"repository-assurance:registry", "repository-assurance:status"})
+        smoke_artifacts = work / "main-baseline"
+        preflight = ci("baseline-smoke", "--directory", smoke_artifacts, event_base=head)
+        self.assertEqual(json.loads(preflight.stdout), {"status": "advisory-passed", "domain": "untrusted-pr",
+                                                        "matrix_jobs": 2, "revision": head})
+        self.assertTrue(all((smoke_artifacts / "receipts" / f"abc-task-{row['artifact']}" / "receipt.json").is_file()
+                            for row in smoke_matrix))
+        cross_revision = ci("baseline-smoke", "--directory", work / "cross-revision", check=False)
+        self.assertEqual(cross_revision.returncode, 1)
+        self.assertIn("same base and head revision", cross_revision.stderr)
+
+        reviewed_head = head
+        policy = "docs/security/trust-and-source-policy.md"
+        self.write(policy, "# Candidate trust policy\n")
+        head = self.commit("change the trust policy")
+        changed_policy = ci("plan", event_base=reviewed_head, check=False)
+        self.assertEqual(changed_policy.returncode, 1)
+        self.assertIn(f"Independent review required for assurance changes: {policy}", changed_policy.stderr)
+
+        reviewed_head = head
         original = (self.repo / BASELINE_ENTRY).read_text(encoding="utf-8")
         self.write(BASELINE_ENTRY, original + "\n# This candidate changes its own verifier.\n")
         head = self.commit("modify the protected baseline entry")
-        changed_baseline = ci("plan", check=False)
+        changed_baseline = ci("plan", event_base=reviewed_head, check=False)
         self.assertEqual(changed_baseline.returncode, 1)
         self.assertIn(f"Independent review required for assurance changes: {BASELINE_ENTRY}", changed_baseline.stderr)
 

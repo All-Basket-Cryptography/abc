@@ -1,6 +1,6 @@
 # ABC 0.1 research qualification
 
-The initial commit is in [draft PR #1](https://github.com/All-Basket-Cryptography/abc/pull/1). `main` contains the review baseline README. Candidate assurance fixtures ran successfully on GitHub. The hosted required gate detected that the base does not yet contain independently reviewed assurance code. [Bootstrap run](https://github.com/All-Basket-Cryptography/abc/actions/runs/46043199862)
+The first ABC implementation is in [PR #1](https://github.com/All-Basket-Cryptography/abc/pull/1). `main` contains the initial README. Candidate assurance fixtures ran successfully on GitHub. The first independent review and baseline activation remain open. The review workflow rehearses the planner, tasks and receipt verifier at the exact candidate revision. When the reviewed baseline reaches `main`, the separate `abc-main-baseline` check exercises that same path on the resulting commit. [Baseline review and verification](../../.github/README.md#first-baseline)
 
 ## SDK consumer evidence
 

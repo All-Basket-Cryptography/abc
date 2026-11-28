@@ -54,6 +54,8 @@ THEOREMS = {
     "Abc.Refine.Ghash.source_payload_byte_refines",
     "Abc.Refine.Ghash.source_ctr_loop_refines",
     "Abc.Refine.Ghash.source_ctr_refines_nist",
+    "Abc.Refine.Ghash.source_authenticate_wiring",
+    "Abc.Refine.Ghash.source_authenticate_refines_nist",
     "Abc.Refine.Ghash.source_seal_tail_authenticates_ciphertext",
     "Abc.Refine.Ghash.source_seal_with_models_refines",
     "Abc.Refine.Ghash.source_open_with_models_refines",
@@ -177,6 +179,7 @@ def check(options, run):
     serialization_negative = xor_negative = None
     seal_negative = None
     hash_tail_negative = None
+    footer_wiring_negative = None
     if options.check_mutant:
         reduction = list(locate(llbc, ["U128", REDUCTION]))
         require(len(reduction) == 1, "Expected one extracted reduction literal")
@@ -283,6 +286,16 @@ def check(options, run):
         fill[0] = {"Const": {"Value": [max(closure.constants) + 1, [{"Integer": {"Unsigned": ["U8", "1"]}}, ty]]}}
         hash_tail_negative = test_negative("ghash-tail-mutant", "Tactic `decide` proved that the proposition",
                                            "source_hash_tail_example")
+        fill[0] = fill_operand
+
+        authenticate = closure.local_function("authenticate")["body"]["Structured"]["body"]
+        footer_id = closure.local_function("pack_lengths")["def_id"]
+        (footer_args,) = [item["call"]["args"] for tag, item in meaningful(authenticate) if tag == "Call"
+                          and item["call"]["func"]["Regular"]["kind"]["Fun"] == footer_id]
+        require(len(footer_args) == 2, "Expected both length inputs in authentication")
+        footer_args.reverse()
+        footer_wiring_negative = test_negative("footer-wiring-mutant", "Tactic `rfl` failed:",
+                                               "source_authenticate_wiring")
 
     return {
         "status": "source_llbc_refinement_checked", "target": target, "charon": charon,
@@ -295,6 +308,7 @@ def check(options, run):
         "serialization_negative_check": serialization_negative, "xor_negative_check": xor_negative,
         "seal_negative_check": seal_negative,
         "hash_tail_negative_check": hash_tail_negative,
+        "footer_wiring_negative_check": footer_wiring_negative,
     }
 
 

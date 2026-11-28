@@ -42,6 +42,7 @@ on:
       - 'src/crypto/kdf/hkdf-sha256/impl/rust/**'
       - 'src/crypto/kdf/hkdf-sha256/spec/**'
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read

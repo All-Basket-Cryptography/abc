@@ -10,6 +10,7 @@ on:
       - 'src/lean/Abc/Foundation/Encoding.lean'
       - '.github/workflows/poly1305-model.yml'
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read

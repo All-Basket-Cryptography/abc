@@ -293,6 +293,21 @@ theorem source_ctr_refines_nist (encrypt : Block → Block) (nonce : Nonce)
     sourceCtrLoop encrypt nonce 0 data = some (gctr encrypt nonce 2 data) := by
   rw [source_ctr_loop_refines _ _ _ _ (by simpa using admitted), gctrSource_refines_nist]
 
+def sourceAbsorb (key state : Block) (bytes : List Byte) : Option Block :=
+  hashWords key state (Ghash.hash_walk asBlock bytes)
+
+theorem source_authenticate_wiring (encrypt : Block → Block) (nonce : Nonce) (aad ciphertext : List Byte) :
+    Ghash.authenticate_word encrypt sourceAbsorb nonce aad ciphertext =
+      sourceTagWord (encrypt 0) (encrypt (Ghash.counter_block nonce 1)) aad ciphertext := by
+  rfl
+
+theorem source_authenticate_refines_nist (encrypt : Block → Block) (nonce : Nonce) (aad ciphertext : List Byte)
+    (aadFits : 8 * aad.length < 2^64) (cipherFits : 8 * ciphertext.length < 2^64) :
+    Ghash.authenticate_word encrypt sourceAbsorb nonce aad ciphertext =
+      some (ghash (encrypt 0) (transcript aad ciphertext) ^^^ encrypt (counterBlock nonce 1)) := by
+  have mask : Ghash.counter_block nonce 1 = counterBlock nonce 1 := source_counter_block_refines nonce 1
+  rw [source_authenticate_wiring, source_tag_word_refines_nist _ _ _ _ aadFits cipherFits, mask]
+
 theorem source_seal_tail_authenticates_ciphertext (applyPayload : α → Option α)
     (authenticate : α → Option β) (encode : β → γ) (plaintext ciphertext : α) (tag : β)
     (encrypted : applyPayload plaintext = some ciphertext) (authenticated : authenticate ciphertext = some tag) :
@@ -306,7 +321,7 @@ def sourceSealWithModel (encrypt : Block → Block) (nonce : Nonce)
   | .error .associatedDataTooLong => some ⟨.error .associatedDataTooLong, plaintext⟩
   | .ok () => do
     let (tag, ciphertext) ← Ghash.seal_tail (sourceCtrLoop encrypt nonce 0)
-      (sourceTagWord (encrypt 0) (encrypt (Ghash.counter_block nonce 1)) aad) asTag plaintext
+      (Ghash.authenticate_word encrypt sourceAbsorb nonce aad) asTag plaintext
     pure ⟨.ok tag, ciphertext⟩
 
 theorem source_seal_with_models_refines (encrypt : Encrypt) (key : Key) (nonce : Nonce)
@@ -323,11 +338,10 @@ theorem source_seal_with_models_refines (encrypt : Encrypt) (key : Key) (nonce :
         rw [gctr_length]
         unfold payloadLimit at payloadTooLong
         omega
-      have block : Ghash.counter_block nonce 1 = counterBlock nonce 1 := source_counter_block_refines _ _
       have ctr := source_ctr_refines_nist (encrypt key) nonce plaintext (by omega)
-      rw [if_neg payloadTooLong, if_neg aadTooLong, if_neg payloadTooLong, if_neg aadTooLong, block,
+      rw [if_neg payloadTooLong, if_neg aadTooLong, if_neg payloadTooLong, if_neg aadTooLong,
         source_seal_tail_authenticates_ciphertext _ _ _ _ _ _ ctr
-          (source_tag_word_refines_nist _ _ _ _ aBits cBits)]
+          (source_authenticate_refines_nist _ _ _ _ aBits cBits)]
       rfl
 
 def sourceOpenWithModel (encrypt : Block → Block) (nonce : Nonce)
@@ -336,7 +350,7 @@ def sourceOpenWithModel (encrypt : Block → Block) (nonce : Nonce)
   | .error .messageTooLong => some ⟨.error .messageTooLong, ciphertext⟩
   | .error .associatedDataTooLong => some ⟨.error .associatedDataTooLong, ciphertext⟩
   | .ok () => do
-    let actual ← sourceTagWord (encrypt 0) (encrypt (Ghash.counter_block nonce 1)) aad ciphertext
+    let actual ← Ghash.authenticate_word encrypt sourceAbsorb nonce aad ciphertext
     let (valid, bytes) := Ghash.open_gate (fun input => input.bind (sourceCtrLoop encrypt nonce 0))
       (some ciphertext) actual (asBlock provided.toList)
     let bytes ← bytes
@@ -356,9 +370,8 @@ theorem source_open_with_models_refines (encrypt : Encrypt) (key : Key) (nonce :
     · have aBits : 8 * aad.length < 2^64 := by unfold aadLimit at aadTooLong; omega
       have cBits : 8 * ciphertext.length < 2^64 := by unfold payloadLimit at payloadTooLong; omega
       rw [if_neg payloadTooLong, if_neg aadTooLong, if_neg payloadTooLong, if_neg aadTooLong]
-      have block : Ghash.counter_block nonce 1 = counterBlock nonce 1 := source_counter_block_refines _ _
       have ctr := source_ctr_refines_nist (encrypt key) nonce ciphertext (by omega)
-      rw [block, source_tag_word_refines_nist _ _ _ _ aBits cBits]
+      rw [source_authenticate_refines_nist _ _ _ _ aBits cBits]
       simp only [bind, Option.bind_some, source_open_gate_refines]
       change (let (valid, bytes) := if authenticate (encrypt key) nonce aad ciphertext = provided then
           (true, sourceCtrLoop (encrypt key) nonce 0 ciphertext) else (false, some ciphertext)
@@ -395,6 +408,8 @@ theorem source_open_with_models_refines (encrypt : Encrypt) (key : Key) (nonce :
 #print axioms source_payload_byte_refines
 #print axioms source_ctr_loop_refines
 #print axioms source_ctr_refines_nist
+#print axioms source_authenticate_wiring
+#print axioms source_authenticate_refines_nist
 #print axioms source_seal_tail_authenticates_ciphertext
 #print axioms source_seal_with_models_refines
 #print axioms source_open_with_models_refines
