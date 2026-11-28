@@ -96,3 +96,23 @@ node tools/benchmarks/hmac-prepared-ecmascript.mjs baseline
 ```
 
 [Recorded Windows x64 comparison](../../docs/status/hmac-prepared-ecmascript-benchmark.json)
+
+## Paired ChaCha20 and ChaCha20-Poly1305 measurements
+
+The runner compares the two portable revisions and Node OpenSSL on public
+67-, 1,024- and 16,387-byte messages. It checks each ciphertext and the
+detached AEAD tag against OpenSSL before taking 11 alternating samples.
+The standalone stream measurement includes restoring the caller buffer
+before each in-place call. The AEAD cases use 27 bytes of associated data
+and time the full `seal` API. The saved result includes source digests,
+batch counts, nominal host details and raw timings.
+
+```sh
+git archive 1d07956 src/crypto/cipher/chacha20 src/crypto/mac/poly1305 \
+  src/crypto/aead/chacha20-poly1305 src/crypto/inputs > baseline.tar
+mkdir baseline
+tar -xf baseline.tar -C baseline
+node tools/benchmarks/chacha20-ecmascript.mjs baseline
+```
+
+[Recorded Windows x64 comparison](../../docs/status/chacha20-word-output-benchmark.json)

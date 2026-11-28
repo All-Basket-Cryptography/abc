@@ -30,4 +30,8 @@ jobs:
       - name: Install the locked test providers
         run: npm ci --ignore-scripts --no-audit --prefix src/crypto/providers/ecmascript
       - name: Exercise JavaScript and TypeScript entry points
-        run: node --test tools/compatibility/ecmascript-views/portfolio.test.mjs
+        run: >-
+          node --test tools/compatibility/ecmascript-views/portfolio.test.mjs
+          src/crypto/inputs/bytes.test.mjs
+          src/crypto/cipher/chacha20/impl/javascript/chacha20.test.mjs
+          src/crypto/cipher/chacha20/impl/typescript/chacha20.test.mts

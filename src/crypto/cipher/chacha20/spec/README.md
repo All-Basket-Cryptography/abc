@@ -29,3 +29,12 @@ and both bounded loops to that specification. It covers termination,
 return status and every byte for admitted and rejected input. Compiled
 leakage and whole-source AEAD composition have separate proof obligations.
 [Reproduction and scope](../../../../../tools/verification/chacha20/README.md)
+
+The JavaScript and TypeScript stream paths XOR complete 32-bit little-endian
+words in place and use byte writes for the last partial word. Lean proves
+the word and byte transformations agree at every offset, the complete
+writes stay in bounds, and the feed-forward sum fits within the exact
+integer range used by JavaScript numbers. This model uses the specified
+32-bit operations and little-endian serialization. ECMAScript source
+correspondence and target leakage still require separate evidence.
+[Word output proof](ChaCha20WordOutput.lean) · [RFC 8439 § 2.4](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.4)

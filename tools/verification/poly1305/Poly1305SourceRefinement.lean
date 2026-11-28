@@ -236,6 +236,24 @@ theorem source_carry_refines (d : Words) (fits : bounded (columns d) (2^59)) :
   simp only [upperCarry, Abc.Spec.Poly1305.Go.carry, Abc.Spec.Poly1305.Go.sweep, columns,
     Aeneas.Std.Array.make_val, List.getElem!_cons_zero, List.getElem!_cons_succ, w0, w1]
 
+/-- The exact upper-carry call at the beginning of Rust's final reduction
+normalizes a live accumulator and preserves its residue. -/
+theorem source_final_carry_refines (d : Words) (state : live (columns d)) :
+    carry_upper d ⦃ out => bounded (columns out) base ∧
+      value (columns out) % modulus = value (columns d) % modulus ⦄ := by
+  have fits : bounded (columns d) (2^60) := by
+    simp only [live, base] at state
+    simp only [bounded]
+    omega
+  refine WP.spec_mono (source_carry_upper_refines d fits) ?_
+  intro out exactCarry
+  have low := Nat.div_eq_of_lt state.1
+  have unchanged := Nat.mod_eq_of_lt state.1
+  have agrees : upperCarry (columns d) = Abc.Spec.Poly1305.Go.carry (columns d) := by
+    simp only [upperCarry, Abc.Spec.Poly1305.Go.carry, Abc.Spec.Poly1305.Go.sweep, low, unchanged, Nat.add_zero]
+  rw [exactCarry, agrees]
+  exact ⟨Abc.Spec.Poly1305.Go.carry_normalizes _ state, Abc.Spec.Poly1305.Go.carry_congruence _⟩
+
 /-- Adding decoded message limbs, folded multiplication and carry form the
 exact unbounded recurrence on every admitted accumulator, key and block. -/
 theorem source_absorb_limbs_refines (h r : Words) (rFive : Multiples) (message : Words)
@@ -284,6 +302,7 @@ theorem source_absorb_polynomial_step (h r : Words) (rFive : Multiples) (message
 #print axioms source_carry_pair_refines
 #print axioms source_carry_upper_refines
 #print axioms source_carry_refines
+#print axioms source_final_carry_refines
 #print axioms source_key_multiples_refines
 #print axioms source_multiply_refines
 #print axioms source_absorb_limbs_refines

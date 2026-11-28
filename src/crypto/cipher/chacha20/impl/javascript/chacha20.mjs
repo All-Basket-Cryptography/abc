@@ -3,6 +3,7 @@ import { asUint8Array } from '../../../../inputs/bytes.mjs';
 
 const MAX_COUNTER = 0xffffffff;
 const BLOCK_BYTES = 64;
+const CONSTANTS = Uint32Array.of(0x61707865, 0x3320646e, 0x79622d32, 0x6b206574);
 
 function view(bytes) {
   const view = asUint8Array(bytes);
@@ -19,7 +20,7 @@ function initialState(key, nonce, counter) {
     throw new RangeError('Invalid ChaCha20 counter');
   }
   const state = new Uint32Array(16);
-  state.set([0x61707865, 0x3320646e, 0x79622d32, 0x6b206574]);
+  state.set(CONSTANTS);
   for (let i = 0; i < 8; i += 1) state[4 + i] = keyView.getUint32(4 * i, true);
   state[12] = counter;
   for (let i = 0; i < 3; i += 1) state[13 + i] = nonceView.getUint32(4 * i, true);
@@ -41,7 +42,7 @@ function quarter(state, a, b, c, d) {
   state[b] = rotate(state[b] ^ state[c], 7);
 }
 
-function compress(initial, work, out) {
+function rounds(initial, work) {
   work.set(initial);
   for (let i = 0; i < 10; i += 1) {
     quarter(work, 0, 4, 8, 12);
@@ -53,13 +54,15 @@ function compress(initial, work, out) {
     quarter(work, 2, 7, 8, 13);
     quarter(work, 3, 4, 9, 14);
   }
-  for (let i = 0; i < 16; i += 1) out.setUint32(4 * i, work[i] + initial[i], true);
 }
 
 export function block(key, nonce, counter) {
   const initial = initialState(key, nonce, counter);
   const output = new Uint8Array(BLOCK_BYTES);
-  compress(initial, new Uint32Array(16), new DataView(output.buffer));
+  const bytes = new DataView(output.buffer);
+  const work = new Uint32Array(16);
+  rounds(initial, work);
+  for (let i = 0; i < work.length; i += 1) bytes.setUint32(4 * i, work[i] + initial[i], true);
   return output;
 }
 
@@ -68,14 +71,25 @@ export function applyKeystream(key, nonce, counter, input) {
   const initial = initialState(key, nonce, counter);
   const blocks = Math.ceil(destination.length / BLOCK_BYTES);
   if (blocks > MAX_COUNTER + 1 - counter) throw new RangeError('ChaCha20 counter would wrap');
-  const buffer = new Uint8Array(BLOCK_BYTES);
-  const output = new DataView(buffer.buffer);
+  if (blocks === 0) return input;
+  const bytes = new DataView(destination.buffer, destination.byteOffset, destination.byteLength);
   const work = new Uint32Array(16);
   for (let offset = 0; offset < destination.length; offset += BLOCK_BYTES) {
     initial[12] = counter + offset / BLOCK_BYTES;
-    compress(initial, work, output);
+    rounds(initial, work);
     const size = Math.min(BLOCK_BYTES, destination.length - offset);
-    for (let i = 0; i < size; i += 1) destination[offset + i] ^= buffer[i];
+    let index = 0;
+    for (; index + 4 <= size; index += 4) {
+      const mask = work[index >>> 2] + initial[index >>> 2];
+      const position = offset + index;
+      bytes.setUint32(position, bytes.getUint32(position, true) ^ mask, true);
+    }
+    if (index < size) {
+      const mask = work[index >>> 2] + initial[index >>> 2];
+      for (let byte = 0; index + byte < size; byte += 1) {
+        destination[offset + index + byte] ^= mask >>> (8 * byte);
+      }
+    }
   }
   return input;
 }

@@ -105,5 +105,39 @@ The trusted lowering and Rust standard-library contracts cover the
 supported integer, slice and byte-conversion operations. The Lean
 update theorem attaches the generated gate to the reviewed block
 driver, and the finalized digest theorem uses the reviewed encoder.
-The update's successful copy-and-compress loop, digest serialization
-and public wrapper still have distinct source-refinement obligations.
+The byte API replay below also checks the successful update driver, digest
+serialization and public wrapper.
+
+## Charon byte API replay
+
+The byte API replay starts its Charon extraction at the Rust public `digest`
+entry point. The lowering checks the constructor's initial registers and
+buffer, the successful update's copy-and-compress effects and `as_chunks`
+loop, the finalizer's length write and padding branches, and the output loop
+that stores eight `u64` words in their original order. It also checks that the
+public wrapper propagates the update error or finalizes the updated context.
+A separate extraction supplies the four existing generated compression terms.
+Lean proves that the generated driver emits the standard full blocks and keeps
+the right suffix for any valid pending length and arbitrary stale storage.
+The composed `sourceDigest_refines` theorem equates the resulting Rust API
+model with FIPS 180-4 § 6.4.2 for every byte list whose length fits a Rust x86-64
+slice length. The trace theorems check the streaming result for every finite
+sequence of such inputs. Successful calls contribute in order and a length
+error leaves the context unchanged. For an admissible total length, the
+result equals the FIPS digest of the concatenation for every partition.
+[Byte API proof](../../../src/crypto/hash/sha512/spec/Sha512ApiSourceRefinement.lean) · [Stream trace proof](../../../src/crypto/hash/sha512/spec/Sha512TraceSourceRefinement.lean)
+
+```sh
+python -B tools/verification/sha512/check_api_source.py --negative-controls
+```
+
+The replay audits ten theorems and compares the terms from two fresh digest
+extractions. It recompiles three Rust mutations. Lean rejects the changed
+copy bound and little-endian output. The lowering rejects a wrapper that
+discards the accepted input by finalizing a fresh context. [Windows x64 byte API receipt](api-source-receipt-windows-x64.json)
+
+The trusted chain includes rustc and Charon extraction, the Python lowering,
+Rust standard-library contracts for slicing, copying, traversal and integer
+encoding, and the reviewed iteration drivers for the four compression loops.
+The proof checks functional behavior within that model. Rust memory and unwind
+semantics, machine code and timing remain outside its scope.

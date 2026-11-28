@@ -8,6 +8,7 @@ on:
       - 'src/crypto/hash/sha256/spec/**'
       - 'tools/build/rust/**'
       - 'src/lean/**'
+      - 'src/crypto/inputs/**'
       - 'src/crypto/hash/sha512/spec/**'
       - 'src/crypto/hash/blake2b/spec/**'
       - 'src/crypto/hash/shake256/spec/**'
@@ -100,6 +101,7 @@ jobs:
             python3 src/lean/check.py "$algorithm"
           done
           lean src/crypto/hash/blake2b/spec/Blake2bBuffer.lean
+          lean -DwarningAsError=true src/crypto/inputs/TypedArrayView.lean
           lean src/crypto/mac/poly1305/spec/Poly1305Reduction.lean
           lean -DwarningAsError=true src/crypto/mac/poly1305/spec/Poly1305Radix13.lean
           lean -DwarningAsError=true src/crypto/cipher/chacha20/impl/java/ChaCha20StreamingBounds.lean
@@ -125,15 +127,13 @@ jobs:
           lean src/crypto/kdf/argon2id/spec/Argon2idBounds.lean
           lean src/crypto/cipher/aes256/spec/Aes256Byte.lean
           lean src/crypto/aead/aes256-gcm/spec/Aes256GcmBounds.lean
-      - name: Check SHA-256, HMAC and HKDF refinements
-        env:
-          ABC_FORMAL_USE_MATHLIB_CACHE: '1'
-        run: node tools/verification/hmac-hkdf/check.mjs .abc/sha256-extraction/run-*/result.json
       - name: Replay source-derived SHA-512 and GHASH proofs
         run: |
           export ABC_CHARON="$ABC_AENEAS_ROOT/charon/bin/charon"
           python3 -B tools/verification/sha512/check_stream_source.py --negative-controls \
             --output .abc/sha512-stream-llbc.json
+          python3 -B tools/verification/sha512/check_api_source.py --negative-controls \
+            --output .abc/sha512-api-llbc.json
           python3 -B tools/verification/aes256-gcm/check.py --check-mutant
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: ${{ always() }}
@@ -141,11 +141,16 @@ jobs:
           name: sha512-ghash-source-evidence-untrusted-pr
           path: |
             .abc/sha512-stream-llbc.json
+            .abc/sha512-api-llbc.json
             .abc/aes256-gcm-extraction/run-*/result.json
             .abc/aes256-gcm-extraction/run-*/*.log
             .abc/aes256-gcm-extraction/run-*/*/GhashLlbc.lean
           if-no-files-found: warn
           retention-days: 7
+      - name: Check SHA-256, HMAC and HKDF refinements
+        env:
+          ABC_FORMAL_USE_MATHLIB_CACHE: '1'
+        run: node tools/verification/hmac-hkdf/check.mjs .abc/sha256-extraction/run-*/result.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: ${{ always() }}
         with:

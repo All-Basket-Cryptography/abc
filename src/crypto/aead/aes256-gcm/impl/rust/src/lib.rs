@@ -103,21 +103,33 @@ fn authenticate(
     let mut state = 0;
     hash_padded(hash_key, &mut state, aad);
     hash_padded(hash_key, &mut state, data);
-    let lengths = ((aad.len() as u128 * 8) << 64) | (data.len() as u128 * 8);
+    let lengths = pack_lengths(aad.len() as u64, data.len() as u64);
     let tag_mask = u128::from_be_bytes(encrypt_counter(aes, nonce, 1));
-    (multiply(state ^ lengths, hash_key) ^ tag_mask).to_be_bytes()
+    finish_tag(hash_key, state, lengths, tag_mask).to_be_bytes()
 }
 
 fn hash_padded(hash_key: u128, state: &mut u128, input: &[u8]) {
     let (blocks, tail) = input.as_chunks::<BLOCK_BYTES>();
     for block in blocks {
-        *state = multiply(*state ^ u128::from_be_bytes(*block), hash_key);
+        *state = hash_block(hash_key, *state, u128::from_be_bytes(*block));
     }
     if !tail.is_empty() {
         let mut padded = [0; BLOCK_BYTES];
         padded[..tail.len()].copy_from_slice(tail);
-        *state = multiply(*state ^ u128::from_be_bytes(padded), hash_key);
+        *state = hash_block(hash_key, *state, u128::from_be_bytes(padded));
     }
+}
+
+fn hash_block(hash_key: u128, state: u128, block: u128) -> u128 {
+    multiply(state ^ block, hash_key)
+}
+
+fn pack_lengths(aad_bytes: u64, data_bytes: u64) -> u128 {
+    ((aad_bytes as u128 * 8) << 64u32) | (data_bytes as u128 * 8)
+}
+
+fn finish_tag(hash_key: u128, state: u128, lengths: u128, tag_mask: u128) -> u128 {
+    hash_block(hash_key, state, lengths) ^ tag_mask
 }
 
 fn multiply(input: u128, mut key: u128) -> u128 {

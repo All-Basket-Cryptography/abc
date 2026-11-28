@@ -57,3 +57,23 @@ test('rejection before mutation and final counter', () => {
   assert.throws(() => applyKeystream(key, nonce, 0, detached), TypeError);
   assert.throws(() => applyKeystream(key, nonce, 0, new Uint8Array(new SharedArrayBuffer(1))), TypeError);
 });
+
+test('word XOR preserves bytes outside unaligned views and supports aliased key and nonce', () => {
+  for (const offset of [1, 2, 3, 4]) {
+    for (const size of [2, 3, 4, 5, 6, 7, 62, 63, 64, 65, 66, 67]) {
+      const buffer = fixture(80);
+      const key = buffer.subarray(0, 32);
+      const nonce = buffer.subarray(19, 31);
+      const input = buffer.subarray(offset, offset + size);
+      const saved = Buffer.from(buffer);
+      const iv = Buffer.alloc(16);
+      iv.writeUInt32LE(0xfffffffe);
+      iv.set(nonce, 4);
+      const cipher = createCipheriv('chacha20', key, iv);
+      const expected = Buffer.concat([cipher.update(input), cipher.final()]);
+      saved.set(expected, offset);
+      assert.equal(applyKeystream(key, nonce, 0xfffffffe, input), input);
+      assert.deepEqual(Buffer.from(buffer), saved);
+    }
+  }
+});

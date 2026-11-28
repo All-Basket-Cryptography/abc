@@ -20,9 +20,11 @@ preservation of the stream view. The runner records the reviewed Rust
 source, independently derives the constants and audits the Lean statements
 and axioms. Charon replays the compression loop bodies, the update
 length decision and the final padding effects from the Rust source.
-Lean checks their generated terms against the FIPS model. The update
-block driver and digest encoding still rely on reviewed models.
-[Length lemmas](Sha512Length.lean) · [Schedule model](Sha512Ring.lean) · [FIPS model](Sha512Spec.lean) · [Charon compression](Sha512LlbcRefinement.lean) · [Charon length and padding](Sha512StreamSourceRefinement.lean) · [Reproduction and receipts](../../../../../tools/verification/sha512/README.md)
+The byte API replay also checks the accepted update driver, digest encoding
+and public wrapper. Lean connects the source-derived API model to FIPS
+SHA-512 for a one-shot message or a finite streaming sequence. Each input
+length fits a Rust x86-64 slice.
+[Length lemmas](Sha512Length.lean) · [Schedule model](Sha512Ring.lean) · [FIPS model](Sha512Spec.lean) · [Charon compression](Sha512LlbcRefinement.lean) · [Charon byte API](Sha512ApiSourceRefinement.lean) · [Charon stream trace](Sha512TraceSourceRefinement.lean) · [Reproduction and receipts](../../../../../tools/verification/sha512/README.md)
 
 The Rust tests check empty and `abc` known answers, failed updates, and
 all split points against independent CPython `hashlib.sha512` digests for

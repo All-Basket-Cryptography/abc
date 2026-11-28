@@ -1,4 +1,4 @@
-"""Extract portable Rust GHASH with Charon and check its Lean refinement."""
+"""Extract portable Rust GHASH word operations and check their Lean refinement."""
 
 import argparse
 from hashlib import sha256
@@ -9,7 +9,7 @@ import re
 import subprocess
 from tempfile import mkdtemp
 
-from translate import require, translate
+from translate import ScalarLoop, require, translate
 
 
 HERE = Path(__file__).resolve().parent
@@ -28,6 +28,14 @@ THEOREMS = {
     "Abc.Refine.Ghash.extracted_round_refines",
     "Abc.Refine.Ghash.extracted_loop_refines",
     "Abc.Refine.Ghash.source_multiply_returns_nist",
+    "Abc.Refine.Ghash.source_hash_block_refines",
+    "Abc.Refine.Ghash.source_nist_example_footer",
+    "Abc.Refine.Ghash.source_length_word_refines",
+    "Abc.Refine.Ghash.source_length_word_matches_nist_bytes",
+    "Abc.Refine.Ghash.source_finish_tag_refines",
+    "Abc.Refine.Ghash.source_hash_words_refines",
+    "Abc.Refine.Ghash.source_tag_word_refines_nist",
+    "Abc.Refine.Ghash.source_tag_bytes_under_aes_contract",
 }
 ALLOWED = {"propext", "Classical.choice", "Quot.sound"}
 AXIOM_LINE = re.compile(r"^'([^']+)' (?:depends on axioms:\s*\[([^\]]*)\]|does not depend on any axioms)$", re.M)
@@ -69,15 +77,15 @@ def audit(output):
     return allowed
 
 
-def mutate_reduction(term):
-    if isinstance(term, list):
-        if term == ["U128", REDUCTION]:
-            term[1] = str(int(REDUCTION) + 1)
-            return 1
-        return sum(mutate_reduction(child) for child in term)
-    if isinstance(term, dict):
-        return sum(mutate_reduction(child) for child in term.values())
-    return 0
+def locate(term, value):
+    if term == value:
+        yield term
+    elif isinstance(term, list):
+        for child in term:
+            yield from locate(child, value)
+    elif isinstance(term, dict):
+        for child in term.values():
+            yield from locate(child, value)
 
 
 def check(options, run):
@@ -96,13 +104,13 @@ def check(options, run):
     target = next(line.removeprefix("host: ") for line in rust.splitlines() if line.startswith("host: "))
     lean = exec_local("lean-version", [options.lean, "--version"]).stdout.strip()
     require(f"version {pins['lean'].split(':v')[-1]}," in lean, "Lean version does not match the repository pin")
-    selections = ["--preset=aeneas", "--start-from", "crate::multiply"]
+    selections = ["--preset=aeneas", "--start-from", "crate::authenticate"]
     cargo = ["--locked", "--offline", "--lib", "--no-default-features", "--target", target]
 
     def extract(label):
         directory = run / label
         directory.mkdir()
-        ir = directory / "multiply.llbc"
+        ir = directory / "authenticate.llbc"
         exec_local(f"{label}-charon",
                    [options.charon, "cargo", *selections, "--dest-file", ir, "--", *cargo],
                    cwd=CRATE, environment={**env, "CARGO_TARGET_DIR": str(directory / "target")})
@@ -129,25 +137,42 @@ def check(options, run):
     provenance = audit(compile_module("compile-refinement", PROOF, objects, [objects]).stdout)
     require(inputs() == original_inputs, "Source input changed during extraction or proof checking")
 
-    negative = None
-    if options.check_mutant:
-        require(mutate_reduction(llbc) == 1, "Expected one extracted reduction literal")
-        mutant = run / "mutant"
+    def test_negative(label, diagnostic, theorem):
+        mutant = run / label
         mutant.mkdir()
         source = mutant / "GhashLlbc.lean"
         emit_model(source, llbc)
         require(digest(source) != first["lean_model_sha256"], "The changed LLBC did not affect translation")
-        compile_module("compile-mutant", source, mutant, [mutant, objects])
-        rejected = compile_module("reject-mutant", PROOF, mutant, [mutant, objects], check=False)
-        require(rejected.returncode != 0 and "Tactic `rfl` failed:" in rejected.stdout,
-                "Lean did not reject the changed extracted reduction at the round lemma")
-        negative = {"status": "rejected", "changed_model_sha256": digest(source), "log": "reject-mutant.log"}
+        compile_module(f"compile-{label}", source, mutant, [mutant, objects])
+        rejected = compile_module(f"reject-{label}", PROOF, mutant, [mutant, objects], check=False)
+        audited = dict(AXIOM_LINE.findall(rejected.stdout))
+        require(rejected.returncode != 0 and diagnostic in rejected.stdout
+                and "sorryAx" in audited.get(f"Abc.Refine.Ghash.{theorem}", ""),
+                f"Lean did not reject the {label} at {theorem}")
+        return {"status": "rejected", "changed_model_sha256": digest(source), "log": f"reject-{label}.log"}
+
+    negative = footer_negative = None
+    if options.check_mutant:
+        reduction = list(locate(llbc, ["U128", REDUCTION]))
+        require(len(reduction) == 1, "Expected one extracted reduction literal")
+        reduction[0][1] = str(int(REDUCTION) + 1)
+        negative = test_negative("mutant", "Tactic `rfl` failed:", "extracted_round_refines")
+        reduction[0][1] = REDUCTION
+
+        footer = ScalarLoop(llbc).local_function("pack_lengths")["body"]
+        footer_shift = list(locate(footer, {"Shl": "Panic"}))
+        require(len(footer_shift) == 1, "Expected one checked shift in the extracted footer")
+        footer_shift[0].clear()
+        footer_shift[0]["Shr"] = "Panic"
+        footer_negative = test_negative("footer-mutant", "Tactic `decide` proved that the proposition",
+                                        "source_nist_example_footer")
 
     return {
         "status": "source_llbc_refinement_checked", "target": target, "charon": charon,
         "rust": rust.strip(), "lean": lean, "selection": selections, "cargo": cargo,
         "source_digests": original_inputs,
         "first": first, "second": second, "theorems": provenance, "negative_check": negative,
+        "footer_negative_check": footer_negative,
     }
 
 

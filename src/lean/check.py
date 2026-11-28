@@ -81,6 +81,7 @@ def main():
                 checked_lean(command, ["-DwarningAsError=true", "-o", output / f"{module}.olean",
                                        f"{module}.lean"], directory, output)
             checked_lean(command, ["-DwarningAsError=true", "ChaCha20Stream.lean"], directory, output)
+            checked_lean(command, ["-DwarningAsError=true", "ChaCha20WordOutput.lean"], directory, output)
 
 
 if __name__ == "__main__":

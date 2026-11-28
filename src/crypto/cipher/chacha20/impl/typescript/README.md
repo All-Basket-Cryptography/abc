@@ -13,5 +13,9 @@ node --test src/crypto/cipher/chacha20/impl/typescript/chacha20.test.mts
 
 The suite compares the RFC block vector and 144 OpenSSL ciphertexts.
 It tests the final counter, rejected lengths and caller-buffer bounds.
+An additional 48 cases cover unaligned output, partial words and overlapping
+key, nonce and destination views at the counter limit. Complete words are
+processed with little-endian `DataView` operations. Only the tail uses
+individual byte writes. [Word model and scope](../../spec/ChaCha20WordOutput.lean)
 Inputs are `Uint8Array` views backed by `ArrayBuffer`.
 Full source refinement and runtime leakage qualification remain open.

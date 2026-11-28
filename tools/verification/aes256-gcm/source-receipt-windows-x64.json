@@ -7,7 +7,7 @@
   "selection": [
     "--preset=aeneas",
     "--start-from",
-    "crate::multiply"
+    "crate::authenticate"
   ],
   "cargo": [
     "--locked",
@@ -20,21 +20,21 @@
   "source_digests": {
     "tools/verification/probe/toolchain-candidate.json": "6953b42492bff08a40479725fec7ce922002bfdbe715afcaedf4f817f7621249",
     "src/crypto/aead/aes256-gcm/spec/Aes256GcmComposition.lean": "578a7494dc952964b40c47f41cdb61a823238f909a8c57651af0beb488a9dfcb",
-    "tools/verification/aes256-gcm/GhashSourceRefinement.lean": "b7542800ea8a558fe3d1bda1bfa1476d992a20a0db89140f83211aaae9577f84",
-    "tools/verification/aes256-gcm/translate.py": "6408d083211e4e8bc291047273ae6a85b6a2c0df2c48dc71c332b0c99eae37c0",
-    "tools/verification/aes256-gcm/check.py": "ec69157e6ee2ce118e3a55ff9bcce3dc8ade390d2c68eb8ec87744949b918b75",
+    "tools/verification/aes256-gcm/GhashSourceRefinement.lean": "d6bffce66faae9a8a17b37a7cf75fbd2ee016062217ee7c41080196dfae0fb30",
+    "tools/verification/aes256-gcm/translate.py": "b841058f51bc2d60c73a34d5812ae3a805fb20f7ad359b8209b257afb28b327d",
+    "tools/verification/aes256-gcm/check.py": "64e744ebff38295f06e9fdd1a84c2bf3e0cf45ae00872bcbe8f9bda033344566",
     "tools/build/rust/Cargo.toml": "9e8dd7579ad780836ce80f3a00639b171926d3435e15e3eb274c4fd67eb0d8f4",
     "tools/build/rust/Cargo.lock": "a3ee8405943bef38fef4f8127d96032013d10bc082ae0cb6ff9ccbd855178b5c",
     "src/crypto/aead/aes256-gcm/impl/rust/Cargo.toml": "bccad3abefdf7faa1d969bc42399af0ed20cb1e7dc83857cdfc8f798342f09a6",
-    "src/crypto/aead/aes256-gcm/impl/rust/src/lib.rs": "e986016e35e1127e91d61e9392db41a8181c9e2342049457f58c98221ce071e9"
+    "src/crypto/aead/aes256-gcm/impl/rust/src/lib.rs": "c05aaf98045e224f07f694713c35a2012293a2beda6170f1ea020a5c44395aca"
   },
   "first": {
-    "llbc_sha256": "75da71dd8410068f8d7e2907b44849b38296f40b9d792ade58692b288e88beb6",
-    "lean_model_sha256": "8903179e136aee9ca3339462b5afd08649daf02147373b49fb4ec97e29dcd309"
+    "llbc_sha256": "dbd49b7b5e2f4230e8b1c6e88115fe3dea199afc88d4c6f5efcb0c013993b753",
+    "lean_model_sha256": "ec278138fae8a6f5614daad91ac8d9dd33668d854c691dff928c6a6bcc80dc5b"
   },
   "second": {
-    "llbc_sha256": "448683c41db9056b700611ee79e00595ccc8c6eb15cb9259ed0ca0d83393e1f6",
-    "lean_model_sha256": "8903179e136aee9ca3339462b5afd08649daf02147373b49fb4ec97e29dcd309"
+    "llbc_sha256": "fc274fde5142536119617a11e0efebd616454653632a895010e5713acf1bab8e",
+    "lean_model_sha256": "ec278138fae8a6f5614daad91ac8d9dd33668d854c691dff928c6a6bcc80dc5b"
   },
   "theorems": {
     "Abc.Refine.Ghash.extracted_round_refines": [
@@ -51,11 +51,55 @@
       "propext",
       "Classical.choice",
       "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.source_hash_block_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.source_nist_example_footer": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.source_length_word_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.source_length_word_matches_nist_bytes": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.source_finish_tag_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.source_hash_words_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.source_tag_word_refines_nist": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.source_tag_bytes_under_aes_contract": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
     ]
   },
   "negative_check": {
     "status": "rejected",
-    "changed_model_sha256": "62e25ded95bd971b45f8e2a18831142eacbfe6959c7811543935529d42d1aee0",
+    "changed_model_sha256": "194a37785db47ff1e1a287ede89be2137b3295587aa51217824887b302a1468b",
     "log": "reject-mutant.log"
+  },
+  "footer_negative_check": {
+    "status": "rejected",
+    "changed_model_sha256": "65c62f757cf65c3aca78ce16ac7b5e0a90e6159e2b8dbee4c0ab18957e9cd30e",
+    "log": "reject-footer-mutant.log"
   }
 }

@@ -1,0 +1,109 @@
+{
+  "status": "sha512_llbc_byte_api_checked",
+  "target": "x86_64-pc-windows-msvc",
+  "charon": "0.1.254 (b104e24fea7d721b71e6c39fd70f26ff20bc0980)",
+  "charon_executable_sha256": "38ec811d2402a6ada748665486111192de9cfb5c3571d57aeb94f57b62b3ab02",
+  "rust": "rustc 1.100.0-nightly (8fa1c96cf 2026-08-17)\nbinary: rustc\ncommit-hash: 8fa1c96cfd489e4c27654c144ae871ce2c4db6c6\ncommit-date: 2026-08-17\nhost: x86_64-pc-windows-msvc\nrelease: 1.100.0-nightly\nLLVM version: 23.1.0",
+  "lean": "Lean (version 4.31.0, x86_64-w64-windows-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)",
+  "sources": {
+    "tools/verification/probe/toolchain-candidate.json": "6953b42492bff08a40479725fec7ce922002bfdbe715afcaedf4f817f7621249",
+    "src/lean/lean-toolchain": "efac0b94923b2d8b6840cd35be9177ad0fc5ab2332f4f4311c98712cee92fdee",
+    "src/crypto/hash/sha512/impl/rust/src/lib.rs": "f714292a3e778f4c1c01397f303183fbf1a3dcfbb78ad40ef6949c7850a005d9",
+    "src/crypto/hash/sha512/impl/rust/Cargo.toml": "bc11e007ac0044c6cb70a6e20105aa026b8ebbe843511858f033e0a6ae036308",
+    "tools/build/rust/Cargo.toml": "9e8dd7579ad780836ce80f3a00639b171926d3435e15e3eb274c4fd67eb0d8f4",
+    "tools/build/rust/Cargo.lock": "a3ee8405943bef38fef4f8127d96032013d10bc082ae0cb6ff9ccbd855178b5c",
+    "src/lean/Abc/Foundation/Encoding.lean": "1e4e51f3430cd6262cabedc9b6a7db80bb8e6f2a4f12af64a842f5e4ef7c32e9",
+    "src/crypto/hash/sha512/spec/Sha512Spec.lean": "7bafda0adb4584c465bef6c9d5fcf0fcf09024bbb06e448be748a4e89ec3c6bf",
+    "src/crypto/hash/sha512/spec/Sha512Compression.lean": "b9a094c309f3cf4205c165449921918f5a62154e3813b4d3451c2aa41eac6e5a",
+    "src/crypto/hash/sha512/spec/Sha512Streaming.lean": "213d36165361b03b6d2778054169afdfcc6439ba9f3dd4b30552ae354b28af91",
+    "src/crypto/hash/sha512/spec/Sha512LlbcRefinement.lean": "ee17710b72af65f16fcefb9f1b6b4517fd10349af121eb3195fc20f1a5d84ce2",
+    "src/crypto/hash/sha512/spec/Sha512StreamSourceRefinement.lean": "33776203eb058f39292ff64376079e596d5face3d9ef45603a6dfeb0e3f820e8",
+    "src/crypto/hash/sha512/spec/Sha512ApiSourceRefinement.lean": "9556b08a8b6e37bba681b03a166d38cdde53a4adac52fd316c7d03491eab3880",
+    "src/crypto/hash/sha512/spec/Sha512TraceSourceRefinement.lean": "0fd60032fba062da43550bacdf60bcbb543bf76cc0cb9f101bfb783b1a6dff50",
+    "tools/verification/sha512/check.py": "bb727ef102e94f69cec7c3caed026bd8a64d171bc58868b9cf8a3ecebfc85794",
+    "tools/verification/sha512/llbc.py": "5aaef69716a24af3f3f331374202cfcb765b40cb4a5e6d89f32adda31cd9efb6",
+    "tools/verification/sha512/check_source.py": "dabf1eb4296fd92e85bd916466ed6934e1bce4451dd1f9c328d777f09f7d1625",
+    "tools/verification/sha512/stream_llbc.py": "15cec3133f80bcda846d474afc1f83fb1233b591df61422b0ad96248915fce96",
+    "tools/verification/sha512/api_llbc.py": "f23139a6959ad5ffa04baba3b611d2c360067e36e4574ee516fafd0bb3a39db5",
+    "tools/verification/sha512/check_api_source.py": "b2a2a4571ada2ea03be4a9c27981065ba1dee1ef8a2710379a0156e6bb769d0b"
+  },
+  "extractions": {
+    "digest": [
+      {
+        "sha256": "fc6b515898cc6a3d56fbedd53529565ef91bc8b684f2f88ebcc6edb670218b43",
+        "used_default_sysroot_fallback": true
+      },
+      {
+        "sha256": "0e7f63c3a15dbc01bc4d846054422be9033feeaa2427164b0f1b1c67e369eab2",
+        "used_default_sysroot_fallback": true
+      }
+    ],
+    "compress": {
+      "sha256": "0294901becef70cc60f27d7882fe3de42e45052a20cdf8839148a56a3334e13c",
+      "used_default_sysroot_fallback": true
+    }
+  },
+  "generated_lean_sha256": {
+    "api": "5ab0ab483b70dc93a59c20cc566212e556fc17d8914fcf9844487547850ad171",
+    "stream": "498192abf159d31d1047c6c6442efdc8e7c998fa67fb70577e7d9abe4f9bdb3b",
+    "compression": "6e6d7e5b18bff2da3ec688889584f1e34186b9e6ddf01b31eb06fdeb2f12c024"
+  },
+  "audited_theorems": {
+    "sourceCopied_refines": [],
+    "sourceInitial_refines": [],
+    "sourceEncode_refines": [],
+    "sourceDriver_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "sourceDigest_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "sourceDigest_eq_composed": [
+      "propext",
+      "Quot.sound"
+    ],
+    "sourceUpdate_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "sourceFinalize_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "sourceTrace_refines_accepted": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "sourceTrace_refines_concat": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "negative_controls": {
+    "wrong_copy_bound": {
+      "rust_sha256": "157419baf9bd08f1e2b783fb8ea86d4dc673904d685bc17923ba5cea6727e8a5",
+      "llbc_sha256": "83877beaeced9ece1e2b736e1ac347ada327d08d08726ffbbb1de48fd59f7224",
+      "lean_sha256": "c389b74ef6008b48f8c37f8d933fef3be88e60afb37347786963939d0eb61a10",
+      "rejected_theorem": "sourceCopied_refines"
+    },
+    "wrong_digest_byte_order": {
+      "rust_sha256": "39082a4f3fc4e6d6a453517b843330e7052118ca8007e8e648ed5b475b9f297a",
+      "llbc_sha256": "b8cf9d2cc81eb38a32cfaeec32701d14e3254a6c6f8562524b6ba10bed9ef334",
+      "lean_sha256": "a42bcaf22ca2d221e873ca1645790e289c9b795cecc0a899d0f96d60d1f558ca",
+      "rejected_theorem": "sourceEncode_refines"
+    },
+    "wrong_wrapper_context": {
+      "rust_sha256": "abdd99d30e19286667611537980f9f317aace4a4357939940f8e743656878ba5",
+      "llbc_sha256": "5e13facfcf1fee5e5abd3707828ca4f912aa79d2f20e4e6123644be878ed38a7",
+      "rejected_by_lowering": "The SHA-512 wrapper must return the finalized updated context"
+    }
+  }
+}

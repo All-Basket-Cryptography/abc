@@ -16,18 +16,18 @@ split point, as well as empty input and a zero multiplier. The independent
 Python oracle uses arbitrary-precision integer arithmetic at block boundaries
 and across 2,000 seeded random inputs. Lean checks high-term folding, the
 final-reduction threshold and a sum bound under its stated input hypotheses.
-The extracted Rust core now has checked proofs for splitting a `u128` into
-five little-endian 26-bit limbs, caching the key multiples, and processing
-one decoded block. For an accumulator in the live-limb range, key and
-message digits below `2^26` and correct cached multiples, the exact
-`absorb_limbs` helper succeeds, preserves the live-limb range, and advances
-the RFC polynomial recurrence modulo `2^130 - 5`. The two checked entry
-points are `source_limbs_refines` and `source_absorb_polynomial_step`.
+The extracted Rust core has checked proofs for little-endian byte loading,
+key clamping, caching the key multiples, and full-block absorption including
+the appended one bit. It also proves the absorption step for an already
+padded final block and the normalization that precedes final reduction.
+The absorption theorems require a live accumulator and bounded key limbs
+with a correct cache. Each step preserves that limb range and advances the
+RFC polynomial recurrence modulo `2^130 - 5`.
 
-The source proof still needs to link byte loading and insertion of the
-appended one bit to those entry points, then cover initialization, streaming
-and final tag computation. The [source replay](../../../../../tools/verification/poly1305/README.md)
-checks the exact generated model and audits the theorem dependencies.
+The public proof still needs to cover key initialization, streaming chunk
+assembly, partial-block padding, and final subtraction and tag emission.
+The source replay compiles the exact generated model and audits the theorem
+dependencies. [Source verification](../../../../../tools/verification/poly1305/README.md) ·
 [RFC 8439 Appendix A.3](https://www.rfc-editor.org/rfc/rfc8439.html#appendix-A.3)
 
 The 13-bit radix model for the JavaScript and TypeScript carry equations

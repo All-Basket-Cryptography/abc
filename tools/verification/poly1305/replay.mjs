@@ -11,11 +11,17 @@ const scope = 'src/crypto/mac/poly1305';
 const sources = [pinPath, 'tools/build/rust/Cargo.toml', 'tools/build/rust/Cargo.lock',
   `${scope}/impl/rust/src/lib.rs`, `${scope}/impl/rust/Cargo.toml`, 'tools/verification/poly1305/check.mjs'];
 const generated = ['Abc/Poly1305/Extracted/Funs.lean', 'Abc/Poly1305/Extracted/Types.lean'];
+const foundationEncoding = 'src/lean/Abc/Foundation/Encoding.lean';
+const radixModel = `${scope}/impl/go/Poly1305GoModel.lean`;
+const replayInputs = [foundationEncoding, radixModel, 'tools/verification/poly1305/replay.mjs'];
 const audits = {
   Poly1305EncodingRefinement: ['Abc.Refine.Poly1305.Encoding.source_limbs_refines'],
   Poly1305SourceRefinement: ['source_carry_pair_refines', 'source_carry_upper_refines',
-    'source_carry_refines', 'source_key_multiples_refines', 'source_multiply_refines',
+    'source_carry_refines', 'source_final_carry_refines', 'source_key_multiples_refines', 'source_multiply_refines',
     'source_absorb_limbs_refines', 'source_absorb_polynomial_step'].map((name) => `Abc.Refine.Poly1305.${name}`),
+  Poly1305ByteRefinement: ['source_limbs_columns', 'source_load_block_refines', 'source_clamped_key_refines',
+    'source_absorb_encoded_refines', 'source_absorb_full_block_refines', 'source_absorb_padded_final_block_refines']
+    .map((name) => `Abc.Refine.Poly1305.Bytes.${name}`),
 };
 const permittedAxioms = new Set(['propext', 'Classical.choice', 'Quot.sound']);
 const digest = (file) => createHash('sha256').update(readFileSync(file)).digest('hex');
@@ -67,20 +73,26 @@ function runReplay(artifactPath) {
   const version = run('lean-version', ['--version'], repo);
   if (!version.includes(`version ${pins.lean.split(':v')[1]},`)) throw new Error('Lean version differs from the pin');
   for (const file of generated.toReversed()) compile(join(artifact, 'first'), file, file.slice(0, -5));
-  compile(join(repo, scope, 'impl/go'), 'Poly1305GoModel.lean', 'Poly1305GoModel');
+  compile(join(repo, 'src/lean'), 'Abc/Foundation/Encoding.lean', 'Abc/Foundation/Encoding');
+  compile(dirname(join(repo, radixModel)), 'Poly1305GoModel.lean', 'Poly1305GoModel');
+  const sourceProofAxioms = {};
   for (const [module, theorems] of Object.entries(audits)) {
     const checked = compile(here, `${module}.lean`, module);
     const dependencies = new Map([...checked.matchAll(/^'([^']+)' depends on axioms: \[([^\]]*)\]/gm)]
-      .map((match) => [match[1], match[2].split(', ').filter(Boolean)]));
+      .map((match) => [match[1], match[2].split(',').map((axiom) => axiom.trim()).filter(Boolean)]));
     for (const theorem of theorems) {
       if (!dependencies.has(theorem) || dependencies.get(theorem).some((axiom) => !permittedAxioms.has(axiom))) {
         throw new Error(`Missing or unexpected axiom audit for ${theorem}. See ${join(work, `${module}.log`)}`);
       }
+      sourceProofAxioms[theorem] = dependencies.get(theorem);
     }
   }
   const report = { status: 'poly1305_source_refinement_checked', extractionRevision: receipt.revision,
     target: receipt.target, model: receipt.first.files, theorems: Object.values(audits).flat(),
     proofFiles: Object.fromEntries(Object.keys(audits).map((module) => [module, digest(join(here, `${module}.lean`))])),
+    extractionInputDigests: receipt.sources, sourceProofAxioms,
+    otherReplayInputDigests: Object.fromEntries(replayInputs.map((path) => [path, digest(join(repo, path))])),
+    lean: version.trim(),
   };
   writeFileSync(join(work, 'result.json'), `${JSON.stringify(report, null, 2)}\n`);
   console.log(JSON.stringify({ ...report, path: work }));

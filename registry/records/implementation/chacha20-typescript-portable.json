@@ -21,7 +21,7 @@
   "subject_ref": "abc:algorithm:chacha20",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "0a96367a6f5e29b1864df42e5854a6768ce4581c10bd6185dc370d845e780a40",
+  "source_sha256": "508a357f6b9ef5619b5fff5fa37b7fa99d47f4b762d247693354715d9b692aa3",
   "path": "src/crypto/cipher/chacha20/impl/typescript",
   "languages": [
     "typescript"
