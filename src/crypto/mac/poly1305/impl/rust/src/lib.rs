@@ -23,13 +23,12 @@ impl Poly1305 {
         let [low, high] = key.as_chunks::<BLOCK_BYTES>().0 else {
             unreachable!("Poly1305 key size is fixed");
         };
-        let clamped = u128::from_le_bytes(*low) & 0x0ffffffc0ffffffc0ffffffc0fffffff;
-        let r = limbs(clamped);
+        let r = clamped_key(*low);
         Self {
             r,
             r_times_five: key_multiples(r),
             h: [0; 5],
-            pad: u128::from_le_bytes(*high),
+            pad: load_block(*high),
             pending: [0; BLOCK_BYTES],
             buffered: 0,
         }
@@ -45,13 +44,13 @@ impl Poly1305 {
             if end < BLOCK_BYTES {
                 return;
             }
-            self.absorb(u128::from_le_bytes(self.pending), 1 << 24);
+            self.absorb(self.pending, 1 << 24);
             input = &input[copied..];
         }
 
         let (blocks, tail) = input.as_chunks::<BLOCK_BYTES>();
         for block in blocks {
-            self.absorb(u128::from_le_bytes(*block), 1 << 24);
+            self.absorb(*block, 1 << 24);
         }
         self.pending[..tail.len()].copy_from_slice(tail);
         self.buffered = tail.len();
@@ -62,7 +61,7 @@ impl Poly1305 {
         if self.buffered != 0 {
             self.pending[self.buffered..].fill(0);
             self.pending[self.buffered] = 1;
-            self.absorb(u128::from_le_bytes(self.pending), 0);
+            self.absorb(self.pending, 0);
         }
 
         // Absorption finishes by carrying any excess from limb 0 into limb 1.
@@ -85,14 +84,32 @@ impl Poly1305 {
         low.wrapping_add(self.pad).to_le_bytes()
     }
 
-    fn absorb(&mut self, value: u128, high_bit: u64) {
-        self.h = absorb_encoded(self.h, self.r, self.r_times_five, value, high_bit);
+    fn absorb(&mut self, block: [u8; BLOCK_BYTES], high_bit: u64) {
+        self.h = absorb_bytes(self.h, self.r, self.r_times_five, block, high_bit);
     }
+}
+
+fn load_block(block: [u8; BLOCK_BYTES]) -> u128 {
+    u128::from_le_bytes(block)
+}
+
+fn clamped_key(block: [u8; BLOCK_BYTES]) -> [u64; 5] {
+    limbs(load_block(block) & 0x0ffffffc0ffffffc0ffffffc0fffffff)
 }
 
 fn key_multiples(r: [u64; 5]) -> [u64; 4] {
     let [_, r1, r2, r3, r4] = r;
     [r1 * 5, r2 * 5, r3 * 5, r4 * 5]
+}
+
+fn absorb_bytes(
+    h: [u64; 5],
+    r: [u64; 5],
+    r_five: [u64; 4],
+    block: [u8; BLOCK_BYTES],
+    high_bit: u64,
+) -> [u64; 5] {
+    absorb_encoded(h, r, r_five, load_block(block), high_bit)
 }
 
 fn absorb_encoded(h: [u64; 5], r: [u64; 5], r_five: [u64; 4], value: u128, high_bit: u64) -> [u64; 5] {

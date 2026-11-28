@@ -14,8 +14,8 @@ const namespace = 'Abc.Poly1305.Extracted';
 const subdir = namespace.replaceAll('.', '/');
 const modelFiles = [`${subdir}/Funs.lean`, `${subdir}/Types.lean`];
 const cargo = ['--locked', '--offline', '--lib', '--no-default-features', '--target', target];
-const charonArgs = ['--preset=aeneas', '--start-from', 'crate::absorb_encoded',
-  '--start-from', 'crate::key_multiples'];
+const charonArgs = ['--preset=aeneas', '--start-from', 'crate::absorb_bytes',
+  '--start-from', 'crate::clamped_key', '--start-from', 'crate::key_multiples'];
 const aeneasArgs = ['-backend', 'lean', '-split-files', '-no-progress-bar', '-subdir', subdir,
   '-namespace', namespace];
 const officialBinaries = {

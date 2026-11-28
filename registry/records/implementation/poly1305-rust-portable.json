@@ -18,7 +18,7 @@
   "subject_ref": "abc:algorithm:poly1305",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "2a0c4f2a224ea5226f17614b2d09860269c6a016d5f943ef77395e8611fec3ea",
+  "source_sha256": "60753aa6b596bed0e70e34f7bc517db2f332aee5f0b5fb04887d43740ed209a7",
   "path": "src/crypto/mac/poly1305/impl/rust",
   "languages": [
     "rust"
