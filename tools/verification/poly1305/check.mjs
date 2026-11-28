@@ -14,8 +14,7 @@ const namespace = 'Abc.Poly1305.Extracted';
 const subdir = namespace.replaceAll('.', '/');
 const modelFiles = [`${subdir}/Funs.lean`, `${subdir}/Types.lean`];
 const cargo = ['--locked', '--offline', '--lib', '--no-default-features', '--target', target];
-const charonArgs = ['--preset=aeneas', '--start-from', 'crate::absorb_bytes',
-  '--start-from', 'crate::_::new', '--start-from', 'crate::_::finalize'];
+const charonArgs = ['--preset=aeneas', '--start-from', 'crate::authenticate'];
 const aeneasArgs = ['-backend', 'lean', '-split-files', '-no-progress-bar', '-subdir', subdir,
   '-namespace', namespace];
 const officialBinaries = {
@@ -39,7 +38,7 @@ function check(toolRoot) {
   const output = join(repo, '.abc/poly1305-extraction');
   mkdirSync(output, { recursive: true });
   const work = mkdtempSync(join(output, 'run-'));
-  const report = { status: 'failed', scope: 'poly1305_constructor_blocks_and_finalizer', pins, target, features: [],
+  const report = { status: 'failed', scope: 'poly1305_public_stream_and_authenticate', pins, target, features: [],
     cargo, charonArgs, aeneasArgs };
 
   function run(label, program, args, cwd, env = {}) {

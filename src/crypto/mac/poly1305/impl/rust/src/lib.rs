@@ -35,22 +35,25 @@ impl Poly1305 {
     /// Absorb arbitrary chunks before finalization.
     pub fn update(&mut self, mut input: &[u8]) {
         if self.buffered != 0 {
-            let copied = input.len().min(BLOCK_BYTES - self.buffered);
+            let room = BLOCK_BYTES - self.buffered;
+            let copied = if input.len() < room {
+                input.len()
+            } else {
+                room
+            };
             let end = self.buffered + copied;
-            self.pending[self.buffered..end].copy_from_slice(&input[..copied]);
+            self.pending = copy_pending(self.pending, self.buffered, &input[..copied]);
             self.buffered = end;
             if end < BLOCK_BYTES {
                 return;
             }
-            self.absorb(self.pending, 1 << 24);
+            self.h = absorb_bytes(self.h, self.r, self.r_times_five, self.pending, 1 << 24);
             input = &input[copied..];
         }
 
-        let (blocks, tail) = input.as_chunks::<BLOCK_BYTES>();
-        for block in blocks {
-            self.absorb(*block, 1 << 24);
-        }
-        self.pending[..tail.len()].copy_from_slice(tail);
+        let (h, tail) = absorb_blocks(self.h, self.r, self.r_times_five, input);
+        self.h = h;
+        self.pending = copy_pending(self.pending, 0, tail);
         self.buffered = tail.len();
     }
 
@@ -64,10 +67,27 @@ impl Poly1305 {
         };
         finish_tag(h, self.pad)
     }
+}
 
-    fn absorb(&mut self, block: [u8; BLOCK_BYTES], high_bit: u64) {
-        self.h = absorb_bytes(self.h, self.r, self.r_times_five, block, high_bit);
+fn copy_pending(mut pending: [u8; BLOCK_BYTES], offset: usize, input: &[u8]) -> [u8; BLOCK_BYTES] {
+    pending[offset..offset + input.len()].copy_from_slice(input);
+    pending
+}
+
+fn absorb_blocks<'a>(
+    mut h: [u64; 5],
+    r: [u64; 5],
+    r_times_five: [u64; 4],
+    mut input: &'a [u8],
+) -> ([u64; 5], &'a [u8]) {
+    while input.len() >= BLOCK_BYTES {
+        let Ok(block) = <[u8; BLOCK_BYTES]>::try_from(&input[..BLOCK_BYTES]) else {
+            unreachable!("the slice has the length of one Poly1305 block");
+        };
+        h = absorb_bytes(h, r, r_times_five, block, 1 << 24);
+        input = &input[BLOCK_BYTES..];
     }
+    (h, input)
 }
 
 fn split_key(key: &[u8; KEY_BYTES]) -> ([u8; BLOCK_BYTES], [u8; BLOCK_BYTES]) {
