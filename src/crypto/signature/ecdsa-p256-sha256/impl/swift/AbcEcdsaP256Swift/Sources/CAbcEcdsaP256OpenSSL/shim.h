@@ -1,8 +1,10 @@
 #pragma once
+#define OPENSSL_SUPPRESS_DEPRECATED
 #include <openssl/bn.h>
 #include <openssl/core_names.h>
 #include <openssl/crypto.h>
 #include <openssl/ec.h>
+#include <openssl/err.h>
 #include <openssl/evp.h>
 #include <openssl/params.h>
 #include <stdint.h>
@@ -30,29 +32,64 @@ static inline int abc_p256_public(const uint8_t *scalar, uint8_t *output)
     return ok;
 }
 
-static inline int abc_p256_sign(const uint8_t *scalar, const uint8_t *message, size_t length, uint8_t *out)
+/* Return 1 for a signature, 2 if RFC 6979 must advance its state, or 0 on a provider error. */
+static inline int abc_p256_sign_candidate(const uint8_t *scalar, const uint8_t *digest,
+    const uint8_t *nonce, uint8_t *out)
 {
     EVP_PKEY *key = abc_p256_private(scalar);
-    EVP_MD_CTX *ctx = EVP_MD_CTX_new();
-    unsigned int deterministic = 1;
-    const uint8_t empty = 0;
-    OSSL_PARAM params[] = {
-        OSSL_PARAM_construct_uint(OSSL_SIGNATURE_PARAM_NONCE_TYPE, &deterministic),
-        OSSL_PARAM_construct_end()
-    };
-    unsigned char der[72];
-    size_t der_len = sizeof(der);
-    int ok = key && ctx && EVP_DigestSignInit_ex(ctx, NULL, "SHA256", NULL, "provider=default", key, params) == 1
-        && EVP_DigestSign(ctx, der, &der_len, message ? message : &empty, length) == 1;
-    const unsigned char *cursor = der;
-    ECDSA_SIG *sig = ok ? d2i_ECDSA_SIG(NULL, &cursor, (long)der_len) : NULL;
-    const BIGNUM *r = NULL, *s = NULL;
-    if (sig) ECDSA_SIG_get0(sig, &r, &s);
-    ok = sig && cursor == der + der_len && BN_bn2binpad(r, out, 32) == 32 && BN_bn2binpad(s, out + 32, 32) == 32;
+    EC_KEY *ec = key ? EVP_PKEY_get1_EC_KEY(key) : NULL;
+    const EC_GROUP *group = ec ? EC_KEY_get0_group(ec) : NULL;
+    const BIGNUM *order = group ? EC_GROUP_get0_order(group) : NULL;
+    BN_CTX *ctx = BN_CTX_secure_new();
+    BIGNUM *k = BN_secure_new(), *inverse = BN_secure_new(), *r = BN_secure_new(), *x = BN_secure_new();
+    EC_POINT *point = group ? EC_POINT_new(group) : NULL;
+    ECDSA_SIG *sig = NULL;
+    int status = 0;
+    if (!ctx || !k || !inverse || !r || !x || !point || !order || !BN_bin2bn(nonce, 32, k)) goto end;
+    BN_set_flags(k, BN_FLG_CONSTTIME);
+    BN_set_flags(inverse, BN_FLG_CONSTTIME);
+    if (BN_is_zero(k) || BN_cmp(k, order) >= 0) {
+        status = 2;
+        goto end;
+    }
+    if (EC_POINT_mul(group, point, k, NULL, NULL, ctx) != 1 ||
+        EC_POINT_get_affine_coordinates(group, point, x, NULL, ctx) != 1 ||
+        BN_nnmod(r, x, order, ctx) != 1) goto end;
+    if (BN_is_zero(r)) {
+        status = 2;
+        goto end;
+    }
+    if (!BN_mod_inverse(inverse, k, order, ctx)) goto end;
+
+    /* The library reports s=0 explicitly when supplied with k's inverse and r. */
+    int marked = ERR_set_mark();
+    sig = ECDSA_do_sign_ex(digest, 32, inverse, r, ec);
+    unsigned long error = ERR_peek_last_error();
+    if (marked) ERR_pop_to_mark();
+    else ERR_clear_error();
+    if (!sig) {
+        if (ERR_GET_LIB(error) == ERR_LIB_EC && ERR_GET_REASON(error) == EC_R_NEED_NEW_SETUP_VALUES)
+            status = 2;
+        goto end;
+    }
+    const BIGNUM *rr = NULL, *ss = NULL;
+    ECDSA_SIG_get0(sig, &rr, &ss);
+    uint8_t pending[64];
+    if (BN_bn2binpad(rr, pending, 32) == 32 && BN_bn2binpad(ss, pending + 32, 32) == 32) {
+        memcpy(out, pending, sizeof(pending));
+        status = 1;
+    }
+end:
     ECDSA_SIG_free(sig);
-    EVP_MD_CTX_free(ctx);
+    EC_POINT_clear_free(point);
+    BN_clear_free(x);
+    BN_clear_free(r);
+    BN_clear_free(inverse);
+    BN_clear_free(k);
+    BN_CTX_free(ctx);
+    EC_KEY_free(ec);
     EVP_PKEY_free(key);
-    return ok;
+    return status;
 }
 
 static inline int abc_p256_verify(const uint8_t *pub, size_t pub_len, const uint8_t *msg, size_t length,

@@ -17,7 +17,8 @@ GO_ORACLE = CRYPTO / "agreement/ml-kem-768/impl/swift/tests/oracle.go"
 PROFILES = {
     "argon2id": ("kdf/argon2id", "Argon2id", {"cases": "110", "bounds": "passed"}),
     "ecdsa-p256-sha256": ("signature/ecdsa-p256-sha256", "EcdsaP256",
-                         {"rfc_known": "3", "interoperability": "48", "bounds": "passed"}),
+                         {"rfc_known": "3", "candidate_retries": "2", "provider_retries": "2",
+                          "interoperability": "48", "bounds": "passed"}),
     "ml-kem-768": ("agreement/ml-kem-768", "MlKem768", {"acvp_known": "2", "go_cases": "12", "bounds": "passed"}),
     "ml-dsa-65": ("signature/ml-dsa-65", "MlDsa65", {"acvp_known": "4", "go_cases": "12", "bounds": "passed"}),
 }
@@ -107,8 +108,11 @@ def check(profile, swift):
         fixture = work / "fixtures.txt"
         fixture.write_text("\n".join(fixtures(profile)) + "\n", encoding="utf-8")
 
-        args = (swift, "run", "--package-path", str(consumer), "--scratch-path", str(work / "build"),
-                "--configuration", "release", "-Xswiftc", "-warnings-as-errors", "Consumer", str(fixture))
+        args = [swift, "run", "--package-path", str(consumer), "--scratch-path", str(work / "build"),
+                "--configuration", "release", "-Xswiftc", "-warnings-as-errors"]
+        if profile == "ecdsa-p256-sha256":
+            args.extend(["-Xswiftc", "-enable-testing"])
+        args.extend(["Consumer", str(fixture)])
         observed, reciprocal = {}, []
         for line in run(*args).splitlines():
             key, value = line.split("=", 1)

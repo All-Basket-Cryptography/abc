@@ -1,4 +1,4 @@
-import AbcEcdsaP256Swift
+@testable import AbcEcdsaP256Swift
 import CryptoKit
 import Foundation
 
@@ -23,6 +23,26 @@ func check() throws {
     }
     let order = decode("ffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551")
     let message = Data("sample".utf8)
+    let candidates = [
+        decode("a6e3c57dd01abe90086538398355dd4c3b17aa873382b0f24d6129493d8aad60"),
+        decode("8e83dc490bc5fc4d5992bd63cd87f254adffcb930f8a8011702a88870f638fdb"),
+        decode("7b8dc9ad8ce159abca1b9915fc1470e91d5ad2443b3032557e78f47e180ab702"),
+    ]
+    var attempt = 0
+    let repeatedCandidate = EcdsaP256Sha256.deterministicSignature(
+        privateScalar: privateKey, digest: Data(SHA256.hash(data: message))) { nonce in
+        ensure(attempt < candidates.count && nonce == candidates[attempt], "RFC 6979 state after retry")
+        attempt += 1
+        return attempt < candidates.count ? nil : nonce
+    }
+    ensure(attempt == 3 && repeatedCandidate == candidates[2], "Two simulated zero-field retries")
+    let one = Data(repeating: 0, count: 31) + Data([1])
+    let zeroSDigest = decode("94e82e0c1ed3bdb90743191a9c5bbf0d45e37d2c792c6ae3ff18917d23ca62bb")
+    // For the unit fixture d = k = 1 and h = n - x(G), so s = 0.
+    ensure(try EcdsaP256Sha256.signatureCandidate(privateScalar: one, digest: zeroSDigest, nonce: one) == nil,
+           "Provider must retry a zero signature field")
+    ensure(try EcdsaP256Sha256.signatureCandidate(privateScalar: one, digest: zeroSDigest,
+           nonce: Data(repeating: 0, count: 32)) == nil, "Provider must retry an invalid nonce")
     for key in [Data(), Data(repeating: 0, count: 32), order, Data(repeating: 0xff, count: 32)] {
         rejects(EcdsaP256Error.invalidPrivateScalar) { _ = try EcdsaP256Sha256.publicKey(privateScalar: key) }
         rejects(EcdsaP256Error.invalidPrivateScalar) {
@@ -50,6 +70,8 @@ func check() throws {
                "OpenSSL accepts CryptoKit")
     }
     print("rfc_known=3")
+    print("candidate_retries=2")
+    print("provider_retries=2")
     print("interoperability=48")
     print("bounds=passed")
 }
