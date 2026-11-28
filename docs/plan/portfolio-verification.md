@@ -37,6 +37,11 @@ apply to their verified entry points and feature configuration. The
 full portfolio still requires per-source refinement and compiled
 side-channel qualification. [Original exact refinement evidence](../status/pr-1-qualification.md#formal-evidence) · [Linux SHA-256, HMAC and HKDF re-extraction](https://github.com/All-Basket-Cryptography/abc/actions/runs/46096767910/job/140829799978) · [Linux ChaCha20 composition verification](https://github.com/All-Basket-Cryptography/abc/actions/runs/46096767939/job/140829799821)
 
+The updated x86-64 Linux replays passed 24 SHA3/SHAKE statements, five
+Salsa20/8 statements, 32 AES-GCM statements and 29 Poly1305 statements.
+The runtime record links each source replay to its input digests and
+job. [SHAKE256 and Salsa20/8](https://github.com/All-Basket-Cryptography/abc/actions/runs/46109346348/job/140869170148) · [AES-GCM](https://github.com/All-Basket-Cryptography/abc/actions/runs/46109702760/job/140870270112) · [Poly1305](https://github.com/All-Basket-Cryptography/abc/actions/runs/46109346571/job/140869170734)
+
 The Linux replay checked 16 Rust SHA3-256 and SHAKE256 wrapper and reader
 theorems, 22 Rust AES-256-GCM theorems, and the scrypt buffer model on
 commit `52ce20e`. The SHA3/SHAKE check rejected four re-extracted Rust

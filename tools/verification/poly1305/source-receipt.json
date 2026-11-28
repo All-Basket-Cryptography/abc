@@ -1,6 +1,6 @@
 {
   "status": "poly1305_source_refinement_checked",
-  "extractionRevision": "b4f410efd7554754cf636467f1b6ed1b65062e7d",
+  "extractionRevision": "ccd5d606569852b6572f9be6cbd14821511c6a9e",
   "target": "x86_64-unknown-linux-gnu",
   "model": {
     "Abc/Poly1305/Extracted/Funs.lean": "1200cc9a635c9e3c68c8223b201f0c2dad0f21241cfa5ec4a5fef4fd71f5694a",
@@ -205,6 +205,6 @@
     "src/crypto/mac/poly1305/impl/go/Poly1305GoModel.lean": "cc896150363f5b5358117715127ecbff241d703a9c680682c4799b68c3fa7fa9",
     "tools/verification/poly1305/replay.mjs": "96c5e986dc5b7ff666f907c83da30163c46a0d22fe9b49db28cfd5391bbd6c92"
   },
-  "lean": "Lean (version 4.31.0, x86_64-w64-windows-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)",
-  "extractionRun": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46108295252"
+  "lean": "Lean (version 4.31.0, x86_64-unknown-linux-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)",
+  "extractionRun": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46109346571"
 }

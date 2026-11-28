@@ -1352,22 +1352,42 @@
       "sha3_shake": {
         "path": "tools/verification/keccak/wrapper-receipt-windows-x64.json",
         "sha256": "e2b2547204ba6deb483c3dbac0bdf036d1ac5ba1e78b76d97531364fd72bbe42",
-        "audited_theorems": 24
+        "audited_theorems": 24,
+        "linux": {
+          "checkpoint": "dd09587c2865aa908c385f54ce51ce7cdb2bd420",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46109346348/job/140869170148",
+          "result_sha256": "7ae5df020d0a12092fbddeee0d8e1f708d52970496227f800fcd423533e5b672"
+        }
       },
       "aes256_gcm": {
         "path": "tools/verification/aes256-gcm/source-receipt-windows-x64.json",
         "sha256": "ff841d511da1caa6525bbb2a621aff071624aec8fc52c26b54ae3ffa7bbe017c",
-        "audited_theorems": 32
+        "audited_theorems": 32,
+        "linux": {
+          "checkpoint": "c2db53c6bec1b156c48a7417ba40742024475f75",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46109702760/job/140870270112",
+          "result_sha256": "c473bdcc488401b0821408b827fb22a72d7501a92774b3bff71b9b5a1cdd18f0"
+        }
       },
       "scrypt_salsa8": {
         "path": "tools/verification/scrypt/source-receipt-windows-x64.json",
         "sha256": "7752be321f5222bdab1f85d6994cff9eba56042744077bbba80924faa0226e50",
-        "audited_theorems": 5
+        "audited_theorems": 5,
+        "linux": {
+          "checkpoint": "dd09587c2865aa908c385f54ce51ce7cdb2bd420",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46109346348/job/140869170148",
+          "result_sha256": "ff7379a280a12ca089bdf644ca9dd5c1f1ff4e25633ee02196f516c31012edc1"
+        }
       },
       "poly1305": {
         "path": "tools/verification/poly1305/source-receipt.json",
-        "sha256": "333e6146a54149dff7ef7126b5f078e4e85188ab5018b219ef3447ed09512b78",
-        "audited_theorems": 29
+        "sha256": "d430bae16ade475da19d0608073aa64bbb89f8065cd5ed1cc61521c70032287d",
+        "audited_theorems": 29,
+        "linux": {
+          "checkpoint": "dd09587c2865aa908c385f54ce51ce7cdb2bd420",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46109346571/job/140869170734",
+          "merge_revision": "ccd5d606569852b6572f9be6cbd14821511c6a9e"
+        }
       }
     },
     "poly1305_paired_reproduction": {
