@@ -1,16 +1,10 @@
 // RFC 8439 Poly1305 with ten 13-bit limbs and fixed-schedule Number arithmetic.
+import { asUint8Array } from '../../../../inputs/bytes.mjs';
+
 const BLOCK_BYTES = 16;
 const LIMBS = 10;
 const RADIX = 8192;
 const MASK = RADIX - 1;
-
-function requireBytes(bytes) {
-  if (!(bytes instanceof Uint8Array) || !(bytes.buffer instanceof ArrayBuffer)) {
-    throw new TypeError('Poly1305 requires Uint8Array backed by an ArrayBuffer');
-  }
-  // The view constructor rejects a detached buffer before an update can write.
-  new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-}
 
 function decode(bytes, size, blockMarker, out) {
   out.fill(0);
@@ -91,33 +85,33 @@ export class Poly1305 {
   #used = 0;
 
   constructor(key) {
-    requireBytes(key);
-    if (key.length !== 32) throw new RangeError('Poly1305 requires a 32-byte one-time key');
-    const clipped = Uint8Array.from(key.subarray(0, 16));
+    const bytes = asUint8Array(key);
+    if (bytes.length !== 32) throw new RangeError('Poly1305 requires a 32-byte one-time key');
+    const clipped = Uint8Array.from(bytes.subarray(0, 16));
     for (const i of [3, 7, 11, 15]) clipped[i] &= 15;
     for (const i of [4, 8, 12]) clipped[i] &= 252;
     decode(clipped, 16, false, this.#r);
-    this.#pad = Uint8Array.from(key.subarray(16));
+    this.#pad = Uint8Array.from(bytes.subarray(16));
     clipped.fill(0);
   }
 
   update(input) {
-    requireBytes(input);
+    const bytes = asUint8Array(input);
     let offset = 0;
     if (this.#used > 0) {
-      offset = Math.min(BLOCK_BYTES - this.#used, input.length);
-      this.#pending.set(input.subarray(0, offset), this.#used);
+      offset = Math.min(BLOCK_BYTES - this.#used, bytes.length);
+      this.#pending.set(bytes.subarray(0, offset), this.#used);
       this.#used += offset;
       if (this.#used < BLOCK_BYTES) return this;
       absorb(this.#h, this.#r, this.#pending, BLOCK_BYTES, this.#scratch, this.#digits);
     }
-    while (input.length - offset >= BLOCK_BYTES) {
-      absorb(this.#h, this.#r, input.subarray(offset, offset + BLOCK_BYTES),
+    while (bytes.length - offset >= BLOCK_BYTES) {
+      absorb(this.#h, this.#r, bytes.subarray(offset, offset + BLOCK_BYTES),
         BLOCK_BYTES, this.#scratch, this.#digits);
       offset += BLOCK_BYTES;
     }
-    this.#pending.set(input.subarray(offset));
-    this.#used = input.length - offset;
+    this.#pending.set(bytes.subarray(offset));
+    this.#used = bytes.length - offset;
     return this;
   }
 

@@ -1,12 +1,12 @@
 // RFC 8439 ChaCha20. The key and nonce are read before any caller output changes.
+import { asUint8Array } from '../../../../inputs/bytes.mjs';
+
 const MAX_COUNTER = 0xffffffff;
 const BLOCK_BYTES = 64;
 
 function view(bytes) {
-  if (!(bytes instanceof Uint8Array) || !(bytes.buffer instanceof ArrayBuffer)) {
-    throw new TypeError('ChaCha20 requires Uint8Array backed by an ArrayBuffer');
-  }
-  return new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const view = asUint8Array(bytes);
+  return new DataView(view.buffer, view.byteOffset, view.byteLength);
 }
 
 function initialState(key, nonce, counter) {
@@ -59,23 +59,23 @@ function compress(initial, work, out) {
 export function block(key, nonce, counter) {
   const initial = initialState(key, nonce, counter);
   const output = new Uint8Array(BLOCK_BYTES);
-  compress(initial, new Uint32Array(16), view(output));
+  compress(initial, new Uint32Array(16), new DataView(output.buffer));
   return output;
 }
 
 export function applyKeystream(key, nonce, counter, input) {
-  view(input);
+  const destination = asUint8Array(input);
   const initial = initialState(key, nonce, counter);
-  const blocks = Math.ceil(input.length / BLOCK_BYTES);
+  const blocks = Math.ceil(destination.length / BLOCK_BYTES);
   if (blocks > MAX_COUNTER + 1 - counter) throw new RangeError('ChaCha20 counter would wrap');
   const buffer = new Uint8Array(BLOCK_BYTES);
-  const output = view(buffer);
+  const output = new DataView(buffer.buffer);
   const work = new Uint32Array(16);
-  for (let offset = 0; offset < input.length; offset += BLOCK_BYTES) {
+  for (let offset = 0; offset < destination.length; offset += BLOCK_BYTES) {
     initial[12] = counter + offset / BLOCK_BYTES;
     compress(initial, work, output);
-    const size = Math.min(BLOCK_BYTES, input.length - offset);
-    for (let i = 0; i < size; i += 1) input[offset + i] ^= buffer[i];
+    const size = Math.min(BLOCK_BYTES, destination.length - offset);
+    for (let i = 0; i < size; i += 1) destination[offset + i] ^= buffer[i];
   }
   return input;
 }

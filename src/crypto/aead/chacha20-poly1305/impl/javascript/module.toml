@@ -2,6 +2,7 @@ schema_version = 1
 id = "chacha20-poly1305-javascript-portable"
 owned_paths = ["src/crypto/aead/chacha20-poly1305/impl/javascript"]
 dependencies = [
+  { module = "crypto-byte-views-ecmascript", type = "calls" },
   { module = "chacha20-javascript-portable", type = "calls" },
   { module = "poly1305-javascript-portable", type = "calls" },
 ]

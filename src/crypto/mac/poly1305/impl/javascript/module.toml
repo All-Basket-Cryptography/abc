@@ -1,6 +1,7 @@
 schema_version = 1
 id = "poly1305-javascript-portable"
 owned_paths = ["src/crypto/mac/poly1305/impl/javascript"]
+dependencies = [{ module = "crypto-byte-views-ecmascript", type = "calls" }]
 
 [tasks.test]
 kind = "test"

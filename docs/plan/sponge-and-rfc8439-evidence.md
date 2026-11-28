@@ -41,13 +41,19 @@ API description, dependencies, test entry point and target evidence together.
   added native hash variants remain open.
   [Keccak model](../../src/crypto/hash/keccak-p1600/spec) · [BLAKE2b buffer model](../../src/crypto/hash/blake2b/spec/Blake2bBuffer.lean)
 
+The ECMAScript AEAD reads the same fixed-length byte view for authentication
+and decryption. Native typed-array accessors establish the backing store and
+byte range. The tests cover custom array accessors, nonzero offsets and rejection
+of shared, detached and out-of-bounds views.
+[Input regression tests](../../src/crypto/inputs/bytes.test.mjs)
+
 ## Performance evidence
 
 The leaf reports include their own reproducible workloads and environment.
 On an i7-12700K running Windows x64, the C11 and C++17 release-mode
 ChaCha20-Poly1305 samples measured 6.793 µs and 7.138 µs for a 4 KiB seal.
-Node 24.12.0 measured JavaScript at 144.33 µs and TypeScript at 138.63 µs
-with 16 AAD bytes, with a 6.46 µs Node/OpenSSL result under that harness.
+Node 24.12.0 measured JavaScript at 138.58 µs and TypeScript at 137.96 µs
+with 16 AAD bytes, with a 6.38 µs Node/OpenSSL result under that harness.
 Cross-harness native and Node results have different call and allocation
 overheads. [C run](../../src/crypto/aead/chacha20-poly1305/impl/c/README.md) · [C++ run](../../src/crypto/aead/chacha20-poly1305/impl/cpp/README.md) · [Node benchmark](../../src/crypto/aead/chacha20-poly1305/impl/javascript/benchmark.mjs)
 

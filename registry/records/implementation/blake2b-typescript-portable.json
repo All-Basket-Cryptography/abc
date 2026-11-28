@@ -9,6 +9,9 @@
     },
     {
       "path": "src/crypto/hash/blake2b/impl/typescript/README.md"
+    },
+    {
+      "path": "src/crypto/inputs/bytes.mts"
     }
   ],
   "owner": {
@@ -18,7 +21,7 @@
   "subject_ref": "abc:algorithm:blake2b",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "968bf4795240e83a70058a5325b8bc64cf3613d30f1c269f53fe06bc06d85fc5",
+  "source_sha256": "504b57c9031061de4b0beaabe5485e93a4477567efe4948949a59356f946bb5c",
   "path": "src/crypto/hash/blake2b/impl/typescript",
   "languages": [
     "typescript"

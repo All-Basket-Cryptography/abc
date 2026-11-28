@@ -11,6 +11,9 @@
       "path": "src/crypto/aead/chacha20-poly1305/impl/typescript/README.md"
     },
     {
+      "path": "src/crypto/inputs/bytes.mts"
+    },
+    {
       "path": "src/crypto/cipher/chacha20/impl/typescript/chacha20.mts"
     },
     {
@@ -24,7 +27,7 @@
   "subject_ref": "abc:construction:chacha20-poly1305",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "c02788d7696ceb83a060b172b66cbcd45897b14df6b2aa32753ffd433259da8d",
+  "source_sha256": "25eed0a079dbbb2acbeddf53521ccc23a2ddf033ce34fdb623551a49ad125c45",
   "path": "src/crypto/aead/chacha20-poly1305/impl/typescript",
   "languages": [
     "typescript"

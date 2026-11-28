@@ -9,6 +9,9 @@
     },
     {
       "path": "src/crypto/mac/poly1305/impl/typescript/README.md"
+    },
+    {
+      "path": "src/crypto/inputs/bytes.mts"
     }
   ],
   "owner": {
@@ -18,7 +21,7 @@
   "subject_ref": "abc:algorithm:poly1305",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "d3398819b512dd3c70460135ef63fe65c28130fb4db06b98792dc9fc20cb09b8",
+  "source_sha256": "9426c0cbd3c343badbe61122d0e79dba56545e8d2df68801d524cf6800c96796",
   "path": "src/crypto/mac/poly1305/impl/typescript",
   "languages": [
     "typescript"

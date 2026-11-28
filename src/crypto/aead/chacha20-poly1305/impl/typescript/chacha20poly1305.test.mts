@@ -61,3 +61,27 @@ test('bad tag, AAD, and ciphertext expose no plaintext and preserve input views'
   assert.deepEqual(input, saved);
   assert.deepEqual(ciphertext, savedCiphertext);
 });
+
+test('caller view methods and getters are unused during seal and open', () => {
+  const key = fixture(32), nonce = fixture(12), aad = fixture(17), plaintext = fixture(65);
+  const expected = seal(key, nonce, aad, plaintext);
+
+  for (const property of ['buffer', 'byteOffset', 'byteLength', 'length', 'subarray', Symbol.iterator]) {
+    function viewWithUnusedProperty(bytes: Uint8Array) {
+      const storage = new Uint8Array(bytes.length + 6);
+      const view = storage.subarray(3, 3 + bytes.length);
+      view.set(bytes);
+      Object.defineProperty(view, property, {
+        get() { assert.fail(`AEAD read a caller property: ${String(property)}`); },
+      });
+      return view;
+    }
+
+    const keyView = viewWithUnusedProperty(key);
+    const nonceView = viewWithUnusedProperty(nonce);
+    const aadView = viewWithUnusedProperty(aad);
+    assert.deepEqual(seal(keyView, nonceView, aadView, viewWithUnusedProperty(plaintext)), expected);
+    assert.deepEqual(open(keyView, nonceView, aadView,
+      viewWithUnusedProperty(expected.ciphertext), viewWithUnusedProperty(expected.tag)), plaintext);
+  }
+});

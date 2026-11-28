@@ -22,8 +22,8 @@ Use Node.js 24 and Python 3, or set `ABC_PYTHON` to the desired Python
 executable.
 
 On Windows x64 with an i7-12700K and Node 24.12.0, a 1 MiB one-shot
-digest reached 66.0 MiB/s. Node's OpenSSL 3.5.4 provider reached
-1,272.1 MiB/s under the same five-trial median with 15 calls per trial.
+digest reached 65.2 MiB/s. Node's OpenSSL 3.5.4 provider reached
+1,257.1 MiB/s under the same five-trial median with 15 calls per trial.
 
 - [RFC 7693 §§ 2–3 and Appendix A](https://www.rfc-editor.org/rfc/rfc7693.html)
 - [BLAKE2 design paper](https://eprint.iacr.org/2013/322)

@@ -9,6 +9,9 @@
     },
     {
       "path": "src/crypto/mac/poly1305/impl/javascript/README.md"
+    },
+    {
+      "path": "src/crypto/inputs/bytes.mjs"
     }
   ],
   "owner": {
@@ -18,7 +21,7 @@
   "subject_ref": "abc:algorithm:poly1305",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "0b639b49e9682a752eeed32f31298e18a9e43aa89e042467999ab0a14e912fab",
+  "source_sha256": "2bc6e1da8f0f868a5377416ce9fe5766f08546faab75998cbfc08296dd8876e5",
   "path": "src/crypto/mac/poly1305/impl/javascript",
   "languages": [
     "javascript"

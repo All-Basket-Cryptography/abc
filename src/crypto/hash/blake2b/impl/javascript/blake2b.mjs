@@ -1,4 +1,6 @@
 // RFC 7693 sequential, unkeyed BLAKE2b. Each word has low and high 32-bit halves.
+import { asUint8Array } from '../../../../inputs/bytes.mjs';
+
 const BLOCK_BYTES = 128;
 const BYTE_LIMIT = 1n << 128n;
 const IV = new Uint32Array([
@@ -115,10 +117,8 @@ export class Blake2b {
   }
 
   update(input) {
-    if (!(input instanceof Uint8Array) || !(input.buffer instanceof ArrayBuffer)) {
-      throw new TypeError('BLAKE2b requires Uint8Array backed by an ArrayBuffer');
-    }
-    const view = new DataView(input.buffer, input.byteOffset, input.byteLength);
+    const bytes = asUint8Array(input);
+    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
     if (this.#processed + BigInt(this.#used) + BigInt(view.byteLength) >= BYTE_LIMIT) {
       throw new RangeError('BLAKE2b byte counter would wrap');
     }
@@ -126,7 +126,7 @@ export class Blake2b {
     let offset = 0;
     if (this.#used !== 0) {
       offset = Math.min(BLOCK_BYTES - this.#used, view.byteLength);
-      this.#pending.set(input.subarray(0, offset), this.#used);
+      this.#pending.set(bytes.subarray(0, offset), this.#used);
       this.#used += offset;
       if (offset === view.byteLength) return this;
       this.#absorb(this.#pendingView, 0);
@@ -135,7 +135,7 @@ export class Blake2b {
       this.#absorb(view, offset);
       offset += BLOCK_BYTES;
     }
-    this.#pending.set(input.subarray(offset));
+    this.#pending.set(bytes.subarray(offset));
     this.#used = view.byteLength - offset;
     return this;
   }

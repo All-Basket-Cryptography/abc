@@ -1,0 +1,10 @@
+schema_version = 1
+id = "crypto-byte-views-ecmascript"
+owned_paths = ["src/crypto/inputs"]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/inputs/bytes.test.mjs"]
+tools = ["node"]
+target = "node24"
+timeout_seconds = 120

@@ -1,6 +1,7 @@
 schema_version = 1
 id = "chacha20-javascript-portable"
 owned_paths = ["src/crypto/cipher/chacha20/impl/javascript"]
+dependencies = [{ module = "crypto-byte-views-ecmascript", type = "calls" }]
 
 [tasks.test]
 kind = "test"

@@ -9,6 +9,9 @@
     },
     {
       "path": "src/crypto/cipher/chacha20/impl/javascript/README.md"
+    },
+    {
+      "path": "src/crypto/inputs/bytes.mjs"
     }
   ],
   "owner": {
@@ -18,7 +21,7 @@
   "subject_ref": "abc:algorithm:chacha20",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "d99067048f91b0aebd91cf9d90c91a036fadef9397373d764e231a839eb33488",
+  "source_sha256": "27a82cb7acbeb538d5243c6767fadd17560f702a9247f664d78357a48d9d0f8c",
   "path": "src/crypto/cipher/chacha20/impl/javascript",
   "languages": [
     "javascript"

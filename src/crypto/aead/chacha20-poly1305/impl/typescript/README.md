@@ -6,14 +6,16 @@
 node --test src/crypto/aead/chacha20-poly1305/impl/typescript/chacha20poly1305.test.mts
 ```
 
-Inputs are `Uint8Array` views backed by `ArrayBuffer`. Shared buffers are
-rejected so another thread cannot change the ciphertext between verification
-and decryption. The evidence covers standards vectors and differential
-execution. Target and runtime timing qualification remains open.
+Inputs are `Uint8Array` views backed by `ArrayBuffer`. The module uses
+fixed-length views of the underlying bytes and rejects shared, detached,
+and out-of-bounds input. Opening authenticates and decrypts the same
+bytes without invoking caller-defined view methods or getters. The tests
+cover this behavior alongside standards vectors and differential execution.
+Target and runtime timing qualification remains open.
 
 A Windows x64 i7-12700K with Node 24.12.0 and OpenSSL 3.5.4 measured
-138.63 µs per 4 KiB seal with 16 bytes of AAD. Node/OpenSSL measured
-6.46 µs in the same seven-trial median with 1,000 calls per trial.
+137.96 µs per 4 KiB seal with 16 bytes of AAD. Node/OpenSSL measured
+6.38 µs in the same seven-trial median with 1,000 calls per trial.
 
 ```sh
 node src/crypto/aead/chacha20-poly1305/impl/javascript/benchmark.mjs
