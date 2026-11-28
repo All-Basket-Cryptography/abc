@@ -14,7 +14,7 @@ jobs:
   native-fuzz:
     name: main ${{ matrix.task }}
     if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-24.04
+    runs-on: windows-2025
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -42,14 +42,14 @@ jobs:
       - name: Fetch lockfile-pinned fuzz dependencies
         env:
           FUZZ_MANIFEST: ${{ matrix.manifest }}
-        run: cargo +1.92.0 fetch --locked --manifest-path "$FUZZ_MANIFEST"
+        run: cargo +1.92.0 fetch --locked --manifest-path $env:FUZZ_MANIFEST
       - name: Run the provisioned native fuzz task
         env:
           ABC_FUZZ_TASK: ${{ matrix.task }}
         run: |
-          ulimit -c 0
-          python -B -m tools.abc_cli plan --head "$GITHUB_SHA" --output .abc/main-plan.json
-          python -B -m tools.abc_cli run --plan .abc/main-plan.json --target "$ABC_FUZZ_TASK" --output .abc/main-run
+          python -B -m tools.abc_cli plan --head $env:GITHUB_SHA --output .abc/main-plan.json
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B -m tools.abc_cli run --plan .abc/main-plan.json --target $env:ABC_FUZZ_TASK --output .abc/main-run
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: ${{ always() }}
         with:
