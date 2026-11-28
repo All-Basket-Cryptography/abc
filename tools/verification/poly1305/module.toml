@@ -1,0 +1,8 @@
+schema_version = 1
+id = "poly1305-source-verification"
+owned_paths = ["tools/verification/poly1305"]
+
+[tasks.runner-syntax]
+kind = "lint"
+command = ["node", "--check", "tools/verification/poly1305/check.mjs"]
+tools = ["node"]

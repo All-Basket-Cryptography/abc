@@ -25,10 +25,9 @@ impl Poly1305 {
         };
         let clamped = u128::from_le_bytes(*low) & 0x0ffffffc0ffffffc0ffffffc0fffffff;
         let r = limbs(clamped);
-        let [_, r1, r2, r3, r4] = r;
         Self {
             r,
-            r_times_five: [r1 * 5, r2 * 5, r3 * 5, r4 * 5],
+            r_times_five: key_multiples(r),
             h: [0; 5],
             pad: u128::from_le_bytes(*high),
             pending: [0; BLOCK_BYTES],
@@ -67,7 +66,7 @@ impl Poly1305 {
         }
 
         // Absorption finishes by carrying any excess from limb 0 into limb 1.
-        carry(&mut self.h, 1);
+        self.h = carry(self.h, false);
 
         // Adding 5 produces a carry out of limb 4 exactly when h >= 2^130 - 5.
         let mut reduced = self.h;
@@ -87,40 +86,71 @@ impl Poly1305 {
     }
 
     fn absorb(&mut self, value: u128, high_bit: u64) {
-        let mut message = limbs(value);
-        message[4] |= high_bit;
-        for (word, input) in self.h.iter_mut().zip(message) {
-            *word += input;
-        }
-        let [h0, h1, h2, h3, h4] = self.h;
-        let [r0, r1, r2, r3, r4] = self.r;
-        let [r1_5, r2_5, r3_5, r4_5] = self.r_times_five;
-
-        // When a term crosses limb 4, fold it with 2^130 congruent to 5.
-        self.h = [
-            h0 * r0 + h1 * r4_5 + h2 * r3_5 + h3 * r2_5 + h4 * r1_5,
-            h0 * r1 + h1 * r0 + h2 * r4_5 + h3 * r3_5 + h4 * r2_5,
-            h0 * r2 + h1 * r1 + h2 * r0 + h3 * r4_5 + h4 * r3_5,
-            h0 * r3 + h1 * r2 + h2 * r1 + h3 * r0 + h4 * r4_5,
-            h0 * r4 + h1 * r3 + h2 * r2 + h3 * r1 + h4 * r0,
-        ];
-        carry(&mut self.h, 0);
+        self.h = absorb_encoded(self.h, self.r, self.r_times_five, value, high_bit);
     }
+}
+
+fn key_multiples(r: [u64; 5]) -> [u64; 4] {
+    let [_, r1, r2, r3, r4] = r;
+    [r1 * 5, r2 * 5, r3 * 5, r4 * 5]
+}
+
+fn absorb_encoded(h: [u64; 5], r: [u64; 5], r_five: [u64; 4], value: u128, high_bit: u64) -> [u64; 5] {
+    let mut message = limbs(value);
+    message[4] |= high_bit;
+    absorb_limbs(h, r, r_five, message)
+}
+
+fn absorb_limbs(h: [u64; 5], r: [u64; 5], r_five: [u64; 4], message: [u64; 5]) -> [u64; 5] {
+    let [h0, h1, h2, h3, h4] = h;
+    let [m0, m1, m2, m3, m4] = message;
+    let input = [h0 + m0, h1 + m1, h2 + m2, h3 + m3, h4 + m4];
+    carry(multiply(input, r, r_five), true)
+}
+
+fn multiply(h: [u64; 5], r: [u64; 5], r_five: [u64; 4]) -> [u64; 5] {
+    let [h0, h1, h2, h3, h4] = h;
+    let [r0, r1, r2, r3, r4] = r;
+    let [r1_5, r2_5, r3_5, r4_5] = r_five;
+
+    // When a term crosses limb 4, fold it with 2^130 congruent to 5.
+    [
+        h0 * r0 + h1 * r4_5 + h2 * r3_5 + h3 * r2_5 + h4 * r1_5,
+        h0 * r1 + h1 * r0 + h2 * r4_5 + h3 * r3_5 + h4 * r2_5,
+        h0 * r2 + h1 * r1 + h2 * r0 + h3 * r4_5 + h4 * r3_5,
+        h0 * r3 + h1 * r2 + h2 * r1 + h3 * r0 + h4 * r4_5,
+        h0 * r4 + h1 * r3 + h2 * r2 + h3 * r1 + h4 * r0,
+    ]
 }
 
 fn limbs(value: u128) -> [u64; 5] {
-    core::array::from_fn(|index| ((value >> (index * RADIX_BITS as usize)) as u64) & LIMB_MASK)
+    [
+        (value as u64) & LIMB_MASK,
+        ((value >> RADIX_BITS) as u64) & LIMB_MASK,
+        ((value >> (2 * RADIX_BITS)) as u64) & LIMB_MASK,
+        ((value >> (3 * RADIX_BITS)) as u64) & LIMB_MASK,
+        ((value >> (4 * RADIX_BITS)) as u64) & LIMB_MASK,
+    ]
 }
 
-fn carry(words: &mut [u64; 5], first: usize) {
-    for index in first..4 {
-        words[index + 1] += words[index] >> RADIX_BITS;
-        words[index] &= LIMB_MASK;
-    }
-    words[0] += (words[4] >> RADIX_BITS) * 5;
-    words[4] &= LIMB_MASK;
-    words[1] += words[0] >> RADIX_BITS;
-    words[0] &= LIMB_MASK;
+fn carry_pair(low: u64, high: u64) -> (u64, u64) {
+    (low & LIMB_MASK, high + (low >> RADIX_BITS))
+}
+
+fn carry(words: [u64; 5], carry_first: bool) -> [u64; 5] {
+    let [h0, h1, h2, h3, h4] = words;
+    let (h0, h1) = if carry_first {
+        carry_pair(h0, h1)
+    } else {
+        (h0, h1)
+    };
+    let (h1, h2) = carry_pair(h1, h2);
+    let (h2, h3) = carry_pair(h2, h3);
+    let (h3, h4) = carry_pair(h3, h4);
+    let h0 = h0 + (h4 >> RADIX_BITS) * 5;
+    let h4 = h4 & LIMB_MASK;
+    let (h0, h1) = carry_pair(h0, h1);
+    [h0, h1, h2, h3, h4]
 }
 
 pub fn authenticate(key: &[u8; KEY_BYTES], input: &[u8]) -> [u8; TAG_BYTES] {

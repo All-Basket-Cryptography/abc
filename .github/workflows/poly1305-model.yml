@@ -1,0 +1,66 @@
+name: ABC Poly1305 model extraction (advisory)
+
+on:
+  pull_request:
+    paths:
+      - 'src/crypto/mac/poly1305/**'
+      - 'tools/verification/poly1305/**'
+      - 'tools/verification/probe/toolchain-candidate.json'
+      - 'tools/build/rust/**'
+      - '.github/workflows/poly1305-model.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract-poly1305:
+    name: Extract the active Rust Poly1305 block arithmetic
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          repository: AeneasVerif/aeneas
+          ref: 505b6ca35217e7be5c96c3e2f8045edfbdf47291
+          path: .abc/formal-tools/aeneas
+          persist-credentials: false
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          repository: AeneasVerif/charon
+          ref: b104e24fea7d721b71e6c39fd70f26ff20bc0980
+          path: .abc/formal-tools/aeneas/charon
+          persist-credentials: false
+      - name: Install pinned Aeneas, Charon and Rust releases
+        shell: bash
+        run: |
+          aeneas="$GITHUB_WORKSPACE/.abc/formal-tools/aeneas"
+          release_dir="$RUNNER_TEMP/abc-poly1305-aeneas"
+          aeneas_archive="$RUNNER_TEMP/aeneas-505b6ca-linux-x86_64.tar.gz"
+          curl --silent --show-error --fail --location --proto '=https' --retry 2 --max-time 180 \
+            --output "$aeneas_archive" https://github.com/AeneasVerif/aeneas/releases/download/nightly-2026.09.09-505b6ca/aeneas-linux-x86_64.tar.gz
+          printf '%s  %s\n' d5ba53b1370d30866bcd86de5e34abfbadf09e76b3689a7f70f458cd0c133591 "$aeneas_archive" | sha256sum --check --strict
+          mkdir "$release_dir"
+          tar -xzf "$aeneas_archive" -C "$release_dir"
+          mkdir -p "$aeneas/bin" "$aeneas/charon/bin"
+          ln -s "$release_dir/aeneas" "$aeneas/bin/aeneas"
+          ln -s "$release_dir/charon" "$aeneas/charon/bin/charon"
+          rustup toolchain install nightly-2026-08-18 --profile minimal
+          printf 'ABC_AENEAS_ROOT=%s\n' "$aeneas" >> "$GITHUB_ENV"
+      - name: Repeat extraction and compare generated models
+        run: node tools/verification/poly1305/check.mjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ always() }}
+        with:
+          name: poly1305-model-untrusted-pr
+          path: |
+            .abc/poly1305-extraction/run-*/result.json
+            .abc/poly1305-extraction/run-*/*.log
+            .abc/poly1305-extraction/run-*/*.llbc
+            .abc/poly1305-extraction/run-*/first/**/*.lean
+            .abc/poly1305-extraction/run-*/second/**/*.lean
+          if-no-files-found: warn
+          retention-days: 7
