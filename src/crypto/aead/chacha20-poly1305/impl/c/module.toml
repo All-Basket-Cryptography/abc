@@ -1,0 +1,12 @@
+schema_version = 1
+id = "chacha20-poly1305-c-portable"
+owned_paths = ["src/crypto/aead/chacha20-poly1305/impl/c"]
+shared_inputs = ["src/crypto/aead/chacha20-poly1305/impl/cpp/check_bridge.cpp"]
+dependencies = [{ module = "chacha20-c-portable", type = "calls" }, { module = "poly1305-c-portable", type = "calls" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "src/crypto/aead/chacha20-poly1305/impl/c/check.py", "--language", "c", "--profile", "aead"]
+tools = ["python", "clang", "node"]
+target = "portable-c11"
+timeout_seconds = 150

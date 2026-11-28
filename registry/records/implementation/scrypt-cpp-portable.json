@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:scrypt-cpp-portable",
+  "record_type": "implementation",
+  "name": "scrypt in C++ (ABC C++ research core)",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/scrypt/impl/cpp/scrypt.cpp"
+    },
+    {
+      "path": "src/crypto/kdf/scrypt/impl/cpp/README.md"
+    },
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/cpp/pbkdf2_sha256.cpp"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:scrypt",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "945652486241d93cf9b507f0afb791fac2800204379c3a0e403a5c048054b774",
+  "path": "src/crypto/kdf/scrypt/impl/cpp",
+  "languages": [
+    "cpp"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC C++ PBKDF2-HMAC-SHA-256"
+  ],
+  "target_refs": [],
+  "provider": "ABC C++ research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

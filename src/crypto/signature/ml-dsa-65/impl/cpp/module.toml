@@ -1,0 +1,11 @@
+schema_version = 1
+id = "ml-dsa-65-cpp-openssl"
+owned_paths = ["src/crypto/signature/ml-dsa-65/impl/cpp"]
+shared_inputs = ["src/crypto/kdf/argon2id/impl/c/openssl_support.py", "src/crypto/signature/ml-dsa-65/spec/acvp-fips204-sample.json", "src/crypto/signature/ml-dsa-65/impl/c/check.py", "src/crypto/agreement/ml-kem-768/impl/cpp/check.py"]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/agreement/ml-kem-768/impl/cpp/check.py", "dsa"]
+tools = ["python", "clang", "llvm-dlltool"]
+target = "windows-x64-openssl"
+timeout_seconds = 180

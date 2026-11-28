@@ -1,0 +1,11 @@
+schema_version = 1
+id = "shake256-cpp"
+owned_paths = ["src/crypto/hash/shake256/impl/cpp"]
+dependencies = [{ module = "shake256-spec", type = "implements" }, { module = "keccak-p1600-cpp", type = "imports" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "src/crypto/hash/keccak-p1600/impl/cpp/check.py", "shake256"]
+tools = ["python", "clang"]
+target = "portable-cpp17"
+timeout_seconds = 180

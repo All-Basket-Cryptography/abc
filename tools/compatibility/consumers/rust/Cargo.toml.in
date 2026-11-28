@@ -1,0 +1,9 @@
+[package]
+name = "abc-external-research-consumer"
+version = "0.0.0"
+edition = "2021"
+
+[workspace]
+
+[dependencies]
+abc-sha256 = { path = "vendor/abc-sha256-0.1.0" }

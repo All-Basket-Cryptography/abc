@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ml-kem-768-javascript-provider",
+  "record_type": "implementation",
+  "name": "ML-KEM-768 in JavaScript (Noble post-quantum 0.7.1)",
+  "sources": [
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/javascript/ml_kem_768.mjs"
+    },
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/javascript/README.md"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/package-lock.json"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/node-crypto.mjs"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/noble.mjs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-kem",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "455af217032f69906ab82487df9c19376e12dccde4af153c5b2210c88918dc79",
+  "path": "src/crypto/agreement/ml-kem-768/impl/javascript",
+  "languages": [
+    "javascript"
+  ],
+  "features": [],
+  "external_calls": [
+    "Noble post-quantum 0.7.1"
+  ],
+  "target_refs": [],
+  "provider": "Noble post-quantum 0.7.1",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

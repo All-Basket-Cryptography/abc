@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ml-dsa-65-cpp-provider",
+  "record_type": "implementation",
+  "name": "ML-DSA-65 in C++ (OpenSSL 3.5.4)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/cpp/ml_dsa_65.cpp"
+    },
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/cpp/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-dsa",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "be7d53e28a007100b350f58d096272f9018fa70ff4fc2ef1fe7394cf158ece86",
+  "path": "src/crypto/signature/ml-dsa-65/impl/cpp",
+  "languages": [
+    "cpp"
+  ],
+  "features": [],
+  "external_calls": [
+    "OpenSSL 3.5.4"
+  ],
+  "target_refs": [],
+  "provider": "OpenSSL 3.5.4",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

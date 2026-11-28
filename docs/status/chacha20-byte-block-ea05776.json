@@ -1,0 +1,121 @@
+{
+  "status": "block_from_bytes_refinement_checked",
+  "scope": "block_from_bytes",
+  "pins": {
+    "status": "verified",
+    "scope": "Bounded-add engineering probe on the pinned Linux x86_64 toolchain",
+    "aeneas": "505b6ca35217e7be5c96c3e2f8045edfbdf47291",
+    "charon": "b104e24fea7d721b71e6c39fd70f26ff20bc0980",
+    "rust": "nightly-2026-08-18",
+    "lean": "leanprover/lean4:v4.31.0",
+    "mathlib": "v4.31.0",
+    "mathlibRevision": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f"
+  },
+  "target": "x86_64-unknown-linux-gnu",
+  "features": [],
+  "cargo": [
+    "--locked",
+    "--offline",
+    "--lib",
+    "--no-default-features",
+    "--target",
+    "x86_64-unknown-linux-gnu"
+  ],
+  "charonArgs": [
+    "--preset=aeneas",
+    "--start-from",
+    "crate::initial_state",
+    "--start-from",
+    "crate::block"
+  ],
+  "aeneasArgs": [
+    "-backend",
+    "lean",
+    "-split-files",
+    "-no-progress-bar",
+    "-subdir",
+    "Abc/ChaCha20/Extracted",
+    "-namespace",
+    "Abc.ChaCha20.Extracted"
+  ],
+  "sources": {
+    "tools/verification/probe/toolchain-candidate.json": "6953b42492bff08a40479725fec7ce922002bfdbe715afcaedf4f817f7621249",
+    "tools/build/rust/Cargo.toml": "9e8dd7579ad780836ce80f3a00639b171926d3435e15e3eb274c4fd67eb0d8f4",
+    "tools/build/rust/Cargo.lock": "f848f97ca4750bb2b1b18f73c67a71857bfbcc92e412d5c16056f14ff25e31c5",
+    "src/crypto/cipher/chacha20/impl/rust/src/lib.rs": "25f12618378ad2d23a13a30e2ef8c25a804b1866dca824e78f0cc2999b197632",
+    "src/crypto/cipher/chacha20/impl/rust/Cargo.toml": "96ecc9f20b1de8955dac16b0c5c01d511a771aad488b61d501d278bf0504a9bb",
+    "src/crypto/cipher/chacha20/spec/ChaCha20QuarterRound.lean": "a3d8d1996ce132245f8316eeaa96755d2210fe16fba99612f2576f6330906b0a",
+    "src/crypto/cipher/chacha20/impl/rust/formal/ChaCha20QuarterRoundRefinement.lean": "a6b6c597afca7d866b4bd2d16b86aec9e96ba376f71ca6eb5b70ee0e27d8f016",
+    "tools/verification/chacha20/check.mjs": "7a1a2a68141aed0f8e2d845aa96ffa8eb63e8591e9e1c5316e8956a71819a033"
+  },
+  "revision": "b71b39cbd011a67e3da01f5f5ec1d46bfdbefc06",
+  "binaries": {
+    "aeneas": "22b326476f854e19b52ca5a2acfd953fd186da7694cd10d8d008ed5502f7c46a",
+    "charon": "2603f720f0d26a4c77ae215485e2457029d69504dbd9d318a497ed866f21d4fd"
+  },
+  "rust": "rustc 1.100.0-nightly (8fa1c96cf 2026-08-17)\nbinary: rustc\ncommit-hash: 8fa1c96cfd489e4c27654c144ae871ce2c4db6c6\ncommit-date: 2026-08-17\nhost: x86_64-unknown-linux-gnu\nrelease: 1.100.0-nightly\nLLVM version: 23.1.0",
+  "first": {
+    "llbc": "3f41b259e46a5f7aeb9ed03c8764bbb76a3dce9f20e7e5590519bda6c986f97d",
+    "files": {
+      "Abc/ChaCha20/Extracted/Funs.lean": "5bf04c0acc0e018663e71b8ab7658ac49a6fb5e9346beb84eb6ed5d7703647aa",
+      "Abc/ChaCha20/Extracted/Types.lean": "dd730f56ea29ae450591b59721332bda8954514343c4f3b01bdf6635836bef4a"
+    }
+  },
+  "second": {
+    "llbc": "21a695fb4bde70a51134ffbb9d9a167401ebf3a5d1f7ffec4cfc6114806e0f2c",
+    "files": {
+      "Abc/ChaCha20/Extracted/Funs.lean": "5bf04c0acc0e018663e71b8ab7658ac49a6fb5e9346beb84eb6ed5d7703647aa",
+      "Abc/ChaCha20/Extracted/Types.lean": "dd730f56ea29ae450591b59721332bda8954514343c4f3b01bdf6635836bef4a"
+    }
+  },
+  "lean": "Lean (version 4.31.0, x86_64-unknown-linux-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)",
+  "theorems": {
+    "Abc.Refine.ChaCha20.quarter_round_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.ChaCha20.double_round_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.ChaCha20.rounds_20_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.ChaCha20.block_words_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.ChaCha20.load_word_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.ChaCha20.initial_state_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.ChaCha20.serialize_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.ChaCha20.block_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.ChaCha20.block_from_bytes_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "prHead": "ea05776f0c7571359367a525cd391b679b69792f",
+  "workflowJob": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46090560691/job/140810220732"
+}

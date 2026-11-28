@@ -1,0 +1,12 @@
+schema_version = 1
+id = "scrypt-c-portable"
+owned_paths = ["src/crypto/kdf/scrypt/impl/c"]
+shared_inputs = ["src/crypto/mac/hmac-sha256/impl/c/check.py", "src/crypto/hash/sha256/impl/c/check.py"]
+dependencies = [{ module = "scrypt-rust", type = "implements" }, { module = "pbkdf2-hmac-sha256-c-portable", type = "imports" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "src/crypto/kdf/scrypt/impl/c/check.py"]
+tools = ["python", "clang"]
+target = "portable-c11"
+timeout_seconds = 180

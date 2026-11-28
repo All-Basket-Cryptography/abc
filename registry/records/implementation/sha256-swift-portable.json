@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha256-swift-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHA-256 in Swift",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha256/impl/swift/Sources/AbcSha256Swift/Sha256.swift"
+    },
+    {
+      "path": "src/crypto/hash/sha256/impl/swift/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha-256",
+  "spec_ref": "abc:specification:sha256-fips180-4-2015",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "dc2e684754f86708121b0db5b94f59937cb9cf2efe515c7673cf2f9da0446443",
+  "path": "src/crypto/hash/sha256/impl/swift",
+  "languages": [
+    "swift"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable Swift research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

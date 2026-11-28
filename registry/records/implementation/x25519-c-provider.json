@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:x25519-c-provider",
+  "record_type": "implementation",
+  "name": "X25519 in C (OpenSSL 3.5.4)",
+  "sources": [
+    {
+      "path": "src/crypto/agreement/x25519/impl/c/abc_x25519_c.c"
+    },
+    {
+      "path": "src/crypto/agreement/x25519/impl/c/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:x25519",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "90f8ae7c5153c4c14a3a639d168df0c88cb04ea401d05cb368bc26de55b3bc33",
+  "path": "src/crypto/agreement/x25519/impl/c",
+  "languages": [
+    "c"
+  ],
+  "features": [],
+  "external_calls": [
+    "OpenSSL 3.5.4"
+  ],
+  "target_refs": [],
+  "provider": "OpenSSL 3.5.4",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

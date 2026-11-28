@@ -1,0 +1,10 @@
+schema_version = 1
+id = "sha3-encoding-spec"
+owned_paths = ["src/crypto/hash/sha3-256/spec"]
+lean_sources = { Sha3Encoding = "src/crypto/hash/sha3-256/spec" }
+
+[tasks.check]
+kind = "formal"
+command = ["python", "src/lean/check.py", "sha3"]
+tools = ["python", "lean"]
+timeout_seconds = 300

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>12.0</LangVersion>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <PackageId>Abc.Cryptography.Shake256</PackageId>
+    <Version>0.1.0</Version>
+    <Description>Portable managed shake256 for ABC research.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Shake256.cs" />
+    <ProjectReference Include="../../../keccak-p1600/impl/csharp/Abc.Cryptography.KeccakP1600.csproj" />
+  </ItemGroup>
+</Project>

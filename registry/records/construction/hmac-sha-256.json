@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "abc:construction:hmac-sha-256",
+  "record_type": "construction",
+  "name": "HMAC-SHA-256",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc2104.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "mac-prf",
+  "family_ref": "abc:family:hmac",
+  "catalog_state": "indexed",
+  "lifecycle": "established",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [
+    "abc:specification:hmac-sha-256-rfc2104"
+  ],
+  "literature_refs": [
+    "abc:literature:rfc-2104"
+  ],
+  "standard_refs": [
+    "abc:standard:fips-180-4-2015",
+    "abc:standard:rfc-4231"
+  ],
+  "finding_refs": [],
+  "use_cases": [
+    "Message authentication in keyed protocols"
+  ],
+  "limitations": [
+    "Tag length and key lifecycle depend on the containing protocol."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified",
+  "component_refs": [
+    "abc:algorithm:sha-256"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:chacha20-go-portable",
+  "record_type": "implementation",
+  "name": "ABC research ChaCha20 in Go",
+  "sources": [
+    {
+      "path": "src/crypto/cipher/chacha20/impl/go/chacha20.go"
+    },
+    {
+      "path": "src/crypto/cipher/chacha20/impl/go/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:chacha20",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "09df6638a6d1295d4cd9aa80d5daa4488b84f328bec60e2fce0923f2e06bab16",
+  "path": "src/crypto/cipher/chacha20/impl/go",
+  "languages": [
+    "go"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable Go research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

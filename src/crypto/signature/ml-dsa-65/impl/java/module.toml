@@ -1,0 +1,19 @@
+schema_version = 1
+id = "ml-dsa-65-java-bc"
+owned_paths = ["src/crypto/signature/ml-dsa-65/impl/java"]
+shared_inputs = ["src/crypto/kdf/argon2id/impl/java/bcprov.toml", "src/crypto/kdf/argon2id/impl/java/bc_provider.py", "src/crypto/signature/ml-dsa-65/spec/acvp-fips204-sample.json"]
+dependencies = [{ module = "ml-dsa-65-go", type = "implements" }]
+lean_sources = { MlDsa65JvmEncoding = "src/crypto/signature/ml-dsa-65/impl/java" }
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/signature/ml-dsa-65/impl/java/check.py", "--language", "java"]
+tools = ["python", "java", "javac", "jar", "node"]
+target = "jvm-jdk17"
+timeout_seconds = 240
+
+[tasks.encoding-model]
+kind = "formal"
+command = ["lean", "-DwarningAsError=true", "src/crypto/signature/ml-dsa-65/impl/java/MlDsa65JvmEncoding.lean"]
+tools = ["lean"]
+timeout_seconds = 60

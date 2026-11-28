@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ml-dsa-65-csharp-provider",
+  "record_type": "implementation",
+  "name": "ML-DSA-65 in C# (Bouncy Castle .NET 2.7.0)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/csharp/MlDsa65.cs"
+    },
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/csharp/README.md"
+    },
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/csharp/packages.lock.json"
+    },
+    {
+      "path": "src/crypto/providers/csharp/provider.toml"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-dsa",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "8f6054d25886813e36d8e2d8628965f9bd757f2731dee0655b3d7e3670617d0c",
+  "path": "src/crypto/signature/ml-dsa-65/impl/csharp",
+  "languages": [
+    "csharp"
+  ],
+  "features": [],
+  "external_calls": [
+    "Bouncy Castle .NET 2.7.0"
+  ],
+  "target_refs": [],
+  "provider": "Bouncy Castle .NET 2.7.0",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

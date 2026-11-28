@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ed25519-kotlin-sunec",
+  "record_type": "implementation",
+  "name": "Ed25519 in Kotlin (jdk.crypto.ec SunEC, tested via Oracle JDK 17.0.12+8-LTS-286 on Windows amd64)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ed25519/impl/kotlin/src/Ed25519.kt"
+    },
+    {
+      "path": "src/crypto/signature/ed25519/impl/kotlin/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ed25519",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "3c758b003b05a46d509cb3576224b7aece477f1dd9fd180dfa05323a15bb6324",
+  "path": "src/crypto/signature/ed25519/impl/kotlin",
+  "languages": [
+    "kotlin"
+  ],
+  "features": [],
+  "external_calls": [
+    "jdk.crypto.ec/sun.security.ec.SunEC"
+  ],
+  "target_refs": [],
+  "provider": "jdk.crypto.ec SunEC, tested via Oracle JDK 17.0.12+8-LTS-286 on Windows amd64",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

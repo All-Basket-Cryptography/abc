@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-gcm-swift-provider",
+  "record_type": "implementation",
+  "name": "AES-256-GCM in Swift (Apple CryptoKit, tested with Xcode 16.4 on macOS arm64)",
+  "sources": [
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/swift/AbcAes256GcmSwift/Sources/AbcAes256GcmSwift/Aes256Gcm.swift"
+    },
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/swift/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:aes-256-gcm",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "ff38d651fd11b03178c4466c688c7f95bd6ab5b92636b354e107c6a2334d50e8",
+  "path": "src/crypto/aead/aes256-gcm/impl/swift",
+  "languages": [
+    "swift"
+  ],
+  "features": [],
+  "external_calls": [
+    "CryptoKit"
+  ],
+  "target_refs": [],
+  "provider": "Apple CryptoKit, tested with Xcode 16.4 on macOS arm64",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

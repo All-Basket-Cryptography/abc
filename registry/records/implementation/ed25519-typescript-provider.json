@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ed25519-typescript-provider",
+  "record_type": "implementation",
+  "name": "Ed25519 in TypeScript (Node 24.12.0 OpenSSL 3.5.4 and Noble curves 2.4.0)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ed25519/impl/typescript/ed25519.mts"
+    },
+    {
+      "path": "src/crypto/signature/ed25519/impl/typescript/README.md"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/package-lock.json"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/node-crypto.mjs"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/noble.mts"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ed25519",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "3014f4bd943a253be6adb9729fc21f980994e5b1d8d5f99554458c32a162999d",
+  "path": "src/crypto/signature/ed25519/impl/typescript",
+  "languages": [
+    "typescript"
+  ],
+  "features": [],
+  "external_calls": [
+    "Node 24.12.0 OpenSSL 3.5.4 and Noble curves 2.4.0"
+  ],
+  "target_refs": [],
+  "provider": "Node 24.12.0 OpenSSL 3.5.4 and Noble curves 2.4.0",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:literature:rfc-7748",
+  "record_type": "literature",
+  "name": "Elliptic Curves for Security",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc7748.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "RFC 7748",
+  "authors": [
+    "A. Langley",
+    "M. Hamburg",
+    "S. Turner"
+  ],
+  "publisher": "RFC Editor",
+  "published": "2016-01",
+  "accessed": "2026-11-28",
+  "license": "See RFC copyright notice.",
+  "redistribution": "link-only",
+  "sections": [
+    "Sections 4.1, 5, 6.1, and 7"
+  ],
+  "errata_urls": [
+    "https://www.rfc-editor.org/info/rfc7748/"
+  ],
+  "citation_refs": [
+    "abc:literature:curve25519-bernstein-2006"
+  ],
+  "doi": "10.17487/RFC7748"
+}

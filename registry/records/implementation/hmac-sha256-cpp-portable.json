@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:hmac-sha256-cpp-portable",
+  "record_type": "implementation",
+  "name": "ABC research HMAC-SHA-256 in C++",
+  "sources": [
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/cpp/hmac_sha256.cpp"
+    },
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/cpp/README.md"
+    },
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/cpp/hmac_sha256.hpp"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hmac-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "f7ae1c8f703594606af23372302a5aceb459ba5cca131c4ba4a16f7cf04e9f7c",
+  "path": "src/crypto/mac/hmac-sha256/impl/cpp",
+  "languages": [
+    "cpp"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC sha256 in C++"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable cpp research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision",
+  "spec_ref": "abc:specification:hmac-sha-256-rfc2104"
+}

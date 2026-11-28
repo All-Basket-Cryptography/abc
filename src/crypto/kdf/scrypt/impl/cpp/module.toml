@@ -1,0 +1,12 @@
+schema_version = 1
+id = "scrypt-cpp-portable"
+owned_paths = ["src/crypto/kdf/scrypt/impl/cpp"]
+shared_inputs = ["src/crypto/kdf/scrypt/impl/c/check.py"]
+dependencies = [{ module = "scrypt-rust", type = "implements" }, { module = "pbkdf2-hmac-sha256-cpp-portable", type = "imports" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "src/crypto/kdf/scrypt/impl/c/check.py", "--language", "cpp"]
+tools = ["python", "clang"]
+target = "portable-cpp17"
+timeout_seconds = 180

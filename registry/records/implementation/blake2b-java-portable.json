@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:blake2b-java-portable",
+  "record_type": "implementation",
+  "name": "ABC research BLAKE2b in Java",
+  "sources": [
+    {
+      "path": "src/crypto/hash/blake2b/impl/java/src/org/allbasket/abc/hash/blake2b/Blake2b.java"
+    },
+    {
+      "path": "src/crypto/hash/blake2b/impl/java/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:blake2b",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "578d4c4b41ecefe7fcd877c675b0410ff5196cd07a15f69e44cd3562338cac69",
+  "path": "src/crypto/hash/blake2b/impl/java",
+  "languages": [
+    "java"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable Java research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

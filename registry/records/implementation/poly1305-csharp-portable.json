@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:poly1305-csharp-portable",
+  "record_type": "implementation",
+  "name": "Poly1305 in C# (ABC C# research core)",
+  "sources": [
+    {
+      "path": "src/crypto/mac/poly1305/impl/csharp/Poly1305Mac.cs"
+    },
+    {
+      "path": "src/crypto/mac/poly1305/impl/csharp/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:poly1305",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "6a5127534263bb0ea3eceaaacd8ae63021df28c9126ed4ad98f6ea74187960bb",
+  "path": "src/crypto/mac/poly1305/impl/csharp",
+  "languages": [
+    "csharp"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC C# research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

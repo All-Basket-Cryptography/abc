@@ -1,0 +1,12 @@
+[package]
+workspace = "../../../../../../tools/build/rust"
+name = "abc-sha3-256"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+description = "All-Basket Cryptography research SHA3-256 control module"
+readme = "README.md"
+
+[dependencies]
+abc-keccak-p1600 = { path = "../../../keccak-p1600/impl/rust" }

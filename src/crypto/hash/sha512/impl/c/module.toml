@@ -1,0 +1,18 @@
+schema_version = 1
+id = "sha512-c-portable"
+owned_paths = ["src/crypto/hash/sha512/impl/c"]
+dependencies = [{ module = "sha512-spec", type = "implements" }]
+lean_sources = { Sha512LengthHalves = "src/crypto/hash/sha512/impl/c/proof" }
+
+[tasks.test]
+kind = "test"
+command = ["python", "src/crypto/hash/sha512/impl/c/check.py"]
+tools = ["python", "clang"]
+target = "portable-c11"
+timeout_seconds = 180
+
+[tasks.length-model]
+kind = "formal"
+command = ["lean", "src/crypto/hash/sha512/impl/c/proof/Sha512LengthHalves.lean"]
+tools = ["lean"]
+timeout_seconds = 60

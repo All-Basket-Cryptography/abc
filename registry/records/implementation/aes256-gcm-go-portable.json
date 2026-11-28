@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-gcm-go-portable",
+  "record_type": "implementation",
+  "name": "ABC research AES-256-GCM in Go",
+  "sources": [
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/go/aes256gcm.go"
+    },
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/go/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:aes-256-gcm",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "f1e3717f00a04461865a3ab3671a18481759ef09dcac8cf9ebe4f5e795346e23",
+  "path": "src/crypto/aead/aes256-gcm/impl/go",
+  "languages": [
+    "go"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Go AES-256"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable Go research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

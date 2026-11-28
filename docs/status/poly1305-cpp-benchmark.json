@@ -1,0 +1,89 @@
+{
+  "scope": "Public-input paired Windows x64 timing",
+  "cpu": "12th Gen Intel(R) Core(TM) i7-12700K",
+  "compiler": "Clang 21.1.8",
+  "target": "x86_64-pc-windows-msvc",
+  "flags": [
+    "-std=c++17",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror"
+  ],
+  "revision_baseline": "d1b008cfee0b3361be3e39e5fcf9b181e7ca8e49",
+  "baseline_source_sha256": "566646b3195df6051f675bec0f881ac01a4a3ed5a9c404463ee1d8903f2a0be1",
+  "candidate_source_sha256": "f16238406ca646bcb1b4aae817236c7f6321d81667a5364e7e3d63de677eea94",
+  "pairs_per_case": 9,
+  "fixture_sha256": "a8bb664c3be62c33332ed8b7a6159d3df5566d6d976380f72badcdc8feba36c0",
+  "offset_checks_per_size": 16,
+  "trials": [
+    [
+      {
+        "bytes": 64,
+        "baseline_ns": 80.098724,
+        "candidate_ns": 77.598317,
+        "median_speedup": 1.033876,
+        "min_speedup": 0.978153,
+        "max_speedup": 1.071849
+      },
+      {
+        "bytes": 1024,
+        "baseline_ns": 507.792155,
+        "candidate_ns": 483.117676,
+        "median_speedup": 1.049834,
+        "min_speedup": 0.749609,
+        "max_speedup": 1.06266
+      },
+      {
+        "bytes": 16384,
+        "baseline_ns": 7451.627604,
+        "candidate_ns": 6945.833333,
+        "median_speedup": 1.065551,
+        "min_speedup": 1.038869,
+        "max_speedup": 1.153835
+      },
+      {
+        "bytes": 1048576,
+        "baseline_ns": 467618.75,
+        "candidate_ns": 442572.916667,
+        "median_speedup": 1.054847,
+        "min_speedup": 0.912341,
+        "max_speedup": 1.060498
+      }
+    ],
+    [
+      {
+        "bytes": 64,
+        "baseline_ns": 79.98174,
+        "candidate_ns": 77.755483,
+        "median_speedup": 1.026724,
+        "min_speedup": 0.859781,
+        "max_speedup": 1.184254
+      },
+      {
+        "bytes": 1024,
+        "baseline_ns": 505.655924,
+        "candidate_ns": 481.502279,
+        "median_speedup": 1.050847,
+        "min_speedup": 1.033239,
+        "max_speedup": 1.056597
+      },
+      {
+        "bytes": 16384,
+        "baseline_ns": 7397.851562,
+        "candidate_ns": 7190.690104,
+        "median_speedup": 1.042517,
+        "min_speedup": 0.87089,
+        "max_speedup": 1.077522
+      },
+      {
+        "bytes": 1048576,
+        "baseline_ns": 467331.25,
+        "candidate_ns": 442725.0,
+        "median_speedup": 1.057212,
+        "min_speedup": 1.016843,
+        "max_speedup": 1.176279
+      }
+    ]
+  ]
+}

@@ -1,0 +1,10 @@
+schema_version = 1
+id = "sha3-256-javascript-portable"
+owned_paths = ["src/crypto/hash/sha3-256/impl/javascript"]
+dependencies = [{ module = "keccak-p1600-javascript", type = "imports" }, { module = "sha3-encoding-spec", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/hash/sha3-256/impl/javascript/sha3_256.test.mjs"]
+tools = ["node"]
+timeout_seconds = 60

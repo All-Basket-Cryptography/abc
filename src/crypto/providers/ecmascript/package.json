@@ -1,0 +1,10 @@
+{
+  "name": "@abc/pinned-ecmascript-providers",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@noble/curves": "2.4.0",
+    "@noble/post-quantum": "0.7.1"
+  }
+}

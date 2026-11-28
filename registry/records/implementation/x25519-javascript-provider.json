@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:x25519-javascript-provider",
+  "record_type": "implementation",
+  "name": "X25519 in JavaScript (Node 24.12.0 OpenSSL 3.5.4)",
+  "sources": [
+    {
+      "path": "src/crypto/agreement/x25519/impl/javascript/x25519.mjs"
+    },
+    {
+      "path": "src/crypto/agreement/x25519/impl/javascript/README.md"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/package-lock.json"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/node-crypto.mjs"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/noble.mjs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:x25519",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "d51ebc1091007c62e5c75ef36bbfebdc534e12d897365d6aa794f78aa735f217",
+  "path": "src/crypto/agreement/x25519/impl/javascript",
+  "languages": [
+    "javascript"
+  ],
+  "features": [],
+  "external_calls": [
+    "Node 24.12.0 OpenSSL 3.5.4"
+  ],
+  "target_refs": [],
+  "provider": "Node 24.12.0 OpenSSL 3.5.4",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

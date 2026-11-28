@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ecdsa-p256-sha256-kotlin-provider",
+  "record_type": "implementation",
+  "name": "ECDSA P-256 in Kotlin (Bouncy Castle Java 1.87)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/kotlin/src/EcdsaP256Sha256.kt"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/kotlin/README.md"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/java/bcprov.toml"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ecdsa-p256-sha256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "15136cb165ba87d0328e626ff34206e38992f0dfe7857efc1d0f8d87cbc9dbc3",
+  "path": "src/crypto/signature/ecdsa-p256-sha256/impl/kotlin",
+  "languages": [
+    "kotlin"
+  ],
+  "features": [],
+  "external_calls": [
+    "Bouncy Castle Java 1.87"
+  ],
+  "target_refs": [],
+  "provider": "Bouncy Castle Java 1.87",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

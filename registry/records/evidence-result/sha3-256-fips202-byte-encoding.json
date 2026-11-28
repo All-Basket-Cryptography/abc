@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "abc:evidence-result:sha3-256-fips202-byte-encoding",
+  "record_type": "evidence-result",
+  "name": "Local SHA3-256 Lean encoding example proofs",
+  "sources": [
+    {
+      "path": "docs/status/sha3-256-lean.txt"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:specification:sha3-256-fips202-byte-encoding",
+  "request_ref": "abc:evidence-request:sha3-256-fips202-byte-encoding",
+  "subject_revision": "research-0.1.0",
+  "subject_sha256": "165d10d6feafb552fae920d1750d504aecc462c5a35b17a759b66194c6bc3ae5",
+  "claim": "functional-correctness",
+  "state": "proved",
+  "scope": "Checks three concrete examples for the Lean lane encoding and rate-boundary padding model.",
+  "assumptions": [],
+  "tcb": [
+    "Lean 4.31.0 kernel",
+    "Pinned Lean standard modules"
+  ],
+  "observations": [
+    "Abc.Spec.Sha3Encoding.encodeLane_example",
+    "Abc.Spec.Sha3Encoding.decodeLane_example",
+    "Abc.Spec.Sha3Encoding.paddedTail_rateBoundary"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/status/sha3-256-lean.txt",
+      "sha256": "7a472ae6aa5883ee078b81967d6e7689837b9c956ae6ecb40e3b6a314c1cee59",
+      "size_bytes": 636
+    }
+  ],
+  "trust": "local",
+  "execution_sha256": "7a472ae6aa5883ee078b81967d6e7689837b9c956ae6ecb40e3b6a314c1cee59",
+  "verifier": "Lean 4.31.0 kernel and #print axioms",
+  "observed_at": "2026-11-27T17:34:30Z"
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:algorithm:ml-kem",
+  "record_type": "algorithm",
+  "name": "ML-KEM",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/pubs/fips/203/final"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "key-agreement-kem",
+  "family_ref": "abc:family:ml-kem",
+  "catalog_state": "indexed",
+  "lifecycle": "standardized",
+  "variant_refs": [],
+  "parameter_refs": [
+    "abc:parameter:ml-kem-512",
+    "abc:parameter:ml-kem-768",
+    "abc:parameter:ml-kem-1024"
+  ],
+  "spec_refs": [],
+  "literature_refs": [],
+  "standard_refs": [
+    "abc:standard:fips-203-2024"
+  ],
+  "finding_refs": [],
+  "use_cases": [
+    "Establishing shared keys for use by a separate protocol"
+  ],
+  "limitations": [
+    "This snapshot indexes the three FIPS 203 parameter sets. Platform and implementation evidence is tracked separately."
+  ],
+  "assumptions": [],
+  "quantum_model": "post-quantum-design"
+}

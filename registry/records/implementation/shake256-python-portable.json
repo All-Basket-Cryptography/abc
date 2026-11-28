@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:shake256-python-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHAKE256 in Python",
+  "sources": [
+    {
+      "path": "src/crypto/hash/shake256/impl/python/abc_shake256.py"
+    },
+    {
+      "path": "src/crypto/hash/shake256/impl/python/README.md"
+    },
+    {
+      "path": "src/crypto/hash/keccak-p1600/impl/python/abc_keccak_p1600.py"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:shake256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "6d53178c065a471008e78b37833e9c2008fc1c3667091837047e09048e1bd109",
+  "path": "src/crypto/hash/shake256/impl/python",
+  "languages": [
+    "python"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Python Keccak-p[1600,24]"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable Python research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

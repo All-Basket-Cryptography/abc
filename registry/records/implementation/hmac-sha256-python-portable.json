@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:hmac-sha256-python-portable",
+  "record_type": "implementation",
+  "name": "ABC research HMAC-SHA-256 in Python",
+  "sources": [
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/python/abc_hmac_sha256.py"
+    },
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/python/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hmac-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "420ecbba4f8ca59ff701befe10cfcbc8679207f63f7618614b67c4a1b6ebf2c0",
+  "path": "src/crypto/mac/hmac-sha256/impl/python",
+  "languages": [
+    "python"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC sha256 in Python"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable python research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision",
+  "spec_ref": "abc:specification:hmac-sha-256-rfc2104"
+}

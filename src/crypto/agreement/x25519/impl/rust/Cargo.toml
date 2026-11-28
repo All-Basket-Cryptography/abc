@@ -1,0 +1,8 @@
+[package]
+workspace = "../../../../../../tools/build/rust"
+name = "abc-x25519"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+description = "Portable research implementation of RFC 7748 X25519"

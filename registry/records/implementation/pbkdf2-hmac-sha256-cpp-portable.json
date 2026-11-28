@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:pbkdf2-hmac-sha256-cpp-portable",
+  "record_type": "implementation",
+  "name": "ABC research PBKDF2-HMAC-SHA-256 in C++",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/cpp/pbkdf2_sha256.cpp"
+    },
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/cpp/README.md"
+    },
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/cpp/pbkdf2_sha256.hpp"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:pbkdf2-hmac-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "7e6812cec1b83992ba13bfeaf6e9516c28ab22ba8539648515ac7c89cd5464a6",
+  "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/cpp",
+  "languages": [
+    "cpp"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC hmac-sha256 in C++"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable cpp research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-swift-provider",
+  "record_type": "implementation",
+  "name": "AES-256 in Swift (Apple CommonCrypto, tested with Xcode 16.4 on macOS arm64)",
+  "sources": [
+    {
+      "path": "src/crypto/cipher/aes256/impl/swift/AbcAes256Swift/Sources/AbcAes256Swift/Aes256.swift"
+    },
+    {
+      "path": "src/crypto/cipher/aes256/impl/swift/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:aes-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "bc0456f6872d420c6ca5d4d76f2acbd75e3c226b91d2cb20aeb6f88a8bd6c884",
+  "path": "src/crypto/cipher/aes256/impl/swift",
+  "languages": [
+    "swift"
+  ],
+  "features": [],
+  "external_calls": [
+    "CommonCrypto"
+  ],
+  "target_refs": [],
+  "provider": "Apple CommonCrypto, tested with Xcode 16.4 on macOS arm64",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

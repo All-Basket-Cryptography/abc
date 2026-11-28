@@ -1,0 +1,12 @@
+[package]
+name = "abc-ecdsa-p256-sha256"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+description = "Research profile for deterministic ECDSA P-256 with SHA-256"
+
+[workspace]
+
+[dependencies]
+p256 = { version = "=0.14.0", default-features = false, features = ["ecdsa"] }

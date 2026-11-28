@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:md",
+  "record_type": "family",
+  "name": "MD digest family",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc1321.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "hash-xof",
+  "description": "The Rivest message-digest line represented in this snapshot by MD5."
+}

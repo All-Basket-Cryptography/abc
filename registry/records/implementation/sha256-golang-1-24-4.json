@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha256-golang-1-24-4",
+  "record_type": "implementation",
+  "name": "Go crypto/sha256",
+  "sources": [
+    {
+      "url": "https://go.dev/dl/#go1.24.4",
+      "locator": "SHA-256 scope: Go project go1.24.4.src.tar.gz source archive."
+    },
+    {
+      "url": "https://github.com/golang/go/blob/go1.24.4/src/crypto/sha256/sha256.go"
+    },
+    {
+      "url": "https://github.com/golang/go/blob/go1.24.4/LICENSE"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha-256",
+  "origin": "upstream",
+  "revision": "go1.24.4",
+  "source_sha256": "5a86a83a31f9fa81490b8c5420ac384fd3d95a3e71fba665c7b3f95d1dfef2b4",
+  "languages": [
+    "go",
+    "assembly"
+  ],
+  "features": [],
+  "external_calls": [
+    "Conditional BoringCrypto backend"
+  ],
+  "provider": "Go standard library",
+  "target_refs": [],
+  "maintenance": {
+    "state": "catalog-only"
+  },
+  "license": "BSD-3-Clause"
+}

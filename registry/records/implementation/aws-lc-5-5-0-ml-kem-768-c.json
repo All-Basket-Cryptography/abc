@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aws-lc-5-5-0-ml-kem-768-c",
+  "record_type": "implementation",
+  "name": "AWS-LC ML-KEM-768 in C",
+  "sources": [
+    {
+      "url": "https://github.com/aws/aws-lc-rs/tree/f464440d1fd3983ce9fb023e9eaf1698530919a2/aws-lc-sys"
+    },
+    {
+      "url": "https://crates.io/crates/aws-lc-sys/0.44.0/download"
+    },
+    {
+      "path": "src/crypto/agreement/ml-kem-768/spec/README.md"
+    },
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/c/ml_kem_768.c"
+    },
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/c/ml_kem_768.h"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-kem",
+  "origin": "upstream",
+  "revision": "5.5.0 (aws-lc-sys 0.44.0)",
+  "source_sha256": "f09fae7be8bb3174e05c6afdb34199e6dc0c7c04ba9fa237b1967adfbde27483",
+  "languages": [
+    "c"
+  ],
+  "features": [
+    "ml-kem-768"
+  ],
+  "external_calls": [],
+  "provider": "AWS-LC native C",
+  "target_refs": [],
+  "maintenance": {
+    "state": "upstream-supported"
+  },
+  "license": "ISC AND (Apache-2.0 OR ISC) AND Apache-2.0 AND MIT AND BSD-3-Clause AND (Apache-2.0 OR ISC OR MIT) AND (Apache-2.0 OR ISC OR MIT-0)"
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "abc:evidence-result:chacha20-rust-quarter-round-d2d1a77",
+  "record_type": "evidence-result",
+  "name": "Pinned ChaCha20 quarter-round extraction and Lean verification",
+  "sources": [
+    {
+      "path": "docs/status/chacha20-quarter-round-d2d1a77.json"
+    },
+    {
+      "url": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46071751435/job/140750099118",
+      "locator": "GNU x86-64 advisory proof job for d2d1a77."
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:implementation:chacha20-rust-portable",
+  "request_ref": "abc:evidence-request:chacha20-rust-quarter-round",
+  "subject_revision": "d2d1a77c0f660f6408a210e66755b80ced09cc4a",
+  "subject_sha256": "6609fa40b99d655f2b7bcb0922b3df4b6c09363ffcdc1fa51ff4c4ee62e5bde4",
+  "claim": "refinement",
+  "state": "proved",
+  "scope": "Successful execution and exact equality of all 16 state lanes for the extracted indexed ChaCha20 Rust quarter round with four distinct in-range indices.",
+  "assumptions": [
+    "The four indices are distinct and are each below 16.",
+    "Lean standard axioms propext, Classical.choice and Quot.sound."
+  ],
+  "tcb": [
+    "Lean 4.31.0 kernel and pinned Mathlib",
+    "Pinned Aeneas and Charon generated semantics",
+    "Rust nightly 2026-08-18"
+  ],
+  "observations": [
+    "Abc.Refine.ChaCha20.quarter_round_refines",
+    "Two independent extractions produced identical Lean model files."
+  ],
+  "artifacts": [
+    {
+      "path": "docs/status/chacha20-quarter-round-d2d1a77.json",
+      "sha256": "89eb8bd363a5d599acb93ada5c32aa29b7c5b512d59b2eee2222460dd65e94cb",
+      "size_bytes": 3375
+    }
+  ],
+  "trust": "untrusted-pr",
+  "execution_sha256": "89eb8bd363a5d599acb93ada5c32aa29b7c5b512d59b2eee2222460dd65e94cb",
+  "verifier": "Pinned Linux model extraction, Lean kernel and #print axioms",
+  "observed_at": "2026-11-27T21:47:44Z"
+}

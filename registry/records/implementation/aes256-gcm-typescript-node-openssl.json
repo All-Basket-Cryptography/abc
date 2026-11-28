@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-gcm-typescript-node-openssl",
+  "record_type": "implementation",
+  "name": "AES-256-GCM in Typescript (Node 24.12.0 with OpenSSL 3.5.4)",
+  "sources": [
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/typescript/node.mts"
+    },
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/typescript/README.md"
+    },
+    {
+      "path": "src/crypto/inputs/bytes.mts"
+    },
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/typescript/node-crypto.d.ts"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:aes-256-gcm",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "40eb0b2d9095eb924b148d6f9310beeac3e63eee08ca1083cea19f8fe9ad7c1f",
+  "path": "src/crypto/aead/aes256-gcm/impl/typescript",
+  "languages": [
+    "typescript"
+  ],
+  "features": [],
+  "external_calls": [
+    "Node 24.12.0 with OpenSSL 3.5.4"
+  ],
+  "target_refs": [],
+  "provider": "Node 24.12.0 with OpenSSL 3.5.4",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -1,0 +1,23 @@
+if(TARGET ABC::c)
+    return()
+endif()
+
+get_filename_component(_abc_prefix "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
+
+add_library(ABC::c STATIC IMPORTED)
+set_target_properties(ABC::c PROPERTIES
+    IMPORTED_LOCATION "${_abc_prefix}/lib/@STATIC@"
+    INTERFACE_INCLUDE_DIRECTORIES "${_abc_prefix}/include"
+    INTERFACE_LINK_LIBRARIES "@NATIVE_LIBS@")
+
+add_library(ABC::c_shared SHARED IMPORTED)
+set_target_properties(ABC::c_shared PROPERTIES
+    IMPORTED_LOCATION "${_abc_prefix}/@SHARED@"
+    INTERFACE_INCLUDE_DIRECTORIES "${_abc_prefix}/include")
+if(WIN32)
+    set_target_properties(ABC::c_shared PROPERTIES
+        IMPORTED_IMPLIB "${_abc_prefix}/lib/@IMPORT_LIB@"
+        INTERFACE_COMPILE_DEFINITIONS ABC_CRYPTO_SHARED)
+endif()
+
+unset(_abc_prefix)

@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:hkdf-sha256-python-portable",
+  "record_type": "implementation",
+  "name": "ABC research HKDF-SHA-256 in Python",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/hkdf-sha256/impl/python/abc_hkdf_sha256.py"
+    },
+    {
+      "path": "src/crypto/kdf/hkdf-sha256/impl/python/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hkdf-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "b7278b7075f3ceb5f021ece8e7901dedbefcc2a969c099886a7b2ee07d9ff0c8",
+  "path": "src/crypto/kdf/hkdf-sha256/impl/python",
+  "languages": [
+    "python"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC hmac-sha256 in Python"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable python research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision",
+  "spec_ref": "abc:specification:hkdf-sha-256-rfc5869"
+}

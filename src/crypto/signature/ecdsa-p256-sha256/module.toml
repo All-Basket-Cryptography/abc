@@ -1,0 +1,16 @@
+schema_version = 1
+id = "ecdsa-p256-sha256-rust"
+owned_paths = ["src/crypto/signature/ecdsa-p256-sha256"]
+cargo_manifests = ["src/crypto/signature/ecdsa-p256-sha256/impl/rust/Cargo.toml"]
+
+[tasks.test]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--locked", "--offline", "--manifest-path", "src/crypto/signature/ecdsa-p256-sha256/impl/rust/Cargo.toml"]
+tools = ["cargo", "rustup"]
+timeout_seconds = 180
+
+[tasks.interop]
+kind = "test"
+command = ["node", "src/crypto/signature/ecdsa-p256-sha256/spec/verify.mjs"]
+tools = ["node", "cargo", "rustup"]
+timeout_seconds = 180

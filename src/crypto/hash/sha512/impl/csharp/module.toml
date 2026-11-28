@@ -1,0 +1,11 @@
+schema_version = 1
+id = "sha512-csharp-portable"
+owned_paths = ["src/crypto/hash/sha512/impl/csharp"]
+dependencies = [{ module = "sha512-spec", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "src/crypto/hash/sha512/impl/csharp/check.py"]
+tools = ["python", "dotnet"]
+target = "net10.0"
+timeout_seconds = 180

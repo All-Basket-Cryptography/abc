@@ -1,0 +1,94 @@
+{
+  "status": "keccak_llbc_permutation_and_absorb_checked",
+  "target": "x86_64-pc-windows-msvc",
+  "charon": "0.1.254 (b104e24fea7d721b71e6c39fd70f26ff20bc0980)",
+  "charon_executable_sha256": "38ec811d2402a6ada748665486111192de9cfb5c3571d57aeb94f57b62b3ab02",
+  "rust": "rustc 1.100.0-nightly (8fa1c96cf 2026-08-17)\nbinary: rustc\ncommit-hash: 8fa1c96cfd489e4c27654c144ae871ce2c4db6c6\ncommit-date: 2026-08-17\nhost: x86_64-pc-windows-msvc\nrelease: 1.100.0-nightly\nLLVM version: 23.1.0",
+  "lean": "Lean (version 4.31.0, x86_64-w64-windows-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)",
+  "sources": {
+    "tools/verification/probe/toolchain-candidate.json": "6953b42492bff08a40479725fec7ce922002bfdbe715afcaedf4f817f7621249",
+    "src/lean/lean-toolchain": "efac0b94923b2d8b6840cd35be9177ad0fc5ab2332f4f4311c98712cee92fdee",
+    "src/crypto/hash/keccak-p1600/impl/rust/src/lib.rs": "d38da0e66e9233f145cd94e39e07ad20f4727a5500229f521de477a0745a32d5",
+    "src/crypto/hash/keccak-p1600/impl/rust/Cargo.toml": "8abad62da43ddea38d09f5fe123c02a562ea0cf8c3443d5ca0dcab031bc45f5f",
+    "tools/build/rust/Cargo.toml": "9e8dd7579ad780836ce80f3a00639b171926d3435e15e3eb274c4fd67eb0d8f4",
+    "tools/build/rust/Cargo.lock": "a3ee8405943bef38fef4f8127d96032013d10bc082ae0cb6ff9ccbd855178b5c",
+    "src/crypto/hash/keccak-p1600/spec/KeccakRound.lean": "73f5cb603334b2d310e67dd674b83d2676f8fe680d3c7e0fa7429fb05ce3be99",
+    "src/crypto/hash/keccak-p1600/spec/KeccakSourceRefinement.lean": "e957f9568dee455c0abe9b8f8135f1556dd1c0b9f58101d7f59addca25c9529d",
+    "tools/verification/keccak/llbc.py": "a71a02fd13ee906be1d484a334c5c3f82ff2eb32e9c03a5ed3343d0b3425a75f",
+    "tools/verification/keccak/check_source.py": "b0f7a015fc7d7511f25b0c0c2b2547aecef4b969c6b8cf4e473cdab12eb093ea"
+  },
+  "extractions": [
+    {
+      "sha256": "034cb48d65fa9dd23ab57d5c9b0a35d314c859d3b65f253ff6ae48cd6326c21b",
+      "used_default_sysroot_fallback": true
+    },
+    {
+      "sha256": "cad8b7c611429b977f3a8db8d4959cde37a49da97eda1e052d0c3dbae8046f14",
+      "used_default_sysroot_fallback": true
+    }
+  ],
+  "generated_lean_sha256": "7124531af7e37bbe704971afa2688a619e0ae8a77b69876a29c38a06c9d2e9b7",
+  "audited_theorems": {
+    "sourceConstants_refine": [
+      "propext",
+      "Quot.sound"
+    ],
+    "sourceRound_refines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "sourcePermutation_refines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "sourcePermutation_bits": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "sourceAbsorbMix_refines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "sourceAbsorb_bits": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "sourceAbsorb_blocks_bits": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "sourceOutput_blocks_bits": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "sourceSponge_blocks_bits": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "negative_controls": {
+    "theta_rotation": {
+      "rust_sha256": "7801e744ce21fa3e4d375dc6a07aa9660a526b0244da4415513a3e9aa9817934",
+      "llbc_sha256": "7595003c3e534c7787fa03cbb4ab2f4ff84353fbfcd54c9e87f267bee9ff6650",
+      "lean_sha256": "7e2980458f6c184dd2909d2fc689410489c30f00b1d42da9a4dc6f58f76b552a",
+      "rejected_theorem": "sourceRound_refines"
+    },
+    "absorb_endianness": {
+      "rust_sha256": "87d8896a5d6c8962eabd9b3459907a869b01c9d7a2993028e4bd96de043e0878",
+      "llbc_sha256": "61c99bd79090a68840a3c6956b8fe5825b54118050ffe6f4ba4ee5f86a98bdd3",
+      "lean_sha256": "74307713eb3639aacbd24e59d2ba59c67ba0f817cb26399b9cb3f304263e3ee6",
+      "rejected_theorem": "sourceAbsorbMix_refines"
+    },
+    "iota_constant": {
+      "rust_sha256": "df0c518c435100bcec1dd2561dba7ce0ae6f1e2d121066b59aff99727028f8b1",
+      "llbc_sha256": "67296a64b2f2f7062bfe25148226c9de26bb313b128dd5c7e0b15e369da26845",
+      "lean_sha256": "e20638a7849272956515c3ff10126048b95b1f25c4437d1dbc475d4995b7ea6a",
+      "rejected_theorem": "sourceConstants_refine"
+    }
+  }
+}

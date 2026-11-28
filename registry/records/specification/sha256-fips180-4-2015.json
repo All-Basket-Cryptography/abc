@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:specification:sha256-fips180-4-2015",
+  "record_type": "specification",
+  "name": "SHA-256 FIPS 180-4 byte-domain specification",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha256/spec/Sha256Spec.lean"
+    },
+    {
+      "path": "src/crypto/hash/sha256/impl/rust/formal/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha-256",
+  "version": "FIPS 180-4 (August 2015)",
+  "reference_refs": [
+    "abc:standard:fips-180-4-2015"
+  ],
+  "sections": [
+    "Sections 3 through 6.2.2"
+  ],
+  "errata_urls": [
+    "https://csrc.nist.gov/pubs/fips/180-4/upd1/final"
+  ],
+  "lean_module": "Sha256Spec",
+  "path": "src/crypto/hash/sha256/spec/Sha256Spec.lean",
+  "theorems": [],
+  "domain": "Whole-byte messages with bit length strictly below 2^64.",
+  "input_semantics": "Bytes encoded into SHA-256 words in big-endian order. Streaming updates concatenate in delivery order.",
+  "output_semantics": "A 32-byte big-endian digest. An overflowing update preserves the prior state.",
+  "preconditions": [
+    "The sum of accepted byte lengths is at most 2^61 - 1."
+  ],
+  "reviewer": {
+    "state": "unassigned",
+    "contacts": []
+  }
+}

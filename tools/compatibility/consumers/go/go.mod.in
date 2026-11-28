@@ -1,0 +1,7 @@
+module abc-external-go-consumer
+
+go 1.24.0
+
+require github.com/All-Basket-Cryptography/abc/sdk/go v0.0.0
+
+replace github.com/All-Basket-Cryptography/abc/sdk/go => ./sdk

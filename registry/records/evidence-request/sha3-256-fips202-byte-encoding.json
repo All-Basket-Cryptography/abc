@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:evidence-request:sha3-256-fips202-byte-encoding",
+  "record_type": "evidence-request",
+  "name": "SHA3-256 Lean encoding examples",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha3-256/spec/Sha3Encoding.lean"
+    },
+    {
+      "path": "src/lean/check.py"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:specification:sha3-256-fips202-byte-encoding",
+  "claim": "functional-correctness",
+  "method": "formal",
+  "scope": "Checks three concrete examples for the Lean lane encoding and rate-boundary padding model.",
+  "theorems": [
+    "Abc.Spec.Sha3Encoding.encodeLane_example",
+    "Abc.Spec.Sha3Encoding.decodeLane_example",
+    "Abc.Spec.Sha3Encoding.paddedTail_rateBoundary"
+  ],
+  "toolchain": [
+    {
+      "name": "Lean",
+      "version": "4.31.0"
+    }
+  ],
+  "assumption_policy": "Kernel checks the examples without a native-evaluation oracle.",
+  "output_format": "text"
+}

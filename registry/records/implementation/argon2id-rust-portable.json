@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:argon2id-rust-portable",
+  "record_type": "implementation",
+  "name": "ABC research Argon2id v1.3 in Rust",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/argon2id/impl/rust/src/lib.rs"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/spec/README.md"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/rust/src/compress.rs"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/rust/src/matrix.rs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:argon2id",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "c5c72140e3d760c465967ed77b65a39113dbcf29760e32219816d23288cdcd2b",
+  "path": "src/crypto/kdf/argon2id/impl/rust",
+  "languages": [
+    "rust"
+  ],
+  "features": [],
+  "external_calls": [
+    "abc-blake2b"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable rust research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

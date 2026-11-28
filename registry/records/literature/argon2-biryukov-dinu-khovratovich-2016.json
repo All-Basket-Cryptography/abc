@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "abc:literature:argon2-biryukov-dinu-khovratovich-2016",
+  "record_type": "literature",
+  "name": "Argon2: New Generation of Memory-Hard Functions for Password Hashing and Other Applications",
+  "sources": [
+    {
+      "url": "https://orbilu.uni.lu/handle/10993/31652"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "EuroS&P 2016",
+  "authors": [
+    "A. Biryukov",
+    "D. Dinu",
+    "D. Khovratovich"
+  ],
+  "publisher": "IEEE",
+  "published": "2016",
+  "accessed": "2026-11-28",
+  "license": "See publisher rights information.",
+  "redistribution": "link-only",
+  "sections": [],
+  "errata_urls": [],
+  "citation_refs": [],
+  "doi": "10.1109/EuroSP.2016.31"
+}

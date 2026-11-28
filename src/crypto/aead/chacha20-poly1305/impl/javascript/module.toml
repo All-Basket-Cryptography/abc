@@ -1,0 +1,14 @@
+schema_version = 1
+id = "chacha20-poly1305-javascript-portable"
+owned_paths = ["src/crypto/aead/chacha20-poly1305/impl/javascript"]
+dependencies = [
+  { module = "crypto-byte-views-ecmascript", type = "calls" },
+  { module = "chacha20-javascript-portable", type = "calls" },
+  { module = "poly1305-javascript-portable", type = "calls" },
+]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/aead/chacha20-poly1305/impl/javascript/chacha20poly1305.test.mjs"]
+tools = ["node"]
+timeout_seconds = 120

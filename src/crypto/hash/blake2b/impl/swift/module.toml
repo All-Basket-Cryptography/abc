@@ -1,0 +1,12 @@
+schema_version = 1
+id = "blake2b-swift-portable"
+owned_paths = ["src/crypto/hash/blake2b/impl/swift"]
+shared_inputs = ["src/crypto/hash/blake2b/impl/cpp/check.py"]
+dependencies = [{ module = "blake2b", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["swift", "test", "--package-path", "src/crypto/hash/blake2b/impl/swift/AbcBlake2bSwift", "--configuration", "release", "-Xswiftc", "-warnings-as-errors"]
+tools = ["swift"]
+target = "macos"
+timeout_seconds = 180

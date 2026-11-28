@@ -1,0 +1,12 @@
+schema_version = 1
+id = "aes256-gcm-cpp-x86-aesni"
+owned_paths = ["src/crypto/aead/aes256-gcm/impl/cpp"]
+shared_inputs = ["src/crypto/aead/aes256-gcm/impl/c/check.py", "src/crypto/cipher/aes256/impl/java/check.py"]
+dependencies = [{ module = "aes256-gcm-rust", type = "implements" }, { module = "aes256-cpp-x86-aesni", type = "imports" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "src/crypto/aead/aes256-gcm/impl/c/check.py", "--language", "cpp"]
+tools = ["python", "clang", "node"]
+target = "x86_64-aesni"
+timeout_seconds = 180

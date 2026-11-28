@@ -1,0 +1,12 @@
+schema_version = 1
+id = "sha3-256-kotlin-portable"
+owned_paths = ["src/crypto/hash/sha3-256/impl/kotlin"]
+shared_inputs = ["src/crypto/hash/keccak-p1600/impl/java/fixtures.mjs","src/crypto/hash/keccak-p1600/impl/java/check.py"]
+dependencies = [{ module = "keccak-p1600-kotlin-portable", type = "imports" }, { module = "sha3-encoding-spec", type = "implements" }]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/hash/keccak-p1600/impl/java/check.py", "--language", "kotlin", "--algorithm", "sha3-256"]
+tools = ["python","java","node"]
+target = "kotlin-jvm-jdk17"
+timeout_seconds = 240

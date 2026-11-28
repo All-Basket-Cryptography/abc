@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ml-dsa-65-kotlin-provider",
+  "record_type": "implementation",
+  "name": "ML-DSA-65 in Kotlin (Bouncy Castle Java 1.87)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/kotlin/src/MlDsa65.kt"
+    },
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/kotlin/README.md"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/java/bcprov.toml"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-dsa",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "405aa13dad6c46945caa74995dddf27e38a1feb0208e417d94b8f81d190c93f5",
+  "path": "src/crypto/signature/ml-dsa-65/impl/kotlin",
+  "languages": [
+    "kotlin"
+  ],
+  "features": [],
+  "external_calls": [
+    "Bouncy Castle Java 1.87"
+  ],
+  "target_refs": [],
+  "provider": "Bouncy Castle Java 1.87",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

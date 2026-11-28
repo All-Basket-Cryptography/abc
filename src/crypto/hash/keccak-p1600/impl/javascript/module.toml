@@ -1,0 +1,10 @@
+schema_version = 1
+id = "keccak-p1600-javascript"
+owned_paths = ["src/crypto/hash/keccak-p1600/impl/javascript"]
+dependencies = [{ module = "crypto-byte-views-ecmascript", type = "calls" }, { module = "keccak-p1600-spec", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/hash/keccak-p1600/impl/javascript/keccak.test.mjs"]
+tools = ["node"]
+timeout_seconds = 60

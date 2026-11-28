@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:chacha20-poly1305-kotlin-portable",
+  "record_type": "implementation",
+  "name": "ChaCha20-Poly1305 in Kotlin (ABC Kotlin research core)",
+  "sources": [
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/kotlin/src/ChaCha20Poly1305.kt"
+    },
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/kotlin/README.md"
+    },
+    {
+      "path": "src/crypto/cipher/chacha20/impl/kotlin/src/ChaCha20.kt"
+    },
+    {
+      "path": "src/crypto/mac/poly1305/impl/kotlin/src/Poly1305.kt"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:chacha20-poly1305",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "2218585abe5e37f0328eaef5ad49fe876823f717c9ca6c8c86d8c8cf328c1134",
+  "path": "src/crypto/aead/chacha20-poly1305/impl/kotlin",
+  "languages": [
+    "kotlin"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Kotlin ChaCha20",
+    "ABC Kotlin Poly1305"
+  ],
+  "target_refs": [],
+  "provider": "ABC Kotlin research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

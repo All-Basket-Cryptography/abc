@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "id": "abc:parameter:ml-kem-1024",
+  "record_type": "parameter",
+  "name": "ML-KEM-1024",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/pubs/fips/203/final"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "parameter_kind": "parameter-set",
+  "description": "The ML-KEM-1024 parameter set named by the cited publication.",
+  "standard_refs": [
+    "abc:standard:fips-203-2024"
+  ]
+}

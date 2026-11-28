@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-python-portable",
+  "record_type": "implementation",
+  "name": "AES-256 in Python (ABC Python research core)",
+  "sources": [
+    {
+      "path": "src/crypto/cipher/aes256/impl/python/abc_aes256.py"
+    },
+    {
+      "path": "src/crypto/cipher/aes256/impl/python/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:aes-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "48c5b31fe8945c59a8bae759926631b16689438624c8f9a029ca499b7018c9f2",
+  "path": "src/crypto/cipher/aes256/impl/python",
+  "languages": [
+    "python"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC Python research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

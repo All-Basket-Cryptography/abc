@@ -1,0 +1,19 @@
+schema_version = 1
+id = "scrypt-csharp-portable"
+owned_paths = ["src/crypto/kdf/scrypt/impl/csharp"]
+shared_inputs = ["src/crypto/kdf/scrypt/impl/java/check.py"]
+dependencies = [{ module = "pbkdf2-hmac-sha256-csharp-portable", type = "calls" }, { module = "scrypt-rust", type = "implements" }]
+lean_sources = { ScryptCSharpBounds = "src/crypto/kdf/scrypt/impl/csharp" }
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/kdf/scrypt/impl/csharp/check.py"]
+tools = ["python", "dotnet"]
+target = "net10.0"
+timeout_seconds = 240
+
+[tasks.workspace-model]
+kind = "formal"
+command = ["lean", "-DwarningAsError=true", "src/crypto/kdf/scrypt/impl/csharp/ScryptCSharpBounds.lean"]
+tools = ["lean"]
+timeout_seconds = 60

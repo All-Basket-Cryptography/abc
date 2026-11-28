@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha256-python-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHA-256 in Python",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha256/impl/python/abc_sha256.py"
+    },
+    {
+      "path": "src/crypto/hash/sha256/impl/python/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha-256",
+  "spec_ref": "abc:specification:sha256-fips180-4-2015",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "c920ddb6f048e4180620a7c1d28367b28360b8e02d471d3ea4c81d53634b62bd",
+  "path": "src/crypto/hash/sha256/impl/python",
+  "languages": [
+    "python"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable Python research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -1,0 +1,10 @@
+schema_version = 1
+id = "wasi-sdk"
+owner = "sdk"
+owned_paths = ["src/crypto/hash/sha256/sdk/wasi"]
+
+[tasks.adapter]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "tools/build/rust/Cargo.toml", "--locked", "--offline", "-p", "abc-wasi-sha256"]
+tools = ["cargo", "rustc", "rustup"]
+target = "native-adapter"

@@ -1,0 +1,14 @@
+schema_version = 1
+id = "x25519-typescript-provider"
+owned_paths = ["src/crypto/agreement/x25519/impl/typescript"]
+dependencies = [
+  { module = "crypto-byte-views-ecmascript", type = "calls" },
+  { module = "crypto-providers-ecmascript", type = "calls" },
+]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/agreement/x25519/impl/typescript/x25519.test.mts"]
+tools = ["node"]
+target = "node24"
+timeout_seconds = 120

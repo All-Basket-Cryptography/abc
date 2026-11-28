@@ -1,0 +1,12 @@
+schema_version = 1
+id = "ed25519-swift-provider"
+owned_paths = ["src/crypto/signature/ed25519/impl/swift"]
+shared_inputs = ["src/crypto/signature/ed25519/impl/java/check.py","src/crypto/agreement/x25519/impl/swift/check.py","src/crypto/agreement/x25519/impl/swift/tests/Support.swift"]
+dependencies = [{ module = "ed25519-rust", type = "implements" }]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/agreement/x25519/impl/swift/check.py", "ed25519"]
+tools = ["python", "swift", "node", "pkg-config"]
+target = "macos-arm64"
+timeout_seconds = 180

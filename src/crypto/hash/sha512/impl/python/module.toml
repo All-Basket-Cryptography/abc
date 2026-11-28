@@ -1,0 +1,11 @@
+schema_version = 1
+id = "sha512-python-portable"
+owned_paths = ["src/crypto/hash/sha512/impl/python"]
+dependencies = [{ module = "sha512-spec", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "-m", "unittest", "discover", "-s", "src/crypto/hash/sha512/impl/python", "-p", "test_sha512.py"]
+tools = ["python"]
+target = "portable"
+timeout_seconds = 120

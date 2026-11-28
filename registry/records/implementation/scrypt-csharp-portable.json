@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:scrypt-csharp-portable",
+  "record_type": "implementation",
+  "name": "scrypt in C# (ABC C# research core)",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/scrypt/impl/csharp/Scrypt.cs"
+    },
+    {
+      "path": "src/crypto/kdf/scrypt/impl/csharp/README.md"
+    },
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/csharp/Pbkdf2Sha256.cs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:scrypt",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "6989ada184818a8be990bd11cad56442d8e30b714bcf4f5c1dccd1592c94480f",
+  "path": "src/crypto/kdf/scrypt/impl/csharp",
+  "languages": [
+    "csharp"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC C# PBKDF2-HMAC-SHA-256"
+  ],
+  "target_refs": [],
+  "provider": "ABC C# research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

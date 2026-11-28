@@ -1,0 +1,10 @@
+schema_version = 1
+id = "blake2b-python-portable"
+owned_paths = ["src/crypto/hash/blake2b/impl/python"]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "-m", "unittest", "discover", "-s", "src/crypto/hash/blake2b/impl/python", "-p", "test_blake2b.py"]
+tools = ["python"]
+target = "portable"
+timeout_seconds = 120

@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "id": "abc:literature:rfc-2104",
+  "record_type": "literature",
+  "name": "HMAC: Keyed-Hashing for Message Authentication",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc2104.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "RFC 2104",
+  "authors": [
+    "H. Krawczyk",
+    "M. Bellare",
+    "R. Canetti"
+  ],
+  "publisher": "RFC Editor",
+  "published": "1997-02",
+  "accessed": "2026-11-28",
+  "license": "See the RFC's copyright notice and applicable RFC publication terms.",
+  "redistribution": "link-only",
+  "sections": [
+    "Sections 2 and 6"
+  ],
+  "errata_urls": [],
+  "citation_refs": [],
+  "doi": "10.17487/RFC2104"
+}

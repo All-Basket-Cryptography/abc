@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha256-typescript-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHA-256 in TypeScript",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha256/impl/typescript/sha256.mts"
+    },
+    {
+      "path": "src/crypto/hash/sha256/impl/typescript/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha-256",
+  "spec_ref": "abc:specification:sha256-fips180-4-2015",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "698541bc0ae7ff937edad96ea08d36a273e0d1f34cfb3aaf71ff74f9c3e25999",
+  "path": "src/crypto/hash/sha256/impl/typescript",
+  "languages": [
+    "typescript"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable TypeScript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

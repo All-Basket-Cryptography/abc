@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha256-openssl-c-3-0-16",
+  "record_type": "implementation",
+  "name": "OpenSSL C SHA-256 core",
+  "sources": [
+    {
+      "url": "https://github.com/openssl/openssl/blob/openssl-3.0.16/crypto/sha/sha256.c",
+      "locator": "SHA-256 scope: Git blob 5845c389379ed795b866d77c27264d113dd8873d, C source file bytes only."
+    },
+    {
+      "url": "https://github.com/openssl/openssl/blob/openssl-3.0.16/LICENSE.txt"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha-256",
+  "origin": "upstream",
+  "revision": "openssl-3.0.16",
+  "source_sha256": "c4fcbb5fcdba2ad651ebf5151bd0f67c1b2bf13e1ac828ed7f614da167d5af20",
+  "languages": [
+    "c"
+  ],
+  "features": [],
+  "external_calls": [],
+  "provider": "OpenSSL libcrypto",
+  "target_refs": [],
+  "maintenance": {
+    "state": "catalog-only"
+  },
+  "license": "Apache-2.0"
+}

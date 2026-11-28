@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:construction:chacha20-poly1305",
+  "record_type": "construction",
+  "name": "ChaCha20-Poly1305",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc8439.html#section-2.8"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "symmetric",
+  "family_ref": "abc:family:chacha20-poly1305",
+  "catalog_state": "indexed",
+  "lifecycle": "established",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [],
+  "literature_refs": [
+    "abc:literature:rfc-8439"
+  ],
+  "standard_refs": [],
+  "finding_refs": [],
+  "use_cases": [
+    "Authenticated encryption with associated data"
+  ],
+  "limitations": [
+    "Nonce uniqueness is required for each key."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified",
+  "component_refs": [
+    "abc:algorithm:chacha20",
+    "abc:algorithm:poly1305"
+  ]
+}

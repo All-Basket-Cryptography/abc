@@ -1,0 +1,11 @@
+schema_version = 1
+id = "sha512-kotlin-portable"
+owned_paths = ["src/crypto/hash/sha512/impl/kotlin"]
+dependencies = [{ module = "sha512-spec", type = "implements" }]
+
+[tasks.jvm-tests]
+kind = "test"
+command = ["python", "-B", "src/crypto/hash/sha512/impl/kotlin/check.py"]
+tools = ["python", "java"]
+target = "jdk17"
+timeout_seconds = 180

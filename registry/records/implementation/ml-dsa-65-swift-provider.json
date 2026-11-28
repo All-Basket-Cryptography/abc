@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ml-dsa-65-swift-provider",
+  "record_type": "implementation",
+  "name": "ML-DSA-65 in Swift (OpenSSL 3.5.9)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/swift/AbcMlDsa65Swift/Sources/AbcMlDsa65Swift/MlDsa65.swift"
+    },
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/swift/README.md"
+    },
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/swift/AbcMlDsa65Swift/Sources/CAbcMlDsa65OpenSSL/shim.h"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-dsa",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "d9693f55b3248241c085bb1f89abe36e82b1470be03a33ae288a9feebd3de1cf",
+  "path": "src/crypto/signature/ml-dsa-65/impl/swift",
+  "languages": [
+    "swift"
+  ],
+  "features": [],
+  "external_calls": [
+    "OpenSSL 3.5.9"
+  ],
+  "target_refs": [],
+  "provider": "OpenSSL 3.5.9",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

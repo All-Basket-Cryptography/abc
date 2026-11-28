@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha512-kotlin-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHA-512 in Kotlin",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha512/impl/kotlin/src/Sha512.kt"
+    },
+    {
+      "path": "src/crypto/hash/sha512/impl/kotlin/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha-512",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "c56e7d0a738419394f5833bab8efd3a4bf9b8c6e7c6a42a1cd3773dc11fffcbf",
+  "path": "src/crypto/hash/sha512/impl/kotlin",
+  "languages": [
+    "kotlin"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable Kotlin research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:slh-dsa",
+  "record_type": "family",
+  "name": "SLH-DSA",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/pubs/fips/205/final"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "signature",
+  "description": "Stateless hash-based signatures specified by FIPS 205."
+}

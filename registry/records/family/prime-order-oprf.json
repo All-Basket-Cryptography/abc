@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:prime-order-oprf",
+  "record_type": "family",
+  "name": "Prime-order oblivious PRFs",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc9497.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "mpc-privacy",
+  "description": "Two-party oblivious PRF protocols instantiated over prime-order groups."
+}

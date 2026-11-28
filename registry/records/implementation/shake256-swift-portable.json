@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:shake256-swift-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHAKE256 in Swift",
+  "sources": [
+    {
+      "path": "src/crypto/hash/shake256/impl/swift/AbcShake256Swift/Sources/AbcShake256Swift/Shake256.swift"
+    },
+    {
+      "path": "src/crypto/hash/shake256/impl/swift/README.md"
+    },
+    {
+      "path": "src/crypto/hash/keccak-p1600/impl/swift/AbcKeccakP1600Swift/Sources/AbcKeccakP1600Swift/KeccakP1600.swift"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:shake256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "435c85ce3878946ca6c70035658ea1189c470422f5952b86c53c07d09ddfb6f0",
+  "path": "src/crypto/hash/shake256/impl/swift",
+  "languages": [
+    "swift"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Swift Keccak-p[1600,24]"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable Swift research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

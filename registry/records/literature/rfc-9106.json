@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:literature:rfc-9106",
+  "record_type": "literature",
+  "name": "Argon2 Memory-Hard Function for Password Hashing and Proof-of-Work Applications",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc9106.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "RFC 9106",
+  "authors": [
+    "A. Biryukov",
+    "D. Dinu",
+    "D. Khovratovich",
+    "S. Josefsson"
+  ],
+  "publisher": "RFC Editor",
+  "published": "2021-09",
+  "accessed": "2026-11-28",
+  "license": "See RFC copyright notice.",
+  "redistribution": "link-only",
+  "sections": [
+    "Sections 3 and 5.3"
+  ],
+  "errata_urls": [
+    "https://www.rfc-editor.org/info/rfc9106/"
+  ],
+  "citation_refs": [
+    "abc:literature:argon2-biryukov-dinu-khovratovich-2016"
+  ],
+  "doi": "10.17487/RFC9106"
+}

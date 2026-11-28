@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>12.0</LangVersion>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <PackageId>Abc.Cryptography.Sha3_256</PackageId>
+    <Version>0.1.0</Version>
+    <Description>Portable managed sha3-256 for ABC research.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Sha3_256.cs" />
+    <ProjectReference Include="../../../keccak-p1600/impl/csharp/Abc.Cryptography.KeccakP1600.csproj" />
+  </ItemGroup>
+</Project>

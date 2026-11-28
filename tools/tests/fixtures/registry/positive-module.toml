@@ -1,0 +1,12 @@
+schema_version = 1
+id = "fixture-registry"
+owned_paths = ["tools/tests/fixtures/registry"]
+cargo_manifests = []
+shared_inputs = ["registry/schemas/registry.schema.json"]
+
+[tasks.check]
+kind = "test"
+always = false
+command = ["python", "-m", "unittest", "discover", "-s", "tools/tests/fixtures/registry"]
+timeout_seconds = 60
+tools = ["python"]

@@ -1,0 +1,85 @@
+name: ABC formal probe (advisory)
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/formal-probe.yml'
+      - 'tools/verification/probe/**'
+      - 'src/lean/**'
+      - 'src/crypto/hash/sha256/impl/rust/formal/**'
+      - 'src/crypto/hash/sha256/spec/**'
+      - 'src/crypto/hash/sha3-256/spec/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  research-probe:
+    name: Rust-to-Lean research probe (advisory)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          repository: AeneasVerif/aeneas
+          ref: 505b6ca35217e7be5c96c3e2f8045edfbdf47291
+          path: .abc/formal-tools/aeneas
+          persist-credentials: false
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          repository: AeneasVerif/charon
+          ref: b104e24fea7d721b71e6c39fd70f26ff20bc0980
+          path: .abc/formal-tools/aeneas/charon
+          persist-credentials: false
+      - name: Install and verify the published Lean build
+        shell: bash
+        run: |
+          archive="$RUNNER_TEMP/lean-4.31.0-linux.tar.zst"
+          curl --silent --show-error --fail --location --proto '=https' --retry 2 --max-time 300 \
+            --output "$archive" https://github.com/leanprover/lean4/releases/download/v4.31.0/lean-4.31.0-linux.tar.zst
+          printf '%s  %s\n' 07a633cc8d9151cbc08825ea4cdda50d4b02a2c9cb852c0131b13046f49cad7f "$archive" | sha256sum --check --strict
+          tar --zstd -xf "$archive" -C "$RUNNER_TEMP"
+          printf '%s\n' "$RUNNER_TEMP/lean-4.31.0-linux/bin" >> "$GITHUB_PATH"
+      - name: Check the Lean specification independently
+        run: python3 src/lean/check.py sha256
+      - name: Install the exact published Aeneas and Charon tools
+        shell: bash
+        run: |
+          aeneas="$GITHUB_WORKSPACE/.abc/formal-tools/aeneas"
+          archive="$RUNNER_TEMP/aeneas-505b6ca-linux-x86_64.tar.gz"
+          release_dir="$RUNNER_TEMP/aeneas-505b6ca"
+          test "$(git -C "$aeneas" rev-parse HEAD)" = 505b6ca35217e7be5c96c3e2f8045edfbdf47291
+          test "$(git -C "$aeneas/charon" rev-parse HEAD)" = b104e24fea7d721b71e6c39fd70f26ff20bc0980
+          test "$(tail -n 1 "$aeneas/charon-pin")" = b104e24fea7d721b71e6c39fd70f26ff20bc0980
+          curl --silent --show-error --fail --location --proto '=https' --retry 2 --max-time 180 \
+            --output "$archive" https://github.com/AeneasVerif/aeneas/releases/download/nightly-2026.09.09-505b6ca/aeneas-linux-x86_64.tar.gz
+          printf '%s  %s\n' d5ba53b1370d30866bcd86de5e34abfbadf09e76b3689a7f70f458cd0c133591 "$archive" | sha256sum --check --strict
+          mkdir "$release_dir"
+          tar -xzf "$archive" -C "$release_dir"
+          "$release_dir/aeneas" -version | grep -Fx 'aeneas nightly-2026.09.09-505b6ca'
+          test "$("$release_dir/charon" toolchain-version)" = nightly-2026-08-18
+          mkdir -p "$aeneas/bin" "$aeneas/charon/bin"
+          ln -s "$release_dir/aeneas" "$aeneas/bin/aeneas"
+          ln -s "$release_dir/charon" "$aeneas/charon/bin/charon"
+          rustup toolchain install nightly-2026-08-18 --profile minimal
+          printf 'ABC_AENEAS_ROOT=%s\n' "$aeneas" >> "$GITHUB_ENV"
+      - name: Run the positive and negative formal probe
+        env:
+          ABC_FORMAL_USE_MATHLIB_CACHE: '1'
+        run: node tools/verification/probe/check.mjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ always() }}
+        with:
+          name: formal-probe-untrusted-pr
+          path: |
+            .abc/formal-probe/run-*/result.json
+            .abc/formal-probe/run-*/*.log
+            .abc/formal-probe/run-*/*.llbc
+            .abc/formal-probe/run-*/positive-generated/*.lean
+            .abc/formal-probe/run-*/lean/Generated/*.lean
+          if-no-files-found: ignore
+          retention-days: 3

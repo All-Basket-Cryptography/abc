@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ecdsa-p256-sha256-c-provider",
+  "record_type": "implementation",
+  "name": "ECDSA P-256 in C (OpenSSL 3.5.4)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/c/abc_ecdsa_p256_sha256_c.c"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/c/README.md"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/c/ecdsa_p256_nonce.c"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ecdsa-p256-sha256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "19c6d1b9054663892f6e94935c972c772e862ea045f876113e5511bfe7c5d89e",
+  "path": "src/crypto/signature/ecdsa-p256-sha256/impl/c",
+  "languages": [
+    "c"
+  ],
+  "features": [],
+  "external_calls": [
+    "OpenSSL 3.5.4"
+  ],
+  "target_refs": [],
+  "provider": "OpenSSL 3.5.4",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

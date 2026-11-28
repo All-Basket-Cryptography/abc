@@ -1,0 +1,18 @@
+schema_version = 1
+id = "argon2id-java-bc"
+owned_paths = ["src/crypto/kdf/argon2id/impl/java"]
+lean_sources = { Argon2idJvmBudget = "src/crypto/kdf/argon2id/impl/java" }
+dependencies = [{ module = "argon2id-rust", type = "implements" }]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/kdf/argon2id/impl/java/check.py", "--language", "java"]
+tools = ["python", "java", "javac", "jar", "node"]
+target = "jvm-jdk17"
+timeout_seconds = 240
+
+[tasks.budget-model]
+kind = "formal"
+command = ["lean", "-DwarningAsError=true", "src/crypto/kdf/argon2id/impl/java/Argon2idJvmBudget.lean"]
+tools = ["lean"]
+timeout_seconds = 60

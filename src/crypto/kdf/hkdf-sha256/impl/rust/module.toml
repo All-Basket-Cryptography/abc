@@ -1,0 +1,23 @@
+schema_version = 1
+id = "hkdf-sha256"
+owned_paths = ["src/crypto/kdf/hkdf-sha256/impl/rust"]
+cargo_manifests = ["src/crypto/kdf/hkdf-sha256/impl/rust/Cargo.toml"]
+
+[lean_sources]
+ExpandInvariant = "src/crypto/kdf/hkdf-sha256/impl/rust/formal"
+ExpandBlockRefinement = "src/crypto/kdf/hkdf-sha256/impl/rust/formal"
+ExpandRefinement = "src/crypto/kdf/hkdf-sha256/impl/rust/formal"
+HkdfLengthRefinement = "src/crypto/kdf/hkdf-sha256/impl/rust/formal"
+HkdfRefinement = "src/crypto/kdf/hkdf-sha256/impl/rust/formal"
+HkdfApi = "src/crypto/kdf/hkdf-sha256/impl/rust/formal"
+HkdfClaims = "src/crypto/kdf/hkdf-sha256/impl/rust/formal"
+
+[lean_external_imports]
+Aeneas = "tools/verification/probe/toolchain-candidate.json"
+"Abc.HkdfSha256.Extracted" = "tools/verification/hmac-hkdf/check.mjs"
+
+[tasks.test]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "tools/build/rust/Cargo.toml", "--locked", "-p", "abc-hkdf-sha256"]
+tools = ["cargo"]
+timeout_seconds = 120

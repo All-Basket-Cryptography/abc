@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:chacha",
+  "record_type": "family",
+  "name": "ChaCha",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc8439.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "symmetric",
+  "description": "ChaCha stream cipher family"
+}

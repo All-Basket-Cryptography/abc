@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "scope": "Fixed-width ML-KEM-768 and X25519 input models",
+  "lean": "Lean (version 4.31.0, x86_64-w64-windows-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)",
+  "sources": [
+    {
+      "path": "src/crypto/providers/formal/MlKem768InputEncoding.lean",
+      "sha256": "aa4880d32afa318343c3969de4762c7dc784f6f8175b538b71cc40dc35a14c9b",
+      "theorems": [
+        {
+          "name": "Abc.Spec.ProviderInputs.MlKem768.unpack_preserves_little_endian_value",
+          "axioms": [
+            "propext",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.MlKem768.unpack_matches_bit_operations",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.MlKem768.unpack_pack",
+          "axioms": [
+            "propext",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.MlKem768.pack_unpack",
+          "axioms": [
+            "propext",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.MlKem768.canonical_check_iff",
+          "axioms": [
+            "propext",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.MlKem768.reduce_fixed_iff",
+          "axioms": [
+            "propext",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.MlKem768.canonical_iff_reencode_after_reduction",
+          "axioms": [
+            "propext",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.MlKem768.complete_key_acceptance",
+          "axioms": [
+            "propext",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.MlKem768.triple_offset_bounds",
+          "axioms": [
+            "propext",
+            "Quot.sound"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "src/crypto/providers/formal/X25519InputEncoding.lean",
+      "sha256": "9c26c03e494a07586acb651741c21692a5d232dadecc3270422909ae6c241264",
+      "theorems": [
+        {
+          "name": "Abc.Spec.ProviderInputs.X25519.mask_is_low_255_bits",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.X25519.mask_bound",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.X25519.normalization_range",
+          "axioms": [
+            "propext"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.X25519.high_bit_does_not_change_normalization",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.X25519.normalize_is_single_subtraction",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.X25519.canonical_encoding_unchanged",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.X25519.normalize_idempotent",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.X25519.mask_when_wire_has_256_bits",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.X25519.mask_matches_final_byte",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.X25519.all_wire_aliases",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.X25519.extra_aliases_fit_iff",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.X25519.aliases_distinct",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ]
+        },
+        {
+          "name": "Abc.Spec.ProviderInputs.X25519.raw_limit_is_256_bits",
+          "axioms": []
+        }
+      ]
+    }
+  ]
+}

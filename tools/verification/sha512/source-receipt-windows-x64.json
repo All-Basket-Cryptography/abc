@@ -1,0 +1,65 @@
+{
+  "status": "sha512_llbc_compression_body_model_checked",
+  "target": "x86_64-pc-windows-msvc",
+  "charon": "0.1.254 (b104e24fea7d721b71e6c39fd70f26ff20bc0980)",
+  "charon_executable_sha256": "38ec811d2402a6ada748665486111192de9cfb5c3571d57aeb94f57b62b3ab02",
+  "rust": "rustc 1.100.0-nightly (8fa1c96cf 2026-08-17)\nbinary: rustc\ncommit-hash: 8fa1c96cfd489e4c27654c144ae871ce2c4db6c6\ncommit-date: 2026-08-17\nhost: x86_64-pc-windows-msvc\nrelease: 1.100.0-nightly\nLLVM version: 23.1.0",
+  "lean": "Lean (version 4.31.0, x86_64-w64-windows-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)",
+  "sources": {
+    "tools/verification/probe/toolchain-candidate.json": "6953b42492bff08a40479725fec7ce922002bfdbe715afcaedf4f817f7621249",
+    "src/lean/lean-toolchain": "efac0b94923b2d8b6840cd35be9177ad0fc5ab2332f4f4311c98712cee92fdee",
+    "src/crypto/hash/sha512/impl/rust/src/lib.rs": "f714292a3e778f4c1c01397f303183fbf1a3dcfbb78ad40ef6949c7850a005d9",
+    "src/crypto/hash/sha512/impl/rust/Cargo.toml": "bc11e007ac0044c6cb70a6e20105aa026b8ebbe843511858f033e0a6ae036308",
+    "tools/build/rust/Cargo.toml": "9e8dd7579ad780836ce80f3a00639b171926d3435e15e3eb274c4fd67eb0d8f4",
+    "tools/build/rust/Cargo.lock": "a3ee8405943bef38fef4f8127d96032013d10bc082ae0cb6ff9ccbd855178b5c",
+    "src/lean/Abc/Foundation/Encoding.lean": "1e4e51f3430cd6262cabedc9b6a7db80bb8e6f2a4f12af64a842f5e4ef7c32e9",
+    "src/crypto/hash/sha512/spec/Sha512Spec.lean": "7bafda0adb4584c465bef6c9d5fcf0fcf09024bbb06e448be748a4e89ec3c6bf",
+    "src/crypto/hash/sha512/spec/Sha512Compression.lean": "b9a094c309f3cf4205c165449921918f5a62154e3813b4d3451c2aa41eac6e5a",
+    "src/crypto/hash/sha512/spec/Sha512LlbcRefinement.lean": "ee17710b72af65f16fcefb9f1b6b4517fd10349af121eb3195fc20f1a5d84ce2",
+    "tools/verification/sha512/check.py": "bb727ef102e94f69cec7c3caed026bd8a64d171bc58868b9cf8a3ecebfc85794",
+    "tools/verification/sha512/llbc.py": "5aaef69716a24af3f3f331374202cfcb765b40cb4a5e6d89f32adda31cd9efb6",
+    "tools/verification/sha512/check_source.py": "dabf1eb4296fd92e85bd916466ed6934e1bce4451dd1f9c328d777f09f7d1625"
+  },
+  "generated_lean_sha256": "6e6d7e5b18bff2da3ec688889584f1e34186b9e6ddf01b31eb06fdeb2f12c024",
+  "extractions": [
+    {
+      "sha256": "53ccd0c7d3eb735a8880829998b17e92fc47e80bce5be7b207b62a9f8584bf00",
+      "used_default_sysroot_fallback": true
+    },
+    {
+      "sha256": "34a6ac7b897235b0c829a8a631093e8d864bffdd0372c5783bbcb19ce773d782",
+      "used_default_sysroot_fallback": true
+    }
+  ],
+  "audited_theorems": {
+    "generatedLoad_refines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "generatedSchedule_refines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "generatedRound_refines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "generatedFeed_refines": [],
+    "generatedCompression_eq": [
+      "propext",
+      "Quot.sound"
+    ],
+    "generatedCompression_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "negative_controls": {
+    "changed_rust_rotation_rejected_by_lean": {
+      "source_sha256": "a071314573cde181c4383adb721a90951853ebe5df795f9785cd473bbfd16b6a",
+      "llbc_sha256": "6a73336423b8c6ca2a90cc829bed28a584093e74be0bb9562d9a16937f261282",
+      "generated_lean_sha256": "785e50985ee2b4e4dca6afcaee8527492694e1af91ee65b9f622d0e072b818b7"
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:poly1305-rust-portable",
+  "record_type": "implementation",
+  "name": "ABC research Poly1305 in Rust",
+  "sources": [
+    {
+      "path": "src/crypto/mac/poly1305/impl/rust/src/lib.rs"
+    },
+    {
+      "path": "src/crypto/mac/poly1305/spec/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:poly1305",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "7e5e177c5c72f6652e3b583515e2d8e309985677c841a73fb0a89a390ddcdc04",
+  "path": "src/crypto/mac/poly1305/impl/rust",
+  "languages": [
+    "rust"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable rust research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

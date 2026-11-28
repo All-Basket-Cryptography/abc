@@ -1,0 +1,32 @@
+schema_version = 1
+id = "sha256"
+owner = "runtime"
+owned_paths = ["src/crypto/hash/sha256/impl/rust", "src/crypto/hash/sha256/module.toml"]
+cargo_manifests = ["src/crypto/hash/sha256/impl/rust/Cargo.toml", "src/crypto/hash/sha256/impl/rust/fuzz/Cargo.toml"]
+[lean_sources]
+ModelView = "src/crypto/hash/sha256/impl/rust/formal"
+CounterRefinement = "src/crypto/hash/sha256/impl/rust/formal"
+CoreRefinement = "src/crypto/hash/sha256/impl/rust/formal"
+WordRefinement = "src/crypto/hash/sha256/impl/rust/formal"
+ExtractedCompression = "src/crypto/hash/sha256/impl/rust/formal"
+FinalizeRefinement = "src/crypto/hash/sha256/impl/rust/formal"
+UpdateRefinement = "src/crypto/hash/sha256/impl/rust/formal"
+Refinement = "src/crypto/hash/sha256/impl/rust/formal"
+TrustedClaims = "src/crypto/hash/sha256/impl/rust/formal"
+
+[lean_external_imports]
+Aeneas = "tools/verification/probe/toolchain-candidate.json"
+"Abc.Sha256.Extracted" = "src/crypto/hash/sha256/impl/rust/formal/extract.mjs"
+
+[tasks.rust-tests]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "tools/build/rust/Cargo.toml", "--locked", "--offline", "-p", "abc-sha256"]
+tools = ["cargo", "rustc", "rustup"]
+target = "portable"
+
+[tasks.differential-fuzz]
+kind = "fuzz"
+command = ["node", "src/crypto/hash/sha256/impl/rust/fuzz/run.mjs", "--native", "2"]
+tools = ["node", "cargo", "rustc", "rustup"]
+target = "native"
+timeout_seconds = 360

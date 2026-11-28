@@ -1,0 +1,17 @@
+schema_version = 1
+id = "crypto-byte-views-ecmascript"
+owned_paths = ["src/crypto/inputs"]
+lean_sources = { TypedArrayView = "src/crypto/inputs" }
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/inputs/bytes.test.mjs"]
+tools = ["node"]
+target = "node24"
+timeout_seconds = 120
+
+[tasks.view-model]
+kind = "formal"
+command = ["lean", "-DwarningAsError=true", "src/crypto/inputs/TypedArrayView.lean"]
+tools = ["lean"]
+timeout_seconds = 60

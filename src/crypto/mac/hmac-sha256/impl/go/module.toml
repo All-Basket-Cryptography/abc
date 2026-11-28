@@ -1,0 +1,15 @@
+schema_version = 1
+id = "hmac-sha256-go-portable"
+owned_paths = ["src/crypto/mac/hmac-sha256/impl/go"]
+dependencies = [
+  { module = "sha256-go-portable", type = "calls" },
+  { module = "hmac-sha256-spec", type = "implements" },
+]
+
+[tasks.test]
+kind = "test"
+command = ["go", "test", "-C", "src/crypto/mac/hmac-sha256/impl/go", "-count=1", "./..."]
+dependencies = ["sha256-go-portable:test"]
+tools = ["go"]
+target = "portable"
+timeout_seconds = 120

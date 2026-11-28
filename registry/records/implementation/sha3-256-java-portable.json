@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha3-256-java-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHA3-256 in Java",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha3-256/impl/java/src/org/allbasket/abc/hash/sha3256/Sha3_256.java"
+    },
+    {
+      "path": "src/crypto/hash/sha3-256/impl/java/README.md"
+    },
+    {
+      "path": "src/crypto/hash/keccak-p1600/impl/java/src/org/allbasket/abc/hash/keccakp1600/KeccakSponge.java"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha3-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "56772f646e514585d2c334ca301cc0a042775042d78a1f178fe794e3613c9169",
+  "path": "src/crypto/hash/sha3-256/impl/java",
+  "languages": [
+    "java"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Java Keccak-p[1600,24]"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable Java research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

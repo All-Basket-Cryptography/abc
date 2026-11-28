@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ml-kem-768-csharp-provider",
+  "record_type": "implementation",
+  "name": "ML-KEM-768 in C# (Bouncy Castle .NET 2.7.0)",
+  "sources": [
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/csharp/MlKem768.cs"
+    },
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/csharp/README.md"
+    },
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/csharp/packages.lock.json"
+    },
+    {
+      "path": "src/crypto/providers/csharp/provider.toml"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-kem",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "bd217e5d55e41c2b331518cc148c2e7414c662407dee3fd2106d06c74a5cb152",
+  "path": "src/crypto/agreement/ml-kem-768/impl/csharp",
+  "languages": [
+    "csharp"
+  ],
+  "features": [],
+  "external_calls": [
+    "Bouncy Castle .NET 2.7.0"
+  ],
+  "target_refs": [],
+  "provider": "Bouncy Castle .NET 2.7.0",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

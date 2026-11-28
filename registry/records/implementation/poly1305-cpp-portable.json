@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:poly1305-cpp-portable",
+  "record_type": "implementation",
+  "name": "ABC research Poly1305 in C++",
+  "sources": [
+    {
+      "path": "src/crypto/mac/poly1305/impl/cpp/poly1305.cpp"
+    },
+    {
+      "path": "src/crypto/mac/poly1305/impl/cpp/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:poly1305",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "f16238406ca646bcb1b4aae817236c7f6321d81667a5364e7e3d63de677eea94",
+  "path": "src/crypto/mac/poly1305/impl/cpp",
+  "languages": [
+    "cpp"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable C++ research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

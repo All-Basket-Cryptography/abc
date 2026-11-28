@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:hkdf-sha256-javascript-portable",
+  "record_type": "implementation",
+  "name": "ABC research HKDF-SHA-256 in JavaScript",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/hkdf-sha256/impl/javascript/hkdf.mjs"
+    },
+    {
+      "path": "src/crypto/kdf/hkdf-sha256/impl/javascript/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hkdf-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "7d3f162c26eeb1441bc138850e319ba3306c59dd5642e9f7e717ac4e477b166f",
+  "path": "src/crypto/kdf/hkdf-sha256/impl/javascript",
+  "languages": [
+    "javascript"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC hmac-sha256 in JavaScript"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable javascript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision",
+  "spec_ref": "abc:specification:hkdf-sha-256-rfc5869"
+}

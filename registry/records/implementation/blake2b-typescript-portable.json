@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:blake2b-typescript-portable",
+  "record_type": "implementation",
+  "name": "ABC research BLAKE2b in TypeScript",
+  "sources": [
+    {
+      "path": "src/crypto/hash/blake2b/impl/typescript/blake2b.mts"
+    },
+    {
+      "path": "src/crypto/hash/blake2b/impl/typescript/README.md"
+    },
+    {
+      "path": "src/crypto/inputs/bytes.mts"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:blake2b",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "504b57c9031061de4b0beaabe5485e93a4477567efe4948949a59356f946bb5c",
+  "path": "src/crypto/hash/blake2b/impl/typescript",
+  "languages": [
+    "typescript"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable TypeScript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

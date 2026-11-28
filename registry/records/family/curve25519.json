@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:curve25519",
+  "record_type": "family",
+  "name": "Curve25519",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc7748.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "key-agreement-kem",
+  "description": "Montgomery curve over the field of order 2^255-19."
+}

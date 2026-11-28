@@ -1,0 +1,19 @@
+[package]
+name = "abc-benchmark"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+
+[dependencies]
+abc-sha256 = { path = "../../src/crypto/hash/sha256/impl/rust" }
+
+[profile.release]
+opt-level = 3
+codegen-units = 1
+lto = "off"
+incremental = false
+debug = false
+panic = "unwind"
+
+[workspace]

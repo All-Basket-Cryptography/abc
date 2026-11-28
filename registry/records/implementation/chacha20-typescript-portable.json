@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:chacha20-typescript-portable",
+  "record_type": "implementation",
+  "name": "ABC research ChaCha20 in TypeScript",
+  "sources": [
+    {
+      "path": "src/crypto/cipher/chacha20/impl/typescript/chacha20.mts"
+    },
+    {
+      "path": "src/crypto/cipher/chacha20/impl/typescript/README.md"
+    },
+    {
+      "path": "src/crypto/inputs/bytes.mts"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:chacha20",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "508a357f6b9ef5619b5fff5fa37b7fa99d47f4b762d247693354715d9b692aa3",
+  "path": "src/crypto/cipher/chacha20/impl/typescript",
+  "languages": [
+    "typescript"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable TypeScript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

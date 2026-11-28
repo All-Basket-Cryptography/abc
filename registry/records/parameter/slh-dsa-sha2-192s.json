@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "id": "abc:parameter:slh-dsa-sha2-192s",
+  "record_type": "parameter",
+  "name": "SLH-DSA-SHA2-192s",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/pubs/fips/205/final"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "parameter_kind": "parameter-set",
+  "description": "The SLH-DSA-SHA2-192s parameter set named by the cited publication.",
+  "standard_refs": [
+    "abc:standard:fips-205-2024"
+  ]
+}

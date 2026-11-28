@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "id": "abc:algorithm:sha3-256",
+  "record_type": "algorithm",
+  "name": "SHA3-256",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/pubs/fips/202/final",
+      "locator": "Section 6.1"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "hash-xof",
+  "family_ref": "abc:family:sha-3",
+  "catalog_state": "indexed",
+  "lifecycle": "standardized",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [
+    "abc:specification:sha3-256-fips202-byte-encoding"
+  ],
+  "literature_refs": [],
+  "standard_refs": [
+    "abc:standard:fips-202-2015"
+  ],
+  "finding_refs": [],
+  "use_cases": [
+    "Digest computation in larger constructions"
+  ],
+  "limitations": [
+    "FIPS 202's domain separation distinguishes this variant from Keccak-256."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified"
+}

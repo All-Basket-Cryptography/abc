@@ -1,0 +1,12 @@
+[package]
+workspace = "../../../../../../tools/build/rust"
+name = "abc-chacha20-poly1305"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+description = "Portable research IETF ChaCha20-Poly1305 AEAD"
+
+[dependencies]
+abc-chacha20 = { path = "../../../../cipher/chacha20/impl/rust" }
+abc-poly1305 = { path = "../../../../mac/poly1305/impl/rust" }

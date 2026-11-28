@@ -1,0 +1,11 @@
+schema_version = 1
+id = "sha256-go-portable"
+owned_paths = ["src/crypto/hash/sha256/impl/go"]
+dependencies = [{ module = "sha256-spec", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["go", "test", "-C", "src/crypto/hash/sha256/impl/go", "-count=1", "./..."]
+tools = ["go"]
+target = "portable"
+timeout_seconds = 120

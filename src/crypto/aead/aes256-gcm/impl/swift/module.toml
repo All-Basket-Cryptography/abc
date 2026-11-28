@@ -1,0 +1,12 @@
+schema_version = 1
+id = "aes256-gcm-swift-provider"
+owned_paths = ["src/crypto/aead/aes256-gcm/impl/swift"]
+shared_inputs = ["src/crypto/cipher/aes256/impl/java/check.py","src/crypto/cipher/aes256/impl/swift/check.py","src/crypto/cipher/aes256/impl/swift/tests/Support.swift"]
+dependencies = [{ module = "aes256-gcm-rust", type = "implements" }]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/cipher/aes256/impl/swift/check.py", "aes256-gcm"]
+tools = ["python", "swift", "node"]
+target = "macos-arm64"
+timeout_seconds = 180

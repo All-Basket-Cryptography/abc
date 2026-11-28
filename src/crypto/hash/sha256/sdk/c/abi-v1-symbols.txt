@@ -1,0 +1,8 @@
+abc_abi_version
+abc_sha256_digest
+abc_sha256_finalize
+abc_sha256_free
+abc_sha256_implementation
+abc_sha256_new
+abc_sha256_reset
+abc_sha256_update

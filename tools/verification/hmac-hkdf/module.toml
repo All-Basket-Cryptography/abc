@@ -1,0 +1,19 @@
+schema_version = 1
+id = "hmac-hkdf-formal"
+owned_paths = ["tools/verification/hmac-hkdf"]
+
+[lean_sources]
+"Abc.HmacSha256.Extracted.TypesExternal" = "tools/verification/hmac-hkdf/links"
+"Abc.HmacSha256.Extracted.FunsExternal" = "tools/verification/hmac-hkdf/links"
+"Abc.HkdfSha256.Extracted.TypesExternal" = "tools/verification/hmac-hkdf/links"
+"Abc.HkdfSha256.Extracted.FunsExternal" = "tools/verification/hmac-hkdf/links"
+
+[lean_external_imports]
+"Abc.Sha256.Extracted" = "src/crypto/hash/sha256/impl/rust/formal/extract.mjs"
+"Abc.HmacSha256.Extracted" = "tools/verification/hmac-hkdf/check.mjs"
+"Abc.HkdfSha256.Extracted" = "tools/verification/hmac-hkdf/check.mjs"
+
+[tasks.runner-syntax]
+kind = "lint"
+command = ["node", "--check", "tools/verification/hmac-hkdf/check.mjs"]
+tools = ["node"]

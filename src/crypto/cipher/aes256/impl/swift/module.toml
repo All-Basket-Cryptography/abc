@@ -1,0 +1,12 @@
+schema_version = 1
+id = "aes256-swift-provider"
+owned_paths = ["src/crypto/cipher/aes256/impl/swift"]
+shared_inputs = ["src/crypto/cipher/aes256/impl/java/check.py"]
+dependencies = [{ module = "aes256-rust", type = "implements" }]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/cipher/aes256/impl/swift/check.py", "aes256"]
+tools = ["python", "swift", "node"]
+target = "macos-arm64"
+timeout_seconds = 180

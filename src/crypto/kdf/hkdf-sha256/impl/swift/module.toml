@@ -1,0 +1,14 @@
+schema_version = 1
+id = "hkdf-sha256-swift"
+owned_paths = ["src/crypto/kdf/hkdf-sha256/impl/swift"]
+dependencies = [
+  { module = "hmac-sha256-swift", type = "calls" },
+  { module = "hkdf-sha256-spec", type = "implements" },
+]
+
+[tasks.macos-tests]
+kind = "test"
+command = ["swift", "test", "--package-path", "src/crypto/kdf/hkdf-sha256/impl/swift/AbcHkdfSha256Swift", "--scratch-path", ".abc/swift-hkdf-tests", "--configuration", "release", "-Xswiftc", "-warnings-as-errors"]
+tools = ["swift"]
+target = "macos-swift6.1.2"
+timeout_seconds = 240

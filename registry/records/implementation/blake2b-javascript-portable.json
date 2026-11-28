@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:blake2b-javascript-portable",
+  "record_type": "implementation",
+  "name": "ABC research BLAKE2b in JavaScript",
+  "sources": [
+    {
+      "path": "src/crypto/hash/blake2b/impl/javascript/blake2b.mjs"
+    },
+    {
+      "path": "src/crypto/hash/blake2b/impl/javascript/README.md"
+    },
+    {
+      "path": "src/crypto/inputs/bytes.mjs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:blake2b",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "50d083139e4411d9e9333610ad2802b3c25ee287675ceb4ad38096f2f57bf70e",
+  "path": "src/crypto/hash/blake2b/impl/javascript",
+  "languages": [
+    "javascript"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable JavaScript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

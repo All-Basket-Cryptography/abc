@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ml-dsa-65-typescript-provider",
+  "record_type": "implementation",
+  "name": "ML-DSA-65 in TypeScript (Noble post-quantum 0.7.1)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/typescript/ml_dsa_65.mts"
+    },
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/typescript/README.md"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/package-lock.json"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/node-crypto.mjs"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/noble.mts"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-dsa",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "2d5c48ef28b5ff7e6dec1d6fa912e83808dd12ea6ef65435b6d8f2e76090d50d",
+  "path": "src/crypto/signature/ml-dsa-65/impl/typescript",
+  "languages": [
+    "typescript"
+  ],
+  "features": [],
+  "external_calls": [
+    "Noble post-quantum 0.7.1"
+  ],
+  "target_refs": [],
+  "provider": "Noble post-quantum 0.7.1",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

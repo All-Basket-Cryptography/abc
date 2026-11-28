@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:argon2id-javascript-provider",
+  "record_type": "implementation",
+  "name": "Argon2id in JavaScript (Node 24.12.0 OpenSSL 3.5.4)",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/argon2id/impl/javascript/argon2id.mjs"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/javascript/README.md"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/package-lock.json"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/node-crypto.mjs"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/noble.mjs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:argon2id",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "ed89160431c062609625f46bb180417d7d322daf6db397ffc3d6f51e5f6489ad",
+  "path": "src/crypto/kdf/argon2id/impl/javascript",
+  "languages": [
+    "javascript"
+  ],
+  "features": [],
+  "external_calls": [
+    "Node 24.12.0 OpenSSL 3.5.4"
+  ],
+  "target_refs": [],
+  "provider": "Node 24.12.0 OpenSSL 3.5.4",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

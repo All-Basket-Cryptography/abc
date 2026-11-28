@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:scrypt-c-portable",
+  "record_type": "implementation",
+  "name": "scrypt in C (ABC C research core)",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/scrypt/impl/c/abc_scrypt_c.c"
+    },
+    {
+      "path": "src/crypto/kdf/scrypt/impl/c/README.md"
+    },
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/c/abc_pbkdf2_sha256_c.c"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:scrypt",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "7619c4693528b446331a7c4ce8efbd86f27b2d5f43799417c12dd57a9cb202ec",
+  "path": "src/crypto/kdf/scrypt/impl/c",
+  "languages": [
+    "c"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC C PBKDF2-HMAC-SHA-256"
+  ],
+  "target_refs": [],
+  "provider": "ABC C research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

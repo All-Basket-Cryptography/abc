@@ -1,0 +1,17 @@
+[workspace]
+
+[package]
+name = "abc-python-native"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+description = "All-Basket Cryptography research PyO3 binding"
+
+[lib]
+name = "_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+abc-sha256 = { path = "../../../impl/rust" }
+pyo3 = { version = "=0.23.5", features = ["extension-module"] }

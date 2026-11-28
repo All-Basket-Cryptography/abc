@@ -1,0 +1,18 @@
+schema_version = 1
+id = "sha256-c"
+owned_paths = ["src/crypto/hash/sha256/impl/c"]
+dependencies = [{ module = "sha256-spec", type = "implements" }]
+
+[tasks.native-tests]
+kind = "test"
+command = ["python", "-B", "src/crypto/hash/sha256/impl/c/check.py"]
+tools = ["python", "clang"]
+target = "native"
+timeout_seconds = 180
+
+[tasks.length-proof]
+kind = "formal"
+command = ["lean", "src/crypto/hash/sha256/impl/c/proof/Length.lean"]
+tools = ["lean"]
+target = "lean-4.31.0"
+timeout_seconds = 60

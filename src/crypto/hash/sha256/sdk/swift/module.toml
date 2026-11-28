@@ -1,0 +1,13 @@
+schema_version = 1
+id = "swift-sdk"
+owner = "sdk-mobile"
+owned_paths = ["src/crypto/hash/sha256/sdk/swift"]
+dependencies = [{ module = "c-sdk", type = "wraps" }]
+
+[tasks.consumer]
+kind = "test"
+command = ["python", "src/crypto/hash/sha256/sdk/swift/package.py", "--consumer"]
+tools = ["python", "cargo", "rustc", "rustup"]
+outputs = ["swift-artifacts.json"]
+target = "swift-host"
+timeout_seconds = 480

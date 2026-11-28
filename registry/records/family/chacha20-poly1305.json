@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:chacha20-poly1305",
+  "record_type": "family",
+  "name": "ChaCha20-Poly1305 AEAD",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc8439.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "symmetric",
+  "description": "Authenticated encryption combining IETF ChaCha20 and Poly1305."
+}

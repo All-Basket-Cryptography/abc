@@ -1,0 +1,18 @@
+schema_version = 1
+id = "keccak-p1600-cpp"
+owned_paths = ["src/crypto/hash/keccak-p1600/impl/cpp"]
+dependencies = [{ module = "keccak-p1600-spec", type = "implements" }]
+lean_sources = { KeccakCppTables = "src/crypto/hash/keccak-p1600/impl/cpp/proof" }
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "src/crypto/hash/keccak-p1600/impl/cpp/check.py", "keccak-p1600"]
+tools = ["python", "clang"]
+target = "portable-cpp17"
+timeout_seconds = 180
+
+[tasks.tables]
+kind = "formal"
+command = ["lean", "-DwarningAsError=true", "src/crypto/hash/keccak-p1600/impl/cpp/proof/KeccakCppTables.lean"]
+tools = ["lean"]
+timeout_seconds = 120

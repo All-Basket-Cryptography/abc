@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "abc:standard:nist-sp-800-38d-2007",
+  "record_type": "standard",
+  "name": "Galois/Counter Mode for Block Ciphers",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/pubs/sp/800/38/d/final"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "SP 800-38D (November 2007)",
+  "authors": [
+    "M. Dworkin"
+  ],
+  "publisher": "NIST",
+  "published": "2007-11",
+  "accessed": "2026-11-28",
+  "license": "See NIST publication rights information.",
+  "redistribution": "link-only",
+  "sections": [
+    "Sections 5–8"
+  ],
+  "errata_urls": [],
+  "citation_refs": [],
+  "doi": "10.6028/NIST.SP.800-38D"
+}

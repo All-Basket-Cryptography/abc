@@ -1,0 +1,9 @@
+schema_version = 1
+id = "chacha20-formal"
+owned_paths = ["tools/verification/chacha20"]
+lean_sources = { ChaCha20StreamRefinement = "tools/verification/chacha20", ChaCha20SourceRefinement = "tools/verification/chacha20" }
+
+[tasks.runner-syntax]
+kind = "lint"
+command = ["node", "--check", "tools/verification/chacha20/check.mjs"]
+tools = ["node"]

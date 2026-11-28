@@ -1,0 +1,11 @@
+schema_version = 1
+id = "dotnet-sdk"
+owner = "sdk"
+owned_paths = ["src/crypto/hash/sha256/sdk/dotnet"]
+dependencies = [{ module = "c-sdk", type = "wraps" }]
+
+[tasks.source]
+kind = "test"
+command = ["python", "src/crypto/hash/sha256/sdk/dotnet/package.py", "--check-source"]
+target = "net10.0"
+timeout_seconds = 120

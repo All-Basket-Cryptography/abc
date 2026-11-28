@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:pbkdf2-hmac-sha256-rust-portable",
+  "record_type": "implementation",
+  "name": "ABC research PBKDF2-HMAC-SHA-256 in Rust",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/rust/src/lib.rs"
+    },
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/spec/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:pbkdf2-hmac-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "82ed11c0f018d0f626014776a86e7afc5ca87f1b1dcce675a7216864801a6515",
+  "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/rust/src/lib.rs",
+  "languages": [
+    "rust"
+  ],
+  "features": [],
+  "external_calls": [
+    "abc-hmac-sha256",
+    "abc-sha256"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable Rust research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

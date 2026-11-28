@@ -1,0 +1,12 @@
+schema_version = 1
+id = "blake2b-c-portable"
+owned_paths = ["src/crypto/hash/blake2b/impl/c"]
+shared_inputs = ["src/crypto/hash/blake2b/impl/cpp/check.py"]
+dependencies = [{ module = "blake2b", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "src/crypto/hash/blake2b/impl/c/check.py"]
+tools = ["python", "clang"]
+target = "portable-c11"
+timeout_seconds = 180

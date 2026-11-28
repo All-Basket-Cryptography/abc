@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:argon2id-cpp-provider",
+  "record_type": "implementation",
+  "name": "Argon2id in C++ (OpenSSL 3.5.4)",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/argon2id/impl/cpp/argon2id.cpp"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/cpp/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:argon2id",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "ba97ba76ad4272a6977a72d5487185f598cfcf04e1cd514686e48b5745061623",
+  "path": "src/crypto/kdf/argon2id/impl/cpp",
+  "languages": [
+    "cpp"
+  ],
+  "features": [],
+  "external_calls": [
+    "OpenSSL 3.5.4"
+  ],
+  "target_refs": [],
+  "provider": "OpenSSL 3.5.4",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

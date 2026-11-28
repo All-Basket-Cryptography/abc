@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:poly1305-kotlin-portable",
+  "record_type": "implementation",
+  "name": "Poly1305 in Kotlin (ABC Kotlin research core)",
+  "sources": [
+    {
+      "path": "src/crypto/mac/poly1305/impl/kotlin/src/Poly1305.kt"
+    },
+    {
+      "path": "src/crypto/mac/poly1305/impl/kotlin/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:poly1305",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "69d9fcb759e27aa929f4eb158f6aa2a274c5760097e6eea78b92bc62169d8312",
+  "path": "src/crypto/mac/poly1305/impl/kotlin",
+  "languages": [
+    "kotlin"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC Kotlin research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

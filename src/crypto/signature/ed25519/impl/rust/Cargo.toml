@@ -1,0 +1,12 @@
+[package]
+name = "abc-ed25519"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+description = "All-Basket Cryptography raw Ed25519 research SDK"
+
+[dependencies]
+ed25519-dalek = { version = "=2.2.0", default-features = false, features = ["zeroize"] }
+
+[workspace]

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ecdsa-p256-sha256-javascript-provider",
+  "record_type": "implementation",
+  "name": "ECDSA P-256 in JavaScript (Noble curves 2.4.0)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/javascript/ecdsa_p256.mjs"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/javascript/README.md"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/package-lock.json"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/node-crypto.mjs"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/noble.mjs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ecdsa-p256-sha256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "c1c85cb9bd8928f902de6022f866512dfc3355fcaad85cc9958dabde7f780154",
+  "path": "src/crypto/signature/ecdsa-p256-sha256/impl/javascript",
+  "languages": [
+    "javascript"
+  ],
+  "features": [],
+  "external_calls": [
+    "Noble curves 2.4.0"
+  ],
+  "target_refs": [],
+  "provider": "Noble curves 2.4.0",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

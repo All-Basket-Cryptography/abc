@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ml-kem-768-swift-provider",
+  "record_type": "implementation",
+  "name": "ML-KEM-768 in Swift (OpenSSL 3.5.9)",
+  "sources": [
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/swift/AbcMlKem768Swift/Sources/AbcMlKem768Swift/MlKem768.swift"
+    },
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/swift/README.md"
+    },
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/swift/AbcMlKem768Swift/Sources/CAbcMlKem768OpenSSL/shim.h"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-kem",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "7b5ac2a21c83fece802de70c2f43ce662a1a2173791bef687c3c059d1764ee35",
+  "path": "src/crypto/agreement/ml-kem-768/impl/swift",
+  "languages": [
+    "swift"
+  ],
+  "features": [],
+  "external_calls": [
+    "OpenSSL 3.5.9"
+  ],
+  "target_refs": [],
+  "provider": "OpenSSL 3.5.9",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

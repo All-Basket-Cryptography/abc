@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:eddsa",
+  "record_type": "family",
+  "name": "EdDSA",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc8032.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "signature",
+  "description": "Edwards-curve digital signature schemes"
+}

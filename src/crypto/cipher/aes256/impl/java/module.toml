@@ -1,0 +1,11 @@
+schema_version = 1
+id = "aes256-java-sunjce"
+owned_paths = ["src/crypto/cipher/aes256/impl/java"]
+dependencies = [{ module = "aes256-rust", type = "implements" }]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/cipher/aes256/impl/java/check.py", "--algorithm", "aes256", "--language", "java"]
+tools = ["python", "java", "javac", "jar", "node"]
+target = "jvm-jdk17"
+timeout_seconds = 240

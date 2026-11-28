@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:scrypt-rust-portable",
+  "record_type": "implementation",
+  "name": "ABC research scrypt in Rust",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/scrypt/impl/rust/src/lib.rs"
+    },
+    {
+      "path": "src/crypto/kdf/scrypt/spec/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:scrypt",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "049953eae2d5ea347bf5f2f4cd1f00aba63662964663f87fc382f5d2e6da0424",
+  "path": "src/crypto/kdf/scrypt/impl/rust",
+  "languages": [
+    "rust"
+  ],
+  "features": [],
+  "external_calls": [
+    "abc-pbkdf2-hmac-sha256"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable rust research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -1,0 +1,87 @@
+# Rust Poly1305 source refinement
+
+The pinned Charon and Aeneas tools translate the public `authenticate`
+entry point and its reachable bodies, including `Poly1305::new`, `update`,
+and `finalize`. Extraction targets `x86_64-unknown-linux-gnu` with default
+features disabled. The
+extraction workflow runs the translation twice and publishes `result.json`,
+both generated models and the tool logs. The same workflow builds the
+pinned Lean backend, checks the theorems and publishes the replay receipt.
+
+`Poly1305EncodingRefinement.lean` proves the exact `limbs` helper returns
+the first five radix-`2^26` digits of any input `u128` in little-endian order.
+`Poly1305SourceRefinement.lean` proves the exact key multiples, five folded
+convolution columns, and carry operations using the unbounded integer
+arithmetic in `Poly1305GoModel.lean`. Its `source_final_carry_refines` theorem
+checks that the carry called by `finalize` normalizes the accumulator and
+preserves its residue.
+
+`Poly1305ByteRefinement.lean` checks little-endian loading of 16-byte words
+and the RFC clamp of the low key half. For every full 16-byte input block,
+`source_absorb_full_block_refines` checks the actual byte-loading and
+absorption path against `(h + LE(block) + 2^128) * r mod (2^130 - 5)`.
+`source_absorb_padded_final_block_refines` verifies the corresponding
+transition for a partial block after the caller has put the marker and
+zero padding into the input array. Both block theorems assume a live
+accumulator and bounded key limbs with a correct cache, and both preserve
+the live-limb invariant.
+
+`Poly1305FinalRefinement.lean` links the active `finish_tag` helper called
+by the public finalizer to the RFC tag formula. Starting with any live
+accumulator and 128-bit pad, the exact code returns the 16 little-endian
+bytes of `((h mod (2^130 - 5)) + pad) mod 2^128`. The proof checks the
+conditional subtraction through the source's all-zero or all-one mask,
+limb packing including two-bit truncation, wrapping pad addition, and
+serialization. `source_finish_tag_value` also checks the decoded integer
+using the independent little-endian decoder in `Abc.Foundation.Encoding`.
+
+`Poly1305ApiRefinement.lean` checks the public constructor and finalizer.
+`source_new_refines` proves the 32 key bytes are split in order, the low
+half sets the clamped multiplier and its cache, and the high half sets the
+pad. It also proves that the initial accumulator and pending buffer are
+zero. `source_finalize_refines` checks both buffered-length cases from any
+state whose key limbs, cache, accumulator and pending length satisfy the
+invariant. A nonempty tail of length `n < 16` contributes its first `n`
+bytes and the marker `256^n` to the recurrence. If the buffer is empty,
+finalization emits a tag directly from the existing accumulator.
+
+`Poly1305StreamRefinement.lean` proves the exact `update` loop processes
+every full block of the old buffered bytes followed by the new input and
+stores precisely the short suffix. It preserves the key, cache, pad, and
+ready-state invariant. `blocks_append` proves independence of the chunk
+boundaries, so the update theorem applies to arbitrary successive calls
+starting from `new`. The `source_authenticate_refines` theorem composes
+the extracted constructor, update and finalizer and proves that the tag
+bytes decode to the RFC integer for every 32-byte key and input slice.
+[RFC 8439 § 2.5.1](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.5.1)
+
+The proof relies on the Aeneas standard library models of Rust integer,
+array and slice operations and successful source translation. The generated
+program is checked for functional correctness. Compiled timing behavior
+and the host's memory handling are outside this result.
+
+## Replay
+
+Start with the extraction artifact for a checkout with identical extraction
+inputs, or generate it on the pinned Linux host by running
+`node tools/verification/poly1305/check.mjs` with `ABC_AENEAS_ROOT` set to
+the pinned checkout. Use the directory inside the artifact that contains
+`result.json`, `first` and `second` as the replay argument.
+
+Use Lean 4.31.0 and the compiled Lean libraries from the pinned Aeneas
+checkout and all its Lake dependencies. If those libraries are already
+built, replay uses them directly on either Windows or Linux. Set `LEAN_PATH`
+to the backend's `.lake/build/lib/lean` and each package directory's
+`.lake/build/lib/lean`, separated by the OS path separator. Set
+`ABC_LEAN_BIN` to the Lean executable if `lean` on `PATH` differs from the
+pin in [`toolchain-candidate.json`](../probe/toolchain-candidate.json).
+
+```sh
+node tools/verification/poly1305/replay.mjs /path/to/artifact/run-directory
+```
+
+The runner checks input hashes against the current checkout, compares both
+generated models with the extraction receipt, compiles the actual
+generated files and the proof modules, and checks the theorem axiom
+reports. It saves the result and compiler logs under `.abc/poly1305-replay`.
+[Recorded extraction and theorem audit](source-receipt.json)

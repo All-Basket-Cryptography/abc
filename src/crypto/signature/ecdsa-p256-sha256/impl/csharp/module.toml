@@ -1,0 +1,23 @@
+schema_version = 1
+id = "ecdsa-p256-sha256-csharp-bc"
+owned_paths = ["src/crypto/signature/ecdsa-p256-sha256/impl/csharp"]
+shared_inputs = [
+  "src/crypto/providers/csharp/check.py",
+  "src/crypto/providers/csharp/provider.toml",
+  "src/crypto/providers/csharp/global.json",
+  "src/crypto/signature/ecdsa-p256-sha256/impl/java/check.py",
+  "src/crypto/kdf/argon2id/impl/java/bc_provider.py",
+  "src/crypto/kdf/argon2id/impl/java/bcprov.toml",
+  "src/crypto/signature/ecdsa-p256-sha256/impl/go/tests/interop.mjs",
+]
+dependencies = [
+  { module = "csharp-bouncycastle-provider", type = "calls" },
+  { module = "ecdsa-p256-sha256-rust", type = "implements" },
+]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/providers/csharp/check.py", "--profile", "ecdsa-p256-sha256"]
+tools = ["python", "dotnet", "node"]
+target = "net10.0"
+timeout_seconds = 240

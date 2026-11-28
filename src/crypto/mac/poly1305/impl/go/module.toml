@@ -1,0 +1,17 @@
+schema_version = 1
+id = "poly1305-go-portable"
+owned_paths = ["src/crypto/mac/poly1305/impl/go"]
+lean_sources = { Poly1305GoModel = "src/crypto/mac/poly1305/impl/go" }
+
+[tasks.test]
+kind = "test"
+command = ["go", "test", "-C", "src/crypto/mac/poly1305/impl/go", "-count=1", "./..."]
+tools = ["go"]
+target = "portable"
+timeout_seconds = 120
+
+[tasks.carry-proof]
+kind = "formal"
+command = ["lean", "src/crypto/mac/poly1305/impl/go/Poly1305GoModel.lean"]
+tools = ["lean"]
+timeout_seconds = 120

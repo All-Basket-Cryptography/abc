@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:blake2b-swift-portable",
+  "record_type": "implementation",
+  "name": "BLAKE2b in Swift (ABC Swift research core)",
+  "sources": [
+    {
+      "path": "src/crypto/hash/blake2b/impl/swift/AbcBlake2bSwift/Sources/AbcBlake2bSwift/Blake2b.swift"
+    },
+    {
+      "path": "src/crypto/hash/blake2b/impl/swift/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:blake2b",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "3dbe6dc17d95d7014795a27ec59c1594b72852ba61e6a8331b9fb62334a13bbc",
+  "path": "src/crypto/hash/blake2b/impl/swift",
+  "languages": [
+    "swift"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC Swift research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

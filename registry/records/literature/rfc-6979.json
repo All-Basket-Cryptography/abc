@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "id": "abc:literature:rfc-6979",
+  "record_type": "literature",
+  "name": "Deterministic Usage of DSA and ECDSA",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc6979.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "RFC 6979",
+  "authors": [
+    "T. Pornin"
+  ],
+  "publisher": "RFC Editor",
+  "published": "2013-08",
+  "accessed": "2026-11-28",
+  "license": "See RFC copyright notice.",
+  "redistribution": "link-only",
+  "sections": [
+    "Section 3 and Appendix A.2.5"
+  ],
+  "errata_urls": [
+    "https://www.rfc-editor.org/info/rfc6979/"
+  ],
+  "citation_refs": [],
+  "doi": "10.17487/RFC6979"
+}

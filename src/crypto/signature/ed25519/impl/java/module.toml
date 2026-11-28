@@ -1,0 +1,18 @@
+schema_version = 1
+id = "ed25519-java-sunec"
+owned_paths = ["src/crypto/signature/ed25519/impl/java"]
+dependencies = [{ module = "ed25519-rust", type = "implements" }]
+lean_sources = { Ed25519JvmModel = "src/crypto/signature/ed25519/impl/java" }
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/signature/ed25519/impl/java/check.py", "--language", "java"]
+tools = ["python", "java", "javac", "jar", "node"]
+target = "jvm-jdk17"
+timeout_seconds = 240
+
+[tasks.arithmetic-model]
+kind = "formal"
+command = ["lean", "-DwarningAsError=true", "src/crypto/signature/ed25519/impl/java/Ed25519JvmModel.lean"]
+tools = ["lean"]
+timeout_seconds = 60

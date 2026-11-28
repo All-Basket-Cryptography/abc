@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:blake2b-kotlin-portable",
+  "record_type": "implementation",
+  "name": "BLAKE2b in Kotlin (ABC Kotlin research core)",
+  "sources": [
+    {
+      "path": "src/crypto/hash/blake2b/impl/kotlin/src/Blake2b.kt"
+    },
+    {
+      "path": "src/crypto/hash/blake2b/impl/kotlin/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:blake2b",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "0246a51d6147a2477fd9e0f8493444a4bc7e49296749dfcd2c64dc165fcb1501",
+  "path": "src/crypto/hash/blake2b/impl/kotlin",
+  "languages": [
+    "kotlin"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC Kotlin research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "id": "abc:standard:sec-2-v2",
+  "record_type": "standard",
+  "name": "Standards for Efficient Cryptography 2 (SEC 2)",
+  "sources": [
+    {
+      "url": "https://www.secg.org/sec2-v2.pdf"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "2.0",
+  "authors": [
+    "Certicom Research"
+  ],
+  "publisher": "Standards for Efficient Cryptography Group",
+  "published": "2010-01-27",
+  "accessed": "2026-11-28",
+  "license": "Certicom document with conditional copying permission specified at the source.",
+  "redistribution": "link-only",
+  "sections": [
+    "Section 2.4.1"
+  ],
+  "errata_urls": [],
+  "citation_refs": []
+}

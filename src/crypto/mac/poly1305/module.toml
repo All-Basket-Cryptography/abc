@@ -1,0 +1,29 @@
+schema_version = 1
+id = "poly1305-rust"
+owned_paths = ["src/crypto/mac/poly1305"]
+cargo_manifests = ["src/crypto/mac/poly1305/impl/rust/Cargo.toml"]
+lean_sources = { Poly1305Reduction = "src/crypto/mac/poly1305/spec", Poly1305Radix13 = "src/crypto/mac/poly1305/spec", Poly1305Window = "src/crypto/mac/poly1305/spec" }
+
+[tasks.test]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "tools/build/rust/Cargo.toml", "--locked", "--offline", "-p", "abc-poly1305"]
+tools = ["cargo", "rustc", "rustup"]
+timeout_seconds = 120
+
+[tasks.differential]
+kind = "test"
+command = ["python", "-B", "src/crypto/mac/poly1305/spec/verify.py"]
+tools = ["python", "cargo", "rustc", "rustup"]
+timeout_seconds = 120
+
+[tasks.proof]
+kind = "formal"
+command = ["lean", "src/crypto/mac/poly1305/spec/Poly1305Reduction.lean"]
+tools = ["lean"]
+timeout_seconds = 120
+
+[tasks.radix13-proof]
+kind = "formal"
+command = ["python", "-B", "src/lean/check.py", "poly1305"]
+tools = ["python", "lean"]
+timeout_seconds = 120

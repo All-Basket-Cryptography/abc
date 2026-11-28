@@ -1,0 +1,1762 @@
+{
+  "schema_version": 1,
+  "profiles": 20,
+  "implementation_languages": 11,
+  "passed_cells": 220,
+  "scope": "Functional execution at the listed targets. Source refinement, side-channel resistance, performance and other targets have separate evidence.",
+  "local": {
+    "target": "Windows x64",
+    "provenance": "Working-tree replay of graph test tasks and release-mode Rust crate tests. Per-task logs were checked locally.",
+    "status": "passed",
+    "rerun": {
+      "profiles": ["chacha20", "poly1305", "chacha20-poly1305"],
+      "language": "csharp",
+      "runner": "src/crypto/cipher/chacha20/impl/csharp/check.py",
+      "reason": "The initial AEAD restore exited early and temporary-directory cleanup encountered a sharing violation. The runner uses one node per MSBuild invocation and disables build servers. All three profiles passed independent concurrent runs and an all-profile run."
+    },
+    "supplemental_node_aes256_gcm": {
+      "languages": ["javascript", "typescript"],
+      "runner": "node --test <leaf>/aes256gcm.test.<extension>",
+      "runtime": "Node 24.12.0 with OpenSSL 3.5.4",
+      "interop_cases_per_language": 216,
+      "status": "passed"
+    },
+    "supplemental_native_c": {
+      "ml-kem-768": {
+        "runner": "src/crypto/agreement/ml-kem-768/impl/c/check.py",
+        "provider": "AWS-LC 5.5.0",
+        "oracle": "OpenSSL 3.5.4 30 Sep 2025",
+        "acvp_cases": 8,
+        "rfc_9935": "passed",
+        "independent_keygen_encap_decap_cases": 8,
+        "implicit_rejection_cases": 8,
+        "randomized_public_api_roundtrips": 4,
+        "status": "passed"
+      },
+      "ml-dsa-65": {
+        "runner": "src/crypto/signature/ml-dsa-65/impl/c/check.py",
+        "provider": "AWS-LC 5.5.0",
+        "oracle": "OpenSSL 3.5.4 30 Sep 2025 (Library: OpenSSL 3.5.4 30 Sep 2025)",
+        "acvp_keygen": 1,
+        "acvp_siggen": 1,
+        "acvp_sigver": 2,
+        "openssl_comparisons": 12,
+        "status": "passed"
+      }
+    },
+    "tasks": {
+      "c": {
+        "aes256": ["aes256-c-x86-aesni:test"],
+        "aes256-gcm": ["aes256-gcm-c-x86-aesni:test"],
+        "argon2id": ["argon2id-c-openssl:conformance"],
+        "blake2b": ["blake2b-c-portable:test"],
+        "chacha20": ["chacha20-c-portable:test"],
+        "chacha20-poly1305": ["chacha20-poly1305-c-portable:test"],
+        "ecdsa-p256-sha256": ["ecdsa-p256-sha256-c-openssl:conformance"],
+        "ed25519": ["ed25519-c-openssl-strict:conformance"],
+        "hkdf-sha256": ["hkdf-sha256-c-portable:test"],
+        "hmac-sha256": ["hmac-sha256-c-portable:test"],
+        "ml-dsa-65": ["ml-dsa-65-aws-lc-c:fixtures"],
+        "ml-kem-768": ["ml-kem-768-c-aws-lc:fixture-integrity"],
+        "pbkdf2-hmac-sha256": ["pbkdf2-hmac-sha256-c-portable:test"],
+        "poly1305": ["poly1305-c-portable:test"],
+        "scrypt": ["scrypt-c-portable:test"],
+        "sha256": ["sha256-c:native-tests"],
+        "sha3-256": ["sha3-256-c:test"],
+        "sha512": ["sha512-c-portable:test"],
+        "shake256": ["shake256-c:test"],
+        "x25519": ["x25519-c-openssl:conformance"]
+      },
+      "cpp": {
+        "aes256": ["aes256-cpp-x86-aesni:test"],
+        "aes256-gcm": ["aes256-gcm-cpp-x86-aesni:test"],
+        "argon2id": ["argon2id-cpp-openssl:conformance"],
+        "blake2b": ["blake2b-cpp-portable:test"],
+        "chacha20": ["chacha20-cpp-portable:test"],
+        "chacha20-poly1305": ["chacha20-poly1305-cpp-portable:test"],
+        "ecdsa-p256-sha256": ["ecdsa-p256-sha256-cpp-openssl:conformance"],
+        "ed25519": ["ed25519-cpp-openssl-strict:conformance"],
+        "hkdf-sha256": ["hkdf-sha256-cpp-portable:test"],
+        "hmac-sha256": ["hmac-sha256-cpp-portable:test"],
+        "ml-dsa-65": ["ml-dsa-65-cpp-openssl:conformance"],
+        "ml-kem-768": ["ml-kem-768-cpp-openssl:conformance"],
+        "pbkdf2-hmac-sha256": ["pbkdf2-hmac-sha256-cpp-portable:test"],
+        "poly1305": ["poly1305-cpp-portable:test"],
+        "scrypt": ["scrypt-cpp-portable:test"],
+        "sha256": ["sha256-cpp-portable:test"],
+        "sha3-256": ["sha3-256-cpp:test"],
+        "sha512": ["sha512-cpp-portable:test"],
+        "shake256": ["shake256-cpp:test"],
+        "x25519": ["x25519-cpp-openssl:conformance"]
+      },
+      "csharp": {
+        "aes256": ["aes256-csharp-dotnet:conformance"],
+        "aes256-gcm": ["aes256-gcm-csharp-dotnet:conformance"],
+        "argon2id": ["argon2id-csharp-bc:conformance"],
+        "blake2b": ["blake2b-csharp-portable:test"],
+        "chacha20": ["chacha20-csharp-portable:conformance"],
+        "chacha20-poly1305": ["chacha20-poly1305-csharp-portable:conformance"],
+        "ecdsa-p256-sha256": ["ecdsa-p256-sha256-csharp-bc:conformance"],
+        "ed25519": ["ed25519-csharp-bc:conformance"],
+        "hkdf-sha256": ["hkdf-sha256-csharp-portable:test"],
+        "hmac-sha256": ["hmac-sha256-csharp-portable:test"],
+        "ml-dsa-65": ["ml-dsa-65-csharp-bc:conformance"],
+        "ml-kem-768": ["ml-kem-768-csharp-bc:conformance"],
+        "pbkdf2-hmac-sha256": ["pbkdf2-hmac-sha256-csharp-portable:test"],
+        "poly1305": ["poly1305-csharp-portable:conformance"],
+        "scrypt": ["scrypt-csharp-portable:conformance"],
+        "sha256": ["sha256-csharp-portable:test"],
+        "sha3-256": ["sha3-256-csharp-portable:conformance"],
+        "sha512": ["sha512-csharp-portable:test"],
+        "shake256": ["shake256-csharp-portable:conformance"],
+        "x25519": ["x25519-csharp-bc:conformance"]
+      },
+      "go": {
+        "aes256": ["aes256-go-portable:test"],
+        "aes256-gcm": ["aes256-gcm-go-portable:test"],
+        "argon2id": ["argon2id-go-portable:test", "argon2id-go-portable:differential"],
+        "blake2b": ["blake2b-go-portable:test"],
+        "chacha20": ["chacha20-go-portable:test", "chacha20-go-portable:openssl"],
+        "chacha20-poly1305": ["chacha20-poly1305-go-portable:test", "chacha20-poly1305-go-portable:openssl"],
+        "ecdsa-p256-sha256": ["ecdsa-p256-sha256-go:test", "ecdsa-p256-sha256-go:openssl-interop"],
+        "ed25519": ["ed25519-go-native:test", "ed25519-go-native:interop"],
+        "hkdf-sha256": ["hkdf-sha256-go-portable:test"],
+        "hmac-sha256": ["hmac-sha256-go-portable:test"],
+        "ml-dsa-65": ["ml-dsa-65-go:test"],
+        "ml-kem-768": ["ml-kem-768-go:test"],
+        "pbkdf2-hmac-sha256": ["pbkdf2-hmac-sha256-go-portable:test"],
+        "poly1305": ["poly1305-go-portable:test"],
+        "scrypt": ["scrypt-go-portable:test", "scrypt-go-portable:provider-comparison"],
+        "sha256": ["sha256-go-portable:test"],
+        "sha3-256": ["sha3-256-go-portable:test"],
+        "sha512": ["sha512-go-portable:test"],
+        "shake256": ["shake256-go-portable:test"],
+        "x25519": ["x25519-go-native:test", "x25519-go-native:openssl"]
+      },
+      "java": {
+        "aes256": ["aes256-java-sunjce:conformance"],
+        "aes256-gcm": ["aes256-gcm-java-sunjce:conformance"],
+        "argon2id": ["argon2id-java-bc:conformance"],
+        "blake2b": ["blake2b-java-portable:conformance"],
+        "chacha20": ["chacha20-java-portable:conformance"],
+        "chacha20-poly1305": ["chacha20-poly1305-java-portable:conformance"],
+        "ecdsa-p256-sha256": ["ecdsa-p256-sha256-java-bc:conformance"],
+        "ed25519": ["ed25519-java-sunec:conformance"],
+        "hkdf-sha256": ["hkdf-sha256-java-portable:test"],
+        "hmac-sha256": ["hmac-sha256-java-portable:test"],
+        "ml-dsa-65": ["ml-dsa-65-java-bc:conformance"],
+        "ml-kem-768": ["ml-kem-768-java-bc:conformance"],
+        "pbkdf2-hmac-sha256": ["pbkdf2-hmac-sha256-java-portable:test"],
+        "poly1305": ["poly1305-java-portable:conformance"],
+        "scrypt": ["scrypt-java-portable:conformance"],
+        "sha256": ["sha256-java:jdk17-tests"],
+        "sha3-256": ["sha3-256-java-portable:conformance"],
+        "sha512": ["sha512-java:jdk17-tests"],
+        "shake256": ["shake256-java-portable:conformance"],
+        "x25519": ["x25519-java-sunec:conformance"]
+      },
+      "javascript": {
+        "aes256": ["aes256-javascript-portable:test"],
+        "aes256-gcm": ["aes256-gcm-javascript-portable:test"],
+        "argon2id": ["argon2id-javascript-provider:test"],
+        "blake2b": ["blake2b-javascript-portable:test"],
+        "chacha20": ["chacha20-javascript-portable:test"],
+        "chacha20-poly1305": ["chacha20-poly1305-javascript-portable:test"],
+        "ecdsa-p256-sha256": ["ecdsa-p256-sha256-javascript-provider:test"],
+        "ed25519": ["ed25519-javascript-provider:test"],
+        "hkdf-sha256": ["hkdf-sha256-javascript-portable:test"],
+        "hmac-sha256": ["hmac-sha256-javascript-portable:test"],
+        "ml-dsa-65": ["ml-dsa-65-javascript-provider:test"],
+        "ml-kem-768": ["ml-kem-768-javascript-provider:test"],
+        "pbkdf2-hmac-sha256": ["pbkdf2-hmac-sha256-javascript-portable:test"],
+        "poly1305": ["poly1305-javascript-portable:test"],
+        "scrypt": ["scrypt-javascript-portable:test"],
+        "sha256": ["sha256-javascript-portable:test"],
+        "sha3-256": ["sha3-256-javascript-portable:test"],
+        "sha512": ["sha512-javascript-portable:test"],
+        "shake256": ["shake256-javascript-portable:test"],
+        "x25519": ["x25519-javascript-provider:test"]
+      },
+      "kotlin": {
+        "aes256": ["aes256-kotlin-sunjce:conformance"],
+        "aes256-gcm": ["aes256-gcm-kotlin-sunjce:conformance"],
+        "argon2id": ["argon2id-kotlin-bc:conformance"],
+        "blake2b": ["blake2b-kotlin-portable:test"],
+        "chacha20": ["chacha20-kotlin-portable:conformance"],
+        "chacha20-poly1305": ["chacha20-poly1305-kotlin-portable:conformance"],
+        "ecdsa-p256-sha256": ["ecdsa-p256-sha256-kotlin-bc:conformance"],
+        "ed25519": ["ed25519-kotlin-sunec:conformance"],
+        "hkdf-sha256": ["hkdf-sha256-kotlin:jvm-tests"],
+        "hmac-sha256": ["hmac-sha256-kotlin:jvm-tests"],
+        "ml-dsa-65": ["ml-dsa-65-kotlin-bc:conformance"],
+        "ml-kem-768": ["ml-kem-768-kotlin-bc:conformance"],
+        "pbkdf2-hmac-sha256": ["pbkdf2-hmac-sha256-kotlin:jvm-tests"],
+        "poly1305": ["poly1305-kotlin-portable:conformance"],
+        "scrypt": ["scrypt-kotlin-portable:conformance"],
+        "sha256": ["sha256-kotlin:jvm-tests"],
+        "sha3-256": ["sha3-256-kotlin-portable:conformance"],
+        "sha512": ["sha512-kotlin-portable:jvm-tests"],
+        "shake256": ["shake256-kotlin-portable:conformance"],
+        "x25519": ["x25519-kotlin-sunec:conformance"]
+      },
+      "python": {
+        "aes256": ["aes256-python-portable:test"],
+        "aes256-gcm": ["aes256-gcm-python-portable:test"],
+        "argon2id": ["argon2id-python-provider:test"],
+        "blake2b": ["blake2b-python-portable:test"],
+        "chacha20": ["chacha20-python-portable:test"],
+        "chacha20-poly1305": ["chacha20-poly1305-python-portable:test"],
+        "ecdsa-p256-sha256": ["ecdsa-p256-sha256-python-provider:test"],
+        "ed25519": ["ed25519-python-provider:test"],
+        "hkdf-sha256": ["hkdf-sha256-python-portable:test"],
+        "hmac-sha256": ["hmac-sha256-python-portable:test"],
+        "ml-dsa-65": ["ml-dsa-65-python-provider:test"],
+        "ml-kem-768": ["ml-kem-768-python-provider:test"],
+        "pbkdf2-hmac-sha256": ["pbkdf2-hmac-sha256-python-portable:test"],
+        "poly1305": ["poly1305-python-portable:test"],
+        "scrypt": ["scrypt-python-portable:test"],
+        "sha256": ["sha256-python-portable:test"],
+        "sha3-256": ["sha3-256-python-portable:test"],
+        "sha512": ["sha512-python-portable:test"],
+        "shake256": ["shake256-python-portable:test"],
+        "x25519": ["x25519-python-provider:test"]
+      },
+      "rust": {
+        "aes256": ["aes256:release"],
+        "aes256-gcm": ["aes256-gcm:release"],
+        "argon2id": ["argon2id:release"],
+        "blake2b": ["blake2b:release"],
+        "chacha20": ["chacha20:release"],
+        "chacha20-poly1305": ["chacha20-poly1305:release"],
+        "ecdsa-p256-sha256": ["ecdsa-p256-sha256:release"],
+        "ed25519": ["ed25519:release"],
+        "hkdf-sha256": ["hkdf-sha256:release"],
+        "hmac-sha256": ["hmac-sha256:release"],
+        "ml-dsa-65": ["ml-dsa-65:release"],
+        "ml-kem-768": ["ml-kem-768:release"],
+        "pbkdf2-hmac-sha256": ["pbkdf2-hmac-sha256:release"],
+        "poly1305": ["poly1305:release"],
+        "scrypt": ["scrypt:release"],
+        "sha256": ["sha256:release"],
+        "sha3-256": ["sha3-256:release"],
+        "sha512": ["sha512:release"],
+        "shake256": ["shake256:release"],
+        "x25519": ["x25519:release"]
+      },
+      "typescript": {
+        "aes256": ["aes256-typescript-portable:test"],
+        "aes256-gcm": ["aes256-gcm-typescript-portable:test"],
+        "argon2id": ["argon2id-typescript-provider:test"],
+        "blake2b": ["blake2b-typescript-portable:test"],
+        "chacha20": ["chacha20-typescript-portable:test"],
+        "chacha20-poly1305": ["chacha20-poly1305-typescript-portable:test"],
+        "ecdsa-p256-sha256": ["ecdsa-p256-sha256-typescript-provider:test"],
+        "ed25519": ["ed25519-typescript-provider:test"],
+        "hkdf-sha256": ["hkdf-sha256-typescript-portable:test"],
+        "hmac-sha256": ["hmac-sha256-typescript-portable:test"],
+        "ml-dsa-65": ["ml-dsa-65-typescript-provider:test"],
+        "ml-kem-768": ["ml-kem-768-typescript-provider:test"],
+        "pbkdf2-hmac-sha256": ["pbkdf2-hmac-sha256-typescript-portable:test"],
+        "poly1305": ["poly1305-typescript-portable:test"],
+        "scrypt": ["scrypt-typescript-portable:test"],
+        "sha256": ["sha256-typescript-portable:test"],
+        "sha3-256": ["sha3-256-typescript-portable:test"],
+        "sha512": ["sha512-typescript-portable:test"],
+        "shake256": ["shake256-typescript-portable:test"],
+        "x25519": ["x25519-typescript-provider:test"]
+      }
+    }
+  },
+  "hosted": {
+    "target": "GitHub Actions macOS 15, Swift 6.1.2",
+    "revision": "aead74fddf942b4aa1d2d91b5ea26706c276d468",
+    "status": "success",
+    "job_count": 16,
+    "swift": {
+      "aes256": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815849/job/140826787183",
+      "aes256-gcm": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815849/job/140826787183",
+      "argon2id": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815902/job/140826787076",
+      "blake2b": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815771/job/140826787049",
+      "chacha20": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815783/job/140826787131",
+      "chacha20-poly1305": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815783/job/140826787131",
+      "ecdsa-p256-sha256": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815902/job/140826787371",
+      "ed25519": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815879/job/140826787127",
+      "hkdf-sha256": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815818/job/140826787023",
+      "hmac-sha256": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815829/job/140826787357",
+      "ml-dsa-65": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815902/job/140826787289",
+      "ml-kem-768": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815902/job/140826787297",
+      "pbkdf2-hmac-sha256": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815818/job/140826787204",
+      "poly1305": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815783/job/140826787131",
+      "scrypt": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095816081/job/140826787660",
+      "sha256": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815910/job/140826787231",
+      "sha3-256": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815801/job/140826786992",
+      "sha512": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815785/job/140826786996",
+      "shake256": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815801/job/140826787238",
+      "x25519": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46095815879/job/140826787127"
+    }
+  },
+  "byte_view_update": {
+    "base_revision": "ca58838234e7947c565871c76551d369b9b26e6b",
+    "local_target": "Windows x64",
+    "local_profiles": 200,
+    "passed_suite_commands_by_language": {
+      "c": 20,
+      "cpp": 20,
+      "csharp": 20,
+      "go": 27,
+      "java": 20,
+      "javascript": 20,
+      "kotlin": 20,
+      "python": 20,
+      "rust": 20,
+      "typescript": 20
+    },
+    "native_c_post_quantum_replay": {
+      "ml-kem-768_independent_openssl_cases": 8,
+      "ml-dsa-65_independent_openssl_cases": 12
+    },
+    "ecmascript_suite": {
+      "path": "tools/compatibility/ecmascript-views/portfolio.test.mjs",
+      "sha256": "1251091d1e1706c4050d786077470c32f88c5e7d9f3468dbefd60d8d36879f34",
+      "profiles": 20,
+      "languages": [
+        "javascript",
+        "typescript"
+      ],
+      "cases": 44,
+      "runtime": "Node 24.12.0",
+      "linux_run": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46099552029"
+    }
+  },
+  "prepared_hmac_update": {
+    "checkpoint_revision": "35bad7d9d167a0c1193585ec014791fafad43afc",
+    "passed_cells": 220,
+    "local_target": "Windows x64",
+    "local_cells": 200,
+    "passed_suite_commands": 207,
+    "local_provenance": "Working-tree suite replay on the checkpoint. Each receipt row was checked against the corresponding local log.",
+    "local_suites": {
+      "c": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "de0ee22716645c0f08ed0a16fe9b93bd7e41668b0d5a2e6b92d8d28fb5e1694f"
+      },
+      "cpp": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "b27293935108c6247b2f08d7c511f84fd4386596b4403a2d1f897e7951d45589"
+      },
+      "csharp": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "490b601ecdd76d42a2c5f99f0e3ecb45bee04582c399be38c8983b7aea01e363"
+      },
+      "go": {
+        "profiles": 20,
+        "passed_commands": 27,
+        "receipt_sha256": "6200de7689ed8b628ba78d8aff67b3e7d54431cf0d0a26029915ae7ebe3d873e"
+      },
+      "java": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "56c0133e717b343b616f83ed6338cea5eb28aeb1de6d9a71e5d932269a84c3ba"
+      },
+      "javascript": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "09ec3269e094ce6641f37394cb01a7696b0a5e7df8394dc1612f20e8af73333e"
+      },
+      "kotlin": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "fbe92d97640edcd03a6f19ab23f8d32f44965afec2f19ecd0ed5d33f6f4cbec5"
+      },
+      "python": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "42a5447c5a0c5010a9cc7b60ba58a10ae6c2baea737ac1e074dd0cf7130413fc"
+      },
+      "rust": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "ee94896746e08513d050248791e5ca237ff56ef97b34f002e275370c0eacc1a5"
+      },
+      "typescript": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "876fb2baaf4152f67b7c62d50da8e78026b488d5de3c4a3372263f078b82a98d"
+      }
+    },
+    "replayed_rust_sources_sha256": {
+      "src/crypto/aead/aes256-gcm/impl/rust/src/lib.rs": "e986016e35e1127e91d61e9392db41a8181c9e2342049457f58c98221ce071e9",
+      "src/crypto/mac/poly1305/impl/rust/src/lib.rs": "2a0c4f2a224ea5226f17614b2d09860269c6a016d5f943ef77395e8611fec3ea"
+    },
+    "prepared_ecmascript": {
+      "node": "24.12.0",
+      "test_groups": 158,
+      "node_suite_log_sha256": "aa5efb29580b6a3162f0cdf0bf000ea8ab8680238894256c4276a9a85df1c2b4",
+      "prepared_sources_sha256": {
+        "src/crypto/hash/sha256/impl/javascript/sha256.mjs": "e4d50a2880f544fb02b0b4ca3f11b0df14df607ab7551005a2f538ce588ee443",
+        "src/crypto/hash/sha256/impl/typescript/sha256.mts": "698541bc0ae7ff937edad96ea08d36a273e0d1f34cfb3aaf71ff74f9c3e25999",
+        "src/crypto/mac/hmac-sha256/impl/javascript/hmac.mjs": "2a21a0caf57af6b4c4cb81c114fdcf20293fc2d43f39af9df922e2729ddeec0b",
+        "src/crypto/mac/hmac-sha256/impl/typescript/hmac.mts": "b8c1bc6a6321166f80eccfc3e2305b985309969707ada79fbd3582af2e4eba2d"
+      }
+    },
+    "native_c_post_quantum_replay": {
+      "shared_aws_lc_library_sha256": "14969bbb28b6b2355a58bbe4a6776ce7e58948ac5811754a8f8b15dfdbe41af3",
+      "ml-kem-768": {
+        "independent_openssl_cases": 8,
+        "implicit_rejection_cases": 8,
+        "receipt_sha256": "0b2dd35c9cf8227f7388fa16e956839d434b0e74d2a5dd79e0014ed5d95aa52e"
+      },
+      "ml-dsa-65": {
+        "independent_openssl_cases": 12,
+        "receipt_sha256": "576133c06796f4384c711076dd292547d52414b79da9970921459fadd40cb701"
+      }
+    },
+    "hosted": {
+      "target": "GitHub Actions macOS 15, Swift 6.1.2",
+      "cells": 20,
+      "completed_on_checkpoint": 20,
+      "fallback_commit": null,
+      "fallback_provenance": "All Swift cells have successful jobs at the checkpoint.",
+      "swift": {
+        "aes256": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286537/job/140844073978",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "aes256-gcm": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286537/job/140844073978",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "argon2id": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286336/job/140844073591",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "blake2b": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286323/job/140844073310",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "chacha20": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286467/job/140844074119",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "chacha20-poly1305": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286467/job/140844074119",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "ecdsa-p256-sha256": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286336/job/140844073365",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "ed25519": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286349/job/140844073250",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "hkdf-sha256": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286442/job/140844073481",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "hmac-sha256": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286489/job/140844073765",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "ml-dsa-65": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286336/job/140844073519",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "ml-kem-768": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286336/job/140844073333",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "pbkdf2-hmac-sha256": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286442/job/140844073649",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "poly1305": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286467/job/140844074119",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "scrypt": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286460/job/140844073648",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "sha256": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286474/job/140844073902",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "sha3-256": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286321/job/140844073257",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "sha512": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286315/job/140844073014",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "shake256": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286321/job/140844072948",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "x25519": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286349/job/140844073250",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        }
+      }
+    }
+  },
+  "chacha20_word_output_update": {
+    "scope": "Functional execution on configured Windows x64 and macOS arm64 hosts.",
+    "profiles": 20,
+    "languages": 11,
+    "passed_cells": 220,
+    "windows_cells": 200,
+    "windows_suite_commands": 207,
+    "windows": {
+      "c": {
+        "cells": 20,
+        "commands": 20,
+        "receipt_sha256": "c4cfe79706e35f7e7aab22b9c9d1a282c710042b8cd435d7837b453a51bdf891"
+      },
+      "cpp": {
+        "cells": 20,
+        "commands": 20,
+        "receipt_sha256": "fba94b22b1a196dfa9e193ad503df4a8988189d6f3a5a9d2013050bdc975891d"
+      },
+      "csharp": {
+        "cells": 20,
+        "commands": 20,
+        "receipt_sha256": "f6e6b0b439265391cd8d55fb51b30494adef2319cfc37dd5bcda4a931470adb9"
+      },
+      "go": {
+        "cells": 20,
+        "commands": 27,
+        "receipt_sha256": "3df31072d93474eca68998b0ae8c332310a9dc91fd221c01a9ac175e2ab384b3"
+      },
+      "java": {
+        "cells": 20,
+        "commands": 20,
+        "receipt_sha256": "d8143fecb956b7627934417b011e6d8ef59a3e71c39f074489c0549b39534eb3"
+      },
+      "kotlin": {
+        "cells": 20,
+        "commands": 20,
+        "receipt_sha256": "e1e51b816757be621317c317d8655f219c435be4b42576c1d1fd293c8308d7fc"
+      },
+      "python": {
+        "cells": 20,
+        "commands": 20,
+        "receipt_sha256": "cd0b03a1bc3399936bbddac2a3e0df4f234cc5c4e3efe390147a2b0015141de3"
+      },
+      "javascript": {
+        "cells": 20,
+        "commands": 20,
+        "receipt_sha256": "5d104356e458e7bbf5dbda099451cbdf36decedf122d7b9d43d2cde51996dd3b"
+      },
+      "rust": {
+        "cells": 20,
+        "commands": 20,
+        "receipt_sha256": "8669c34bd2a862514818a772fb8e0c1f882ee9653df09f41a8a68200a3d0e9c0"
+      },
+      "typescript": {
+        "cells": 20,
+        "commands": 20,
+        "receipt_sha256": "66143ddbf21f57fe1e66eb7dbf8942a43287e5a88de515c16e42fad085a84a78"
+      }
+    },
+    "new_advisory_replay": {
+      "lanes": [
+        "javascript",
+        "rust",
+        "typescript"
+      ],
+      "cells": 60,
+      "inputs_unchanged": true,
+      "result_sha256": "865be5ef7b1dc96704e2898c1298a3980b1ae095cd5762615338623b1b6eb00a"
+    },
+    "inventory": {
+      "command": "python -B -m tools.compatibility.portfolio.replay --inventory",
+      "rows": 220,
+      "result_sha256": "65bcd1d53f3f8ad7088370101c08c93694b137e8509a9426064d40ff67ec2b55"
+    },
+    "ecmascript_groups": 162,
+    "ecmascript_log_sha256": "44ed3b34607ca6121c09e9ff4e03c3665f3530a27f6cbdee532de9a22a05a1f1",
+    "tested_changed_sources_sha256": {
+      "src/crypto/inputs/bytes.mjs": "819b9e1edb1858651eaa0a2ac60cc09391561f291e6c2e590dc95f7a44c7097c",
+      "src/crypto/inputs/bytes.mts": "ecf7ed87b0d836bc9935b5aa67c0ec3465ad978452504d2f961341a755d77e39",
+      "src/crypto/cipher/chacha20/impl/javascript/chacha20.mjs": "c529d74c49b768c0ecf9b1e481fe2ca780765c6f1fd43da96ce7da820162544d",
+      "src/crypto/cipher/chacha20/impl/typescript/chacha20.mts": "508a357f6b9ef5619b5fff5fa37b7fa99d47f4b762d247693354715d9b692aa3",
+      "src/crypto/aead/aes256-gcm/impl/rust/src/lib.rs": "c05aaf98045e224f07f694713c35a2012293a2beda6170f1ea020a5c44395aca",
+      "src/crypto/mac/poly1305/impl/rust/src/lib.rs": "60753aa6b596bed0e70e34f7bc517db2f332aee5f0b5fb04887d43740ed209a7"
+    },
+    "native_c_post_quantum": {
+      "ml-kem-768": {
+        "independent_cases": 8,
+        "receipt_sha256": "0b2dd35c9cf8227f7388fa16e956839d434b0e74d2a5dd79e0014ed5d95aa52e"
+      },
+      "ml-dsa-65": {
+        "independent_cases": 12,
+        "receipt_sha256": "8d32f1065e593f70632df07f1ec91097c5a58cb5412d11aaa3ed45f9c5a6e920"
+      }
+    },
+    "swift": {
+      "checkpoint_revision": "b6ccabda03d6e5dc10c9e72b08e8a7a798b44729",
+      "target": "macOS 15 arm64 with Swift 6.1.2",
+      "cells": 20,
+      "jobs": [
+        {
+          "profiles": [
+            "aes256",
+            "aes256-gcm"
+          ],
+          "url": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46102927060/job/140849217710",
+          "conclusion": "success"
+        },
+        {
+          "profiles": [
+            "x25519",
+            "ed25519"
+          ],
+          "url": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46102927136/job/140849218037",
+          "conclusion": "success"
+        },
+        {
+          "profiles": [
+            "chacha20",
+            "poly1305",
+            "chacha20-poly1305"
+          ],
+          "url": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46102927053/job/140849217943",
+          "conclusion": "success"
+        },
+        {
+          "profiles": [
+            "scrypt"
+          ],
+          "url": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46102927132/job/140849217997",
+          "conclusion": "success"
+        },
+        {
+          "profiles": [
+            "hmac-sha256"
+          ],
+          "url": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46102927142/job/140849218047",
+          "conclusion": "success"
+        },
+        {
+          "profiles": [
+            "blake2b"
+          ],
+          "url": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46102927166/job/140849218394",
+          "conclusion": "success"
+        },
+        {
+          "profiles": [
+            "sha512"
+          ],
+          "url": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46102927089/job/140849218130",
+          "conclusion": "success"
+        },
+        {
+          "profiles": [
+            "hkdf-sha256"
+          ],
+          "url": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46102927055/job/140849217682",
+          "conclusion": "success"
+        },
+        {
+          "profiles": [
+            "pbkdf2-hmac-sha256"
+          ],
+          "url": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46102927055/job/140849217961",
+          "conclusion": "success"
+        },
+        {
+          "profiles": [
+            "argon2id"
+          ],
+          "url": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46102927052/job/140849217893",
+          "conclusion": "success"
+        },
+        {
+          "profiles": [
+            "ml-dsa-65"
+          ],
+          "url": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46102927052/job/140849218101",
+          "conclusion": "success"
+        },
+        {
+          "profiles": [
+            "ecdsa-p256-sha256"
+          ],
+          "url": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46102927052/job/140849218133",
+          "conclusion": "success"
+        },
+        {
+          "profiles": [
+            "ml-kem-768"
+          ],
+          "url": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46102927052/job/140849218161",
+          "conclusion": "success"
+        },
+        {
+          "profiles": [
+            "sha3-256"
+          ],
+          "url": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46102927095/job/140849217852",
+          "conclusion": "success"
+        },
+        {
+          "profiles": [
+            "shake256"
+          ],
+          "url": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46102927095/job/140849218121",
+          "conclusion": "success"
+        },
+        {
+          "profiles": [
+            "sha256"
+          ],
+          "url": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46102927099/job/140849218044",
+          "conclusion": "success"
+        }
+      ]
+    }
+  },
+  "poly1305_window_update": {
+    "scope": "Functional execution on Windows x64 and macOS arm64. Windows groups are composed by selected language and verified against current inputs and saved logs.",
+    "passed_cells": 220,
+    "windows_cells": 200,
+    "windows_suite_commands": 207,
+    "windows_assembled_result_sha256": "0f9efe4a8afc5513acbca6036b1f3e47f2b853eca356572f54be641485adfcad",
+    "windows_source_receipts": [
+      {
+        "lanes": [
+          "c",
+          "csharp",
+          "go",
+          "java",
+          "kotlin",
+          "python"
+        ],
+        "tested_revision": "fec0acd11a55a7a3824d44a6cb784d9e91f5bfc2",
+        "sha256": "4cf7430df6b41a403ca4032f385560ec6d03c7e02ae2eb0a4068f5f4255b4690"
+      },
+      {
+        "lanes": [
+          "javascript",
+          "typescript"
+        ],
+        "tested_revision": "fec0acd11a55a7a3824d44a6cb784d9e91f5bfc2",
+        "sha256": "20b4f066ef9adc7afa9cc587c3f8382f17556fce3060331769405fe1ca4cd2f7"
+      },
+      {
+        "lanes": [
+          "rust"
+        ],
+        "tested_revision": "fec0acd11a55a7a3824d44a6cb784d9e91f5bfc2",
+        "sha256": "5d2effda09a3213e4741069883c14ef6b5e79f0907b789f86c8decde28b2df50"
+      },
+      {
+        "lanes": [
+          "cpp"
+        ],
+        "tested_revision": "fec0acd11a55a7a3824d44a6cb784d9e91f5bfc2",
+        "sha256": "05d75f55bae80fcb3811b3829fc8fcafdff6d3b18d6f4969de155fa546a69cfc"
+      }
+    ],
+    "refreshed_cells": [
+      {
+        "language": "c",
+        "profile": "hash/sha3-256"
+      },
+      {
+        "language": "c",
+        "profile": "hash/shake256"
+      },
+      {
+        "language": "c",
+        "profile": "aead/aes256-gcm"
+      },
+      {
+        "language": "csharp",
+        "profile": "hash/sha3-256"
+      },
+      {
+        "language": "csharp",
+        "profile": "hash/shake256"
+      },
+      {
+        "language": "csharp",
+        "profile": "aead/aes256-gcm"
+      },
+      {
+        "language": "go",
+        "profile": "hash/sha3-256"
+      },
+      {
+        "language": "go",
+        "profile": "hash/shake256"
+      },
+      {
+        "language": "java",
+        "profile": "hash/sha3-256"
+      },
+      {
+        "language": "java",
+        "profile": "hash/shake256"
+      },
+      {
+        "language": "java",
+        "profile": "aead/aes256-gcm"
+      },
+      {
+        "language": "kotlin",
+        "profile": "hash/sha3-256"
+      },
+      {
+        "language": "kotlin",
+        "profile": "hash/shake256"
+      },
+      {
+        "language": "kotlin",
+        "profile": "aead/aes256-gcm"
+      },
+      {
+        "language": "python",
+        "profile": "hash/sha3-256"
+      },
+      {
+        "language": "python",
+        "profile": "hash/shake256"
+      }
+    ],
+    "refresh_result_sha256": "e84e3f71362d1d3390beae525ebf006a46e971631c6892f182729bbeb295d57f",
+    "negative_log_control": "rejected",
+    "ecmascript_groups": 164,
+    "ecmascript_log_sha256": "c6edde51e46e26701bba2da8793c03b9b1432abc9d517a2e2d322e4fca3cc34f",
+    "tested_changed_sources_sha256": {
+      "src/crypto/mac/poly1305/impl/cpp/poly1305.cpp": "f16238406ca646bcb1b4aae817236c7f6321d81667a5364e7e3d63de677eea94",
+      "src/crypto/mac/poly1305/impl/javascript/poly1305.mjs": "271fd2a126c3ed97d2032650000053045e4ad5d950406402bd9f060bf1661532",
+      "src/crypto/mac/poly1305/impl/typescript/poly1305.mts": "38d90500c6815543b25956c81a75285ee289bb4a783ee7d564a509e808318d6f",
+      "src/crypto/mac/poly1305/impl/rust/src/lib.rs": "d12fc051cc0d7d00fcda6fefa1cd8971f3dc9a376d105af13a9722d619703e0b",
+      "src/crypto/aead/aes256-gcm/impl/rust/src/lib.rs": "9f99dc4ce2bdc4a8627b2bef8b7c3fc23c75cceda6c1478e8f779de452d8af6b"
+    },
+    "cpp_ubsan": {
+      "status": "passed",
+      "language": "cpp",
+      "target": "AMD64",
+      "compiler": [
+        "clang version 21.1.8",
+        "Target: x86_64-pc-windows-msvc"
+      ],
+      "ubsan": true,
+      "sources_sha256": {
+        "aead/chacha20-poly1305/impl/cpp/check_bridge.cpp": "7be2e701b9aa587f1fc9115814852741ce53622fc5f5df5e0ec2de5d3f101bc5",
+        "cipher/chacha20/impl/cpp/chacha20.cpp": "7274edb69717f824c08a2cb6f0e5fb62515b5392f4c42fde36c905d0600ee48f",
+        "cipher/chacha20/impl/cpp/chacha20.hpp": "60c0d80f765a34b022432096b958b8a2278134b2b4930b8141ecea5f517b946a",
+        "mac/poly1305/impl/cpp/poly1305.cpp": "f16238406ca646bcb1b4aae817236c7f6321d81667a5364e7e3d63de677eea94",
+        "mac/poly1305/impl/cpp/poly1305.hpp": "f29e8d45ff463aa25fb35fcb04468642d825d43ec96bb11a0f79424da7a92cd4",
+        "aead/chacha20-poly1305/impl/cpp/chacha20_poly1305.cpp": "bbc957d2972adbb3adec04b944b1c8bdf012a250194e39d0526f386494894684",
+        "aead/chacha20-poly1305/impl/cpp/chacha20_poly1305.hpp": "0d3edc8398d1675e3a30ea909921c962a94a5d0f77bb412500bc40f6224a230b"
+      },
+      "results": {
+        "chacha20": {
+          "rfc_known": 2,
+          "openssl_cases": 144,
+          "openssl_version": "3.5.4"
+        },
+        "poly1305": {
+          "rfc_known": 8,
+          "integer_comparisons": 512,
+          "openssl_cases": 0
+        },
+        "aead": {
+          "rfc_known": 1,
+          "bidirectional_openssl_cases": 174,
+          "openssl_version": "3.5.4"
+        }
+      }
+    },
+    "native_c_post_quantum": {
+      "ml-kem-768": {
+        "independent_cases": 8,
+        "receipt_sha256": "0b2dd35c9cf8227f7388fa16e956839d434b0e74d2a5dd79e0014ed5d95aa52e"
+      },
+      "ml-dsa-65": {
+        "independent_cases": 12,
+        "receipt_sha256": "ccf617d0e00ae07702655569a9f86c0efcb9b7e5005dca1e8d900c2d2679574f"
+      }
+    },
+    "swift": {
+      "checkpoint_revision": "fec0acd11a55a7a3824d44a6cb784d9e91f5bfc2",
+      "target": "macOS 15 arm64 with Swift 6.1.2",
+      "cells": 20,
+      "jobs": [
+        {
+          "profiles": [
+            "sha256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46104523292/job/140854174448"
+        },
+        {
+          "profiles": [
+            "sha512"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46104523211/job/140854174301"
+        },
+        {
+          "profiles": [
+            "sha3-256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46104523116/job/140854174176"
+        },
+        {
+          "profiles": [
+            "shake256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46104523116/job/140854174216"
+        },
+        {
+          "profiles": [
+            "blake2b"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46104523388/job/140854174876"
+        },
+        {
+          "profiles": [
+            "hmac-sha256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46104523382/job/140854174871"
+        },
+        {
+          "profiles": [
+            "hkdf-sha256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46104523378/job/140854174698"
+        },
+        {
+          "profiles": [
+            "pbkdf2-hmac-sha256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46104523378/job/140854174933"
+        },
+        {
+          "profiles": [
+            "scrypt"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46104523205/job/140854174192"
+        },
+        {
+          "profiles": [
+            "argon2id"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46104523336/job/140854174780"
+        },
+        {
+          "profiles": [
+            "ml-kem-768"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46104523336/job/140854174614"
+        },
+        {
+          "profiles": [
+            "ml-dsa-65"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46104523336/job/140854174802"
+        },
+        {
+          "profiles": [
+            "ecdsa-p256-sha256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46104523336/job/140854174857"
+        },
+        {
+          "profiles": [
+            "chacha20",
+            "poly1305",
+            "chacha20-poly1305"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46104523105/job/140854173819"
+        },
+        {
+          "profiles": [
+            "aes256",
+            "aes256-gcm"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46104523403/job/140854174880"
+        },
+        {
+          "profiles": [
+            "x25519",
+            "ed25519"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46104523436/job/140854174924"
+        }
+      ]
+    }
+  },
+  "scrypt_alternating_update": {
+    "scope": "Functional replay with Windows x64 and macOS arm64. Includes documented provider adapters.",
+    "passed_cells": 220,
+    "windows_cells": 200,
+    "windows_suite_commands": 207,
+    "windows_assembled_result_sha256": "646ab7a8ccec8d22e45c50d92b07746d6ba4e87a0942c343269499802de20e9b",
+    "windows_source_receipts": [
+      {
+        "revision": "5837fefea517017124bd4b02c8972a749e41b985",
+        "cells": 200,
+        "result_sha256": "6e724a06301aea5e958f102b64026b4dcd9d6ca0c8185f238d580305b49986f4"
+      },
+      {
+        "revision": "52ce20ea89f2de45f36ad52d40fff62ed60d68ba",
+        "cells": 18,
+        "result_sha256": "1e58e6fc224dba2da7ead595d1612c19dd0ea84e0dc9d009922998b28bbdd0ba"
+      }
+    ],
+    "refreshed_cells": [
+      {
+        "language": "c",
+        "profile": "hash/sha3-256"
+      },
+      {
+        "language": "c",
+        "profile": "hash/shake256"
+      },
+      {
+        "language": "cpp",
+        "profile": "hash/sha3-256"
+      },
+      {
+        "language": "cpp",
+        "profile": "hash/shake256"
+      },
+      {
+        "language": "csharp",
+        "profile": "hash/sha3-256"
+      },
+      {
+        "language": "csharp",
+        "profile": "hash/shake256"
+      },
+      {
+        "language": "go",
+        "profile": "hash/sha3-256"
+      },
+      {
+        "language": "go",
+        "profile": "hash/shake256"
+      },
+      {
+        "language": "java",
+        "profile": "hash/sha3-256"
+      },
+      {
+        "language": "java",
+        "profile": "hash/shake256"
+      },
+      {
+        "language": "javascript",
+        "profile": "hash/sha3-256"
+      },
+      {
+        "language": "javascript",
+        "profile": "hash/shake256"
+      },
+      {
+        "language": "kotlin",
+        "profile": "hash/sha3-256"
+      },
+      {
+        "language": "kotlin",
+        "profile": "hash/shake256"
+      },
+      {
+        "language": "python",
+        "profile": "hash/sha3-256"
+      },
+      {
+        "language": "python",
+        "profile": "hash/shake256"
+      },
+      {
+        "language": "typescript",
+        "profile": "hash/sha3-256"
+      },
+      {
+        "language": "typescript",
+        "profile": "hash/shake256"
+      }
+    ],
+    "negative_log_control": "rejected",
+    "ecmascript_groups": 164,
+    "ecmascript_log_sha256": "346a42cbc3e6543c50c3e657b80a123ec06c7e6397ee1da55fdefbc59536beb6",
+    "tested_changed_sources_sha256": {
+      "src/crypto/kdf/scrypt/impl/c/abc_scrypt_c.c": "7619c4693528b446331a7c4ce8efbd86f27b2d5f43799417c12dd57a9cb202ec",
+      "src/crypto/kdf/scrypt/impl/cpp/scrypt.cpp": "945652486241d93cf9b507f0afb791fac2800204379c3a0e403a5c048054b774",
+      "src/crypto/kdf/scrypt/impl/go/scrypt.go": "6af5c9b17a10ab11edfdeb106e129a3755cc5729e2b8d677a23d1035276882c6",
+      "src/crypto/kdf/scrypt/impl/javascript/scrypt.mjs": "cbfa281ef0fc531fbb774119f2d9fbc78b6ba3d0195cc7fc374a0f04f7740107",
+      "src/crypto/kdf/scrypt/impl/python/abc_scrypt.py": "3e09adaae5ea48d65cf74ae09dbf6cc17383a590be4a317dcd784afba3e2ddde",
+      "src/crypto/kdf/scrypt/impl/rust/src/lib.rs": "049953eae2d5ea347bf5f2f4cd1f00aba63662964663f87fc382f5d2e6da0424",
+      "src/crypto/kdf/scrypt/impl/typescript/scrypt.mts": "a62a26482aeb689d69a728ba762eaa54d648465877d11bdb77e686a25cb7e430",
+      "src/crypto/mac/poly1305/impl/rust/src/lib.rs": "fdbb969701b4d9c47fc2cbeb837f5ba32e605c0f5cdd795b00fed9c6969229cb"
+    },
+    "scrypt_ubsan": {
+      "c": {
+        "status": "passed",
+        "compiler": [
+          "clang version 21.1.8",
+          "Target: x86_64-pc-windows-msvc"
+        ],
+        "oracle": "OpenSSL 3.0.21 9 Jun 2026",
+        "ubsan_trap": true,
+        "source_sha256": "7619c4693528b446331a7c4ce8efbd86f27b2d5f43799417c12dd57a9cb202ec",
+        "hacl_revision": "8ba599b2f6c9701b3dc961db895b0856a2210f76",
+        "known_answers": 3,
+        "openssl_comparisons": 144,
+        "workspace_preflight": "passed"
+      },
+      "cpp": {
+        "status": "passed",
+        "compiler": [
+          "clang version 21.1.8",
+          "Target: x86_64-pc-windows-msvc"
+        ],
+        "oracle": "OpenSSL 3.0.21 9 Jun 2026",
+        "ubsan_trap": true,
+        "source_sha256": "945652486241d93cf9b507f0afb791fac2800204379c3a0e403a5c048054b774",
+        "known_answers": 3,
+        "openssl_comparisons": 144,
+        "workspace_preflight": "passed"
+      }
+    },
+    "paired_benchmark": {
+      "path": "docs/status/scrypt-alternating-benchmark.json",
+      "sha256": "f1e0e0a975a25da1a84485751fb0aa6447e89ae22a13f60b50eaf3bc620a5de2",
+      "cases": 12
+    },
+    "portfolio_benchmark": {
+      "profiles": 20,
+      "node_openssl_comparisons": 19,
+      "result_sha256": "7ad9e36c10ca3138fa6389d69caa8233542e6a5b4784d70dd875d640a8398ff8",
+      "runner_sha256": "088d462814704475c4ae808d89c7b5bf07d3a6732698ef0be6a1aad71371d2f4"
+    },
+    "linux_source_replay": {
+      "checkpoint_revision": "52ce20ea89f2de45f36ad52d40fff62ed60d68ba",
+      "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310509/job/140862830326",
+      "keccak_wrappers": {
+        "audited_theorems": 16,
+        "rejected_rust_mutations": 4,
+        "receipt_sha256": "2dc2a93c0cdd616027427f97ef761b7908aa98cbb8c96fc51c159a42ae38e6e4"
+      },
+      "aes256_gcm": {
+        "audited_theorems": 22,
+        "rejected_llbc_mutations": 6,
+        "receipt_sha256": "2831f9d6a14cd2d38e1decf795ef372ca1339217a3098d2190187a8edb88a778"
+      }
+    },
+    "swift": {
+      "checkpoint_revision": "52ce20ea89f2de45f36ad52d40fff62ed60d68ba",
+      "target": "macOS 15 arm64 with Swift 6.1.2",
+      "cells": 20,
+      "jobs": [
+        {
+          "profiles": [
+            "sha256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310427/job/140862829835"
+        },
+        {
+          "profiles": [
+            "sha512"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310368/job/140862829670"
+        },
+        {
+          "profiles": [
+            "sha3-256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310535/job/140862830488"
+        },
+        {
+          "profiles": [
+            "shake256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310535/job/140862830500"
+        },
+        {
+          "profiles": [
+            "blake2b"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310365/job/140862829795"
+        },
+        {
+          "profiles": [
+            "hmac-sha256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310366/job/140862829637"
+        },
+        {
+          "profiles": [
+            "hkdf-sha256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310559/job/140862830387"
+        },
+        {
+          "profiles": [
+            "pbkdf2-hmac-sha256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310559/job/140862830570"
+        },
+        {
+          "profiles": [
+            "scrypt"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310510/job/140862830292"
+        },
+        {
+          "profiles": [
+            "argon2id"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310423/job/140862830030"
+        },
+        {
+          "profiles": [
+            "ml-kem-768"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310423/job/140862830246"
+        },
+        {
+          "profiles": [
+            "ml-dsa-65"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310423/job/140862830231"
+        },
+        {
+          "profiles": [
+            "ecdsa-p256-sha256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310423/job/140862830299"
+        },
+        {
+          "profiles": [
+            "chacha20",
+            "poly1305",
+            "chacha20-poly1305"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310431/job/140862830081"
+        },
+        {
+          "profiles": [
+            "aes256",
+            "aes256-gcm"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310388/job/140862829852"
+        },
+        {
+          "profiles": [
+            "x25519",
+            "ed25519"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310399/job/140862830051"
+        }
+      ]
+    }
+  },
+  "source_streaming_update": {
+    "scope": "Advisory functional execution on Windows x64 and macOS arm64, including native C checks for the two post-quantum leaves.",
+    "passed_cells": 220,
+    "windows_cells": 200,
+    "windows_suite_commands": 207,
+    "windows_assembled_result_sha256": "02efd1ff539f60982f7d131c5f653a5510f8cfd11aee3ddef57388ed3df4eba2",
+    "windows_source_receipts": [
+      {
+        "revision": "18bd2ccb1bf235ee6cb8b5607eda5e6044315fed",
+        "cells": 200,
+        "result_sha256": "3b2c9fa4283d28550ec57d49aa5cc197045f18d37b912069c9a92815455dfc84"
+      },
+      {
+        "revision": "6bf6ecdbe83228ae4155e78b405ac95533c22fd6",
+        "cells": 6,
+        "result_sha256": "049b605ffc1939b982e3d9e5a5b7314c93c6b10476b785d5a3166324edeb5727"
+      }
+    ],
+    "refreshed_cells": [
+      {
+        "language": "c",
+        "profile": "kdf/scrypt"
+      },
+      {
+        "language": "cpp",
+        "profile": "kdf/scrypt"
+      },
+      {
+        "language": "csharp",
+        "profile": "kdf/scrypt"
+      },
+      {
+        "language": "java",
+        "profile": "kdf/scrypt"
+      },
+      {
+        "language": "kotlin",
+        "profile": "kdf/scrypt"
+      },
+      {
+        "language": "rust",
+        "profile": "kdf/scrypt"
+      }
+    ],
+    "negative_log_control": "rejected",
+    "ecmascript_groups": 164,
+    "ecmascript_log_sha256": "722cd5036157d3de858c9f401f97ab2d3c8a057b4055b221ccd197ac76bae31b",
+    "native_c_pq": {
+      "receipt": "tools/compatibility/portfolio/receipts/native-pq-windows-x64/result.json",
+      "receipt_sha256": "062601e32092cbf9324f388bdb4c5957e8aed0000394d5bcac92c0430a0239b1",
+      "ml_kem_openssl_cases": 8,
+      "ml_kem_implicit_rejection_cases": 8,
+      "ml_dsa_openssl_cases": 12
+    },
+    "source_replays": {
+      "sha3_shake": {
+        "path": "tools/verification/keccak/wrapper-receipt-windows-x64.json",
+        "sha256": "e2b2547204ba6deb483c3dbac0bdf036d1ac5ba1e78b76d97531364fd72bbe42",
+        "audited_theorems": 24,
+        "linux": {
+          "checkpoint": "dd09587c2865aa908c385f54ce51ce7cdb2bd420",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46109346348/job/140869170148",
+          "result_sha256": "7ae5df020d0a12092fbddeee0d8e1f708d52970496227f800fcd423533e5b672"
+        }
+      },
+      "aes256_gcm": {
+        "path": "tools/verification/aes256-gcm/source-receipt-windows-x64.json",
+        "sha256": "ff841d511da1caa6525bbb2a621aff071624aec8fc52c26b54ae3ffa7bbe017c",
+        "audited_theorems": 32,
+        "linux": {
+          "checkpoint": "c2db53c6bec1b156c48a7417ba40742024475f75",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46109702760/job/140870270112",
+          "result_sha256": "c473bdcc488401b0821408b827fb22a72d7501a92774b3bff71b9b5a1cdd18f0"
+        }
+      },
+      "scrypt_salsa8": {
+        "path": "tools/verification/scrypt/source-receipt-windows-x64.json",
+        "sha256": "7752be321f5222bdab1f85d6994cff9eba56042744077bbba80924faa0226e50",
+        "audited_theorems": 5,
+        "linux": {
+          "checkpoint": "dd09587c2865aa908c385f54ce51ce7cdb2bd420",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46109346348/job/140869170148",
+          "result_sha256": "ff7379a280a12ca089bdf644ca9dd5c1f1ff4e25633ee02196f516c31012edc1"
+        }
+      },
+      "poly1305": {
+        "path": "tools/verification/poly1305/source-receipt.json",
+        "sha256": "d430bae16ade475da19d0608073aa64bbb89f8065cd5ed1cc61521c70032287d",
+        "audited_theorems": 29,
+        "linux": {
+          "checkpoint": "dd09587c2865aa908c385f54ce51ce7cdb2bd420",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46109346571/job/140869170734",
+          "merge_revision": "ccd5d606569852b6572f9be6cbd14821511c6a9e"
+        }
+      }
+    },
+    "poly1305_paired_reproduction": {
+      "scope": "Additional public-input reproduction separate from the three documented comparison runs.",
+      "target": "Windows x64, Intel Core i7-12700K, rustc 1.92.0 -O",
+      "units": "nanoseconds per authenticate operation",
+      "samples": 11,
+      "baseline_revision": "d1f7c884c6934d3f9d9f608d2c6ddea4df437e8a",
+      "baseline_source_sha256": "fdbb969701b4d9c47fc2cbeb837f5ba32e605c0f5cdd795b00fed9c6969229cb",
+      "candidate_source_sha256": "7e5e177c5c72f6652e3b583515e2d8e309985677c841a73fb0a89a390ddcdc04",
+      "fixture_sha256": "82e1f5a297b2b537b64466e7e4944e26db7ea5fb5570f1ef6f32527a098c2740",
+      "log_sha256": "1a587f5fbdb1e27b122f5abdaf17a32ba4d2b989b34926f6f5ced9f5156b1498",
+      "workloads": [
+        {
+          "bytes": 1,
+          "calls_per_sample": 65536,
+          "baseline": {
+            "median": 31.8,
+            "min": 31.7,
+            "max": 32.1
+          },
+          "candidate": {
+            "median": 33.2,
+            "min": 33.0,
+            "max": 33.3
+          }
+        },
+        {
+          "bytes": 17,
+          "calls_per_sample": 65536,
+          "baseline": {
+            "median": 36.6,
+            "min": 36.4,
+            "max": 38.2
+          },
+          "candidate": {
+            "median": 36.5,
+            "min": 36.2,
+            "max": 36.9
+          }
+        },
+        {
+          "bytes": 64,
+          "calls_per_sample": 65536,
+          "baseline": {
+            "median": 41.3,
+            "min": 41.0,
+            "max": 43.8
+          },
+          "candidate": {
+            "median": 35.3,
+            "min": 34.5,
+            "max": 36.8
+          }
+        },
+        {
+          "bytes": 65,
+          "calls_per_sample": 65536,
+          "baseline": {
+            "median": 50.2,
+            "min": 48.8,
+            "max": 51.4
+          },
+          "candidate": {
+            "median": 50.4,
+            "min": 49.2,
+            "max": 53.2
+          }
+        },
+        {
+          "bytes": 1025,
+          "calls_per_sample": 16384,
+          "baseline": {
+            "median": 418.5,
+            "min": 417.4,
+            "max": 462.6
+          },
+          "candidate": {
+            "median": 421.9,
+            "min": 417.9,
+            "max": 603.3
+          }
+        },
+        {
+          "bytes": 16384,
+          "calls_per_sample": 1024,
+          "baseline": {
+            "median": 6293.0,
+            "min": 6163.7,
+            "max": 6694.1
+          },
+          "candidate": {
+            "median": 6333.5,
+            "min": 6317.8,
+            "max": 6629.8
+          }
+        }
+      ]
+    },
+    "swift": {
+      "checkpoint_revision": "18bd2ccb1bf235ee6cb8b5607eda5e6044315fed",
+      "target": "macOS 15 arm64 with Swift 6.1.2",
+      "cells": 20,
+      "jobs": [
+        {
+          "profiles": [
+            "aes256",
+            "aes256-gcm"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46108295223/job/140865897441"
+        },
+        {
+          "profiles": [
+            "argon2id"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46108295100/job/140865897498"
+        },
+        {
+          "profiles": [
+            "blake2b"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46108295113/job/140865897081"
+        },
+        {
+          "profiles": [
+            "chacha20",
+            "poly1305",
+            "chacha20-poly1305"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46108295083/job/140865897057"
+        },
+        {
+          "profiles": [
+            "ecdsa-p256-sha256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46108295100/job/140865897366"
+        },
+        {
+          "profiles": [
+            "hkdf-sha256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46108295072/job/140865896765"
+        },
+        {
+          "profiles": [
+            "hmac-sha256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46108295262/job/140865897386"
+        },
+        {
+          "profiles": [
+            "ml-dsa-65"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46108295100/job/140865897136"
+        },
+        {
+          "profiles": [
+            "ml-kem-768"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46108295100/job/140865897376"
+        },
+        {
+          "profiles": [
+            "pbkdf2-hmac-sha256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46108295072/job/140865896949"
+        },
+        {
+          "profiles": [
+            "scrypt"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46108295248/job/140865897522"
+        },
+        {
+          "profiles": [
+            "sha256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46108295087/job/140865896971"
+        },
+        {
+          "profiles": [
+            "sha3-256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46108295150/job/140865897178"
+        },
+        {
+          "profiles": [
+            "sha512"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46108295214/job/140865897329"
+        },
+        {
+          "profiles": [
+            "shake256"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46108295150/job/140865897213"
+        },
+        {
+          "profiles": [
+            "x25519",
+            "ed25519"
+          ],
+          "result": "success",
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46108295194/job/140865897161"
+        }
+      ]
+    }
+  },
+  "ci_baseline_and_refinement_update": {
+    "scope": "Advisory execution and pinned source proof replays. No independent approval recorded.",
+    "passed_cells": 220,
+    "windows_cells": 200,
+    "windows_suite_commands": 207,
+    "windows_matrix_result_sha256": "01f6644db7fc9183534bcadf739b73a32d0cc7d8dfb5bc78791ccd45f2ffa642",
+    "windows_matrix_reported_revision": "892fbb5e61d65de9c32ef1aee66be1cb3dd0809b",
+    "native_c_pq_receipt_sha256": "062601e32092cbf9324f388bdb4c5957e8aed0000394d5bcac92c0430a0239b1",
+    "source_replays": {
+      "aes256": {
+        "windows_receipt": "tools/verification/aes256/source-receipt-windows-x64.json",
+        "windows_sha256": "cc4b73df773035bcff2feb2ffa5aab014aa137596b29de3aa8a7f206bf69f831",
+        "audited_theorems": 5,
+        "rejected_changes": 3
+      },
+      "aes256-gcm": {
+        "windows_receipt": "tools/verification/aes256-gcm/source-receipt-windows-x64.json",
+        "windows_sha256": "c35db69a703a5122857c209423c732271c1746ace17ab63ab54a41094167b74e",
+        "audited_theorems": 34,
+        "rejected_changes": 11
+      },
+      "scrypt": {
+        "windows_receipt": "tools/verification/scrypt/source-receipt-windows-x64.json",
+        "windows_sha256": "b4dd15c17eab9a5d7657b21b98b09c75f562db575e11163d381cbd6241a8b0b7",
+        "audited_theorems": 13,
+        "rejected_changes": 4
+      }
+    },
+    "swift": {
+      "checkpoint": "e5020428889e0a6698380861c4bae840fe8dc192",
+      "target": "macOS 15 arm64 with Swift 6.1.2",
+      "cells": 20,
+      "jobs": [
+        {
+          "profiles": [
+            "aes256",
+            "aes256-gcm"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292758/job/140893851175"
+        },
+        {
+          "profiles": [
+            "argon2id"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292784/job/140893851667"
+        },
+        {
+          "profiles": [
+            "blake2b"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292797/job/140893851412"
+        },
+        {
+          "profiles": [
+            "chacha20",
+            "poly1305",
+            "chacha20-poly1305"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292674/job/140893851027"
+        },
+        {
+          "profiles": [
+            "ecdsa-p256-sha256"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292784/job/140893851739"
+        },
+        {
+          "profiles": [
+            "hkdf-sha256"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292868/job/140893851803"
+        },
+        {
+          "profiles": [
+            "hmac-sha256"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292801/job/140893851286"
+        },
+        {
+          "profiles": [
+            "ml-dsa-65"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292784/job/140893851472"
+        },
+        {
+          "profiles": [
+            "ml-kem-768"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292784/job/140893851710"
+        },
+        {
+          "profiles": [
+            "pbkdf2-hmac-sha256"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292868/job/140893851559"
+        },
+        {
+          "profiles": [
+            "scrypt"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292934/job/140893851679"
+        },
+        {
+          "profiles": [
+            "sha256"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292913/job/140893851637"
+        },
+        {
+          "profiles": [
+            "sha3-256"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292831/job/140893851389"
+        },
+        {
+          "profiles": [
+            "sha512"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292788/job/140893851322"
+        },
+        {
+          "profiles": [
+            "shake256"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292831/job/140893851709"
+        },
+        {
+          "profiles": [
+            "x25519",
+            "ed25519"
+          ],
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292627/job/140893851144"
+        }
+      ]
+    },
+    "ci_rehearsal": {
+      "checkpoint": "e5020428889e0a6698380861c4bae840fe8dc192",
+      "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292819/job/140893906811",
+      "advisory": "passed",
+      "plan_sha256": "cdb32329224faea3dc7e0c009aba341779155a662d47538786b1ab30d4c19a0e",
+      "receipts_sha256": {
+        "repository-assurance:registry": "b749ef5727011aeff404aa07af03a765844a3dceeb40365beae105f0a6bdcaf3",
+        "repository-assurance:status": "806df449bee787adad13388763209484ba6ccedacf59fc96ac03398ee1ef371c"
+      },
+      "required_job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46117292819/job/140894009736",
+      "required_result": "independent-review-required"
+    }
+  }
+}

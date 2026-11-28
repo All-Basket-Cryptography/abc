@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:blake2b-python-portable",
+  "record_type": "implementation",
+  "name": "ABC research BLAKE2b in Python",
+  "sources": [
+    {
+      "path": "src/crypto/hash/blake2b/impl/python/abc_blake2b.py"
+    },
+    {
+      "path": "src/crypto/hash/blake2b/impl/python/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:blake2b",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "32ca375aeb3c3b81ac8b42686b5e91d4497568fb6debed9859ea3275c40f0ff7",
+  "path": "src/crypto/hash/blake2b/impl/python",
+  "languages": [
+    "python"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC portable Python research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

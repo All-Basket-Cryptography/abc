@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-javascript-portable",
+  "record_type": "implementation",
+  "name": "AES-256 in JavaScript (ABC JavaScript research core)",
+  "sources": [
+    {
+      "path": "src/crypto/cipher/aes256/impl/javascript/aes256.mjs"
+    },
+    {
+      "path": "src/crypto/cipher/aes256/impl/javascript/README.md"
+    },
+    {
+      "path": "src/crypto/inputs/bytes.mjs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:aes-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "304b016ef21ea5ee3169355612c44470ca452b86bcecede36f29768241873730",
+  "path": "src/crypto/cipher/aes256/impl/javascript",
+  "languages": [
+    "javascript"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "ABC JavaScript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

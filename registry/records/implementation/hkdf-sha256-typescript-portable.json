@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:hkdf-sha256-typescript-portable",
+  "record_type": "implementation",
+  "name": "ABC research HKDF-SHA-256 in TypeScript",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/hkdf-sha256/impl/typescript/hkdf.mts"
+    },
+    {
+      "path": "src/crypto/kdf/hkdf-sha256/impl/typescript/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hkdf-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "5d68349f1833fe214a7609efce98beabb84d0e8d6ac983e013823ea92da36661",
+  "path": "src/crypto/kdf/hkdf-sha256/impl/typescript",
+  "languages": [
+    "typescript"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC hmac-sha256 in TypeScript"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable typescript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision",
+  "spec_ref": "abc:specification:hkdf-sha-256-rfc5869"
+}

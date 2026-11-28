@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:hmac-sha256-kotlin-portable",
+  "record_type": "implementation",
+  "name": "ABC research HMAC-SHA-256 in Kotlin",
+  "sources": [
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/kotlin/src/HmacSha256.kt"
+    },
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/kotlin/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hmac-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "e97ec0d091b8b397cb0d5912186c4973562411e2a66b80adfe15863da20999e5",
+  "path": "src/crypto/mac/hmac-sha256/impl/kotlin",
+  "languages": [
+    "kotlin"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC sha256 in Kotlin"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable kotlin research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision",
+  "spec_ref": "abc:specification:hmac-sha-256-rfc2104"
+}

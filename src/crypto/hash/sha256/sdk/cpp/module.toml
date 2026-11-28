@@ -1,0 +1,11 @@
+schema_version = 1
+id = "cpp-sdk"
+owned_paths = ["src/crypto/hash/sha256/sdk/cpp"]
+dependencies = [{ module = "c-sdk", type = "wraps" }]
+
+[tasks.consumer]
+kind = "test"
+command = ["python", "src/crypto/hash/sha256/sdk/c/package.py", "--sdk", "cpp", "--consumer", "--output", ".abc/cpp-sdk"]
+tools = ["python", "cargo", "rustc", "rustup"]
+outputs = ["archive-sha256.json"]
+timeout_seconds = 420

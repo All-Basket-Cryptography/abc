@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:hmac-sha256-c-portable",
+  "record_type": "implementation",
+  "name": "ABC research HMAC-SHA-256 in C",
+  "sources": [
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/c/abc_hmac_sha256_c.c"
+    },
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/c/README.md"
+    },
+    {
+      "path": "src/crypto/mac/hmac-sha256/impl/c/abc_hmac_sha256_c.h"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hmac-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "7bca8942c8dfa64ba51005cde1b3e7e06991aa3864d66138a474015e16363a2d",
+  "path": "src/crypto/mac/hmac-sha256/impl/c",
+  "languages": [
+    "c"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC sha256 in C"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable c research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision",
+  "spec_ref": "abc:specification:hmac-sha-256-rfc2104"
+}

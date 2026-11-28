@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:pbkdf2-hmac-sha256-javascript-portable",
+  "record_type": "implementation",
+  "name": "ABC research PBKDF2-HMAC-SHA-256 in JavaScript",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/javascript/pbkdf2.mjs"
+    },
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/javascript/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:pbkdf2-hmac-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "2ba560b134db9128ef07f5ae433487985761827fe2546e04bef459f955284b77",
+  "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/javascript",
+  "languages": [
+    "javascript"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC hmac-sha256 in JavaScript"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable javascript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

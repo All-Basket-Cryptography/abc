@@ -1,0 +1,11 @@
+schema_version = 1
+id = "sha256-python-portable"
+owned_paths = ["src/crypto/hash/sha256/impl/python"]
+dependencies = [{ module = "sha256-spec", type = "implements" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "-m", "unittest", "discover", "-s", "src/crypto/hash/sha256/impl/python", "-p", "test_sha256.py"]
+tools = ["python"]
+target = "portable"
+timeout_seconds = 120

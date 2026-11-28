@@ -1,0 +1,22 @@
+[package]
+name = "abc-c-ffi-fuzz"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+abc-c-ffi = { path = ".." }
+abc-sha256 = { path = "../../../../impl/rust" }
+libfuzzer-sys = "=0.4.13"
+
+[[bin]]
+name = "sha256_abi"
+path = "fuzz_targets/sha256_abi.rs"
+test = false
+doc = false
+bench = false
+
+[workspace]

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:scrypt-swift-portable",
+  "record_type": "implementation",
+  "name": "scrypt in Swift (ABC Swift research core)",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/scrypt/impl/swift/AbcScryptSwift/Sources/AbcScryptSwift/Scrypt.swift"
+    },
+    {
+      "path": "src/crypto/kdf/scrypt/impl/swift/README.md"
+    },
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/swift/AbcPbkdf2Sha256Swift/Sources/AbcPbkdf2Sha256Swift/Pbkdf2Sha256.swift"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:scrypt",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "667a2090cb951668a6142c4f3d2458a580cd5b96b473f8a5522c634547054ace",
+  "path": "src/crypto/kdf/scrypt/impl/swift",
+  "languages": [
+    "swift"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Swift PBKDF2-HMAC-SHA-256"
+  ],
+  "target_refs": [],
+  "provider": "ABC Swift research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

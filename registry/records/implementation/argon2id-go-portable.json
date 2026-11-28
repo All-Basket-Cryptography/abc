@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:argon2id-go-portable",
+  "record_type": "implementation",
+  "name": "ABC research Argon2id v1.3 in Go",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/argon2id/impl/go/argon2id.go"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/go/README.md"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/go/compress.go"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/go/matrix.go"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:argon2id",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "db6d032140fd9acce203bda6a4eefe316d351821628dfaec0eedfcde1eb50b93",
+  "path": "src/crypto/kdf/argon2id/impl/go",
+  "languages": [
+    "go"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Go BLAKE2b"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable Go research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

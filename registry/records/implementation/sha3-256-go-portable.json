@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha3-256-go-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHA3-256 in Go",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha3-256/impl/go/sha3_256.go"
+    },
+    {
+      "path": "src/crypto/hash/sha3-256/impl/go/README.md"
+    },
+    {
+      "path": "src/crypto/hash/keccak-p1600/impl/go/keccak.go"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha3-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "57437a0a1fe63c66490e88fec45d605e034d157e387a1d5f36a0b0ceed81b897",
+  "path": "src/crypto/hash/sha3-256/impl/go",
+  "languages": [
+    "go"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Go Keccak-p[1600,24]"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable Go research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

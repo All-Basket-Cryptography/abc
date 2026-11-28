@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "target": "x86_64-pc-windows-msvc",
+  "toolchain": "Rust 1.92.0",
+  "command": [
+    "cargo",
+    "+1.92.0",
+    "test",
+    "--quiet",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "tools/build/rust/Cargo.toml",
+    "-p",
+    "abc-sha3-256",
+    "--test",
+    "vectors"
+  ],
+  "input_sha256": {
+    "src/crypto/hash/sha3-256/impl/rust/src/lib.rs": "1e4e4aa525d822a112975386f1ac5d4b35078677e08ad5a594f59f660d0693bc",
+    "src/crypto/hash/sha3-256/impl/rust/tests/vectors.rs": "66ee3c6af3d43585988315fa6603f9c667ded252e36ed34845a4e52089921ca8",
+    "src/crypto/hash/keccak-p1600/impl/rust/src/lib.rs": "d38da0e66e9233f145cd94e39e07ad20f4727a5500229f521de477a0745a32d5",
+    "tools/build/rust/Cargo.lock": "db89c5302a8635616cd30b7ef3a5b44f9dcaa7a9db9f619cc65c88b9c172ea89"
+  },
+  "stdout": "\nrunning 3 tests\n...\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+  "observed_at": "2026-11-27T21:20:20Z"
+}

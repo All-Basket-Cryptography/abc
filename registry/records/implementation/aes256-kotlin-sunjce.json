@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-kotlin-sunjce",
+  "record_type": "implementation",
+  "name": "AES-256 in Kotlin (java.base SunJCE, tested via Oracle JDK 17.0.12+8-LTS-286 on Windows amd64)",
+  "sources": [
+    {
+      "path": "src/crypto/cipher/aes256/impl/kotlin/src/Aes256.kt"
+    },
+    {
+      "path": "src/crypto/cipher/aes256/impl/kotlin/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:aes-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "beaaa639c3f3b93b654563b74f9edc9973137b83cd8d67a231c93409b45540d3",
+  "path": "src/crypto/cipher/aes256/impl/kotlin",
+  "languages": [
+    "kotlin"
+  ],
+  "features": [],
+  "external_calls": [
+    "java.base/com.sun.crypto.provider.SunJCE"
+  ],
+  "target_refs": [],
+  "provider": "java.base SunJCE, tested via Oracle JDK 17.0.12+8-LTS-286 on Windows amd64",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

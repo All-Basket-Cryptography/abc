@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "id": "abc:finding:md5-collision-resistance",
+  "record_type": "finding",
+  "name": "MD5 collision resistance",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc6151.html",
+      "locator": "Section 2.1"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:md5",
+  "specification_version": "RFC 1321 (April 1992)",
+  "parameter_refs": [],
+  "scope": "Collision resistance of MD5",
+  "use_case": "Applications that rely on collision resistance, including digital signatures",
+  "attacker_model": "An attacker can choose inputs whose digests are compared.",
+  "resource_bound": "RFC 6151 summarizes published results. This catalog entry makes no independent quantitative resource claim.",
+  "published": "2011-03",
+  "literature_refs": [
+    "abc:literature:rfc-6151"
+  ]
+}

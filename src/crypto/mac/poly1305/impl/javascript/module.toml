@@ -1,0 +1,10 @@
+schema_version = 1
+id = "poly1305-javascript-portable"
+owned_paths = ["src/crypto/mac/poly1305/impl/javascript"]
+dependencies = [{ module = "crypto-byte-views-ecmascript", type = "calls" }]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/mac/poly1305/impl/javascript/poly1305.test.mjs"]
+tools = ["node"]
+timeout_seconds = 120

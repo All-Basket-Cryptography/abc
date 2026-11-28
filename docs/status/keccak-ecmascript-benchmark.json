@@ -1,0 +1,341 @@
+{
+  "node": "v24.12.0",
+  "openssl": "3.5.4",
+  "cpu": "12th Gen Intel(R) Core(TM) i7-12700K",
+  "platform": "win32",
+  "arch": "x64",
+  "units": "microseconds per operation",
+  "repetitions": 11,
+  "warmupCalls": 128,
+  "checksum": -669813760,
+  "baselineSources": {
+    "src/crypto/hash/keccak-p1600/impl/javascript/keccak.mjs": "b45bd035339b41d5ca579c5d94326eac68ed609d616d2a6e23eef31e53cf5b0d",
+    "src/crypto/hash/sha3-256/impl/javascript/sha3_256.mjs": "c32d70e743260e9551024b5dea9dceceff310523d52816e386b1f524332f63ec",
+    "src/crypto/hash/shake256/impl/javascript/shake256.mjs": "3e156d5a6508b1590e5588d0cd1885e0f3a2f7c8f0940dfb085e05d51450deb7",
+    "src/crypto/hash/keccak-p1600/impl/typescript/keccak.mts": "1a9287cddb1d12b0215f69dd6b276df1a48ab36ef3a6a394f064a7dbd7683e6f",
+    "src/crypto/hash/sha3-256/impl/typescript/sha3_256.mts": "a5812c355d7d3e744936b27d50f1a025f4aec19b9084a285061a954bcaf16994",
+    "src/crypto/hash/shake256/impl/typescript/shake256.mts": "7df6a4e8383f6ef0ee2fd46eb68120112992250a4336e404cde3966d619ac202"
+  },
+  "candidateSources": {
+    "src/crypto/hash/keccak-p1600/impl/javascript/keccak.mjs": "841eb57de1ed44604e962a21c67c32e7838f507cc0f26df60d155975311c3036",
+    "src/crypto/hash/sha3-256/impl/javascript/sha3_256.mjs": "c32d70e743260e9551024b5dea9dceceff310523d52816e386b1f524332f63ec",
+    "src/crypto/hash/shake256/impl/javascript/shake256.mjs": "3e156d5a6508b1590e5588d0cd1885e0f3a2f7c8f0940dfb085e05d51450deb7",
+    "src/crypto/hash/keccak-p1600/impl/typescript/keccak.mts": "9ac0f69f0e61835583ba3c9c93b6ae43d3cbab422b6a4e495a0ec5f1b46491cd",
+    "src/crypto/hash/sha3-256/impl/typescript/sha3_256.mts": "a5812c355d7d3e744936b27d50f1a025f4aec19b9084a285061a954bcaf16994",
+    "src/crypto/hash/shake256/impl/typescript/shake256.mts": "7df6a4e8383f6ef0ee2fd46eb68120112992250a4336e404cde3966d619ac202"
+  },
+  "byteViewSources": {
+    "src/crypto/inputs/bytes.mjs": "4a23f8fbf315016a64f238b68123b766f82d3f0b27e1f39206a451e80f599a49",
+    "src/crypto/inputs/bytes.mts": "f0129b276c34da1cb47b07bff479e2bba04938903fb158d87d5aee103738f82a"
+  },
+  "results": [
+    {
+      "language": "javascript",
+      "profile": "sha3-256",
+      "inputBytes": 64,
+      "outputBytes": 32,
+      "callsPerSample": 192,
+      "baseline": {
+        "median": 13.908333333333337,
+        "min": 12.403645833333272,
+        "max": 64.25052083333327
+      },
+      "candidate": {
+        "median": 13.186458333333354,
+        "min": 11.531770833333345,
+        "max": 19.21927083333334
+      }
+    },
+    {
+      "language": "javascript",
+      "profile": "sha3-256",
+      "inputBytes": 1024,
+      "outputBytes": 32,
+      "callsPerSample": 192,
+      "baseline": {
+        "median": 43.057812500000146,
+        "min": 41.44375,
+        "max": 44.067187500000195
+      },
+      "candidate": {
+        "median": 30.507812500000085,
+        "min": 29.64531250000002,
+        "max": 31.615624999999998
+      }
+    },
+    {
+      "language": "javascript",
+      "profile": "sha3-256",
+      "inputBytes": 16384,
+      "outputBytes": 32,
+      "callsPerSample": 48,
+      "baseline": {
+        "median": 595.8145833333338,
+        "min": 579.777083333333,
+        "max": 642.8270833333348
+      },
+      "candidate": {
+        "median": 407.71250000000003,
+        "min": 404.0791666666669,
+        "max": 435.7562499999995
+      }
+    },
+    {
+      "language": "javascript",
+      "profile": "shake256",
+      "inputBytes": 64,
+      "outputBytes": 32,
+      "callsPerSample": 192,
+      "baseline": {
+        "median": 7.452083333333211,
+        "min": 7.124479166666475,
+        "max": 8.789583333333203
+      },
+      "candidate": {
+        "median": 6.27656249999949,
+        "min": 6.047395833333506,
+        "max": 7.55885416666698
+      }
+    },
+    {
+      "language": "javascript",
+      "profile": "shake256",
+      "inputBytes": 1024,
+      "outputBytes": 32,
+      "callsPerSample": 192,
+      "baseline": {
+        "median": 41.11406250000016,
+        "min": 40.14114583333376,
+        "max": 42.20885416666557
+      },
+      "candidate": {
+        "median": 29.933854166666645,
+        "min": 29.106770833333684,
+        "max": 31.809895833333712
+      }
+    },
+    {
+      "language": "javascript",
+      "profile": "shake256",
+      "inputBytes": 16384,
+      "outputBytes": 32,
+      "callsPerSample": 48,
+      "baseline": {
+        "median": 581.8916666666686,
+        "min": 577.0354166666654,
+        "max": 591.8125000000032
+      },
+      "candidate": {
+        "median": 407.25625000000326,
+        "min": 401.31249999999835,
+        "max": 443.5770833333331
+      }
+    },
+    {
+      "language": "javascript",
+      "profile": "shake256",
+      "inputBytes": 64,
+      "outputBytes": 1536,
+      "callsPerSample": 192,
+      "baseline": {
+        "median": 62.5588541666661,
+        "min": 61.143749999999386,
+        "max": 83.77343749999966
+      },
+      "candidate": {
+        "median": 45.51562500000136,
+        "min": 44.58177083333226,
+        "max": 46.378124999999194
+      }
+    },
+    {
+      "language": "javascript",
+      "profile": "shake256",
+      "inputBytes": 1024,
+      "outputBytes": 1536,
+      "callsPerSample": 192,
+      "baseline": {
+        "median": 95.10156249999824,
+        "min": 94.43437500000111,
+        "max": 98.76822916666583
+      },
+      "candidate": {
+        "median": 68.5630208333355,
+        "min": 67.37500000000078,
+        "max": 70.5036458333339
+      }
+    },
+    {
+      "language": "javascript",
+      "profile": "shake256",
+      "inputBytes": 16384,
+      "outputBytes": 1536,
+      "callsPerSample": 48,
+      "baseline": {
+        "median": 639.8770833333268,
+        "min": 624.5708333333274,
+        "max": 655.8937499999994
+      },
+      "candidate": {
+        "median": 445.06041666666835,
+        "min": 433.34791666666206,
+        "max": 453.63541666666646
+      }
+    },
+    {
+      "language": "typescript",
+      "profile": "sha3-256",
+      "inputBytes": 64,
+      "outputBytes": 32,
+      "callsPerSample": 192,
+      "baseline": {
+        "median": 7.796354166664798,
+        "min": 7.320833333333591,
+        "max": 10.101562499999753
+      },
+      "candidate": {
+        "median": 6.722916666665431,
+        "min": 6.287499999999113,
+        "max": 10.865104166666603
+      }
+    },
+    {
+      "language": "typescript",
+      "profile": "sha3-256",
+      "inputBytes": 1024,
+      "outputBytes": 32,
+      "callsPerSample": 192,
+      "baseline": {
+        "median": 44.54166666666737,
+        "min": 43.67031250000034,
+        "max": 45.26249999999976
+      },
+      "candidate": {
+        "median": 33.25572916666649,
+        "min": 32.40000000000028,
+        "max": 34.241145833334485
+      }
+    },
+    {
+      "language": "typescript",
+      "profile": "sha3-256",
+      "inputBytes": 16384,
+      "outputBytes": 32,
+      "callsPerSample": 48,
+      "baseline": {
+        "median": 609.2645833333279,
+        "min": 594.368750000001,
+        "max": 666.4770833333383
+      },
+      "candidate": {
+        "median": 429.1979166666617,
+        "min": 418.0458333333282,
+        "max": 471.1583333333351
+      }
+    },
+    {
+      "language": "typescript",
+      "profile": "shake256",
+      "inputBytes": 64,
+      "outputBytes": 32,
+      "callsPerSample": 192,
+      "baseline": {
+        "median": 7.536979166668327,
+        "min": 7.034374999998742,
+        "max": 8.397395833332174
+      },
+      "candidate": {
+        "median": 6.742187499999848,
+        "min": 6.276041666671024,
+        "max": 8.579687499998082
+      }
+    },
+    {
+      "language": "typescript",
+      "profile": "shake256",
+      "inputBytes": 1024,
+      "outputBytes": 32,
+      "callsPerSample": 192,
+      "baseline": {
+        "median": 42.24479166667076,
+        "min": 41.242187500003524,
+        "max": 43.60885416666823
+      },
+      "candidate": {
+        "median": 31.18333333333112,
+        "min": 30.57864583333488,
+        "max": 32.524479166662935
+      }
+    },
+    {
+      "language": "typescript",
+      "profile": "shake256",
+      "inputBytes": 16384,
+      "outputBytes": 32,
+      "callsPerSample": 48,
+      "baseline": {
+        "median": 594.5312499999886,
+        "min": 589.6687500000061,
+        "max": 614.9895833333403
+      },
+      "candidate": {
+        "median": 424.38125000001037,
+        "min": 418.46458333333203,
+        "max": 436.57083333332974
+      }
+    },
+    {
+      "language": "typescript",
+      "profile": "shake256",
+      "inputBytes": 64,
+      "outputBytes": 1536,
+      "callsPerSample": 192,
+      "baseline": {
+        "median": 64.87968750000068,
+        "min": 63.28750000000127,
+        "max": 68.56666666666437
+      },
+      "candidate": {
+        "median": 48.022395833333086,
+        "min": 45.57708333333702,
+        "max": 50.834895833332894
+      }
+    },
+    {
+      "language": "typescript",
+      "profile": "shake256",
+      "inputBytes": 1024,
+      "outputBytes": 1536,
+      "callsPerSample": 192,
+      "baseline": {
+        "median": 96.96718749999889,
+        "min": 95.60624999999827,
+        "max": 99.12343750000237
+      },
+      "candidate": {
+        "median": 70.24947916666709,
+        "min": 68.72500000000059,
+        "max": 71.80000000000082
+      }
+    },
+    {
+      "language": "typescript",
+      "profile": "shake256",
+      "inputBytes": 16384,
+      "outputBytes": 1536,
+      "callsPerSample": 48,
+      "baseline": {
+        "median": 650.4812500000033,
+        "min": 645.8979166666646,
+        "max": 661.5479166666584
+      },
+      "candidate": {
+        "median": 460.4833333333242,
+        "min": 453.8999999999949,
+        "max": 463.24375000000373
+      }
+    }
+  ],
+  "baselineRevision": "ca58838234e7947c565871c76551d369b9b26e6b",
+  "runnerSha256": "424356dab91a98172782f08a7fd0c0f5714491d57cdfa454c54fea50de8839cd"
+}

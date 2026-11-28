@@ -1,0 +1,10 @@
+schema_version = 1
+id = "portable-aead-compatibility"
+owned_paths = ["tools/compatibility/portable-aead"]
+cargo_manifests = ["tools/compatibility/portable-aead/Cargo.toml"]
+
+[tasks.oracle]
+kind = "test"
+command = ["node", "tools/compatibility/portable-aead/check.mjs"]
+tools = ["node", "cargo", "rustc", "rustup"]
+timeout_seconds = 120

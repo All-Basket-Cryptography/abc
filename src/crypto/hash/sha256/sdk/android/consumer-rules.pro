@@ -1,0 +1,1 @@
+-keepclasseswithmembers,includedescriptorclasses class org.allbasket.abc.Sha256 { native <methods>; }

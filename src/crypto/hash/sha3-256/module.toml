@@ -1,0 +1,10 @@
+schema_version = 1
+id = "sha3-256"
+owned_paths = ["src/crypto/hash/sha3-256"]
+cargo_manifests = ["src/crypto/hash/sha3-256/impl/rust/Cargo.toml"]
+
+[tasks.test]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "tools/build/rust/Cargo.toml", "--locked", "--offline", "-p", "abc-sha3-256"]
+tools = ["cargo", "rustc", "rustup"]
+timeout_seconds = 120

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ecdsa-p256-sha256-csharp-provider",
+  "record_type": "implementation",
+  "name": "ECDSA P-256 in C# (Bouncy Castle .NET 2.7.0)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/csharp/EcdsaP256Sha256.cs"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/csharp/README.md"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/csharp/packages.lock.json"
+    },
+    {
+      "path": "src/crypto/providers/csharp/provider.toml"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ecdsa-p256-sha256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "e2ebafc8e5b01d9cc67371aaa0fe2a33e6162972098e5d92c781ef36793bb05b",
+  "path": "src/crypto/signature/ecdsa-p256-sha256/impl/csharp",
+  "languages": [
+    "csharp"
+  ],
+  "features": [],
+  "external_calls": [
+    "Bouncy Castle .NET 2.7.0"
+  ],
+  "target_refs": [],
+  "provider": "Bouncy Castle .NET 2.7.0",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha3-256-swift-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHA3-256 in Swift",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha3-256/impl/swift/AbcSha3256Swift/Sources/AbcSha3256Swift/Sha3256.swift"
+    },
+    {
+      "path": "src/crypto/hash/sha3-256/impl/swift/README.md"
+    },
+    {
+      "path": "src/crypto/hash/keccak-p1600/impl/swift/AbcKeccakP1600Swift/Sources/AbcKeccakP1600Swift/KeccakP1600.swift"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha3-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "17eb2dabde68f97151e4cb795709b75e8e064c2fbfd6eb1730221ce44d38129f",
+  "path": "src/crypto/hash/sha3-256/impl/swift",
+  "languages": [
+    "swift"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Swift Keccak-p[1600,24]"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable Swift research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

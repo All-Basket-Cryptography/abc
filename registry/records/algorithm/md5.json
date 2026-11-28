@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "id": "abc:algorithm:md5",
+  "record_type": "algorithm",
+  "name": "MD5",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc1321.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "hash-xof",
+  "family_ref": "abc:family:md",
+  "catalog_state": "archived",
+  "lifecycle": "broken",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [],
+  "literature_refs": [
+    "abc:literature:rfc-1321",
+    "abc:literature:rfc-6151"
+  ],
+  "standard_refs": [],
+  "finding_refs": [
+    "abc:finding:md5-collision-resistance"
+  ],
+  "use_cases": [
+    "Historical interoperability research"
+  ],
+  "limitations": [
+    "Collision resistance has failed. RFC 6151 excludes use where collision resistance is required."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified"
+}

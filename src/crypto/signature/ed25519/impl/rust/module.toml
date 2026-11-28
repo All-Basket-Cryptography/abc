@@ -1,0 +1,11 @@
+schema_version = 1
+id = "ed25519-rust"
+owned_paths = ["src/crypto/signature/ed25519/impl/rust"]
+cargo_manifests = ["src/crypto/signature/ed25519/impl/rust/Cargo.toml"]
+
+[tasks.test]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "src/crypto/signature/ed25519/impl/rust/Cargo.toml", "--locked", "--offline"]
+tools = ["cargo", "rustc", "rustup"]
+target = "native"
+timeout_seconds = 180

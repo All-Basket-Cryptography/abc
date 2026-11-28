@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "id": "abc:literature:curve25519-bernstein-2006",
+  "record_type": "literature",
+  "name": "Curve25519: New Diffie-Hellman Speed Records",
+  "sources": [
+    {
+      "url": "https://iacr.org/cryptodb/archive/2006/PKC/3351/3351.pdf"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "PKC 2006",
+  "authors": [
+    "D. J. Bernstein"
+  ],
+  "publisher": "Springer",
+  "published": "2006",
+  "accessed": "2026-11-28",
+  "license": "See publisher rights information.",
+  "redistribution": "link-only",
+  "sections": [],
+  "errata_urls": [],
+  "citation_refs": [],
+  "doi": "10.1007/11745853_14"
+}

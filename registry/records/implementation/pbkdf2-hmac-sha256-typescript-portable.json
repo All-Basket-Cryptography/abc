@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:pbkdf2-hmac-sha256-typescript-portable",
+  "record_type": "implementation",
+  "name": "ABC research PBKDF2-HMAC-SHA-256 in TypeScript",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/typescript/pbkdf2.mts"
+    },
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/typescript/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:pbkdf2-hmac-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "0f3fcb45671066b6185be4f0166fbdfe3125f82f56a689618f684aa13f223982",
+  "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/typescript",
+  "languages": [
+    "typescript"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC hmac-sha256 in TypeScript"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable typescript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

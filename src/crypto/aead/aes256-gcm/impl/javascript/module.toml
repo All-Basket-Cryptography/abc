@@ -1,0 +1,14 @@
+schema_version = 1
+id = "aes256-gcm-javascript-portable"
+owned_paths = ["src/crypto/aead/aes256-gcm/impl/javascript"]
+dependencies = [
+  { module = "crypto-byte-views-ecmascript", type = "calls" },
+  { module = "aes256-javascript-portable", type = "calls" },
+]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/aead/aes256-gcm/impl/javascript/aes256gcm.test.mjs"]
+tools = ["node"]
+target = "node24"
+timeout_seconds = 120

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ecdsa-p256-sha256-cpp-provider",
+  "record_type": "implementation",
+  "name": "ECDSA P-256 in C++ (OpenSSL 3.5.4)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/cpp/ecdsa_p256_sha256.cpp"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/cpp/README.md"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/c/abc_ecdsa_p256_sha256_c.c"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/c/ecdsa_p256_nonce.c"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ecdsa-p256-sha256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "8b3d09202e83740493ac787c09ce2fd5203924c3a3498892f96e7eb92ab3ba7c",
+  "path": "src/crypto/signature/ecdsa-p256-sha256/impl/cpp",
+  "languages": [
+    "cpp"
+  ],
+  "features": [],
+  "external_calls": [
+    "OpenSSL 3.5.4"
+  ],
+  "target_refs": [],
+  "provider": "OpenSSL 3.5.4",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

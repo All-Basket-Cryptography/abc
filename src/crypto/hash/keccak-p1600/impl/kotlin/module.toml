@@ -1,0 +1,12 @@
+schema_version = 1
+id = "keccak-p1600-kotlin-portable"
+owned_paths = ["src/crypto/hash/keccak-p1600/impl/kotlin"]
+shared_inputs = ["src/crypto/hash/keccak-p1600/impl/java/check.py"]
+dependencies = [{ module = "keccak-p1600-spec", type = "implements" }]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/hash/keccak-p1600/impl/java/check.py", "--language", "kotlin", "--algorithm", "keccak-p1600"]
+tools = ["python","java"]
+target = "kotlin-jvm-jdk17"
+timeout_seconds = 240

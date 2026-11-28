@@ -1,0 +1,14 @@
+schema_version = 1
+id = "ml-kem-768-javascript-provider"
+owned_paths = ["src/crypto/agreement/ml-kem-768/impl/javascript"]
+dependencies = [
+  { module = "crypto-byte-views-ecmascript", type = "calls" },
+  { module = "crypto-providers-ecmascript", type = "calls" },
+]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/agreement/ml-kem-768/impl/javascript/ml_kem_768.test.mjs"]
+tools = ["node"]
+target = "node24"
+timeout_seconds = 120

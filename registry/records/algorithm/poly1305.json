@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:algorithm:poly1305",
+  "record_type": "algorithm",
+  "name": "Poly1305",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc8439.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "mac-prf",
+  "family_ref": "abc:family:poly1305",
+  "catalog_state": "indexed",
+  "lifecycle": "established",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [],
+  "literature_refs": [
+    "abc:literature:rfc-8439"
+  ],
+  "standard_refs": [],
+  "finding_refs": [],
+  "use_cases": [
+    "Poly1305 one-time authenticator"
+  ],
+  "limitations": [
+    "One-time authenticators require distinct keys."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified"
+}

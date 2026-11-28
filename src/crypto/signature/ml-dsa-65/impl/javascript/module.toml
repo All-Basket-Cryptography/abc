@@ -1,0 +1,14 @@
+schema_version = 1
+id = "ml-dsa-65-javascript-provider"
+owned_paths = ["src/crypto/signature/ml-dsa-65/impl/javascript"]
+dependencies = [
+  { module = "crypto-byte-views-ecmascript", type = "calls" },
+  { module = "crypto-providers-ecmascript", type = "calls" },
+]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/signature/ml-dsa-65/impl/javascript/ml_dsa_65.test.mjs"]
+tools = ["node"]
+target = "node24"
+timeout_seconds = 120

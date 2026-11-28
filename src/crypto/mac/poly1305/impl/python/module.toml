@@ -1,0 +1,10 @@
+schema_version = 1
+id = "poly1305-python-portable"
+owned_paths = ["src/crypto/mac/poly1305/impl/python"]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "-m", "unittest", "discover", "-s", "src/crypto/mac/poly1305/impl/python", "-p", "test_poly1305.py"]
+tools = ["python", "node"]
+target = "portable"
+timeout_seconds = 120

@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "id": "abc:standard:rfc-4231",
+  "record_type": "standard",
+  "name": "Identifiers and Test Vectors for HMAC-SHA-224, HMAC-SHA-256, HMAC-SHA-384, and HMAC-SHA-512",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc4231.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "RFC 4231",
+  "authors": [
+    "M. Nystrom"
+  ],
+  "publisher": "RFC Editor",
+  "published": "2005-12",
+  "accessed": "2026-11-28",
+  "license": "See the RFC's copyright notice and applicable RFC publication terms.",
+  "redistribution": "link-only",
+  "sections": [
+    "Section 4"
+  ],
+  "errata_urls": [],
+  "citation_refs": [
+    "abc:literature:rfc-2104"
+  ],
+  "doi": "10.17487/RFC4231"
+}

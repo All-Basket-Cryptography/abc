@@ -1,0 +1,10 @@
+schema_version = 1
+id = "ml-kem-768-go"
+owned_paths = ["src/crypto/agreement/ml-kem-768/impl/go"]
+shared_inputs = ["src/crypto/agreement/ml-kem-768/spec/acvp.json"]
+
+[tasks.test]
+kind = "test"
+command = ["go", "test", "-C", "src/crypto/agreement/ml-kem-768/impl/go", "-count=1", "./..."]
+tools = ["go", "node"]
+timeout_seconds = 120

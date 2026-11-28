@@ -1,0 +1,11 @@
+schema_version = 1
+id = "aes256-gcm-go-portable"
+owned_paths = ["src/crypto/aead/aes256-gcm/impl/go"]
+dependencies = [{ module = "aes256-go-portable", type = "calls" }]
+
+[tasks.test]
+kind = "test"
+command = ["go", "test", "-C", "src/crypto/aead/aes256-gcm/impl/go", "-count=1", "./..."]
+tools = ["go"]
+target = "portable"
+timeout_seconds = 120

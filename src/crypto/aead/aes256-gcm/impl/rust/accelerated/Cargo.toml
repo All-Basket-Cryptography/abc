@@ -1,0 +1,15 @@
+[package]
+name = "abc-aes256-gcm-accelerated"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+description = "Research AES-256-GCM profile backed by the native RustCrypto provider"
+
+[workspace]
+
+[dependencies]
+aes-gcm = { version = "=0.11.1", default-features = false, features = ["aes", "zeroize"] }
+
+[dev-dependencies]
+abc-aes256-gcm = { path = ".." }

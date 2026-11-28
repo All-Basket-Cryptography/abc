@@ -1,0 +1,18 @@
+schema_version = 1
+id = "chacha20-poly1305-java-portable"
+owned_paths = ["src/crypto/aead/chacha20-poly1305/impl/java"]
+dependencies = [{ module = "chacha20-java-portable", type = "calls" }, { module = "poly1305-java-portable", type = "calls" }, { module = "chacha20-poly1305-rust", type = "implements" }]
+lean_sources = { ChaCha20Poly1305JavaBounds = "src/crypto/aead/chacha20-poly1305/impl/java" }
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/aead/chacha20-poly1305/impl/java/check.py"]
+tools = ["python", "java", "javac", "jar", "node"]
+target = "jvm-jdk17"
+timeout_seconds = 180
+
+[tasks.transcript-bounds]
+kind = "formal"
+command = ["lean", "-DwarningAsError=true", "src/crypto/aead/chacha20-poly1305/impl/java/ChaCha20Poly1305JavaBounds.lean"]
+tools = ["lean"]
+timeout_seconds = 60

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "lean": {
+    "profile": "kernel-only",
+    "allowed_axioms": ["Classical.choice", "Quot.sound", "propext"],
+    "reject_transitive_axioms_outside_allowlist": true,
+    "require_expected_statement": true,
+    "require_reextraction": true
+  },
+  "execution": {
+    "required_gate": "abc-required",
+    "domains": ["local", "untrusted-pr", "reviewed-main", "release"],
+    "local_receipt_consumers": ["local"],
+    "pr_receipt_consumers": ["untrusted-pr"],
+    "production_approved_profiles": []
+  }
+}

@@ -1,0 +1,11 @@
+schema_version = 1
+id = "hmac-sha256-typescript-portable"
+owned_paths = ["src/crypto/mac/hmac-sha256/impl/typescript"]
+dependencies = [{ module = "crypto-byte-views-ecmascript", type = "calls" }, { module = "sha256-typescript-portable", type = "imports" }]
+
+[tasks.test]
+kind = "test"
+command = ["node","--test","src/crypto/mac/hmac-sha256/impl/typescript/hmac.test.mts"]
+tools = ["node"]
+target = "portable"
+timeout_seconds = 120

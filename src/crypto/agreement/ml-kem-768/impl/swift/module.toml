@@ -1,0 +1,11 @@
+schema_version = 1
+id = "ml-kem-768-swift-provider"
+owned_paths = ["src/crypto/agreement/ml-kem-768/impl/swift"]
+shared_inputs = ["src/crypto/agreement/x25519/impl/swift/check.py","src/crypto/agreement/x25519/impl/swift/tests/Support.swift","src/crypto/agreement/ml-kem-768/impl/swift/tests/oracle.go","src/crypto/agreement/ml-kem-768/spec/acvp.json","src/crypto/kdf/argon2id/impl/swift/check.py"]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/kdf/argon2id/impl/swift/check.py", "ml-kem-768"]
+tools = ["python","swift","pkg-config","go"]
+target = "macos-arm64"
+timeout_seconds = 360

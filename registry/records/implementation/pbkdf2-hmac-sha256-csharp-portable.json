@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:pbkdf2-hmac-sha256-csharp-portable",
+  "record_type": "implementation",
+  "name": "ABC research PBKDF2-HMAC-SHA-256 in C#",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/csharp/Pbkdf2Sha256.cs"
+    },
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/csharp/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:pbkdf2-hmac-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "3a9f7b87b3d97ecdb76287bf4b6a1cd9adbb82e1ff532320f5bb080e49a8e095",
+  "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/csharp",
+  "languages": [
+    "csharp"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC hmac-sha256 in C#"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable csharp research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

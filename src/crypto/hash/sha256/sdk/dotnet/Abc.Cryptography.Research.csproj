@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PackageId>Abc.Cryptography.Research</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>All-Basket Cryptography</Authors>
+    <Description>ABC research SHA-256 binding for Windows x64.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="consumer/**" />
+    <None Include="README.md" Pack="true" PackagePath="/" />
+    <None Include="$(AbcNativeLibrary)" Pack="true" PackagePath="runtimes/win-x64/native/abc_crypto.dll" Condition="'$(AbcNativeLibrary)' != ''" />
+  </ItemGroup>
+  <Target Name="RequireNativeLibraryForPackage" BeforeTargets="GenerateNuspec">
+    <Error Condition="!Exists('$(AbcNativeLibrary)')" Text="Packaging requires AbcNativeLibrary to reference the built Windows x64 ABC C ABI library." />
+  </Target>
+</Project>

@@ -1,0 +1,35 @@
+Command: cargo +1.92.0 test --locked --offline -p abc-sha3-256
+Observed UTC: 2026-11-27T16:51:28Z
+lib.rs SHA-256: a9f17e6328802d5487d9dd7b93d38678d429704c38991b9a4a974a7b3e036451
+vectors.rs SHA-256: 66ee3c6af3d43585988315fa6603f9c667ded252e36ed34845a4e52089921ca8
+Cargo.lock SHA-256 at execution: 677c7a79f121cd816f7ecba1cec3ca390b10109c971abb3c3724c7e52ff4c9a4
+rustc 1.92.0 (ded5c06cf 2025-12-08)
+binary: rustc
+commit-hash: ded5c06cf21d2b93bffd5d884aa6e96934ee4234
+commit-date: 2025-12-08
+host: x86_64-pc-windows-msvc
+release: 1.92.0
+LLVM version: 21.1.3
+
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src\lib.rs (target\debug\deps\abc_sha3_256-63579e9ee5dfaafc.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\vectors.rs (target\debug\deps\vectors-38442c50cfe1da5e.exe)
+
+running 3 tests
+test fips_202_domain_separator ... ok
+test nist_byte_aligned_examples ... ok
+test independently_computed_rate_boundaries ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests abc_sha3_256
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

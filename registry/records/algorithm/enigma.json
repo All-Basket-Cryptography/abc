@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "abc:algorithm:enigma",
+  "record_type": "algorithm",
+  "name": "Enigma",
+  "sources": [
+    {
+      "url": "https://www.nsa.gov/History/National-Cryptologic-Museum/Exhibits-Artifacts/Exhibit-View/Article/2719176/world-war-2-enigma/"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "classical",
+  "family_ref": "abc:family:rotor-machine",
+  "catalog_state": "archived",
+  "lifecycle": "historical",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [],
+  "literature_refs": [
+    "abc:literature:nsa-enigma-exhibit"
+  ],
+  "standard_refs": [],
+  "finding_refs": [],
+  "use_cases": [
+    "History of mechanical cryptography"
+  ],
+  "limitations": [
+    "Historical record for study of the Enigma family. Individual machine configurations are outside this entry."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified"
+}

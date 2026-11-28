@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:aes256-gcm-csharp-dotnet",
+  "record_type": "implementation",
+  "name": "AES-256-GCM in C# (System.Security.Cryptography, tested on .NET 10.0.15 Windows x64)",
+  "sources": [
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/csharp/Aes256GcmCipher.cs"
+    },
+    {
+      "path": "src/crypto/aead/aes256-gcm/impl/csharp/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:aes-256-gcm",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "7623cf9f92b9b808f572bdc35a7b29c9e3c14e3914d76c45028eb00545b66200",
+  "path": "src/crypto/aead/aes256-gcm/impl/csharp",
+  "languages": [
+    "csharp"
+  ],
+  "features": [],
+  "external_calls": [
+    "System.Security.Cryptography"
+  ],
+  "target_refs": [],
+  "provider": "System.Security.Cryptography, tested on .NET 10.0.15 Windows x64",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

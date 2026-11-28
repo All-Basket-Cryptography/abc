@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:argon2id-kotlin-provider",
+  "record_type": "implementation",
+  "name": "Argon2id in Kotlin (Bouncy Castle Java 1.87)",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/argon2id/impl/kotlin/src/Argon2id.kt"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/kotlin/README.md"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/java/bcprov.toml"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:argon2id",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "d807b14a0825bce9cc3c3121b2acd26e967a415f87e9d6db51c4391bf1922b8f",
+  "path": "src/crypto/kdf/argon2id/impl/kotlin",
+  "languages": [
+    "kotlin"
+  ],
+  "features": [],
+  "external_calls": [
+    "Bouncy Castle Java 1.87"
+  ],
+  "target_refs": [],
+  "provider": "Bouncy Castle Java 1.87",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

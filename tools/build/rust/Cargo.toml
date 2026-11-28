@@ -1,0 +1,24 @@
+[workspace]
+members = [
+    "../../../src/crypto/aead/aes256-gcm/impl/rust",
+    "../../../src/crypto/aead/chacha20-poly1305/impl/rust",
+    "../../../src/crypto/agreement/x25519/impl/rust",
+    "../../../src/crypto/cipher/aes256/impl/rust",
+    "../../../src/crypto/cipher/chacha20/impl/rust",
+    "../../../src/crypto/hash/blake2b/impl/rust",
+    "../../../src/crypto/hash/sha256/impl/rust",
+    "../../../src/crypto/hash/sha512/impl/rust",
+    "../../../src/crypto/hash/sha3-256/impl/rust",
+    "../../../src/crypto/hash/keccak-p1600/impl/rust",
+    "../../../src/crypto/hash/shake256/impl/rust",
+    "../../../src/crypto/mac/hmac-sha256/impl/rust",
+    "../../../src/crypto/mac/poly1305/impl/rust",
+    "../../../src/crypto/kdf/argon2id/impl/rust",
+    "../../../src/crypto/kdf/hkdf-sha256/impl/rust",
+    "../../../src/crypto/kdf/pbkdf2-hmac-sha256/impl/rust",
+    "../../../src/crypto/kdf/scrypt/impl/rust",
+    "../../../src/crypto/hash/sha256/sdk/c/ffi",
+    "../../../src/crypto/hash/sha256/sdk/npm/wasm",
+    "../../../src/crypto/hash/sha256/sdk/wasi",
+]
+resolver = "2"

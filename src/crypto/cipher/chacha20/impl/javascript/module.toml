@@ -1,0 +1,10 @@
+schema_version = 1
+id = "chacha20-javascript-portable"
+owned_paths = ["src/crypto/cipher/chacha20/impl/javascript"]
+dependencies = [{ module = "crypto-byte-views-ecmascript", type = "calls" }]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/cipher/chacha20/impl/javascript/chacha20.test.mjs"]
+tools = ["node"]
+timeout_seconds = 120

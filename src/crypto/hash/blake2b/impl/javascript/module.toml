@@ -1,0 +1,11 @@
+schema_version = 1
+id = "blake2b-javascript-portable"
+owned_paths = ["src/crypto/hash/blake2b/impl/javascript"]
+dependencies = [{ module = "blake2b", type = "implements" }, { module = "crypto-byte-views-ecmascript", type = "calls" }]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/hash/blake2b/impl/javascript/blake2b.test.mjs"]
+tools = ["node", "python"]
+target = "node24"
+timeout_seconds = 120

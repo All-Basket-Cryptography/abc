@@ -1,0 +1,11 @@
+schema_version = 1
+id = "aes256-gcm-python-portable"
+owned_paths = ["src/crypto/aead/aes256-gcm/impl/python"]
+dependencies = [{ module = "aes256-python-portable", type = "imports" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "-m", "unittest", "discover", "-s", "src/crypto/aead/aes256-gcm/impl/python", "-p", "test_aes256gcm.py"]
+tools = ["python", "node"]
+target = "portable"
+timeout_seconds = 120

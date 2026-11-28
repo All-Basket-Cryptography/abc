@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:hmac",
+  "record_type": "family",
+  "name": "HMAC",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc2104.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "mac-prf",
+  "description": "Keyed message authentication constructions instantiated with a hash function."
+}

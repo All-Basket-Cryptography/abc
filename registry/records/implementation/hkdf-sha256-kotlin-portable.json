@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:hkdf-sha256-kotlin-portable",
+  "record_type": "implementation",
+  "name": "ABC research HKDF-SHA-256 in Kotlin",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/hkdf-sha256/impl/kotlin/src/HkdfSha256.kt"
+    },
+    {
+      "path": "src/crypto/kdf/hkdf-sha256/impl/kotlin/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hkdf-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "c70d9a2d5d46e20abdb4db45d857d62f7c9be93e9ada9c69e3995ee1a5ea4137",
+  "path": "src/crypto/kdf/hkdf-sha256/impl/kotlin",
+  "languages": [
+    "kotlin"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC hmac-sha256 in Kotlin"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable kotlin research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision",
+  "spec_ref": "abc:specification:hkdf-sha-256-rfc5869"
+}

@@ -1,0 +1,14 @@
+schema_version = 1
+id = "ecdsa-p256-sha256-typescript-provider"
+owned_paths = ["src/crypto/signature/ecdsa-p256-sha256/impl/typescript"]
+dependencies = [
+  { module = "crypto-byte-views-ecmascript", type = "calls" },
+  { module = "crypto-providers-ecmascript", type = "calls" },
+]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/signature/ecdsa-p256-sha256/impl/typescript/ecdsa_p256.test.mts"]
+tools = ["node"]
+target = "node24"
+timeout_seconds = 120

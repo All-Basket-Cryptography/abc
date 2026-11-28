@@ -1,0 +1,18 @@
+schema_version = 1
+id = "scrypt-java-portable"
+owned_paths = ["src/crypto/kdf/scrypt/impl/java"]
+dependencies = [{ module = "pbkdf2-hmac-sha256-java-portable", type = "calls" }, { module = "scrypt-rust", type = "implements" }]
+lean_sources = { ScryptJvmBounds = "src/crypto/kdf/scrypt/impl/java" }
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/kdf/scrypt/impl/java/check.py", "--language", "java"]
+tools = ["python", "java", "javac", "jar"]
+target = "jvm-jdk17"
+timeout_seconds = 240
+
+[tasks.workspace-model]
+kind = "formal"
+command = ["lean", "-DwarningAsError=true", "src/crypto/kdf/scrypt/impl/java/ScryptJvmBounds.lean"]
+tools = ["lean"]
+timeout_seconds = 60

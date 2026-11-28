@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:poly1305",
+  "record_type": "family",
+  "name": "Poly1305",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc8439.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "mac-prf",
+  "description": "Poly1305 one-time authenticator"
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:go-1-27-4-ml-dsa-65",
+  "record_type": "implementation",
+  "name": "Go standard library ML-DSA-65",
+  "sources": [
+    {
+      "url": "https://github.com/golang/go/blob/go1.27.4/src/crypto/internal/fips140/mldsa/mldsa.go"
+    },
+    {
+      "url": "https://github.com/golang/go/blob/go1.27.4/src/crypto/mldsa/mldsa.go"
+    },
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/go/ml_dsa_65.go"
+    },
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/go/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-dsa",
+  "origin": "upstream",
+  "revision": "go1.27.4",
+  "source_sha256": "86a276d8d4f866b45e244d6e5bb3c75ad9b5f27e24e11b2fb3d86bd051d31f80",
+  "path": "src/crypto/signature/ml-dsa-65/impl/go",
+  "languages": [
+    "go"
+  ],
+  "features": [],
+  "external_calls": [],
+  "target_refs": [],
+  "provider": "Go standard library",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "BSD-3-Clause"
+}

@@ -1,0 +1,210 @@
+{
+  "status": "poly1305_source_refinement_checked",
+  "extractionRevision": "ccd5d606569852b6572f9be6cbd14821511c6a9e",
+  "target": "x86_64-unknown-linux-gnu",
+  "model": {
+    "Abc/Poly1305/Extracted/Funs.lean": "1200cc9a635c9e3c68c8223b201f0c2dad0f21241cfa5ec4a5fef4fd71f5694a",
+    "Abc/Poly1305/Extracted/Types.lean": "89c5783f94c3bbf2d8ff0714f730e875e3204628ece89f9ef2f277277a374a19"
+  },
+  "theorems": [
+    "Abc.Refine.Poly1305.Encoding.source_limbs_refines",
+    "Abc.Refine.Poly1305.source_carry_pair_refines",
+    "Abc.Refine.Poly1305.source_carry_upper_refines",
+    "Abc.Refine.Poly1305.source_carry_refines",
+    "Abc.Refine.Poly1305.source_final_carry_refines",
+    "Abc.Refine.Poly1305.source_reduce_final_refines",
+    "Abc.Refine.Poly1305.source_pack_low128_refines",
+    "Abc.Refine.Poly1305.source_key_multiples_refines",
+    "Abc.Refine.Poly1305.source_multiply_refines",
+    "Abc.Refine.Poly1305.source_absorb_limbs_refines",
+    "Abc.Refine.Poly1305.source_absorb_polynomial_step",
+    "Abc.Refine.Poly1305.Bytes.source_limbs_columns",
+    "Abc.Refine.Poly1305.Bytes.source_load_block_refines",
+    "Abc.Refine.Poly1305.Bytes.source_clamped_key_refines",
+    "Abc.Refine.Poly1305.Bytes.source_absorb_encoded_refines",
+    "Abc.Refine.Poly1305.Bytes.source_absorb_full_block_refines",
+    "Abc.Refine.Poly1305.Bytes.source_absorb_padded_final_block_refines",
+    "Abc.Refine.Poly1305.Final.source_add_pad_and_serialize_refines",
+    "Abc.Refine.Poly1305.Final.source_finish_tag_refines",
+    "Abc.Refine.Poly1305.Final.source_finish_tag_value",
+    "Abc.Refine.Poly1305.Api.source_split_key_refines",
+    "Abc.Refine.Poly1305.Api.source_new_refines",
+    "Abc.Refine.Poly1305.Api.source_encode_partial_refines",
+    "Abc.Refine.Poly1305.Api.source_finalize_refines",
+    "Abc.Refine.Poly1305.Stream.blocks_append",
+    "Abc.Refine.Poly1305.Stream.source_copy_pending_refines",
+    "Abc.Refine.Poly1305.Stream.source_absorb_blocks_refines",
+    "Abc.Refine.Poly1305.Stream.source_update_refines",
+    "Abc.Refine.Poly1305.Stream.source_authenticate_refines"
+  ],
+  "proofFiles": {
+    "Poly1305EncodingRefinement": "e60ae0dbe1ebc902b5ab826006adb161c2bd96fdf8aaefca98cdb099b0306685",
+    "Poly1305SourceRefinement": "b4c580b6fb268ff84b44f54e8401190f191b963b588c90f02f8c4fd314a4b8e5",
+    "Poly1305ByteRefinement": "0d36f77516e18120188b61b48e2f24aee44f86d2fc84760b81d0aa3ba309db44",
+    "Poly1305FinalRefinement": "c2c01c166fd259169274965bdddd756ab42c6ce1ebceb006c8a20826410816cd",
+    "Poly1305ApiRefinement": "af5f52ab49d1a7b9acfc8e0d99fc19b25d3eece2a399f01fd491917059b413df",
+    "Poly1305StreamRefinement": "00d4c98cfbdaebfd5ed3d23fbc5aaf383970cd682a81c9eceba32437797802ed"
+  },
+  "extractionInputDigests": {
+    "tools/verification/probe/toolchain-candidate.json": "6953b42492bff08a40479725fec7ce922002bfdbe715afcaedf4f817f7621249",
+    "tools/build/rust/Cargo.toml": "9e8dd7579ad780836ce80f3a00639b171926d3435e15e3eb274c4fd67eb0d8f4",
+    "tools/build/rust/Cargo.lock": "a3ee8405943bef38fef4f8127d96032013d10bc082ae0cb6ff9ccbd855178b5c",
+    "src/crypto/mac/poly1305/impl/rust/src/lib.rs": "7e5e177c5c72f6652e3b583515e2d8e309985677c841a73fb0a89a390ddcdc04",
+    "src/crypto/mac/poly1305/impl/rust/Cargo.toml": "58c0d2fafe8cb28f8d873007c7257c72c35d407ff015457692a19cb509fd0ebc",
+    "tools/verification/poly1305/check.mjs": "3f7815b97b835cd9dbda285d179610fc90b72ba3e94cd962601a605ea87944b7"
+  },
+  "sourceProofAxioms": {
+    "Abc.Refine.Poly1305.Encoding.source_limbs_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.source_carry_pair_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.source_carry_upper_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.source_carry_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.source_final_carry_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.source_reduce_final_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.source_pack_low128_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.source_key_multiples_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.source_multiply_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.source_absorb_limbs_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.source_absorb_polynomial_step": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Bytes.source_limbs_columns": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Bytes.source_load_block_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Bytes.source_clamped_key_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Bytes.source_absorb_encoded_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Bytes.source_absorb_full_block_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Bytes.source_absorb_padded_final_block_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Final.source_add_pad_and_serialize_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Final.source_finish_tag_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Final.source_finish_tag_value": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Api.source_split_key_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Api.source_new_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Api.source_encode_partial_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Api.source_finalize_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Stream.blocks_append": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Stream.source_copy_pending_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Stream.source_absorb_blocks_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Stream.source_update_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Stream.source_authenticate_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "otherReplayInputDigests": {
+    "src/lean/Abc/Foundation/Encoding.lean": "1e4e51f3430cd6262cabedc9b6a7db80bb8e6f2a4f12af64a842f5e4ef7c32e9",
+    "src/crypto/mac/poly1305/impl/go/Poly1305GoModel.lean": "cc896150363f5b5358117715127ecbff241d703a9c680682c4799b68c3fa7fa9",
+    "tools/verification/poly1305/replay.mjs": "96c5e986dc5b7ff666f907c83da30163c46a0d22fe9b49db28cfd5391bbd6c92"
+  },
+  "lean": "Lean (version 4.31.0, x86_64-unknown-linux-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)",
+  "extractionRun": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46109346571"
+}

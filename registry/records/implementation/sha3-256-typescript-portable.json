@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:sha3-256-typescript-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHA3-256 in TypeScript",
+  "sources": [
+    {
+      "path": "src/crypto/hash/sha3-256/impl/typescript/sha3_256.mts"
+    },
+    {
+      "path": "src/crypto/hash/sha3-256/impl/typescript/README.md"
+    },
+    {
+      "path": "src/crypto/hash/keccak-p1600/impl/typescript/keccak.mts"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:sha3-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "a5812c355d7d3e744936b27d50f1a025f4aec19b9084a285061a954bcaf16994",
+  "path": "src/crypto/hash/sha3-256/impl/typescript",
+  "languages": [
+    "typescript"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC TypeScript Keccak-p[1600,24]"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable TypeScript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

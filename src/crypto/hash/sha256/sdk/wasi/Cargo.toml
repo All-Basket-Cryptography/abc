@@ -1,0 +1,10 @@
+[package]
+workspace = "../../../../../../tools/build/rust"
+name = "abc-wasi-sha256"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+
+[dependencies]
+abc-sha256 = { path = "../../impl/rust" }

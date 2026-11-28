@@ -1,0 +1,19 @@
+schema_version = 1
+id = "aes256-gcm-source-formal"
+owned_paths = ["tools/verification/aes256-gcm"]
+lean_sources = { GhashSourceRefinement = "tools/verification/aes256-gcm" }
+lean_external_imports = { GhashLlbc = "tools/verification/aes256-gcm/translate.py" }
+shared_inputs = [
+  "src/crypto/aead/aes256-gcm/spec/Aes256GcmComposition.lean",
+  "src/crypto/aead/aes256-gcm/impl/rust/Cargo.toml",
+  "src/crypto/aead/aes256-gcm/impl/rust/src/lib.rs",
+  "tools/build/rust/Cargo.toml",
+  "tools/build/rust/Cargo.lock",
+  "tools/verification/probe/toolchain-candidate.json",
+]
+
+[tasks.refinement]
+kind = "formal"
+command = ["python", "-B", "tools/verification/aes256-gcm/check.py", "--check-mutant"]
+tools = ["python", "charon", "lean", "cargo", "rustc", "rustup"]
+timeout_seconds = 240

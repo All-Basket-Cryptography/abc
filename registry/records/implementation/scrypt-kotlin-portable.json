@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:scrypt-kotlin-portable",
+  "record_type": "implementation",
+  "name": "scrypt in Kotlin (ABC Kotlin research core)",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/scrypt/impl/kotlin/src/Scrypt.kt"
+    },
+    {
+      "path": "src/crypto/kdf/scrypt/impl/kotlin/README.md"
+    },
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/kotlin/src/Pbkdf2Sha256.kt"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:scrypt",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "efb2718920ac39fa1ac485ae5994888ff8c30d21054a2662426edf0cf31dcfbc",
+  "path": "src/crypto/kdf/scrypt/impl/kotlin",
+  "languages": [
+    "kotlin"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Kotlin PBKDF2-HMAC-SHA-256"
+  ],
+  "target_refs": [],
+  "provider": "ABC Kotlin research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

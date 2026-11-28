@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "id": "abc:standard:fips-204-2024",
+  "record_type": "standard",
+  "name": "Module-Lattice-Based Digital Signature Standard",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/pubs/fips/204/final"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "FIPS 204 (August 2024)",
+  "authors": [
+    "National Institute of Standards and Technology"
+  ],
+  "publisher": "NIST",
+  "published": "2024-08",
+  "accessed": "2026-11-28",
+  "license": "See NIST publication and rights information at the linked source.",
+  "redistribution": "link-only",
+  "sections": [
+    "Parameter sets and signature algorithms"
+  ],
+  "errata_urls": [
+    "https://csrc.nist.gov/files/pubs/fips/204/final/docs/fips-204-potential-updates.xlsx"
+  ],
+  "citation_refs": [],
+  "doi": "10.6028/NIST.FIPS.204"
+}

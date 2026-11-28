@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:lattice-fhe",
+  "record_type": "family",
+  "name": "Lattice-based fully homomorphic encryption",
+  "sources": [
+    {
+      "url": "https://research.ibm.com/publications/fully-homomorphic-encryption-using-ideal-lattices"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "homomorphic",
+  "description": "Homomorphic encryption schemes developed from lattice assumptions."
+}

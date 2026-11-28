@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:hkdf-sha256-go-portable",
+  "record_type": "implementation",
+  "name": "ABC portable research HKDF-SHA-256 in Go",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/hkdf-sha256/impl/go/hkdf.go",
+      "locator": "Native Go implementation."
+    },
+    {
+      "path": "src/crypto/kdf/hkdf-sha256/impl/go/README.md",
+      "locator": "Test instructions, source standard, and scope."
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hkdf-sha-256",
+  "spec_ref": "abc:specification:hkdf-sha-256-rfc5869",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "0364851e03141c34b5cc034ea596df3f9f640cc2c0de3ce5d53313e04c751779",
+  "path": "src/crypto/kdf/hkdf-sha256/impl/go/hkdf.go",
+  "languages": [
+    "go"
+  ],
+  "features": [],
+  "external_calls": [],
+  "provider": "ABC portable Go research core",
+  "target_refs": [],
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

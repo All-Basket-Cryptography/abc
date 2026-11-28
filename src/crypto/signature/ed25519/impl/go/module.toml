@@ -1,0 +1,17 @@
+schema_version = 1
+id = "ed25519-go-native"
+owned_paths = ["src/crypto/signature/ed25519/impl/go"]
+
+[tasks.test]
+kind = "test"
+command = ["go", "test", "-C", "src/crypto/signature/ed25519/impl/go", "-count=1", "./..."]
+tools = ["go"]
+target = "native"
+timeout_seconds = 120
+
+[tasks.interop]
+kind = "test"
+command = ["node", "src/crypto/signature/ed25519/impl/go/verify.mjs"]
+tools = ["go", "node"]
+target = "native"
+timeout_seconds = 120

@@ -1,0 +1,75 @@
+{
+  "cpython_revision": "df793163d5821791d4e7caf88885a2c11a107986",
+  "cpython_archive": "https://codeload.github.com/python/cpython/tar.gz/df793163d5821791d4e7caf88885a2c11a107986",
+  "cpython_archive_sha256": "92edb80499cb357dfb353f682d0cb870ee0a803f4457a08917c8a4124d4f9a6c",
+  "hacl_revision": "8ba599b2f6c9701b3dc961db895b0856a2210f76",
+  "files": {
+    "Hacl_Hash_SHA2.c": {
+      "path": "Modules/_hacl/Hacl_Hash_SHA2.c",
+      "sha256": "f8af382de7e29a73c726f9c70770498ddd99e2c4702489ed6e634f0b68597c95"
+    },
+    "Hacl_Hash_SHA2.h": {
+      "path": "Modules/_hacl/Hacl_Hash_SHA2.h",
+      "sha256": "442d8997d2bcda20ddf628665e2e69945400e1ab3019bc14fc7c8e20db20c320"
+    },
+    "Hacl_Streaming_Types.h": {
+      "path": "Modules/_hacl/Hacl_Streaming_Types.h",
+      "sha256": "efc7bd11460744768425aedf4e004d3ad3397a5489752b80044ae785f30b78d4"
+    },
+    "include/krml/FStar_UInt128_Verified.h": {
+      "path": "Modules/_hacl/include/krml/FStar_UInt128_Verified.h",
+      "sha256": "69dc2e78411e9b271100eb0d2a2d8dc39dd2348afc26f8b4cfba14c025102c7f"
+    },
+    "include/krml/FStar_UInt_8_16_32_64.h": {
+      "path": "Modules/_hacl/include/krml/FStar_UInt_8_16_32_64.h",
+      "sha256": "f01e3f0892935f3f659019875f580445b9ea23482afbe11ffbe7cdbd22dbd4d2"
+    },
+    "include/krml/fstar_uint128_struct_endianness.h": {
+      "path": "Modules/_hacl/include/krml/fstar_uint128_struct_endianness.h",
+      "sha256": "1c9bee7ac4b987c73cc3aba6b7ceed8ec7e75c9a741810e4411f35602490e0d8"
+    },
+    "include/krml/internal/compat.h": {
+      "path": "Modules/_hacl/include/krml/internal/compat.h",
+      "sha256": "c5a04a1f99807cea29ac1832ba17d8a3d3805862d3a713642583be2106e04edb"
+    },
+    "include/krml/internal/target.h": {
+      "path": "Modules/_hacl/include/krml/internal/target.h",
+      "sha256": "08bb43ef5626a8450f985da0af345b6658ac8bcc4585f77271decd0e41fc02e0"
+    },
+    "include/krml/internal/types.h": {
+      "path": "Modules/_hacl/include/krml/internal/types.h",
+      "sha256": "404691cf9b2269ecc754ceca27bb8f8f029f1c8deaa4d967990dcf5ce08cd016"
+    },
+    "include/krml/lowstar_endianness.h": {
+      "path": "Modules/_hacl/include/krml/lowstar_endianness.h",
+      "sha256": "6d1a350ec272c83761f1789611d8f60947a4d69fed3d23d8eee38709a0ad2c0a"
+    },
+    "internal/Hacl_Hash_SHA2.h": {
+      "path": "Modules/_hacl/internal/Hacl_Hash_SHA2.h",
+      "sha256": "709c6272f77e2368f6cc0bf36527e3b16dd5d5f3dc26a2afdef8238200af8770"
+    },
+    "internal/Hacl_Streaming_Types.h": {
+      "path": "Modules/_hacl/internal/Hacl_Streaming_Types.h",
+      "sha256": "76997c7069a347ac78b65d26354a0324d54add4ca7a02e7be36d6d5e1c9702e0"
+    },
+    "python_hacl_namespaces.h": {
+      "path": "Modules/_hacl/python_hacl_namespaces.h",
+      "sha256": "8551d2c3fde03b92c6fab5febde00347bd9184ea0085077976863c7836e9669d"
+    },
+    "LICENSE-CPython": {
+      "path": "LICENSE",
+      "sha256": "b0e25a78cffb43f4d92de8b61ccfa1f1f98ecbc22330b54b5251e7b6ba010231"
+    }
+  },
+  "hacl_license": {
+    "path": "LICENSE",
+    "sha256": "c5accbbd8546e94c34aed24afe689a617627d18eed5a6c48277e48db57c23851",
+    "git_blob": "9c8f3ea0871e0bfe81da0fa6e7c1d7d156dc380e"
+  },
+  "hacl_sha2_source": {
+    "path": "dist/gcc-compatible/Hacl_Hash_SHA2.c",
+    "sha256": "6cd390cc86d9054e3d577f75e1e4d1559a545ec22e4643179aa087c8bd612e4e",
+    "git_blob": "7427e7e42831714f5207829fae206b2f5e8ff9e7",
+    "refresh_transforms_reproduce_cpython": true
+  }
+}

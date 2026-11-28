@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:groth-pairing-arguments",
+  "record_type": "family",
+  "name": "Groth pairing-based arguments",
+  "sources": [
+    {
+      "url": "https://eprint.iacr.org/2016/260"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "zero-knowledge",
+  "description": "Pairing-based preprocessing proof systems."
+}

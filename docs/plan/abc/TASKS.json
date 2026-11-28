@@ -1,0 +1,949 @@
+{
+  "schema_version": 1,
+  "project": "All-Basket Cryptography",
+  "plan_version": "1.0",
+  "date": "2026-11-28",
+  "state": "planning_artifact_not_implementation_evidence",
+  "statuses": [
+    "not_started",
+    "ready",
+    "in_progress",
+    "blocked",
+    "in_review",
+    "done"
+  ],
+  "completion_policy": "Done requires actual deliverables and acceptance evidence. Blocked proof or platform work remains incomplete. Dependencies schedule work; milestone approval is evaluated separately.",
+  "tasks": [
+    {
+      "id": "ABC-001",
+      "milestone": "M0",
+      "title": "Repository and scope audit",
+      "depends_on": [],
+      "owner_role": "integration",
+      "status": "not_started",
+      "deliverables": [
+        "Repository inventory",
+        "Scope and instruction decision record"
+      ],
+      "acceptance": [
+        "Preserve existing instructions, license, source, and uncommitted work.",
+        "Record all seven required SDK ecosystems and the complete historical catalog scope.",
+        "Identify actual repository ownership, available tools, and access blockers without inventing them."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-002",
+      "milestone": "M0",
+      "title": "Minimal working monorepo and task state",
+      "depends_on": [
+        "ABC-001"
+      ],
+      "owner_role": "integration",
+      "status": "not_started",
+      "deliverables": [
+        "Minimal workspace manifests",
+        "Root command entry",
+        "Task and progress records"
+      ],
+      "acceptance": [
+        "A documented root command executes real behavior.",
+        "Keep one first-party repository and create only directories needed by working modules.",
+        "Track incomplete work explicitly; empty packages are not deliverables."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-003",
+      "milestone": "M0",
+      "title": "Pinned Rust-to-Lean toolchain spike",
+      "depends_on": [
+        "ABC-002"
+      ],
+      "owner_role": "formal",
+      "status": "not_started",
+      "deliverables": [
+        "Toolchain lock and compatibility ADR",
+        "Small extraction and proof reproduction",
+        "Unsupported-feature notes"
+      ],
+      "acceptance": [
+        "Execute Rust to Charon to Aeneas to Lean with actual compatible versions or commits.",
+        "Save commands, source/model digests, and real checker output.",
+        "If unsupported, retain a minimal reproducer and mark the task blocked rather than substituting a mock."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-004",
+      "milestone": "M0",
+      "title": "Trust, source rights, and CI threat policy",
+      "depends_on": [
+        "ABC-001"
+      ],
+      "owner_role": "security",
+      "status": "not_started",
+      "deliverables": [
+        "Proof trust policy",
+        "Source and literature rights policy",
+        "CI threat model"
+      ],
+      "acceptance": [
+        "Define allowed axioms, native trust, theorem scope, external models, and compiler boundaries.",
+        "Distinguish upstream maintenance responsibility from catalog inclusion.",
+        "Separate untrusted code execution from release credentials and reviewed decision tools."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-005",
+      "milestone": "M1",
+      "title": "Versioned registry and evidence contracts",
+      "depends_on": [
+        "ABC-002",
+        "ABC-004"
+      ],
+      "owner_role": "registry",
+      "status": "not_started",
+      "deliverables": [
+        "JSON Schemas",
+        "Semantic and reference validator",
+        "Positive and negative fixtures"
+      ],
+      "acceptance": [
+        "Represent algorithms, parameters, specifications, implementations, modules/tasks, bindings, targets, evidence, and releases.",
+        "Reject duplicate IDs, invalid references, unknown fields, unsafe paths, and malformed schema versions.",
+        "Keep catalog, maintenance, evidence, and production policy states independent."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-006",
+      "milestone": "M1",
+      "title": "Initial taxonomy and source-backed catalog",
+      "depends_on": [
+        "ABC-005"
+      ],
+      "owner_role": "registry",
+      "status": "not_started",
+      "deliverables": [
+        "Taxonomy",
+        "Representative historical and modern entries",
+        "Literature and standards records"
+      ],
+      "acceptance": [
+        "Include historical, broken, standardized, and experimental examples with traceable sources.",
+        "Separate mathematical parameters from algorithms, constructions, and protocols.",
+        "Mark all unavailable implementations and proofs honestly; redistribute only permitted content."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-007",
+      "milestone": "M1",
+      "title": "Module ownership and dependency extraction",
+      "depends_on": [
+        "ABC-005"
+      ],
+      "owner_role": "automation",
+      "status": "not_started",
+      "deliverables": [
+        "Module manifest contract",
+        "Cargo and Lean dependency adapters",
+        "Ownership diagnostics"
+      ],
+      "acceptance": [
+        "Map files, native manifests, imports, generators, vectors, policies, toolchains, and features to module inputs.",
+        "Detect missing ownership and invalid or undeclared inputs.",
+        "Use actual module/import granularity and document any conservative dependency approximation."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-008",
+      "milestone": "M1",
+      "title": "Typed graphs and executable task DAG",
+      "depends_on": [
+        "ABC-007"
+      ],
+      "owner_role": "automation",
+      "status": "not_started",
+      "deliverables": [
+        "Knowledge and evidence graph views",
+        "Task DAG projection",
+        "Cycle diagnostics"
+      ],
+      "acceptance": [
+        "Use consumer-to-prerequisite dependency direction consistently.",
+        "Allow non-execution relation cycles while rejecting cycles in the actual executable graph.",
+        "Generate deterministic graphs and explain edge provenance."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-009",
+      "milestone": "M1",
+      "title": "Base-head incremental impact planner",
+      "depends_on": [
+        "ABC-008"
+      ],
+      "owner_role": "automation",
+      "status": "not_started",
+      "deliverables": [
+        "Plan generator",
+        "Reason traces",
+        "Change and refactoring fixtures"
+      ],
+      "acceptance": [
+        "Analyze both base and head for removals, renames, changed edges, features, and tool inputs.",
+        "Use their union only for impact, and execute surviving head tasks with deletion compatibility checks.",
+        "Unknown inputs or missing base cause conservative work or failure, never silent empty success."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-010",
+      "milestone": "M1",
+      "title": "Task runner, cache, and evidence verification",
+      "depends_on": [
+        "ABC-004",
+        "ABC-008"
+      ],
+      "owner_role": "automation",
+      "status": "not_started",
+      "deliverables": [
+        "Structured task runner",
+        "Content-addressed cache",
+        "Evidence result verifier"
+      ],
+      "acceptance": [
+        "Fingerprints cover transitive sources, models, tools, flags, target, policy, verifier, and trust domain.",
+        "Reject stale, forged, missing, or mismatched evidence and untrusted release promotions.",
+        "Distinguish execution failure, timeout, cancellation, not-run, and successful work."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-011",
+      "milestone": "M1",
+      "title": "Modular GitHub Actions and final gate",
+      "depends_on": [
+        "ABC-009",
+        "ABC-010"
+      ],
+      "owner_role": "automation",
+      "status": "not_started",
+      "deliverables": [
+        "Plan and reusable module workflows",
+        "Stable final status gate",
+        "Untrusted-PR security fixtures"
+      ],
+      "acceptance": [
+        "Validate dynamic matrices and compare expected tasks with all actual results.",
+        "Pin actions and separate PR, main, and release permissions and trust domains.",
+        "Candidate planner/verifier changes are checked using approved baseline rules and independent fixtures."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-012",
+      "milestone": "M1",
+      "title": "Complete isolated proof and fuzz probe",
+      "depends_on": [
+        "ABC-003",
+        "ABC-004",
+        "ABC-005",
+        "ABC-010",
+        "ABC-011"
+      ],
+      "owner_role": "formal",
+      "status": "not_started",
+      "deliverables": [
+        "Small non-production arithmetic or byte probe",
+        "Real proof and fuzz evidence",
+        "Adversarial verification fixtures"
+      ],
+      "acceptance": [
+        "Run specification, implementation, extraction, proof, tests, fuzz, and evidence end to end.",
+        "Reject hidden axioms, changed theorem statements, stale models, forged pass output, and contaminated cache.",
+        "Clearly label the probe as infrastructure validation, not production cryptography."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-013",
+      "milestone": "M1",
+      "title": "Generated documentation and milestone report",
+      "depends_on": [
+        "ABC-006",
+        "ABC-009",
+        "ABC-012"
+      ],
+      "owner_role": "documentation",
+      "status": "not_started",
+      "deliverables": [
+        "Minimal static explorer",
+        "Generated status pages",
+        "M1 acceptance report"
+      ],
+      "acceptance": [
+        "Generate identities and status from canonical records and verified evidence.",
+        "Show theorem scope, limitations, TCB, and actual incomplete states.",
+        "Removing or invalidating evidence removes the corresponding valid status."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-014",
+      "milestone": "M2",
+      "title": "Independent SHA-256 specification",
+      "depends_on": [
+        "ABC-003",
+        "ABC-005",
+        "ABC-006"
+      ],
+      "owner_role": "formal",
+      "status": "not_started",
+      "deliverables": [
+        "Lean SHA-256 specification",
+        "Standard mapping and claim inventory",
+        "Executable specification tests"
+      ],
+      "acceptance": [
+        "Pin the standard and relevant errata and define endianness, padding, length, and streaming semantics.",
+        "Keep the specification independent from the Rust implementation being verified.",
+        "Document exact theorems and input domains before claiming full implementation correctness."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-015",
+      "milestone": "M2",
+      "title": "Portable SHA-256 Rust implementation",
+      "depends_on": [
+        "ABC-003",
+        "ABC-014"
+      ],
+      "owner_role": "runtime",
+      "status": "not_started",
+      "deliverables": [
+        "Portable crate implementation",
+        "Streaming API",
+        "Boundary and known-answer tests"
+      ],
+      "acceptance": [
+        "Use the verified toolchain subset and avoid unplanned SIMD, assembly, or unsafe code.",
+        "Pass source-traceable vectors, empty inputs, padding boundaries, chunking, and overflow behavior.",
+        "Do not derive the only oracle from the same implementation or generator."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-016",
+      "milestone": "M2",
+      "title": "SHA-256 implementation refinement",
+      "depends_on": [
+        "ABC-004",
+        "ABC-014",
+        "ABC-015"
+      ],
+      "owner_role": "formal",
+      "status": "not_started",
+      "deliverables": [
+        "Regenerable extracted model",
+        "Named refinement theorems",
+        "Axiom and trusted-statement checks"
+      ],
+      "acceptance": [
+        "Prove the promised API behavior over the declared valid input domain against the independent specification.",
+        "Bind proof to exact source, model, target/features, tools, assumptions, and excluded behavior.",
+        "Keep incomplete proofs blocked or partial; do not claim collision resistance, constant time, or binary proof from functional correctness."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-017",
+      "milestone": "M2",
+      "title": "SHA-256 differential and fuzz suite",
+      "depends_on": [
+        "ABC-011",
+        "ABC-015"
+      ],
+      "owner_role": "testing",
+      "status": "not_started",
+      "deliverables": [
+        "Independent comparison adapter",
+        "Stateful fuzz targets",
+        "Minimized regression corpus"
+      ],
+      "acceptance": [
+        "Test boundary lengths and streaming operation sequences with meaningful input-sensitive harnesses.",
+        "Record actual oracle lineage, budgets, coverage type, failures, and target.",
+        "A deliberately faulty implementation or disabled harness is detected."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-018",
+      "milestone": "M2",
+      "title": "Common runtime and SDK behavior contract",
+      "depends_on": [
+        "ABC-005",
+        "ABC-015"
+      ],
+      "owner_role": "runtime",
+      "status": "not_started",
+      "deliverables": [
+        "Typed API and capability contract",
+        "Provider identity interface",
+        "Error, ownership, RNG, and format specifications"
+      ],
+      "acceptance": [
+        "Define bytes, lengths, errors, streaming states, thread guarantees, and observable implementation identity.",
+        "Do not expose or advertise cryptographic operations that are not implemented.",
+        "Reserve explicit boundaries for platform randomness, non-exportable keys, and versioned policies."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-019",
+      "milestone": "M2",
+      "title": "Packaged Rust SDK and external consumer",
+      "depends_on": [
+        "ABC-015",
+        "ABC-017",
+        "ABC-018"
+      ],
+      "owner_role": "sdk",
+      "status": "not_started",
+      "deliverables": [
+        "Installable source package",
+        "External consumer fixture",
+        "Feature and toolchain support table"
+      ],
+      "acceptance": [
+        "Install and run from the packaged artifact outside the workspace.",
+        "Validate included files, locked dependencies, features, and example behavior.",
+        "Keep research status until all applicable proof and production gates are satisfied."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-020",
+      "milestone": "M2",
+      "title": "npm TypeScript and WASM SDK",
+      "depends_on": [
+        "ABC-019"
+      ],
+      "owner_role": "sdk",
+      "status": "not_started",
+      "deliverables": [
+        "npm tarball with WASM and types",
+        "Browser and Node consumers",
+        "Binding and artifact evidence"
+      ],
+      "acceptance": [
+        "Run actual consumers in declared browser and Node environments.",
+        "Validate loading, binary conversion, initialization, streaming, and errors.",
+        "Distinguish core proof coverage from binding tests and WASM runtime assumptions."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-021",
+      "milestone": "M2",
+      "title": "HMAC and HKDF dependency modules",
+      "depends_on": [
+        "ABC-014",
+        "ABC-015",
+        "ABC-018"
+      ],
+      "owner_role": "formal-runtime",
+      "status": "not_started",
+      "deliverables": [
+        "HMAC-SHA256 and HKDF-SHA256 modules",
+        "Separate specifications and evidence targets",
+        "Real dependency propagation fixtures"
+      ],
+      "acceptance": [
+        "Implement source-backed vectors, key and output-length boundaries, and actual SHA-256 dependencies.",
+        "Maintain separate functional and security claims; complete the selected functional refinement claims before this task is done.",
+        "A SHA-256 implementation change schedules both dependent modules without inventing graph edges."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-022",
+      "milestone": "M2",
+      "title": "Independent SHA-3 control module",
+      "depends_on": [
+        "ABC-005",
+        "ABC-007",
+        "ABC-011"
+      ],
+      "owner_role": "runtime-testing",
+      "status": "not_started",
+      "deliverables": [
+        "Real SHA-3 module or fixed upstream integration",
+        "Source and evidence records",
+        "Incremental isolation fixtures"
+      ],
+      "acceptance": [
+        "Distinguish SHA3-256 from Keccak-256 and preserve actual source/proof status.",
+        "A SHA-256 leaf change does not schedule unrelated SHA-3 work.",
+        "A genuinely shared imported foundation change schedules both applicable closures."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-023",
+      "milestone": "M3",
+      "title": "Versioned C ABI and C package",
+      "depends_on": [
+        "ABC-018",
+        "ABC-019"
+      ],
+      "owner_role": "sdk",
+      "status": "not_started",
+      "deliverables": [
+        "C header and native artifacts",
+        "ABI and caller-obligation specification",
+        "External C consumer"
+      ],
+      "acceptance": [
+        "Specify handles, allocation, buffers, integer conversions, errors, thread behavior, and panic boundaries.",
+        "Link and run the packaged library from a separate C project on declared targets.",
+        "Fuzz valid-memory boundary cases and establish ABI baselines without claiming arbitrary invalid-pointer safety."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-024",
+      "milestone": "M3",
+      "title": "C++ SDK and packaging",
+      "depends_on": [
+        "ABC-023"
+      ],
+      "owner_role": "sdk",
+      "status": "not_started",
+      "deliverables": [
+        "RAII wrapper",
+        "CMake package configuration",
+        "External C++ consumer"
+      ],
+      "acceptance": [
+        "Install and use the actual package from a clean C++ build.",
+        "Validate object lifetime, errors, move/copy policy, and streaming semantics.",
+        "Depend on the versioned C ABI rather than exposing Rust internal layout."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-025",
+      "milestone": "M3",
+      "title": "Python package and wheels",
+      "depends_on": [
+        "ABC-018",
+        "ABC-019"
+      ],
+      "owner_role": "sdk",
+      "status": "not_started",
+      "deliverables": [
+        "PyO3 binding",
+        "Wheel and source distribution",
+        "External Python consumers"
+      ],
+      "acceptance": [
+        "Install artifacts in clean environments for each declared supported Python/platform combination.",
+        "Validate byte conversion, error mapping, object lifetime, and bundled native dependencies.",
+        "Record binding evidence independently and mark untested targets planned."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-026",
+      "milestone": "M3",
+      "title": "Node native-backend decision and delivery",
+      "depends_on": [
+        "ABC-019",
+        "ABC-020"
+      ],
+      "owner_role": "sdk",
+      "status": "not_started",
+      "deliverables": [
+        "Measured backend-selection ADR",
+        "Node-API package if selected",
+        "Runtime backend identity tests"
+      ],
+      "acceptance": [
+        "Choose WASM-only or an additional native backend using actual integration needs and measurements.",
+        "If native is selected, package and test it; otherwise record the decision without claiming a native implementation exists.",
+        "Any backend selection is observable, policy-constrained, and behaviorally tested."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-027",
+      "milestone": "M3",
+      "title": "Go SDK and deployment contract",
+      "depends_on": [
+        "ABC-023"
+      ],
+      "owner_role": "sdk",
+      "status": "not_started",
+      "deliverables": [
+        "Go module",
+        "cgo or explicitly selected native route",
+        "External Go consumer"
+      ],
+      "acceptance": [
+        "Build, link, test, and run a consumer using packaged native artifacts.",
+        "Document cgo, compiler, linker, OS, and architecture requirements.",
+        "Do not advertise pure Go unless an independently tracked pure Go implementation is actually delivered."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-028",
+      "milestone": "M3",
+      "title": "Java SDK and JVM distribution",
+      "depends_on": [
+        "ABC-023"
+      ],
+      "owner_role": "sdk",
+      "status": "not_started",
+      "deliverables": [
+        "JDK baseline and JNI/FFM ADR",
+        "Maven/Gradle artifacts",
+        "External JVM consumer"
+      ],
+      "acceptance": [
+        "Select and test an actual minimum JDK and native loading approach.",
+        "Validate lifecycle, errors, byte buffers, native library packaging, and platform classifiers.",
+        "Do not imply Android compatibility solely from JVM support."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-029",
+      "milestone": "M3",
+      "title": "Seven-ecosystem conformance and compatibility",
+      "depends_on": [
+        "ABC-019",
+        "ABC-020",
+        "ABC-023",
+        "ABC-024",
+        "ABC-025",
+        "ABC-026",
+        "ABC-027",
+        "ABC-028"
+      ],
+      "owner_role": "integration-testing",
+      "status": "not_started",
+      "deliverables": [
+        "Common conformance corpus",
+        "External consumer matrix",
+        "Cross-version compatibility baseline"
+      ],
+      "acceptance": [
+        "Rust, C, C++, Go, Java, npm, and PyPI artifacts install and run real consumers.",
+        "Check common bytes, errors, streaming, provider identity, and supported runtime baselines.",
+        "Retain old artifacts and verify applicable cross-version data behavior rather than workspace-only compilation."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-030",
+      "milestone": "M4",
+      "title": "Release verification and supply-chain gate",
+      "depends_on": [
+        "ABC-004",
+        "ABC-010",
+        "ABC-011",
+        "ABC-016",
+        "ABC-029"
+      ],
+      "owner_role": "release-security",
+      "status": "not_started",
+      "deliverables": [
+        "Release-set manifest",
+        "Clean verification and packaging workflow",
+        "SBOM, provenance, and artifact verification"
+      ],
+      "acceptance": [
+        "Rebuild and verify the supported release closure using reviewed tools, policies, and sources.",
+        "Reject research-only dependencies, missing review, stale evidence, forged artifacts, or incorrect consumer packages.",
+        "Produce reviewable artifacts locally; production claims and external publication require actual satisfied gates and session authorization.",
+        "Engineering completion means the implemented gate correctly rejects candidates without independent review. Actual production approval is a separate ReleaseSet state and may remain blocked without blocking maintenance-policy engineering."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-031",
+      "milestone": "M4",
+      "title": "Upstream continuity and vulnerability drill",
+      "depends_on": [
+        "ABC-005",
+        "ABC-008",
+        "ABC-030"
+      ],
+      "owner_role": "maintenance-security",
+      "status": "not_started",
+      "deliverables": [
+        "Upstream/advisory monitoring",
+        "Affected-release query",
+        "Backport and migration rehearsal"
+      ],
+      "acceptance": [
+        "Map a simulated upstream issue to exact versions, features, targets, and consumers.",
+        "Demonstrate patch/backport or provider migration while checking data and API compatibility.",
+        "Do not silence scanners globally; any scoped exception has owner, justification, and expiry."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-032",
+      "milestone": "M4",
+      "title": "Governance, support, and industry participation",
+      "depends_on": [
+        "ABC-004",
+        "ABC-013",
+        "ABC-031"
+      ],
+      "owner_role": "governance",
+      "status": "not_started",
+      "deliverables": [
+        "Maintainer and backup-role records",
+        "RFC and review process",
+        "Support/EOL and disclosure policies"
+      ],
+      "acceptance": [
+        "Use real role assignments or explicit vacancies; never invent independent reviewers or a legal foundation.",
+        "Publish support commitments that actual resources can satisfy.",
+        "Keep public evidence and security updates separate from commercial certification services."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-033",
+      "milestone": "M5",
+      "title": "First secret-bearing production profile",
+      "depends_on": [
+        "ABC-018",
+        "ABC-030",
+        "ABC-039"
+      ],
+      "owner_role": "formal-runtime-security",
+      "status": "not_started",
+      "deliverables": [
+        "Reviewed AEAD/KDF use-case selection",
+        "Modular primitive and composition work items",
+        "RNG, nonce, key, and format integration"
+      ],
+      "acceptance": [
+        "Select an established suite through a source-backed ADR and split every component into normal implementation/proof tasks.",
+        "Complete the profile-required correctness, state, side-channel, misuse, and interop evidence before production approval.",
+        "RNG failure, nonce ownership, key-use limits, and unauthorized fallbacks have explicit negative tests."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-034",
+      "milestone": "M5",
+      "title": "Signature and wallet-use-case expansion",
+      "depends_on": [
+        "ABC-018",
+        "ABC-030",
+        "ABC-039"
+      ],
+      "owner_role": "formal-runtime-security",
+      "status": "not_started",
+      "deliverables": [
+        "Explicit signing and wallet requirements",
+        "Algorithm/curve/encoding module tasks",
+        "Key lifecycle and interoperability fixtures"
+      ],
+      "acceptance": [
+        "Distinguish curves, schemes, hashes, encodings, HD derivation, and protocol-level assumptions.",
+        "Validate invalid inputs, canonicalization, key usage, target-specific leakage, and applicable exact refinement claims.",
+        "Do not claim a complete wallet or protocol is secured by a primitive proof alone."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-035",
+      "milestone": "M5",
+      "title": "Catalog expansion and literature ingestion",
+      "depends_on": [
+        "ABC-006",
+        "ABC-013"
+      ],
+      "owner_role": "registry-research",
+      "status": "not_started",
+      "deliverables": [
+        "Bounded-source importers",
+        "Deduplication and provenance pipeline",
+        "Expansion task generator"
+      ],
+      "acceptance": [
+        "Demonstrate a versioned source snapshot with aliases, variants, errata, rights, and human-reviewable changes.",
+        "Generate per-module tasks for classical, mainstream, PQC, ZK, MPC, FHE, and other declared domains.",
+        "Report coverage against the specific source set; completing this importer is not completing all cryptography."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-036",
+      "milestone": "M5",
+      "title": "Original-language upstream verification pilot",
+      "depends_on": [
+        "ABC-014",
+        "ABC-017",
+        "ABC-030"
+      ],
+      "owner_role": "formal-upstream",
+      "status": "not_started",
+      "deliverables": [
+        "One fixed original-language upstream implementation",
+        "Verification route ADR",
+        "Separate source and proof evidence"
+      ],
+      "acceptance": [
+        "Preserve original revision, language, license, local patches, and responsibility level.",
+        "Establish a checked connection to the shared Lean specification or remain explicitly blocked.",
+        "Never substitute proof of a rewrite for verification of the original source."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-037",
+      "milestone": "M5",
+      "title": "Swift and Android Kotlin SDKs",
+      "depends_on": [
+        "ABC-018",
+        "ABC-023"
+      ],
+      "owner_role": "sdk-mobile",
+      "status": "not_started",
+      "deliverables": [
+        "Swift packaging and consumer",
+        "Android artifact and consumer",
+        "Per-platform evidence"
+      ],
+      "acceptance": [
+        "Create separate child tasks and complete actual packaging for each ecosystem.",
+        "Record real-device, simulator, emulator, and compile-only evidence distinctly.",
+        "Handle native ABI, lifecycle, randomness, and non-exportable provider boundaries explicitly."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-038",
+      "milestone": "M5",
+      "title": ".NET, WASI, and embedded target expansion",
+      "depends_on": [
+        "ABC-018",
+        "ABC-023"
+      ],
+      "owner_role": "sdk-platform",
+      "status": "not_started",
+      "deliverables": [
+        "Per-runtime expansion ADRs and child tasks",
+        "Installable selected SDK artifacts",
+        "Target capability matrix"
+      ],
+      "acceptance": [
+        "Complete each selected child target independently; planned targets cannot be counted as shipped.",
+        "Test real runtimes and document native library and capability requirements.",
+        "Keep WASI, browser WASM, and embedded randomness/platform assumptions separate."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-039",
+      "milestone": "M4",
+      "title": "Benchmark and side-channel evidence method",
+      "depends_on": [
+        "ABC-004",
+        "ABC-017"
+      ],
+      "owner_role": "assurance-testing",
+      "status": "not_started",
+      "deliverables": [
+        "Benchmark environment schema",
+        "Leakage-model and timing-test method",
+        "Reproduction and regression workflow"
+      ],
+      "acceptance": [
+        "Record hardware, compiler, flags, input distribution, environment noise, and result uncertainty.",
+        "Treat shared CI timings as coarse regression data rather than definitive performance or constant-time proof.",
+        "Define profile-specific evidence needed before adding secret-bearing optimized implementations."
+      ],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ABC-040",
+      "milestone": "M5",
+      "title": "Reviewable research and maintenance automation",
+      "depends_on": [
+        "ABC-009",
+        "ABC-010",
+        "ABC-013",
+        "ABC-035"
+      ],
+      "owner_role": "research-automation",
+      "status": "not_started",
+      "deliverables": [
+        "Task templates and resumable orchestration",
+        "Deterministic verification integration",
+        "Change-review and resource controls"
+      ],
+      "acceptance": [
+        "Agents may propose metadata, specifications, proofs, code, and harnesses but cannot self-approve policy or production claims.",
+        "Every proposed result flows through the same trusted evidence and review gates.",
+        "Checkpoint real work and budgets without converting generated text into evidence of execution."
+      ],
+      "evidence": [],
+      "blockers": []
+    }
+  ]
+}

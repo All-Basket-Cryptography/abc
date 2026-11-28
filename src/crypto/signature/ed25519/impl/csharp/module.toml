@@ -1,0 +1,20 @@
+schema_version = 1
+id = "ed25519-csharp-bc"
+owned_paths = ["src/crypto/signature/ed25519/impl/csharp"]
+shared_inputs = [
+  "src/crypto/providers/csharp/check.py",
+  "src/crypto/providers/csharp/provider.toml",
+  "src/crypto/providers/csharp/global.json",
+  "src/crypto/signature/ed25519/impl/java/check.py",
+]
+dependencies = [
+  { module = "csharp-bouncycastle-provider", type = "calls" },
+  { module = "ed25519-rust", type = "implements" },
+]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/providers/csharp/check.py", "--profile", "ed25519"]
+tools = ["python", "dotnet", "node"]
+target = "net10.0"
+timeout_seconds = 240

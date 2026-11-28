@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:hkdf-sha256-swift-portable",
+  "record_type": "implementation",
+  "name": "ABC research HKDF-SHA-256 in Swift",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/hkdf-sha256/impl/swift/AbcHkdfSha256Swift/Sources/AbcHkdfSha256Swift/HkdfSha256.swift"
+    },
+    {
+      "path": "src/crypto/kdf/hkdf-sha256/impl/swift/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:hkdf-sha-256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "7203fbd7debc3ade2dccb2a496b48144f3e077bfe3f450f6d2babf0ec28904a1",
+  "path": "src/crypto/kdf/hkdf-sha256/impl/swift",
+  "languages": [
+    "swift"
+  ],
+  "features": [],
+  "external_calls": [
+    "Independent ABC hmac-sha256 in Swift"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable swift research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision",
+  "spec_ref": "abc:specification:hkdf-sha-256-rfc5869"
+}

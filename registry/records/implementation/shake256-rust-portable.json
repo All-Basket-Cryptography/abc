@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:shake256-rust-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHAKE256 in Rust",
+  "sources": [
+    {
+      "path": "src/crypto/hash/shake256/impl/rust/src/lib.rs"
+    },
+    {
+      "path": "src/crypto/hash/shake256/spec/README.md"
+    },
+    {
+      "path": "src/crypto/hash/keccak-p1600/impl/rust/src/lib.rs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:shake256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "90236a819e4e7f50bd71a78d85707ce0de11ebd95d29af89e74541f62be08969",
+  "path": "src/crypto/hash/shake256/impl/rust/src/lib.rs",
+  "languages": [
+    "rust"
+  ],
+  "features": [],
+  "external_calls": [
+    "abc-keccak-p1600"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable Rust research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

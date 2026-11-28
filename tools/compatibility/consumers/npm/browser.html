@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>ABC browser consumer</title>
+<output id="result">Waiting for WASM</output>
+<script type="module">
+import { createSha256Provider } from './node_modules/abc-cryptography-research/index.js';
+const result = document.querySelector('#result');
+try {
+  const abc = new TextEncoder().encode('abc');
+  const provider = await createSha256Provider();
+  const toHex = bytes => [...bytes].map(value => value.toString(16).padStart(2, '0')).join('');
+  const require = (condition, message) => { if (!condition) throw new Error(message); };
+  const requiresError = (operation, accepts) => {
+    try { operation(); } catch (error) { if (accepts(error)) return; throw error; }
+    throw new Error('The invalid operation succeeded');
+  };
+  const context = provider.create();
+  context.update(abc.subarray(0, 1));
+  context.update(abc.subarray(1));
+  require(toHex(context.finalize()) === 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad', 'NIST known answer');
+  require(provider.identity.target === 'wasm32-unknown-unknown', 'Unexpected implementation target');
+  requiresError(() => context.finalize(), error => /closed/.test(error.message));
+  requiresError(() => provider.digest('abc'), error => error instanceof TypeError);
+
+  const input = Uint8Array.from({ length: 12345 }, (_, index) => index % 251);
+  const expected = new Uint8Array(await crypto.subtle.digest('SHA-256', input));
+  const streaming = provider.create();
+  const secondContext = provider.create();
+  streaming.update(input.subarray(0, 56));
+  secondContext.update(abc);
+  streaming.update(input.subarray(56));
+  require(toHex(secondContext.finalize()) === toHex(provider.digest(abc)), 'Independent stream state');
+  require(toHex(streaming.finalize()) === toHex(expected), 'Streaming Web Crypto comparison');
+  const abandoned = provider.create();
+  abandoned.dispose();
+  requiresError(() => abandoned.update(abc), error => /closed/.test(error.message));
+  result.textContent = 'ABC_BROWSER_SHA256_PASS';
+} catch (failure) {
+  result.textContent = `SHA-256 consumer failed: ${failure}`;
+}
+</script>
+</html>

@@ -1,0 +1,11 @@
+schema_version = 1
+id = "poly1305-c-portable"
+owned_paths = ["src/crypto/mac/poly1305/impl/c"]
+shared_inputs = ["src/crypto/aead/chacha20-poly1305/impl/c/check.py", "src/crypto/aead/chacha20-poly1305/impl/cpp/check_bridge.cpp"]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "src/crypto/aead/chacha20-poly1305/impl/c/check.py", "--language", "c", "--profile", "poly1305"]
+tools = ["python", "clang"]
+target = "portable-c11"
+timeout_seconds = 150

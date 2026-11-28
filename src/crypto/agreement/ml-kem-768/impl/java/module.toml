@@ -1,0 +1,19 @@
+schema_version = 1
+id = "ml-kem-768-java-bc"
+owned_paths = ["src/crypto/agreement/ml-kem-768/impl/java"]
+shared_inputs = ["src/crypto/kdf/argon2id/impl/java/bcprov.toml", "src/crypto/kdf/argon2id/impl/java/bc_provider.py", "src/crypto/agreement/ml-kem-768/spec/acvp.json", "src/crypto/agreement/ml-kem-768/spec/fixtures.py", "src/crypto/agreement/ml-kem-768/impl/go/oracle.mjs"]
+dependencies = [{ module = "ml-kem-768-c-aws-lc", type = "implements" }]
+lean_sources = { MlKem768JvmEncoding = "src/crypto/agreement/ml-kem-768/impl/java" }
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/agreement/ml-kem-768/impl/java/check.py", "--language", "java"]
+tools = ["python", "java", "javac", "jar", "node"]
+target = "jvm-jdk17"
+timeout_seconds = 240
+
+[tasks.encoding-model]
+kind = "formal"
+command = ["lean", "-DwarningAsError=true", "src/crypto/agreement/ml-kem-768/impl/java/MlKem768JvmEncoding.lean"]
+tools = ["lean"]
+timeout_seconds = 60

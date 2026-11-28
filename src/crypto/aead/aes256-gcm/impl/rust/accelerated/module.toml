@@ -1,0 +1,17 @@
+schema_version = 1
+id = "aes256-gcm-rust-accelerated"
+owned_paths = ["src/crypto/aead/aes256-gcm/impl/rust/accelerated"]
+cargo_manifests = ["src/crypto/aead/aes256-gcm/impl/rust/accelerated/Cargo.toml"]
+
+[tasks.test]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "src/crypto/aead/aes256-gcm/impl/rust/accelerated/Cargo.toml", "--release", "--locked", "--offline"]
+tools = ["cargo", "rustc", "rustup"]
+timeout_seconds = 180
+
+[tasks.openssl]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--manifest-path", "src/crypto/aead/aes256-gcm/impl/rust/accelerated/Cargo.toml", "--release", "--locked", "--offline", "openssl_interoperability", "--", "--nocapture"]
+tools = ["cargo", "rustc", "rustup", "node"]
+target = "node-openssl"
+timeout_seconds = 180

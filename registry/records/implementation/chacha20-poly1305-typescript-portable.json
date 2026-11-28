@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:chacha20-poly1305-typescript-portable",
+  "record_type": "implementation",
+  "name": "ABC research ChaCha20-Poly1305 in TypeScript",
+  "sources": [
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/typescript/chacha20poly1305.mts"
+    },
+    {
+      "path": "src/crypto/aead/chacha20-poly1305/impl/typescript/README.md"
+    },
+    {
+      "path": "src/crypto/inputs/bytes.mts"
+    },
+    {
+      "path": "src/crypto/cipher/chacha20/impl/typescript/chacha20.mts"
+    },
+    {
+      "path": "src/crypto/mac/poly1305/impl/typescript/poly1305.mts"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:chacha20-poly1305",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "25eed0a079dbbb2acbeddf53521ccc23a2ddf033ce34fdb623551a49ad125c45",
+  "path": "src/crypto/aead/chacha20-poly1305/impl/typescript",
+  "languages": [
+    "typescript"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC TypeScript ChaCha20",
+    "ABC TypeScript Poly1305"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable TypeScript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

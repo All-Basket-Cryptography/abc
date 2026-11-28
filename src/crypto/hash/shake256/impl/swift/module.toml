@@ -1,0 +1,11 @@
+schema_version = 1
+id = "shake256-swift"
+owned_paths = ["src/crypto/hash/shake256/impl/swift"]
+dependencies = [{ module = "shake256-spec", type = "implements" }, { module = "keccak-p1600-swift", type = "imports" }]
+
+[tasks.test]
+kind = "test"
+command = ["swift", "test", "--package-path", "src/crypto/hash/shake256/impl/swift/AbcShake256Swift", "--configuration", "release", "-Xswiftc", "-warnings-as-errors"]
+tools = ["swift"]
+target = "macos"
+timeout_seconds = 180

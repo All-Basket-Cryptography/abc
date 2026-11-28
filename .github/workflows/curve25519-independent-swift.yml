@@ -1,0 +1,49 @@
+name: ABC independent Swift Curve25519
+
+on:
+  pull_request:
+    paths:
+      - 'src/crypto/agreement/x25519/impl/swift/**'
+      - 'src/crypto/agreement/x25519/impl/java/check.py'
+      - 'src/crypto/signature/ed25519/impl/swift/**'
+      - 'src/crypto/signature/ed25519/impl/java/check.py'
+      - '.github/workflows/curve25519-independent-swift.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-swift:
+    name: Swift 6.1.2 macOS X25519 and Ed25519
+    runs-on: macos-15
+    timeout-minutes: 10
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13.14'
+      - name: Exercise independent SwiftPM consumers
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence=dist/swift-curve25519
+          mkdir -p "$evidence"
+          sw_vers | tee "$evidence/macos.txt"
+          xcodebuild -version | tee "$evidence/xcode.txt"
+          node --version | tee "$evidence/node.txt"
+          openssl="$(brew --prefix openssl@3)"
+          export PKG_CONFIG_PATH="$openssl/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
+          pkg-config --modversion libcrypto | tee "$evidence/libcrypto.txt"
+          grep -Fx 3.5.9 "$evidence/libcrypto.txt"
+          python -B src/crypto/agreement/x25519/impl/swift/check.py all | tee "$evidence/results.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: abc-swift-curve25519-macos-arm64
+          path: dist/swift-curve25519/
+          if-no-files-found: error
+          retention-days: 7

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:scrypt-typescript-portable",
+  "record_type": "implementation",
+  "name": "scrypt in TypeScript (ABC TypeScript research core)",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/scrypt/impl/typescript/scrypt.mts"
+    },
+    {
+      "path": "src/crypto/kdf/scrypt/impl/typescript/README.md"
+    },
+    {
+      "path": "src/crypto/inputs/bytes.mts"
+    },
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/typescript/pbkdf2.mts"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:scrypt",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "a62a26482aeb689d69a728ba762eaa54d648465877d11bdb77e686a25cb7e430",
+  "path": "src/crypto/kdf/scrypt/impl/typescript",
+  "languages": [
+    "typescript"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC TypeScript PBKDF2-HMAC-SHA-256"
+  ],
+  "target_refs": [],
+  "provider": "ABC TypeScript research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

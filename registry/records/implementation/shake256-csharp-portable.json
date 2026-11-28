@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:shake256-csharp-portable",
+  "record_type": "implementation",
+  "name": "ABC research SHAKE256 in C#",
+  "sources": [
+    {
+      "path": "src/crypto/hash/shake256/impl/csharp/Shake256.cs"
+    },
+    {
+      "path": "src/crypto/hash/shake256/impl/csharp/README.md"
+    },
+    {
+      "path": "src/crypto/hash/keccak-p1600/impl/csharp/KeccakSponge.cs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:shake256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "af050903a6ab95d96fcf05fc86c369ce3640e6212b71678622fca1909d52225d",
+  "path": "src/crypto/hash/shake256/impl/csharp",
+  "languages": [
+    "csharp"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC C# Keccak-p[1600,24]"
+  ],
+  "target_refs": [],
+  "provider": "ABC portable C# research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:hkdf",
+  "record_type": "family",
+  "name": "HKDF",
+  "sources": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc5869.html"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "kdf-password",
+  "description": "Extract-and-expand key derivation constructions instantiated with HMAC."
+}

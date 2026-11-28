@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ed25519-swift-provider",
+  "record_type": "implementation",
+  "name": "Ed25519 in Swift (Apple CryptoKit and OpenSSL 3.5.9 deterministic signing)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ed25519/impl/swift/AbcEd25519Swift/Sources/AbcEd25519Swift/Ed25519.swift"
+    },
+    {
+      "path": "src/crypto/signature/ed25519/impl/swift/README.md"
+    },
+    {
+      "path": "src/crypto/signature/ed25519/impl/swift/AbcEd25519Swift/Sources/CAbcEd25519OpenSSL/shim.h"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ed25519",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "0f79720a44e97932c22dbacba90e30b52cd9804ccf96c0397a963cf899469218",
+  "path": "src/crypto/signature/ed25519/impl/swift",
+  "languages": [
+    "swift"
+  ],
+  "features": [],
+  "external_calls": [
+    "Apple CryptoKit and OpenSSL 3.5.9 deterministic signing"
+  ],
+  "target_refs": [],
+  "provider": "Apple CryptoKit and OpenSSL 3.5.9 deterministic signing",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

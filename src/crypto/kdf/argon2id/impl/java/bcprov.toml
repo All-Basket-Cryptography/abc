@@ -1,0 +1,7 @@
+group = "org.bouncycastle"
+artifact = "bcprov-jdk18on"
+version = "1.87"
+jar_bytes = 7337657
+jar_sha256 = "12d2d3dd82a9ec15e92ec7c7943ee64f6097c6dc12c07e984f1693b77565b9aa"
+sources_sha256 = "80f01e81d834fef90f50d1c63d5f5cb9b0fc9d5a71b6e8b105e47c88349a15db"
+source_commit = "dd1e61c26066d0793d3f348bf6b4d9b73b701e77"

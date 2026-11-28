@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:ecdsa",
+  "record_type": "family",
+  "name": "Elliptic Curve Digital Signature Algorithm",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/pubs/fips/186-5/final"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "signature",
+  "description": "ECDSA signatures over prime-order elliptic-curve groups."
+}

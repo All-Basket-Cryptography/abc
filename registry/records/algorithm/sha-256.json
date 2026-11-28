@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "id": "abc:algorithm:sha-256",
+  "record_type": "algorithm",
+  "name": "SHA-256",
+  "sources": [
+    {
+      "url": "https://csrc.nist.gov/pubs/fips/180-4/upd1/final",
+      "locator": "Section 6.2"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "hash-xof",
+  "family_ref": "abc:family:sha-2",
+  "catalog_state": "indexed",
+  "lifecycle": "standardized",
+  "variant_refs": [],
+  "parameter_refs": [],
+  "spec_refs": [
+    "abc:specification:sha256-fips180-4-2015"
+  ],
+  "literature_refs": [],
+  "standard_refs": [
+    "abc:standard:fips-180-4-2015"
+  ],
+  "finding_refs": [],
+  "use_cases": [
+    "Digest computation in larger constructions"
+  ],
+  "limitations": [
+    "An unkeyed digest provides no message authentication on its own."
+  ],
+  "assumptions": [],
+  "quantum_model": "unspecified"
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ecdsa-p256-sha256-typescript-provider",
+  "record_type": "implementation",
+  "name": "ECDSA P-256 in TypeScript (Noble curves 2.4.0)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/typescript/ecdsa_p256.mts"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/typescript/README.md"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/package-lock.json"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/node-crypto.mjs"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/noble.mts"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ecdsa-p256-sha256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "b7bad9d17d2d9a64d54cf4c4c4d7d92de1a2660f602120f911108312b04b21c2",
+  "path": "src/crypto/signature/ecdsa-p256-sha256/impl/typescript",
+  "languages": [
+    "typescript"
+  ],
+  "features": [],
+  "external_calls": [
+    "Noble curves 2.4.0"
+  ],
+  "target_refs": [],
+  "provider": "Noble curves 2.4.0",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

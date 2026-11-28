@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "id": "abc:literature:groth-iacr-2016-260",
+  "record_type": "literature",
+  "name": "On the Size of Pairing-based Non-interactive Arguments",
+  "sources": [
+    {
+      "url": "https://eprint.iacr.org/2016/260"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "version": "IACR ePrint 2016/260",
+  "authors": [
+    "Jens Groth"
+  ],
+  "publisher": "IACR Cryptology ePrint Archive",
+  "published": "2016",
+  "accessed": "2026-11-28",
+  "license": "See the publication's rights notice.",
+  "redistribution": "link-only",
+  "sections": [
+    "Pairing-based SNARK construction"
+  ],
+  "errata_urls": [],
+  "citation_refs": []
+}

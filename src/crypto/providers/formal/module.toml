@@ -1,0 +1,16 @@
+schema_version = 1
+id = "provider-input-encoding-models"
+owned_paths = ["src/crypto/providers/formal"]
+lean_sources = { MlKem768InputEncoding = "src/crypto/providers/formal", X25519InputEncoding = "src/crypto/providers/formal" }
+
+[tasks.ml-kem-768-input-encoding]
+kind = "formal"
+command = ["lean", "-DwarningAsError=true", "src/crypto/providers/formal/MlKem768InputEncoding.lean"]
+tools = ["lean"]
+timeout_seconds = 60
+
+[tasks.x25519-input-encoding]
+kind = "formal"
+command = ["lean", "-DwarningAsError=true", "src/crypto/providers/formal/X25519InputEncoding.lean"]
+tools = ["lean"]
+timeout_seconds = 60

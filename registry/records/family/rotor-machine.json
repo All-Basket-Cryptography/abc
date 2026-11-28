@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "abc:family:rotor-machine",
+  "record_type": "family",
+  "name": "Rotor cipher machines",
+  "sources": [
+    {
+      "url": "https://www.nsa.gov/History/National-Cryptologic-Museum/Exhibits-Artifacts/Exhibit-View/Article/2719176/world-war-2-enigma/"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "primary_function": "classical",
+  "description": "Historical electromechanical ciphers that use rotating substitution components."
+}
