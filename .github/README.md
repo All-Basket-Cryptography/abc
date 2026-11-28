@@ -33,10 +33,15 @@ with the approval recorded for the exact revision. [Trust and source policy](../
 
 ## Main diagnostics
 
-The main diagnostics run the bounded-add and SHA-256 native fuzz tasks on
-separate Ubuntu workers with pinned tools and lockfiles. The same workflow
-reuses the provisioned SHA-256 and Poly1305 Lean source replays. Fuzz and
-formal artifacts retain the scope stated by their generators. The full
+The main diagnostics and PR workers run the bounded-add and SHA-256 native
+fuzz tasks on separate Windows x64 workers with pinned tools and lockfiles.
+The native harness retains all corpus seeds without coverage instrumentation.
+The pinned libFuzzer on Ubuntu asserted while choosing its first mutation of
+this corpus. [Linux engine logs](https://github.com/All-Basket-Cryptography/abc/actions/runs/46119615418)
+
+The main workflow reuses the provisioned Linux SHA-256 and Poly1305 Lean
+source replays. Fuzz and formal artifacts retain the scope stated by their
+generators. The full
 graph also contains Windows, macOS and provider-specific tasks. Use the
 reported task target and tool requirements to replay those tasks on the
 appropriate hosts. The graph and the runner remain available for those
