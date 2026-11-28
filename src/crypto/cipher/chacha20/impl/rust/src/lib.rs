@@ -120,6 +120,34 @@ fn block(initial: [u32; 16], counter: u32) -> [u8; BLOCK_BYTES] {
     serialize(block_words(initial, counter))
 }
 
+fn counter_exhausted(length: usize, counter: u32) -> bool {
+    if length == 0 {
+        return false;
+    }
+    // Compare the final block's offset from the starting counter.
+    let last = (length - 1) / BLOCK_BYTES;
+    last as u64 > 0xffff_ffffu64 - counter as u64
+}
+
+fn xor_byte(input: &mut [u8], index: usize, pad: u8) {
+    input[index] ^= pad;
+}
+
+fn xor_block(input: &mut [u8], start: usize, pad: &[u8; BLOCK_BYTES]) -> usize {
+    let remaining = input.len() - start;
+    let length = if remaining < BLOCK_BYTES {
+        remaining
+    } else {
+        BLOCK_BYTES
+    };
+    let mut index = 0;
+    while index < length {
+        xor_byte(input, start + index, pad[index]);
+        index += 1;
+    }
+    start + length
+}
+
 /// XOR an entire message with its keystream. Counter exhaustion preserves the
 /// input. Callers own nonce allocation for each key and protocol authentication.
 pub fn apply_keystream(
@@ -128,15 +156,15 @@ pub fn apply_keystream(
     counter: u32,
     input: &mut [u8],
 ) -> Result<(), CounterExhausted> {
-    let blocks = input.len().div_ceil(BLOCK_BYTES) as u64;
-    if blocks > (1u64 << 32) - u64::from(counter) {
+    if counter_exhausted(input.len(), counter) {
         return Err(CounterExhausted);
     }
     let initial = initial_state(key, nonce);
-    for (index, chunk) in input.chunks_mut(BLOCK_BYTES).enumerate() {
-        for (byte, stream_byte) in chunk.iter_mut().zip(block(initial, counter + index as u32)) {
-            *byte ^= stream_byte;
-        }
+    let mut offset = 0;
+    while offset < input.len() {
+        let index = (offset / BLOCK_BYTES) as u32;
+        let pad = block(initial, counter + index);
+        offset = xor_block(input, offset, &pad);
     }
     Ok(())
 }

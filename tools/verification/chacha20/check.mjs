@@ -29,7 +29,7 @@ const streamRefinementTheorems = ['extracted_block_provider_observes_result',
 const allowedAxioms = new Set(['propext', 'Classical.choice', 'Quot.sound']);
 const target = 'x86_64-unknown-linux-gnu';
 const cargo = ['--locked', '--offline', '--lib', '--no-default-features', '--target', target];
-const charonArgs = ['--preset=aeneas', '--start-from', 'crate::initial_state', '--start-from', 'crate::block'];
+const charonArgs = ['--preset=aeneas', '--start-from', 'crate::apply_keystream'];
 const aeneasArgs = ['-backend', 'lean', '-split-files', '-no-progress-bar', '-subdir', subdir,
   '-namespace', namespace];
 const officialBinaries = {
