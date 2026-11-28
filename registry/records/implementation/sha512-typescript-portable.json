@@ -18,7 +18,7 @@
   "subject_ref": "abc:algorithm:sha-512",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "fac508cce069ae1f12ff12e9f11c128ab2a5a64abb8fa5db43f90ae02ce8343c",
+  "source_sha256": "885ed2549830f7a3357b62b00432ac28ed3ee27e9ad629a966280c145bcab354",
   "path": "src/crypto/hash/sha512/impl/typescript",
   "languages": [
     "typescript"

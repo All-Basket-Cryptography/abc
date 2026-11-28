@@ -1,7 +1,7 @@
 schema_version = 1
 id = "hkdf-sha256-typescript-portable"
 owned_paths = ["src/crypto/kdf/hkdf-sha256/impl/typescript"]
-dependencies = [{ module = "hmac-sha256-typescript-portable", type = "imports" }]
+dependencies = [{ module = "crypto-byte-views-ecmascript", type = "calls" }, { module = "hmac-sha256-typescript-portable", type = "imports" }]
 
 [tasks.test]
 kind = "test"

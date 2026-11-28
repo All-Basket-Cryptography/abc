@@ -1,4 +1,6 @@
 // FIPS 202 Keccak-p[1600,24] in low/high 32-bit words, lane x + 5*y.
+import { asUint8Array, asUint32Array } from '../../../../inputs/bytes.mts';
+
 export const RATE = 136;
 const ROTATION = [
   0, 1, 62, 28, 27,
@@ -41,11 +43,11 @@ function rotateInto(target: Uint32Array, index: number, low: number, high: numbe
   }
 }
 
-export function permute(lanes: Uint32Array) {
-  if (!(lanes instanceof Uint32Array) || lanes.length !== 50) throw new TypeError('Keccak requires 50 limbs');
-  const moved = new Uint32Array(50);
-  const parity = new Uint32Array(10);
-  const theta = new Uint32Array(10);
+function makeScratch() {
+  return { moved: new Uint32Array(50), parity: new Uint32Array(10), theta: new Uint32Array(10) };
+}
+
+function permuteWords(lanes: Uint32Array, { moved, parity, theta }: ReturnType<typeof makeScratch>) {
   for (let round = 0; round < 48; round += 2) {
     for (let i = 0; i < 10; i += 1) {
       parity[i] = lanes[i] ^ lanes[i + 10] ^ lanes[i + 20] ^ lanes[i + 30] ^ lanes[i + 40];
@@ -65,8 +67,14 @@ export function permute(lanes: Uint32Array) {
       }
     }
     for (let row = 0; row < 50; row += 10) {
-      for (let i = 0; i < 10; i += 1) {
-        lanes[row + i] = moved[row + i] ^ (~moved[row + (i + 2) % 10] & moved[row + (i + 4) % 10]);
+      for (let i = 0; i < 6; i += 1) {
+        lanes[row + i] = moved[row + i] ^ (~moved[row + i + 2] & moved[row + i + 4]);
+      }
+      for (let i = 6; i < 8; i += 1) {
+        lanes[row + i] = moved[row + i] ^ (~moved[row + i + 2] & moved[row + i - 6]);
+      }
+      for (let i = 8; i < 10; i += 1) {
+        lanes[row + i] = moved[row + i] ^ (~moved[row + i - 8] & moved[row + i - 6]);
       }
     }
     lanes[0] ^= ROUND_CONSTANTS[round];
@@ -74,22 +82,29 @@ export function permute(lanes: Uint32Array) {
   }
 }
 
-function absorb(state: Uint32Array, input: DataView, offset: number) {
+export function permute(lanes: Uint32Array) {
+  const words = asUint32Array(lanes);
+  if (words.length !== 50) throw new TypeError('Keccak requires 50 limbs');
+  permuteWords(words, makeScratch());
+}
+
+function absorb(state: Uint32Array, input: DataView, offset: number, scratch: ReturnType<typeof makeScratch>) {
   for (let i = 0; i < RATE / 4; i += 1) state[i] ^= input.getUint32(offset + 4 * i, true);
-  permute(state);
+  permuteWords(state, scratch);
 }
 
 function inputView(bytes: Uint8Array) {
-  if (!(bytes instanceof Uint8Array)) throw new TypeError('Keccak requires a Uint8Array');
   return new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
 }
 
 export class Sponge {
   #state = new Uint32Array(50);
+  #scratch = makeScratch();
   #tail = new Uint8Array(RATE);
   #used = 0;
 
   update(input: Uint8Array) {
+    input = asUint8Array(input);
     const view = inputView(input);
     let offset = 0;
     if (this.#used !== 0) {
@@ -97,10 +112,10 @@ export class Sponge {
       this.#tail.set(input.subarray(0, offset), this.#used);
       this.#used += offset;
       if (this.#used < RATE) return;
-      absorb(this.#state, inputView(this.#tail), 0);
+      absorb(this.#state, inputView(this.#tail), 0, this.#scratch);
     }
     while (input.length - offset >= RATE) {
-      absorb(this.#state, view, offset);
+      absorb(this.#state, view, offset, this.#scratch);
       offset += RATE;
     }
     this.#tail.set(input.subarray(offset));
@@ -114,7 +129,7 @@ export class Sponge {
     final.set(this.#tail.subarray(0, this.#used));
     final[this.#used] = domain;
     final[RATE - 1] |= 0x80;
-    absorb(state, inputView(final), 0);
+    absorb(state, inputView(final), 0, this.#scratch);
     return new Reader(state);
   }
 }
@@ -123,6 +138,7 @@ class Reader {
   #state: Uint32Array;
   #encoded = new Uint8Array(RATE);
   #cursor = 0;
+  #scratch: ReturnType<typeof makeScratch> | undefined;
 
   constructor(state: Uint32Array) {
     this.#state = state;
@@ -135,10 +151,11 @@ class Reader {
   }
 
   readInto(output: Uint8Array) {
-    inputView(output);
+    output = asUint8Array(output);
     for (let offset = 0; offset < output.length;) {
       if (this.#cursor === RATE) {
-        permute(this.#state);
+        this.#scratch ??= makeScratch();
+        permuteWords(this.#state, this.#scratch);
         this.#encode();
         this.#cursor = 0;
       }

@@ -1,3 +1,4 @@
+import { asUint8Array } from '../../../../inputs/bytes.mjs';
 import { MAX_INPUT_BYTES, TAG_BYTES, HmacSha256, authenticate } from '../../../../mac/hmac-sha256/impl/javascript/hmac.mjs';
 
 export const MAX_OUTPUT_BYTES = 255 * TAG_BYTES;
@@ -7,7 +8,8 @@ export function extract(salt, inputKeyMaterial) {
 }
 
 export function expand(prk, info, outputLength) {
-  if (!(prk instanceof Uint8Array) || !(info instanceof Uint8Array)) throw new TypeError('HKDF inputs must be Uint8Array');
+  prk = asUint8Array(prk);
+  info = asUint8Array(info);
   if (prk.length < TAG_BYTES) throw new RangeError('HKDF PRK must have at least 32 bytes');
   if (!Number.isInteger(outputLength) || outputLength < 0 || outputLength > MAX_OUTPUT_BYTES) {
     throw new RangeError('HKDF output length must be an integer from 0 through 8160');

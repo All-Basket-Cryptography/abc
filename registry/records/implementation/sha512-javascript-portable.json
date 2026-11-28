@@ -18,7 +18,7 @@
   "subject_ref": "abc:algorithm:sha-512",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "a7c9fabc384d7e4d3adb8430b743d04116a181d52b01a65e62130d10d470950c",
+  "source_sha256": "81c3ee9bab4783ef4ca2710d96f0a8eb3ca4365bcb89b65008303e47ceb61d4e",
   "path": "src/crypto/hash/sha512/impl/javascript",
   "languages": [
     "javascript"

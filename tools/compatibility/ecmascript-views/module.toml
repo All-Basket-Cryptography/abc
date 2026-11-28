@@ -1,0 +1,54 @@
+schema_version = 1
+id = "ecmascript-portfolio-byte-views"
+owned_paths = ["tools/compatibility/ecmascript-views"]
+dependencies = [
+  { module = "aes256-gcm-javascript-portable", type = "imports" },
+  { module = "aes256-gcm-typescript-portable", type = "imports" },
+  { module = "aes256-javascript-portable", type = "imports" },
+  { module = "aes256-typescript-portable", type = "imports" },
+  { module = "argon2id-javascript-provider", type = "imports" },
+  { module = "argon2id-typescript-provider", type = "imports" },
+  { module = "blake2b-javascript-portable", type = "imports" },
+  { module = "blake2b-typescript-portable", type = "imports" },
+  { module = "chacha20-javascript-portable", type = "imports" },
+  { module = "chacha20-poly1305-javascript-portable", type = "imports" },
+  { module = "chacha20-poly1305-typescript-portable", type = "imports" },
+  { module = "chacha20-typescript-portable", type = "imports" },
+  { module = "ecdsa-p256-sha256-javascript-provider", type = "imports" },
+  { module = "ecdsa-p256-sha256-typescript-provider", type = "imports" },
+  { module = "ed25519-javascript-provider", type = "imports" },
+  { module = "ed25519-typescript-provider", type = "imports" },
+  { module = "hkdf-sha256-javascript-portable", type = "imports" },
+  { module = "hkdf-sha256-typescript-portable", type = "imports" },
+  { module = "hmac-sha256-javascript-portable", type = "imports" },
+  { module = "hmac-sha256-typescript-portable", type = "imports" },
+  { module = "keccak-p1600-javascript", type = "imports" },
+  { module = "keccak-p1600-typescript", type = "imports" },
+  { module = "ml-dsa-65-javascript-provider", type = "imports" },
+  { module = "ml-dsa-65-typescript-provider", type = "imports" },
+  { module = "ml-kem-768-javascript-provider", type = "imports" },
+  { module = "ml-kem-768-typescript-provider", type = "imports" },
+  { module = "pbkdf2-hmac-sha256-javascript-portable", type = "imports" },
+  { module = "pbkdf2-hmac-sha256-typescript-portable", type = "imports" },
+  { module = "poly1305-javascript-portable", type = "imports" },
+  { module = "poly1305-typescript-portable", type = "imports" },
+  { module = "scrypt-javascript-portable", type = "imports" },
+  { module = "scrypt-typescript-portable", type = "imports" },
+  { module = "sha256-javascript-portable", type = "imports" },
+  { module = "sha256-typescript-portable", type = "imports" },
+  { module = "sha3-256-javascript-portable", type = "imports" },
+  { module = "sha3-256-typescript-portable", type = "imports" },
+  { module = "sha512-javascript-portable", type = "imports" },
+  { module = "sha512-typescript-portable", type = "imports" },
+  { module = "shake256-javascript-portable", type = "imports" },
+  { module = "shake256-typescript-portable", type = "imports" },
+  { module = "x25519-javascript-provider", type = "imports" },
+  { module = "x25519-typescript-provider", type = "imports" },
+]
+
+[tasks.runtime-contract]
+kind = "test"
+command = ["node", "--test", "tools/compatibility/ecmascript-views/portfolio.test.mjs"]
+tools = ["node"]
+target = "node24"
+timeout_seconds = 120

@@ -1,10 +1,12 @@
+import { asUint8Array } from '../../../../inputs/bytes.mjs';
 import { MAX_INPUT_BYTES, TAG_BYTES, HmacSha256 } from '../../../../mac/hmac-sha256/impl/javascript/hmac.mjs';
 
 export const MAX_ITERATIONS = 0xffffffff;
 export const MAX_OUTPUT_BYTES = 0xffffffff * TAG_BYTES;
 
 export function derive(password, salt, iterations, outputLength) {
-  if (!(password instanceof Uint8Array) || !(salt instanceof Uint8Array)) throw new TypeError('PBKDF2 inputs must be Uint8Array');
+  password = asUint8Array(password);
+  salt = asUint8Array(salt);
   if (!Number.isInteger(iterations) || iterations < 1 || iterations > MAX_ITERATIONS) {
     throw new RangeError('PBKDF2 iterations must be a positive 32-bit integer');
   }

@@ -2,7 +2,7 @@ schema_version = 1
 id = "aes256-gcm-rust"
 owned_paths = ["src/crypto/aead/aes256-gcm"]
 cargo_manifests = ["src/crypto/aead/aes256-gcm/impl/rust/Cargo.toml"]
-lean_sources = { Aes256GcmBounds = "src/crypto/aead/aes256-gcm/spec" }
+lean_sources = { Aes256GcmBounds = "src/crypto/aead/aes256-gcm/spec", Aes256GcmComposition = "src/crypto/aead/aes256-gcm/spec" }
 
 [tasks.test]
 kind = "test"
@@ -13,5 +13,11 @@ timeout_seconds = 120
 [tasks.proof]
 kind = "formal"
 command = ["lean", "src/crypto/aead/aes256-gcm/spec/Aes256GcmBounds.lean"]
+tools = ["lean"]
+timeout_seconds = 120
+
+[tasks.composition-proof]
+kind = "formal"
+command = ["lean", "-DwarningAsError=true", "src/crypto/aead/aes256-gcm/spec/Aes256GcmComposition.lean"]
 tools = ["lean"]
 timeout_seconds = 120

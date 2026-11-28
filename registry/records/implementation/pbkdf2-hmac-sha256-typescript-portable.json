@@ -18,7 +18,7 @@
   "subject_ref": "abc:construction:pbkdf2-hmac-sha-256",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "cd488ff91067dd07f80ad569d536c30fa582059909495b6a93b1b4b465322327",
+  "source_sha256": "0f3fcb45671066b6185be4f0166fbdfe3125f82f56a689618f684aa13f223982",
   "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/typescript",
   "languages": [
     "typescript"

@@ -33,9 +33,45 @@ Rust rotation, round constant and padding marker, and repeat the rotation
 and padding mutations in the Lean model. The Lean changes must break
 equality with the FIPS round and padding specifications.
 
-The original Rust source is linked to the functional model through source
-review and fingerprint checks. Compiler-level translation and raw array
-state outside the live prefix remain source-refinement obligations.
-Constant-time behaviour, compiler output and the other language
-implementations have separate verification scope.
+The standalone functional replay links the reviewed Rust source to the
+model with fingerprint checks. The source replay below adds generated
+terms from the compression function's compiler intermediate representation.
 [Compression theorem](../../../src/crypto/hash/sha512/spec/Sha512Compression.lean) · [Stream theorems](../../../src/crypto/hash/sha512/spec/Sha512Streaming.lean) · [FIPS model](../../../src/crypto/hash/sha512/spec/Sha512Spec.lean) · [Windows x64 receipt](receipt-windows-x64.json)
+
+## Charon compression source replay
+
+The source replay invokes pinned Charon `b104e24` with Rust
+`nightly-2026-08-18` on the original crate's `compress` function. It
+lowers four normal-path bodies from Charon's structured LLBC into Lean.
+The generated expressions cover loading a big-endian word, reading and
+writing the schedule indices, all eight round outputs and the
+feed-forward addition. Lean composes these four expressions with the
+existing fixed-array driver model and proves equality to the separate
+FIPS compression specification for every 128-byte block and eight
+64-bit initial words. The receipt audits six theorems.
+[Charon](https://github.com/AeneasVerif/charon) · [Rust unsigned-word primitives](https://doc.rust-lang.org/std/primitive.u64.html) · [Generated-term refinement](../../../src/crypto/hash/sha512/spec/Sha512LlbcRefinement.lean)
+
+With the LLVM linker, pinned Charon and Rust toolchain on the host and
+Lean 4.31.0 installed, run the source replay from the repository root.
+`--charon` and `--lean` accept explicit executable paths.
+
+```sh
+python -B tools/verification/sha512/check_source.py --negative-controls
+```
+
+The checker requires that two fresh crate extractions generate identical
+Lean terms. The negative control recompiles a Rust copy with a changed
+rotation, lowers its changed LLBC and confirms that Lean rejects the
+round equality. The Windows x64 run used Charon's distributed Rust sysroot
+fallback and records both LLBC fingerprints and the shared generated
+Lean fingerprint. Absolute build metadata can make the raw LLBC
+fingerprints differ. [Source replay receipt](source-receipt-windows-x64.json)
+
+The trusted boundary includes rustc and Charon extraction, the restricted
+LLBC lowering, the meanings assigned to Rust built-in operations and the
+reviewed iterator drivers that supply the four loop inputs. For example,
+the parser validates the normal-path `Option` branches and the extracted
+values that each iteration writes. It takes the iterations' exact
+sequence and pairing from the separately reviewed driver model.
+The streaming source bridge, general Rust memory and unwind semantics,
+compiler output and target leakage remain separate verification work.

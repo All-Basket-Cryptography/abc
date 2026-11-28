@@ -11,7 +11,57 @@ Callers own unique nonce allocation for each key.
 Opening computes and checks the full tag before writing plaintext.
 The Rust tests include NIST GCM-AES256 example 5 with partial blocks,
 empty input, and preservation of ciphertext on rejected authentication.
-Lean checks the counter range and the logical equality result of
-an OR of all tag-byte differences. Source correspondence, leakage
-assessment and hardware performance qualification remain open.
 [NIST AES-GCM examples](https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Standards-and-Guidelines/documents/examples/AES_GCM.pdf)
+
+## Checked composition
+
+The Lean reference uses the GHASH multiplication recurrence in
+SP 800-38D Algorithm 1, the GHASH fold in Algorithm 2, and the counter
+mode and authentication operations from Algorithms 3–5. It fixes the
+profile at 96-bit nonces and 128-bit tags. The implementation model
+follows the portable Rust functions' shifts and masks, counter chunks,
+separate GHASH updates, packed length word, and detached seal and open
+control flow. [NIST SP 800-38D](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf)
+· [Lean source](Aes256GcmComposition.lean) · [Portable Rust source](../impl/rust/src/lib.rs)
+
+Lean proves the 128 multiplication rounds agree for every operand pair.
+It proves zero padding and exact packing of both 64-bit big-endian bit
+lengths. Under these length bounds, the authenticated transcript
+uniquely encodes the associated data and ciphertext. The independently
+padded incremental GHASH updates agree with processing that transcript
+in one pass. The counter proof covers every payload byte and the
+byte-level stream agrees with 16-byte chunks followed by a partial
+chunk. Counters zero and one stay outside the payload domain.
+
+The full-tag XOR/OR reduction equals exact 16-byte comparison. Given
+`AesApi.Refines`, which requires the block provider to return the
+reference AES-256 block value for every key and block, modeled seal and
+open agree with the reference for both accepted and rejected inputs.
+The round trip covers every admitted plaintext. The model preserves
+caller bytes on errors even without the AES contract. Lean also checks
+the GHASH value, ciphertext, tag and decrypted plaintext of NIST
+example 5 using its published AES block outputs.
+
+The GCM theorem checks the handwritten source-shaped model. The Rust
+translation and proof of the concrete AES provider contract remain open.
+The result covers functional equality and buffer preservation.
+Compiler timing, binary correspondence, key erasure, nonce allocation
+and cryptographic security games require separate evidence.
+
+Run the models with Lean 4.31.0. The 20 composition results report only
+the standard axioms `propext`, `Classical.choice` and `Quot.sound`.
+
+```sh
+lean -DwarningAsError=true src/crypto/aead/aes256-gcm/spec/Aes256GcmBounds.lean
+lean -DwarningAsError=true src/crypto/aead/aes256-gcm/spec/Aes256GcmComposition.lean
+```
+
+## Design literature
+
+FIPS 197 specifies the AES block cipher. The original GCM analysis gives
+the mode design and its conditional security and performance analyses.
+SP 800-38D Appendix A discusses assurance of IV uniqueness and Appendix B
+discusses authentication assurance.
+[NIST FIPS 197](https://csrc.nist.gov/pubs/fips/197/final)
+· [McGrew and Viega, GCM security and performance](https://eprint.iacr.org/2004/193)
+· [NIST SP 800-38D](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf)

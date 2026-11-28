@@ -1,3 +1,5 @@
+import { asUint8Array } from '../../../../inputs/bytes.mjs';
+
 // Byte-oriented FIPS 180-4 SHA-256 with a circular message schedule.
 const BLOCK_SIZE = 64;
 export const MAX_MESSAGE_BYTES = (1n << 61n) - 1n;
@@ -58,7 +60,7 @@ export class Sha256 {
   }
 
   update(input) {
-    if (!(input instanceof Uint8Array)) throw new TypeError('SHA-256 requires a Uint8Array');
+    input = asUint8Array(input);
     const length = this.#length + BigInt(input.length);
     if (length > MAX_MESSAGE_BYTES) throw new RangeError('SHA-256 input exceeds the bit-length domain');
     this.#length = length;

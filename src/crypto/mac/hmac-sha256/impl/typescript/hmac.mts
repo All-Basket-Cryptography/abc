@@ -1,3 +1,4 @@
+import { asUint8Array } from '../../../../inputs/bytes.mts';
 import { MAX_MESSAGE_BYTES, Sha256, sha256 } from '../../../../hash/sha256/impl/typescript/sha256.mts';
 
 const blockBytes = 64;
@@ -10,7 +11,7 @@ export class HmacSha256 {
   readonly #outerPad: Uint8Array;
 
   constructor(key: Uint8Array) {
-    if (!(key instanceof Uint8Array)) throw new TypeError('HMAC requires a Uint8Array key');
+    key = asUint8Array(key);
     this.#keyBlock = new Uint8Array(blockBytes);
     this.#keyBlock.set(key.length > blockBytes ? sha256(key) : key);
     this.#outerPad = this.#keyBlock.map((byte) => byte ^ 0x5c);

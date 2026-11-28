@@ -18,7 +18,7 @@
   "subject_ref": "abc:construction:hmac-sha-256",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "6a94e691f90d33693fbfab571735944f45bf51c50274ed206e764d3a6163ac78",
+  "source_sha256": "ef59ae54fa3ca2428798367ef38821ee1e0cd1a1d1fce54bde828a1329726779",
   "path": "src/crypto/mac/hmac-sha256/impl/typescript",
   "languages": [
     "typescript"

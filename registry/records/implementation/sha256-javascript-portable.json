@@ -19,7 +19,7 @@
   "spec_ref": "abc:specification:sha256-fips180-4-2015",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "26ab106d9876e13584e8c06ac75c9231a15593576b7c1fa8eb0de30533c35dae",
+  "source_sha256": "fa918fb4d1ba942865558351146726342275d864f161c2d55719fb05174cab70",
   "path": "src/crypto/hash/sha256/impl/javascript",
   "languages": [
     "javascript"

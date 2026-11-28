@@ -1,3 +1,4 @@
+import { asUint8Array } from '../../../../inputs/bytes.mts';
 import { MAX_INPUT_BYTES, TAG_BYTES, HmacSha256 } from '../../../../mac/hmac-sha256/impl/typescript/hmac.mts';
 
 const largestIndex = 2 ** 32 - 1;
@@ -18,7 +19,8 @@ function block(mac: HmacSha256, salt: Uint8Array, index: number, iterations: num
 }
 
 export function derive(password: Uint8Array, salt: Uint8Array, iterations: number, length: number): Uint8Array {
-  if (!(password instanceof Uint8Array) || !(salt instanceof Uint8Array)) throw new TypeError('PBKDF2 inputs must be Uint8Array');
+  password = asUint8Array(password);
+  salt = asUint8Array(salt);
   if (!Number.isInteger(iterations) || iterations < 1 || iterations > MAX_ITERATIONS) {
     throw new RangeError('PBKDF2 iterations must be a positive 32-bit integer');
   }

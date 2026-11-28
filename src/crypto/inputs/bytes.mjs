@@ -13,8 +13,8 @@ const getOffset = accessor(typedArrayPrototype, 'byteOffset');
 const getLength = accessor(typedArrayPrototype, 'byteLength');
 const arrayBufferLength = accessor(ArrayBuffer.prototype, 'byteLength');
 
-export function asUint8Array(input) {
-  if (getType(input) !== 'Uint8Array') throw new TypeError('Expected a Uint8Array');
+function fixedView(input, type, constructor, bytesPerElement) {
+  if (getType(input) !== type) throw new TypeError(`Expected a ${type}`);
   const buffer = getBuffer(input);
   // This getter validates the ArrayBuffer brand and rejects shared backing stores.
   arrayBufferLength(buffer);
@@ -23,5 +23,13 @@ export function asUint8Array(input) {
     // Distinguish an empty array from an out-of-bounds resizable view.
     Reflect.apply(typedArrayValues, input, []);
   }
-  return new Uint8Array(buffer, getOffset(input), length);
+  return new constructor(buffer, getOffset(input), length / bytesPerElement);
+}
+
+export function asUint8Array(input) {
+  return fixedView(input, 'Uint8Array', Uint8Array, 1);
+}
+
+export function asUint32Array(input) {
+  return fixedView(input, 'Uint32Array', Uint32Array, 4);
 }

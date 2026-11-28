@@ -1,7 +1,7 @@
 schema_version = 1
 id = "pbkdf2-hmac-sha256-javascript-portable"
 owned_paths = ["src/crypto/kdf/pbkdf2-hmac-sha256/impl/javascript"]
-dependencies = [{ module = "hmac-sha256-javascript-portable", type = "imports" }]
+dependencies = [{ module = "crypto-byte-views-ecmascript", type = "calls" }, { module = "hmac-sha256-javascript-portable", type = "imports" }]
 
 [tasks.test]
 kind = "test"

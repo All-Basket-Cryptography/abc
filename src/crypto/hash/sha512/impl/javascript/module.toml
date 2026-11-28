@@ -1,7 +1,7 @@
 schema_version = 1
 id = "sha512-javascript-portable"
 owned_paths = ["src/crypto/hash/sha512/impl/javascript"]
-dependencies = [{ module = "sha512-spec", type = "implements" }]
+dependencies = [{ module = "crypto-byte-views-ecmascript", type = "calls" }, { module = "sha512-spec", type = "implements" }]
 
 [tasks.test]
 kind = "test"

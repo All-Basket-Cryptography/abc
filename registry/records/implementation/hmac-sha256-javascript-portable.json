@@ -18,7 +18,7 @@
   "subject_ref": "abc:construction:hmac-sha-256",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "d75d7d8522d7b61d156cff83c3f87203dc973d1dbe5ff8e71237614146a607e4",
+  "source_sha256": "7db76b517e3457b99f645ecc8107e243b57a2acaa843a3759669ee133478beda",
   "path": "src/crypto/mac/hmac-sha256/impl/javascript",
   "languages": [
     "javascript"

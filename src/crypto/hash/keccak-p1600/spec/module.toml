@@ -1,7 +1,7 @@
 schema_version = 1
 id = "keccak-p1600-spec"
 owned_paths = ["src/crypto/hash/keccak-p1600/spec"]
-lean_sources = { KeccakRound = "src/crypto/hash/keccak-p1600/spec", KeccakSplitWord = "src/crypto/hash/keccak-p1600/spec" }
+lean_sources = { KeccakRound = "src/crypto/hash/keccak-p1600/spec", KeccakSplitWord = "src/crypto/hash/keccak-p1600/spec", KeccakReader = "src/crypto/hash/keccak-p1600/spec", KeccakSpongeRead = "src/crypto/hash/keccak-p1600/spec" }
 
 [tasks.round]
 kind = "formal"
@@ -13,4 +13,10 @@ timeout_seconds = 120
 kind = "formal"
 command = ["lean", "-DwarningAsError=true", "src/crypto/hash/keccak-p1600/spec/KeccakSplitWord.lean"]
 tools = ["lean"]
+timeout_seconds = 60
+
+[tasks.reader]
+kind = "formal"
+command = ["python", "-B", "src/lean/check.py", "keccak-reader"]
+tools = ["python", "lean"]
 timeout_seconds = 60

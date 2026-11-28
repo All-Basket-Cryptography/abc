@@ -62,3 +62,15 @@ The benchmark uses public fixtures, including fixed post-quantum seeds.
 It measures the selected one-shot workloads and runtime on one host.
 The qualification evidence records the source, target and security scope.
 [Qualification evidence](../../docs/plan/portfolio-verification.md)
+
+## Paired SHA-3 and SHAKE measurements
+
+Pass a baseline checkout or extract its hash source directories with
+`git archive`. The script loads both versions in one Node process,
+checks both against OpenSSL, and alternates their timing order across
+11 samples. It records source digests, three input sizes and SHAKE
+outputs that cover both short reads and multiple rate blocks.
+
+```sh
+node tools/benchmarks/keccak-ecmascript.mjs /absolute/path/to/baseline
+```

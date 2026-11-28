@@ -1,3 +1,5 @@
+import { asUint8Array } from '../../../../inputs/bytes.mjs';
+
 // Byte-oriented FIPS 180-4 SHA-512 using two unsigned limbs per word.
 const BLOCK_SIZE = 128;
 const LENGTH_START = 112;
@@ -117,7 +119,7 @@ export class Sha512 {
   }
 
   update(input) {
-    if (!(input instanceof Uint8Array)) throw new TypeError('SHA-512 requires a Uint8Array');
+    input = asUint8Array(input);
     const length = this.#length + BigInt(input.length);
     if (length > MAX_MESSAGE_BYTES) throw new RangeError('SHA-512 input exceeds the bit-length domain');
     const data = new DataView(input.buffer, input.byteOffset, input.byteLength);

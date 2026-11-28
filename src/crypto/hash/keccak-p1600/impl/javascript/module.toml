@@ -1,7 +1,7 @@
 schema_version = 1
 id = "keccak-p1600-javascript"
 owned_paths = ["src/crypto/hash/keccak-p1600/impl/javascript"]
-dependencies = [{ module = "keccak-p1600-spec", type = "implements" }]
+dependencies = [{ module = "crypto-byte-views-ecmascript", type = "calls" }, { module = "keccak-p1600-spec", type = "implements" }]
 
 [tasks.test]
 kind = "test"

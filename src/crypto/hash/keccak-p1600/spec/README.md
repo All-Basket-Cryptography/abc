@@ -27,3 +27,19 @@ interface uses typed rate blocks, a tail length below 136 and exact
 word semantics. The Go and Python conformance tests cover their concrete
 streaming buffers and partial reads. A source-to-model refinement for
 those buffers, the permutation loops and compiled timing is still open.
+
+The ECMAScript implementation reuses private permutation work arrays and
+uses three linear parts for each chi row. Lean relates both neighbor
+indices in each of those parts to the modulo-ten definition for every
+32-bit limb. The reader model relates each bounded span to the corresponding
+rate-block position, including the paused position at byte 136. For any
+finite read partition, its output bytes and final absolute cursor agree
+with a single read of the same size. The block theorem then composes
+these reads with the FIPS bit sponge and proves that every returned bit
+agrees with it for arbitrary finite read partitions. The JavaScript and
+TypeScript conformance suite tests the concrete typed-array state and API.
+[Reader model](KeccakReader.lean) · [Composed FIPS read theorem](KeccakSpongeRead.lean)
+
+```sh
+python -B src/lean/check.py keccak-reader
+```

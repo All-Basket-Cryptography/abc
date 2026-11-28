@@ -11,6 +11,7 @@ on:
       - 'src/crypto/hash/sha512/spec/**'
       - 'src/crypto/hash/blake2b/spec/**'
       - 'src/crypto/hash/shake256/spec/**'
+      - 'src/crypto/hash/keccak-p1600/spec/**'
       - 'src/crypto/cipher/chacha20/spec/**'
       - 'src/crypto/cipher/chacha20/impl/java/*.lean'
       - 'src/crypto/kdf/pbkdf2-hmac-sha256/spec/**'
@@ -107,13 +108,16 @@ jobs:
           lean src/crypto/hash/sha512/impl/c/proof/Sha512LengthHalves.lean
           lean src/crypto/hash/keccak-p1600/spec/KeccakRound.lean
           lean src/crypto/hash/keccak-p1600/spec/KeccakSplitWord.lean
+          python3 -B src/lean/check.py keccak-reader
           lean src/crypto/hash/keccak-p1600/impl/cpp/proof/KeccakCppTables.lean
           lean src/crypto/mac/poly1305/impl/go/Poly1305GoModel.lean
           lean src/crypto/cipher/aes256/impl/go/Aes256GoSquare.lean
           lean src/crypto/aead/chacha20-poly1305/spec/ChaCha20Poly1305Lengths.lean
           lean -DwarningAsError=true src/crypto/aead/chacha20-poly1305/spec/ChaCha20Poly1305Rfc.lean
+          lean -DwarningAsError=true src/crypto/aead/aes256-gcm/spec/Aes256GcmComposition.lean
           python3 -B tools/verification/sha512/check.py --negative-controls
           lean src/crypto/kdf/scrypt/spec/ScryptBounds.lean
+          lean -DwarningAsError=true src/crypto/kdf/scrypt/spec/ScryptFunctional.lean
           lean src/crypto/kdf/argon2id/spec/Argon2idBounds.lean
           lean src/crypto/cipher/aes256/spec/Aes256Byte.lean
           lean src/crypto/aead/aes256-gcm/spec/Aes256GcmBounds.lean

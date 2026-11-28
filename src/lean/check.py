@@ -22,7 +22,7 @@ def checked_lean(command, arguments, directory, output):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("module", choices=(
-        "foundation", "sha256", "sha512", "sha3", "shake256", "hmac", "hkdf", "pbkdf2", "chacha20",
+        "foundation", "sha256", "sha512", "sha3", "shake256", "keccak-reader", "hmac", "hkdf", "pbkdf2", "chacha20",
     ))
     selected = parser.parse_args().module
     elan, lean = shutil.which("elan"), shutil.which("lean")
@@ -57,6 +57,12 @@ def main():
         elif selected == "shake256":
             directory = ROOT / "src/crypto/hash/shake256/spec"
             checked_lean(command, ["Shake256Encoding.lean"], directory, output)
+        elif selected == "keccak-reader":
+            directory = ROOT / "src/crypto/hash/keccak-p1600/spec"
+            for module in ("KeccakRound", "KeccakReader"):
+                checked_lean(command, ["-DwarningAsError=true", "-o", output / f"{module}.olean",
+                                       f"{module}.lean"], directory, output)
+            checked_lean(command, ["-DwarningAsError=true", "KeccakSpongeRead.lean"], directory, output)
         if selected in ("hmac", "hkdf", "pbkdf2"):
             directory = ROOT / "src/crypto/mac/hmac-sha256/spec"
             checked_lean(command, ["-o", output / "HmacSpec.olean", "HmacSpec.lean"], directory, output)

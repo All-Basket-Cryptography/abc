@@ -18,7 +18,7 @@
   "subject_ref": "abc:construction:hkdf-sha-256",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "b29113c727378c54df703ce80cfbfba1b86fe676a71d69925036b584e36ee58f",
+  "source_sha256": "5d68349f1833fe214a7609efce98beabb84d0e8d6ac983e013823ea92da36661",
   "path": "src/crypto/kdf/hkdf-sha256/impl/typescript",
   "languages": [
     "typescript"

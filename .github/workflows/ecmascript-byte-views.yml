@@ -1,0 +1,33 @@
+name: ABC ECMAScript byte-view qualification
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/ecmascript-byte-views.yml'
+      - 'src/crypto/**/impl/javascript/**'
+      - 'src/crypto/**/impl/typescript/**'
+      - 'src/crypto/inputs/**'
+      - 'src/crypto/providers/ecmascript/**'
+      - 'tools/compatibility/ecmascript-views/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    name: Check byte-view contracts for 20 profiles
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903
+        with:
+          node-version: '24.12.0'
+          package-manager-cache: false
+      - name: Install the locked test providers
+        run: npm ci --ignore-scripts --no-audit --prefix src/crypto/providers/ecmascript
+      - name: Exercise JavaScript and TypeScript entry points
+        run: node --test tools/compatibility/ecmascript-views/portfolio.test.mjs
