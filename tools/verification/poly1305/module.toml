@@ -1,8 +1,15 @@
 schema_version = 1
 id = "poly1305-source-verification"
 owned_paths = ["tools/verification/poly1305"]
+lean_sources = { Poly1305EncodingRefinement = "tools/verification/poly1305", Poly1305SourceRefinement = "tools/verification/poly1305" }
+lean_external_imports = { "Abc.Poly1305.Extracted" = "tools/verification/poly1305/check.mjs" }
 
 [tasks.runner-syntax]
 kind = "lint"
 command = ["node", "--check", "tools/verification/poly1305/check.mjs"]
+tools = ["node"]
+
+[tasks.replay-syntax]
+kind = "lint"
+command = ["node", "--check", "tools/verification/poly1305/replay.mjs"]
 tools = ["node"]

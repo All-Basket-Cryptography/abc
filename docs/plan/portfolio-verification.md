@@ -17,6 +17,7 @@ and the [per-language runtime replay](../status/portfolio-replay.json).
 | SHA3-256 and SHAKE256 | The Keccak word-row proof shows that the new linear chi indexing agrees with modulo indexing. The squeeze proof covers arbitrary finite read partitions and connects every returned bit to the FIPS bit sponge. [Reader and composition proofs](../../src/crypto/hash/keccak-p1600/spec) · [FIPS 202](https://doi.org/10.6028/NIST.FIPS.202) | The ECMAScript buffer and permutation source correspondence remains open. |
 | AES-256-GCM | Two extractions generate the same Lean loop for Rust GHASH multiplication. Lean proves termination within 128 rounds and agreement with SP 800-38D Algorithm 1 on all 128-bit inputs. Separate composition theorems cover padding, length packing, CTR chunking, complete tag equality and rejection under the AES block contract. [Source replay](../../tools/verification/aes256-gcm) · [GCM composition](../../src/crypto/aead/aes256-gcm/spec) · [SP 800-38D](https://doi.org/10.6028/NIST.SP.800-38D) | The GHASH wrapper and the actual provider's block contract still need source linkage. Full seal/open source refinement and compiled leakage remain open. |
 | HMAC-SHA-256 | Lean proves the prepared inner and outer prefix state model preserves RFC 2104 outputs on arbitrary admissible chunk partitions and preserves the context after a rejected update. The one-shot function and reusable contexts share the pad normalization and tag logic in both JavaScript and TypeScript. [Prepared-state proof](../../src/crypto/mac/hmac-sha256/spec/HmacPrepared.lean) · [RFC 2104 § 4](https://www.rfc-editor.org/rfc/rfc2104.html#section-4) | The proof uses the byte-level SHA-256 state model. ECMAScript source refinement, JIT leakage and key-state erasure remain open. |
+| Poly1305 | Lean proves that the extracted Rust limb parser represents every 128-bit input as five radix-26 limbs. The extracted folded multiplication, carry and absorption of decoded message limbs implement the RFC polynomial step and preserve the bounded accumulator invariant. [Rust proofs and replay](../../tools/verification/poly1305) · [RFC 8439 § 2.5](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.5) | Rust streaming, the appended block bit, final reduction and tag output still require source linkage. The full ChaCha20-Poly1305 entry-point proof and compiled leakage remain open. |
 | scrypt | The two ROMix passes agree with the RFC model for admitted power-of-two costs. Lean checks table row indexing and truncation followed by masking. The KDF composition uses explicit Salsa20/8 and PBKDF2 contracts. [ROMix and KDF proof](../../src/crypto/kdf/scrypt/spec) · [RFC 7914](https://www.rfc-editor.org/rfc/rfc7914.html#section-5) | Source extraction, provider correspondence, erasure and failure paths remain open. |
 | ML-KEM-768 | Lean checks integral rounding, decode bounds and recompression of every valid wire value. The sharp cyclic coefficient errors are 104 for 4-bit compression and 2 for 10-bit compression. [Coefficient proofs](../../src/crypto/agreement/ml-kem-768/spec) · [FIPS 203](https://doi.org/10.6028/NIST.FIPS.203) | Provider correspondence for coefficient operations and the full key encapsulation refinement remain open. |
 
@@ -34,6 +35,25 @@ existing SHA-256, HMAC and HKDF source-refinement contracts continue to
 apply to their verified entry points and feature configuration. The
 full portfolio still requires per-source refinement and compiled
 side-channel qualification. [Original exact refinement evidence](../status/pr-1-qualification.md#formal-evidence) · [Linux SHA-256, HMAC and HKDF re-extraction](https://github.com/All-Basket-Cryptography/abc/actions/runs/46096767910/job/140829799978) · [Linux ChaCha20 composition verification](https://github.com/All-Basket-Cryptography/abc/actions/runs/46096767939/job/140829799821)
+
+## Construction literature
+
+The [standards matrix](multi-language-qualification.md) lists the governing
+documents and test-vector sections for each of the 20 profiles. The following
+papers give the security assumptions for the constructions affected by this
+round's work. The repository's Lean claims establish the functional results
+listed above.
+
+- Bellare's analysis gives HMAC pseudorandomness under assumptions on the
+  compression function. [IACR ePrint 2006/043](https://eprint.iacr.org/2006/043.pdf)
+- Krawczyk analyzes HKDF in terms of extraction and pseudorandomness
+  properties of HMAC. [IACR ePrint 2010/264](https://eprint.iacr.org/2010/264.pdf)
+- McGrew and Viega analyze GCM as authenticated encryption with universal
+  hashing over a binary field. [IACR ePrint 2004/193](https://eprint.iacr.org/2004/193.pdf)
+- Bernstein derives the polynomial authentication bounds behind Poly1305 in
+  the Poly1305-AES construction. RFC 8439 specifies the one-time authenticator
+  and the ChaCha20-derived key used in this portfolio.
+  [Original Poly1305 paper](https://cr.yp.to/mac/poly1305-20041101.pdf) · [RFC 8439 §§ 2.5–2.6](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.5)
 
 ## Runtime evidence
 
@@ -90,6 +110,15 @@ run-to-run noise. [All 20 workloads](../status/portfolio-benchmark-prepared-hmac
 Direct Node OpenSSL had lower measured latency on all six workloads.
 The native HMAC comparator creates a new context for every message.
 [HMAC key state optimization](https://www.rfc-editor.org/rfc/rfc2104.html#section-4) · [HKDF](https://www.rfc-editor.org/rfc/rfc5869.html#section-2) · [PBKDF2](https://www.rfc-editor.org/rfc/rfc8018.html#section-5.2) · [scrypt](https://www.rfc-editor.org/rfc/rfc7914.html#section-6)
+
+The Rust refactors used for extraction also had paired public-input
+checks against `50db178` on the same Windows x64 host with Rust 1.92.0
+at optimization level 3. The AES-256-GCM `seal` and valid `open` medians
+changed by less than 0.5% across nine alternating batches at both 64
+bytes and 64 KiB, with the same AES implementation. Poly1305 one-shot
+medians were 40.6 → 40.2 ns at 64 bytes, 402.2 → 401.1 ns at 1 KiB,
+and 6,481.4 → 6,317.1 ns at 16 KiB over 11 alternating batches. The
+observed ranges overlap. These checks measure throughput on public inputs.
 
 Rust 1.92.0 PBKDF2 release runs on Windows x64 measured a drop from
 3.401 ms to 1.916 ms for a 32-byte password, 4,096 iterations and a

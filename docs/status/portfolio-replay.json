@@ -327,5 +327,181 @@
       "runtime": "Node 24.12.0",
       "linux_run": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46099552029"
     }
+  },
+  "prepared_hmac_update": {
+    "checkpoint_revision": "35bad7d9d167a0c1193585ec014791fafad43afc",
+    "passed_cells": 220,
+    "local_target": "Windows x64",
+    "local_cells": 200,
+    "passed_suite_commands": 207,
+    "local_provenance": "Working-tree suite replay on the checkpoint. Each receipt row was checked against the corresponding local log.",
+    "local_suites": {
+      "c": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "de0ee22716645c0f08ed0a16fe9b93bd7e41668b0d5a2e6b92d8d28fb5e1694f"
+      },
+      "cpp": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "b27293935108c6247b2f08d7c511f84fd4386596b4403a2d1f897e7951d45589"
+      },
+      "csharp": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "490b601ecdd76d42a2c5f99f0e3ecb45bee04582c399be38c8983b7aea01e363"
+      },
+      "go": {
+        "profiles": 20,
+        "passed_commands": 27,
+        "receipt_sha256": "6200de7689ed8b628ba78d8aff67b3e7d54431cf0d0a26029915ae7ebe3d873e"
+      },
+      "java": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "56c0133e717b343b616f83ed6338cea5eb28aeb1de6d9a71e5d932269a84c3ba"
+      },
+      "javascript": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "09ec3269e094ce6641f37394cb01a7696b0a5e7df8394dc1612f20e8af73333e"
+      },
+      "kotlin": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "fbe92d97640edcd03a6f19ab23f8d32f44965afec2f19ecd0ed5d33f6f4cbec5"
+      },
+      "python": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "42a5447c5a0c5010a9cc7b60ba58a10ae6c2baea737ac1e074dd0cf7130413fc"
+      },
+      "rust": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "ee94896746e08513d050248791e5ca237ff56ef97b34f002e275370c0eacc1a5"
+      },
+      "typescript": {
+        "profiles": 20,
+        "passed_commands": 20,
+        "receipt_sha256": "876fb2baaf4152f67b7c62d50da8e78026b488d5de3c4a3372263f078b82a98d"
+      }
+    },
+    "replayed_rust_sources_sha256": {
+      "src/crypto/aead/aes256-gcm/impl/rust/src/lib.rs": "e986016e35e1127e91d61e9392db41a8181c9e2342049457f58c98221ce071e9",
+      "src/crypto/mac/poly1305/impl/rust/src/lib.rs": "2a0c4f2a224ea5226f17614b2d09860269c6a016d5f943ef77395e8611fec3ea"
+    },
+    "prepared_ecmascript": {
+      "node": "24.12.0",
+      "test_groups": 158,
+      "node_suite_log_sha256": "aa5efb29580b6a3162f0cdf0bf000ea8ab8680238894256c4276a9a85df1c2b4",
+      "prepared_sources_sha256": {
+        "src/crypto/hash/sha256/impl/javascript/sha256.mjs": "e4d50a2880f544fb02b0b4ca3f11b0df14df607ab7551005a2f538ce588ee443",
+        "src/crypto/hash/sha256/impl/typescript/sha256.mts": "698541bc0ae7ff937edad96ea08d36a273e0d1f34cfb3aaf71ff74f9c3e25999",
+        "src/crypto/mac/hmac-sha256/impl/javascript/hmac.mjs": "2a21a0caf57af6b4c4cb81c114fdcf20293fc2d43f39af9df922e2729ddeec0b",
+        "src/crypto/mac/hmac-sha256/impl/typescript/hmac.mts": "b8c1bc6a6321166f80eccfc3e2305b985309969707ada79fbd3582af2e4eba2d"
+      }
+    },
+    "native_c_post_quantum_replay": {
+      "shared_aws_lc_library_sha256": "14969bbb28b6b2355a58bbe4a6776ce7e58948ac5811754a8f8b15dfdbe41af3",
+      "ml-kem-768": {
+        "independent_openssl_cases": 8,
+        "implicit_rejection_cases": 8,
+        "receipt_sha256": "0b2dd35c9cf8227f7388fa16e956839d434b0e74d2a5dd79e0014ed5d95aa52e"
+      },
+      "ml-dsa-65": {
+        "independent_openssl_cases": 12,
+        "receipt_sha256": "576133c06796f4384c711076dd292547d52414b79da9970921459fadd40cb701"
+      }
+    },
+    "hosted": {
+      "target": "GitHub Actions macOS 15, Swift 6.1.2",
+      "cells": 20,
+      "completed_on_checkpoint": 20,
+      "fallback_commit": null,
+      "fallback_provenance": "All Swift cells have successful jobs at the checkpoint.",
+      "swift": {
+        "aes256": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286537/job/140844073978",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "aes256-gcm": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286537/job/140844073978",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "argon2id": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286336/job/140844073591",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "blake2b": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286323/job/140844073310",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "chacha20": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286467/job/140844074119",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "chacha20-poly1305": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286467/job/140844074119",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "ecdsa-p256-sha256": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286336/job/140844073365",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "ed25519": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286349/job/140844073250",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "hkdf-sha256": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286442/job/140844073481",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "hmac-sha256": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286489/job/140844073765",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "ml-dsa-65": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286336/job/140844073519",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "ml-kem-768": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286336/job/140844073333",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "pbkdf2-hmac-sha256": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286442/job/140844073649",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "poly1305": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286467/job/140844074119",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "scrypt": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286460/job/140844073648",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "sha256": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286474/job/140844073902",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "sha3-256": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286321/job/140844073257",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "sha512": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286315/job/140844073014",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "shake256": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286321/job/140844072948",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        },
+        "x25519": {
+          "job": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286349/job/140844073250",
+          "tested_revision": "35bad7d9d167a0c1193585ec014791fafad43afc"
+        }
+      }
+    }
   }
 }

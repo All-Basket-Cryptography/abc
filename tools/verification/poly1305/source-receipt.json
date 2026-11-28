@@ -1,0 +1,79 @@
+{
+  "status": "poly1305_source_refinement_checked",
+  "extractionRevision": "adadbf500b1d60129a933a47644d0fcec2ce1db5",
+  "target": "x86_64-unknown-linux-gnu",
+  "model": {
+    "Abc/Poly1305/Extracted/Funs.lean": "4f8eb0778b8af1f43200761ef9ec85fb7be11c399f9023f38ec879c9d76bd471",
+    "Abc/Poly1305/Extracted/Types.lean": "7196eaedcf17ba0bb540bdfd2e505ec2da85c272035456cb397a4556c7ab858d"
+  },
+  "theorems": [
+    "Abc.Refine.Poly1305.Encoding.source_limbs_refines",
+    "Abc.Refine.Poly1305.source_carry_pair_refines",
+    "Abc.Refine.Poly1305.source_carry_upper_refines",
+    "Abc.Refine.Poly1305.source_carry_refines",
+    "Abc.Refine.Poly1305.source_key_multiples_refines",
+    "Abc.Refine.Poly1305.source_multiply_refines",
+    "Abc.Refine.Poly1305.source_absorb_limbs_refines",
+    "Abc.Refine.Poly1305.source_absorb_polynomial_step"
+  ],
+  "proofFiles": {
+    "Poly1305EncodingRefinement": "e60ae0dbe1ebc902b5ab826006adb161c2bd96fdf8aaefca98cdb099b0306685",
+    "Poly1305SourceRefinement": "a13ef4da7b21596926ff7ff0cb478ab8f02ddb0860ad23842df8ddb850c7a36e"
+  },
+  "extractionRun": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46101286307",
+  "extractionInputDigests": {
+    "tools/verification/probe/toolchain-candidate.json": "6953b42492bff08a40479725fec7ce922002bfdbe715afcaedf4f817f7621249",
+    "tools/build/rust/Cargo.toml": "9e8dd7579ad780836ce80f3a00639b171926d3435e15e3eb274c4fd67eb0d8f4",
+    "tools/build/rust/Cargo.lock": "a3ee8405943bef38fef4f8127d96032013d10bc082ae0cb6ff9ccbd855178b5c",
+    "src/crypto/mac/poly1305/impl/rust/src/lib.rs": "2a0c4f2a224ea5226f17614b2d09860269c6a016d5f943ef77395e8611fec3ea",
+    "src/crypto/mac/poly1305/impl/rust/Cargo.toml": "58c0d2fafe8cb28f8d873007c7257c72c35d407ff015457692a19cb509fd0ebc",
+    "tools/verification/poly1305/check.mjs": "8a9a9d1e212630945d5ddfc98be57bbe9064edb5b638d9476b5b0819258156af"
+  },
+  "sourceProofAxioms": {
+    "Abc.Refine.Poly1305.Encoding.source_limbs_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.source_carry_pair_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.source_carry_upper_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.source_carry_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.source_key_multiples_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.source_multiply_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.source_absorb_limbs_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.source_absorb_polynomial_step": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "otherReplayInputDigests": {
+    "src/crypto/mac/poly1305/impl/go/Poly1305GoModel.lean": "cc896150363f5b5358117715127ecbff241d703a9c680682c4799b68c3fa7fa9",
+    "tools/verification/poly1305/replay.mjs": "3777dfe2a19b2d4582787ee5fa50af5a089460a764239a567707bd9f78b57f8e"
+  },
+  "lean": "Lean (version 4.31.0, x86_64-w64-windows-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)"
+}
