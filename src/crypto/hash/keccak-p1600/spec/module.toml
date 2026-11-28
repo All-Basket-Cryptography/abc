@@ -1,8 +1,8 @@
 schema_version = 1
 id = "keccak-p1600-spec"
 owned_paths = ["src/crypto/hash/keccak-p1600/spec"]
-lean_sources = { KeccakRound = "src/crypto/hash/keccak-p1600/spec", KeccakSplitWord = "src/crypto/hash/keccak-p1600/spec", KeccakReader = "src/crypto/hash/keccak-p1600/spec", KeccakSpongeRead = "src/crypto/hash/keccak-p1600/spec", KeccakSourceRefinement = "src/crypto/hash/keccak-p1600/spec", KeccakWrapperSourceRefinement = "src/crypto/hash/keccak-p1600/spec", KeccakReaderSourceRefinement = "src/crypto/hash/keccak-p1600/spec" }
-lean_external_imports = { KeccakLlbc = "tools/verification/keccak/llbc.py", KeccakWrapperLlbc = "tools/verification/keccak/wrapper_llbc.py", KeccakReaderLlbc = "tools/verification/keccak/reader_llbc.py" }
+lean_sources = { KeccakRound = "src/crypto/hash/keccak-p1600/spec", KeccakSplitWord = "src/crypto/hash/keccak-p1600/spec", KeccakReader = "src/crypto/hash/keccak-p1600/spec", KeccakSpongeRead = "src/crypto/hash/keccak-p1600/spec", KeccakSourceRefinement = "src/crypto/hash/keccak-p1600/spec", KeccakWrapperSourceRefinement = "src/crypto/hash/keccak-p1600/spec", KeccakReaderSourceRefinement = "src/crypto/hash/keccak-p1600/spec", KeccakAbsorbSourceRefinement = "src/crypto/hash/keccak-p1600/spec" }
+lean_external_imports = { KeccakLlbc = "tools/verification/keccak/llbc.py", KeccakWrapperLlbc = "tools/verification/keccak/wrapper_llbc.py", KeccakReaderLlbc = "tools/verification/keccak/reader_llbc.py", KeccakAbsorbLlbc = "tools/verification/keccak/absorb_llbc.py" }
 
 [tasks.round]
 kind = "formal"

@@ -11,9 +11,13 @@ SHAKE256 and SHA3-256 share the Keccak permutation. SHAKE256 uses suffix
 The SHAKE padding combines the suffix and final bit into `0x9f` when
 only one rate byte remains.
 
-Lean checks that the padding fills one rate block, the boundary suffix,
-and the finite-stream equation for split reads. Full Rust-to-Lean
-refinement of the permutation and buffer transitions remains open.
+The source replay uses pinned Charon to check the Rust constructor,
+incremental absorption, finalizer, output reader and one-shot `xof`.
+Lean proves that each output bit equals the FIPS 202 bit sponge for any
+finite partition of the input and output. The proof also establishes that
+the concatenated streaming bytes equal the one-shot result. The lowering
+uses Rust's slice, iterator and integer-operation contracts.
+[Streaming and one-shot proofs](../../keccak-p1600/spec/KeccakAbsorbSourceRefinement.lean) · [Replay and receipt](../../../../../tools/verification/keccak/README.md)
 
 The Rust tests check known answers, a late-output vector reproduced with
 CPython's `hashlib.shake_256(bytes(range(137))).digest(300)[268:]`, and

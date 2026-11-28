@@ -118,7 +118,7 @@ class ScalarLoop:
         width = scalar["Integer"]["Unsigned"]
         if width == "Usize":
             return self.pointer_bits
-        require(width in ("U128", "U64", "U32"), f"Unsupported LLBC scalar type {scalar}")
+        require(width in ("U128", "U64", "U32", "U8"), f"Unsupported LLBC scalar type {scalar}")
         return int(width[1:])
 
     def signature(self, function, args, output):
@@ -499,10 +499,13 @@ class ScalarLoop:
             require(ref["kind"] == kind, "Unexpected payload-loop reference kind")
             return destination, ref
 
-        def call(stmt, expected_prefix, expected_name):
+        def call(stmt, expected_prefix, expected_name, *, drops=()):
             tag, item = stmt
-            require(tag == "Call" and meaningful(item["on_unwind"]) == [("UnwindResume", None)],
-                    "Expected a payload-loop call with ordinary cleanup")
+            require(tag == "Call", "Expected a payload-loop call")
+            cleanup = meaningful(item["on_unwind"])
+            require(cleanup[-1:] == [("UnwindResume", None)] and
+                    [(kind, drop["place"]["kind"]) for kind, drop in cleanup[:-1]] ==
+                    [("Drop", {"Local": which}) for which in drops], "Wrong payload-loop cleanup")
             invoked = item["call"]
             function = self.functions[invoked["func"]["Regular"]["kind"]["Fun"]]
             names = name_segments(function)
@@ -538,48 +541,200 @@ class ScalarLoop:
         arg, _ = reference(loop[1], "TwoPhaseMut", borrowed, "Deref")
         next_item, args = call(loop[2], ("core", "iter", "adapters", "enumerate"), "next")
         sole_arg(args, arg)
-        switch = loop[3][1]
-        control = switch["data"]
-        require(loop[3][0] == "Switch" and control["fallback"] is None
-                and control["scrutinee"]["Discriminant"]["kind"] == {"Local": next_item},
-                "Expected the enumerated item switch")
-        routes = {}
-        for pattern, branch in control["branches"]:
-            declaration, variant = self.constant_data(pattern)[0]["Discriminant"]
-            path, constructor = self.enum_variant(declaration, variant)
-            require(path == ("core", "option", "Option"), "Expected the iterator's Option return")
-            routes[constructor["name"]] = variant, meaningful(switch["branches"][branch])
-        require(set(routes) == {"None", "Some"} and routes["None"][1] == [("Break", 0)] and not routes["Some"][1],
-                "Expected processing only an available chunk")
 
-        index, (operand, initial) = assignment(loop[4], "Use")
-        tuple_, component = operand["Copy"]["kind"]["Projection"]
-        option, field = tuple_["kind"]["Projection"]
-        require(initial == "Yes" and component == {"Field": [None, 0]} and option["kind"] == {"Local": next_item}
-                and field == {"Field": [routes["Some"][0], 0]} and self.locals[index] == self.pointer_bits,
-                "Expected the first field of the enumerated chunk")
-        chunk, (operand, initial) = assignment(loop[5], "Use")
-        tuple_, component = operand["Move"]["kind"]["Projection"]
-        option, field = tuple_["kind"]["Projection"]
-        require(initial == "Yes" and component == {"Field": [None, 1]} and option["kind"] == {"Local": next_item}
-                and field == {"Field": [routes["Some"][0], 0]} and chunk not in self.locals,
-                "Expected the second field of the enumerated chunk")
+        def some_case(statement, item):
+            tag, switch = statement
+            control = switch["data"]
+            require(tag == "Switch" and control["fallback"] is None
+                    and control["scrutinee"]["Discriminant"]["kind"] == {"Local": item},
+                    "Expected the iterator item switch")
+            routes = {}
+            for pattern, branch in control["branches"]:
+                declaration, variant = self.constant_data(pattern)[0]["Discriminant"]
+                path, constructor = self.enum_variant(declaration, variant)
+                require(path == ("core", "option", "Option"), "Expected the iterator's Option return")
+                routes[constructor["name"]] = variant, meaningful(switch["branches"][branch])
+            require(set(routes) == {"None", "Some"} and routes["None"][1] == [("Break", 0)] and not routes["Some"][1],
+                    "Expected processing only an available iterator item")
+            return routes["Some"][0]
+
+        def pair_field(statement, operation, item, some, number):
+            destination, (operand, initial) = assignment(statement, "Use")
+            tuple_, component = operand[operation]["kind"]["Projection"]
+            option, field = tuple_["kind"]["Projection"]
+            require(initial == "Yes" and component == {"Field": [None, number]}
+                    and option["kind"] == {"Local": item} and field == {"Field": [some, 0]},
+                    "Wrong iterator pair field")
+            return destination
+
+        some = some_case(loop[3], next_item)
+        index = pair_field(loop[4], "Copy", next_item, some, 0)
+        chunk = pair_field(loop[5], "Move", next_item, some, 1)
+        require(self.locals[index] == self.pointer_bits and chunk not in self.locals, "Wrong chunk pair types")
         aes, _ = reference(loop[6], "Shared", 1, "Deref")
         nonce, _ = reference(loop[7], "Shared", 2, "Deref")
         counter_call, = [i for i, (tag, _) in enumerate(loop[8:], 8) if tag == "Call" and
                          loop[i][1]["call"]["func"]["Regular"]["kind"]["Fun"] == self.local_function("encrypt_counter")["def_id"]]
-        _, (aes_arg, nonce_arg, counter_arg) = call(loop[counter_call], ("abc_aes256_gcm",), "encrypt_counter")
+        stream, (aes_arg, nonce_arg, counter_arg) = call(loop[counter_call], ("abc_aes256_gcm",), "encrypt_counter")
         require(local_operand(aes_arg) == aes and local_operand(nonce_arg) == nonce, "Wrong CTR block arguments")
         input_ = Expression(f"(BitVec.ofNat {self.pointer_bits} index)", self.pointer_bits)
         values, checks = self.execute({index: input_}, loop[8:counter_call])
         output = self.operand(values, counter_arg)
         require(output.ty == 32 and checks, "Expected a checked u32 payload counter")
-        return f"if {' ∧ '.join(checks)} then some {output.code} else none"
+        counter = f"if {' ∧ '.join(checks)} then some {output.code} else none"
+
+        tail = loop[counter_call + 1:]
+        require(len(tail) == 10 and tail[-1] == ("Continue", 0) and tail[6][0] == "Loop",
+                "Expected the CTR byte mutation loop and a single chunk continuation")
+        borrowed, ref = reference(tail[0], "TwoPhaseMut", chunk, "Deref")
+        parent, length_field = ref["ptr_metadata"]["Copy"]["kind"]["Projection"]
+        require(parent["kind"] == {"Local": chunk} and length_field == "PtrMetadata", "Wrong CTR chunk length")
+        byte_iter, args = call(tail[1], ("core", "slice"), "iter_mut")
+        sole_arg(args, borrowed)
+        pad_array, (operand, initial) = assignment(tail[2], "Use")
+        require(initial == "Yes" and local_operand(operand) == stream, "Expected the computed AES keystream")
+        zipped, args = call(tail[3], ("core", "iter", "traits", "iterator", "Iterator"), "zip")
+        require([local_operand(arg) for arg in args] == [byte_iter, pad_array], "Wrong CTR zip inputs")
+        into_iter, args = call(tail[4], ("core", "iter", "traits", "collect"), "into_iter", drops=(zipped,))
+        sole_arg(args, zipped)
+        zip_iter, (operand, initial) = assignment(tail[5], "Use")
+        require(initial == "Yes" and local_operand(operand) == into_iter, "Wrong CTR zip iterator")
+        require([(tag, drop["place"]["kind"]) for tag, drop in tail[7:9]] ==
+                [("Drop", {"Local": zip_iter}), ("Drop", {"Local": into_iter})], "Wrong CTR iterator disposal")
+
+        inner = meaningful(tail[6][1])
+        require(len(inner) == 9 and inner[-1] == ("Continue", 0), "Wrong CTR byte loop structure")
+        borrowed, _ = reference(inner[0], "Mut", zip_iter)
+        arg, _ = reference(inner[1], "TwoPhaseMut", borrowed, "Deref")
+        item, args = call(inner[2], ("core", "iter", "adapters", "zip"), "next", drops=(zip_iter, into_iter))
+        sole_arg(args, arg)
+        some = some_case(inner[3], item)
+        byte_ref = pair_field(inner[4], "Move", item, some, 0)
+        pad = pair_field(inner[5], "Copy", item, some, 1)
+        value, (operand, initial) = assignment(inner[6], "Use")
+        require(initial == "Yes" and local_operand(operand) == pad and self.locals[value] == self.locals[pad] == 8,
+                "Expected the current keystream byte")
+        tag, (destination, update) = inner[7]
+        operator, left, right = update["BinaryOp"]
+        target, dereference = destination["kind"]["Projection"]
+        require(tag == "Assign" and dereference == "Deref" and target["kind"] == {"Local": byte_ref}
+                and self.scalar_type(destination["ty"]) == 8 and left == {"Copy": destination}
+                and local_operand(right) == value, "Wrong CTR byte update dataflow")
+        symbol = {"BitXor": "^^^", "BitOr": "|||", "BitAnd": "&&&"}.get(operator)
+        require(symbol is not None, "Unsupported CTR byte operator")
+        return counter, f"byte {symbol} pad"
 
     def scalar_width_supported(self, reference):
         tag, data = tagged(reference)
         scalar = (data[1] if tag == "Value" else self.types[data])["Scalar"]
-        return scalar == "Bool" or scalar.get("Integer", {}).get("Unsigned") in ("Usize", "U32", "U64", "U128")
+        return scalar == "Bool" or scalar.get("Integer", {}).get("Unsigned") in ("Usize", "U8", "U32", "U64", "U128")
+
+    def counter_serialization(self):
+        """Check the byte copies into the exact block consumed by the AES call."""
+        function = self.local_function("encrypt_counter")
+        body = function["body"]["Structured"]
+        require(body["locals"]["arg_count"] == 3 and self.scalar_type(function["signature"]["inputs"][2]) == 32,
+                "Wrong counter serialization signature")
+        top = meaningful(body["body"])
+        position = iter(top)
+
+        def assignment(operation):
+            tag, (place, value) = next(position)
+            require(tag == "Assign", "Expected a counter-block assignment")
+            return place["kind"]["Local"], value[operation]
+
+        def reference(kind, source, *, deref=False, slice_=False):
+            destination, ref = assignment("Ref")
+            place = ref["place"]["kind"]
+            if deref:
+                place, projection = place["Projection"]
+                require(projection == "Deref", "Wrong counter-block reborrow")
+                place = place["kind"]
+            require(place == {"Local": source} and ref["kind"] == kind, "Wrong counter-block reference")
+            if slice_:
+                origin, field = ref["ptr_metadata"]["Copy"]["kind"]["Projection"]
+                require(origin["kind"] == {"Local": source} and field == "PtrMetadata",
+                        "Counter-block copy must preserve slice metadata")
+            else:
+                require("Const" in ref["ptr_metadata"], "Expected sized counter-block storage")
+            return destination
+
+        def invoke(prefix, *methods, infallible=False):
+            tag, call = next(position)
+            require(tag == "Call", "Expected a counter-block call")
+            cleanup = [("Abort", "UndefinedBehavior")] if infallible else [("UnwindResume", None)]
+            require(meaningful(call["on_unwind"]) == cleanup, "Unexpected counter-block cleanup")
+            call = call["call"]
+            pointer = call["func"]["Regular"]
+            declaration = self.functions[pointer["kind"]["Fun"]]
+            path = name_segments(declaration)
+            require(path[:len(prefix)] == list(map(ident, prefix)) and path[-1] in list(map(ident, methods)),
+                    f"Wrong counter-block call: expected {methods}")
+            return call["dest"]["kind"]["Local"], call["args"], pointer["generics"], path
+
+        def array_width(generics):
+            (ty,) = generics["types"]
+            (width,) = generics["const_generics"]
+            require(self.scalar_type(ty) == 8, "Expected a byte array")
+            return self.constant(width)
+
+        def usize(value):
+            return Expression(f"{value}#{self.pointer_bits}", self.pointer_bits)
+
+        def arguments(args, *expected):
+            require([local_operand(arg) for arg in args] == list(expected), "Wrong counter-block call arguments")
+
+        block, (zero,), generics, _ = invoke(("core", "array"), "repeat", infallible=True)
+        require(self.operand({}, zero) == Expression("0#8", 8) and array_width(generics) == usize(16),
+                "Expected a fresh zero AES block")
+
+        def region(range_type):
+            array = reference("Mut", block)
+            bounds, (adt, (boundary,)) = assignment("Aggregate")
+            decl, variant, union = adt["Adt"]
+            name = name_segments(self.type_declarations[decl["id"]])
+            require(variant is None and union is None
+                    and name == list(map(ident, ("core", "ops", "range", range_type)))
+                    and self.operand({}, boundary) == usize(12), "Wrong counter-block copy boundary")
+            sliced, args, generics, _ = invoke(("core", "array"), "index_mut")
+            arguments(args, array, bounds)
+            require(self.constant(generics["const_generics"][0]) == usize(16), "Wrong sliced array width")
+            return reference("TwoPhaseMut", sliced, deref=True, slice_=True)
+
+        prefix = region("RangeTo")
+        nonce = reference("Shared", 2, deref=True)
+        bytes_, args, generics, _ = invoke(("core", "array"), "as_slice", infallible=True)
+        arguments(args, nonce)
+        require(array_width(generics) == usize(12), "Wrong nonce width")
+        _, args, _, _ = invoke(("core", "slice"), "copy_from_slice")
+        arguments(args, prefix, bytes_)
+
+        suffix = region("RangeFrom")
+        counter, (operand, initial) = assignment("Use")
+        require(initial == "Yes" and local_operand(operand) == 3, "Wrong encoded counter argument")
+        encoded, args, _, path = invoke(("core", "num"), "to_be_bytes", "to_le_bytes")
+        method = path[-1]["Ident"][0]
+        arguments(args, counter)
+        require(self.scalar_type(path[2]["Impl"]["Ty"]["skip_binder"]) == 32, "Wrong counter encoder type")
+        borrowed = reference("Shared", encoded)
+        reborrowed = reference("Shared", borrowed, deref=True)
+        bytes_, args, generics, _ = invoke(("core", "array"), "as_slice", infallible=True)
+        arguments(args, reborrowed)
+        require(array_width(generics) == usize(4), "Wrong encoded counter width")
+        _, args, _, _ = invoke(("core", "slice"), "copy_from_slice")
+        arguments(args, suffix, bytes_)
+
+        aes = reference("Shared", 1, deref=True)
+        borrowed = reference("Mut", block)
+        reborrowed = reference("TwoPhaseMut", borrowed, deref=True)
+        _, args, _, _ = invoke(("abc_aes256",), "encrypt")
+        arguments(args, aes, reborrowed)
+        result, (operand, initial) = assignment("Use")
+        require(result == 0 and initial == "Yes" and local_operand(operand) == block
+                and list(position) == [("Return", None)], "Wrong AES output return")
+        if method == "to_be_bytes":
+            return "nonce ++ counter"
+        return "nonce ++ (counter.extractLsb' 0 8 ++ counter.extractLsb' 8 8 ++\n    counter.extractLsb' 16 8 ++ counter.extractLsb' 24 8)"
 
     def open_gate(self):
         """Check the straight-line open tail and its two-way result switch."""
@@ -823,7 +978,8 @@ class ScalarLoop:
         length_check = self.length_check()
         for name in ("seal_in_place", "open_in_place"):
             self.api_length_gate(name)
-        counter = self.payload_counter()
+        counter, byte_update = self.payload_counter()
+        counter_serialization = self.counter_serialization()
         return f"""import Std
 
 namespace Abc.Extracted.Ghash
@@ -871,6 +1027,12 @@ def check_lengths (aad payload : BitVec 64) : Except LengthError Unit :=
 
 def payload_counter (index : Nat) : Option (BitVec 32) :=
   {counter}
+
+def counter_block (nonce : BitVec 96) (counter : BitVec 32) : BitVec 128 :=
+  {counter_serialization}
+
+def payload_byte (byte pad : BitVec 8) : BitVec 8 :=
+  {byte_update}
 
 -- The validator resolves both returns and the unique mutable payload call.
 def open_gate {{α : Type}} (applyPayload : α → α) (ciphertext : α)

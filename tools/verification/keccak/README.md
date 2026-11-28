@@ -36,8 +36,8 @@ The trusted boundary includes rustc, Charon, the restricted LLBC lowering
 and the Rust integer and collection contracts used during lowering.
 The proof covers the Keccak crate's normal-path permutation and block
 absorption. The wrapper replay below covers SHA3-256's byte digest and
-SHAKE256's transition to the reader and reads from a finalized state. General Rust memory and unwind
-semantics, machine code and timing are separate verification obligations.
+SHAKE256's byte-oriented streaming and one-shot APIs. General Rust memory
+and unwind semantics, machine code and timing are separate verification obligations.
 The Rust release suites exercise the two wrappers on known answers,
 rate boundaries and repeated or late output reads.
 
@@ -52,8 +52,10 @@ The wrapper replay starts at the public SHA3-256 `digest` and SHAKE256 `xof`
 symbols. For SHA3-256 it checks the zero-state constructor, the full-block
 iterator's absorb call, the final block and all 32 serialized bytes. It
 models Rust's `as_chunks` as the sequence of complete 136-byte blocks and
-its short tail. For SHAKE256 it checks `finalize` and `Reader::encode_block`,
-including initialization of the reader's output offset. The reader replay
+its short tail. For SHAKE256 it checks the constructor, both incremental
+input paths, the `xof` call sequence, `finalize`, and `Reader::encode_block`.
+The input driver checks the computed prefix-copy window, the completion
+branch, the ordered full blocks and the final short-tail copy. The reader replay
 checks the two Rust loop conditions, the refresh-and-encode order, the span
 bound, both copy endpoints, the next offset and the remaining output slice.
 
@@ -65,19 +67,20 @@ wire mapping comes from the actual chunk writes and lane byte conversions.
 Lean proves every SHA3-256 digest bit equals the FIPS sponge result for any
 finite sequence of full blocks and any legal tail. It proves the SHAKE256
 finalizer's lanes, first output block and zero cursor agree with FIPS.
-The SHAKE256 reader theorems carry that state through an arbitrary read
-or finite sequence of reads. They give the FIPS output bits, including
-empty reads and states paused at a rate boundary.
-[Wrapper proofs](../../../src/crypto/hash/keccak-p1600/spec/KeccakWrapperSourceRefinement.lean) · [Reader proofs](../../../src/crypto/hash/keccak-p1600/spec/KeccakReaderSourceRefinement.lean) · [FIPS 202 §§ 4 and 6](https://csrc.nist.gov/pubs/fips/202/final)
+The SHAKE256 trace theorem applies to any finite input and read partition.
+It includes empty updates, empty reads and states paused exactly at a rate
+boundary. The byte-valued partition theorem equates the streaming outputs
+with `xof` on the concatenated input and total requested length.
+[Wrapper proofs](../../../src/crypto/hash/keccak-p1600/spec/KeccakWrapperSourceRefinement.lean) · [Reader proofs](../../../src/crypto/hash/keccak-p1600/spec/KeccakReaderSourceRefinement.lean) · [Absorber and XOF proofs](../../../src/crypto/hash/keccak-p1600/spec/KeccakAbsorbSourceRefinement.lean) · [FIPS 202 §§ 4 and 6](https://csrc.nist.gov/pubs/fips/202/final)
 
 ```sh
 python -B tools/verification/keccak/check_wrappers.py --negative-controls
 ```
 
-The replay checks sixteen theorems and recompiles four Rust mutations.
-The changed SHA3-256 and SHAKE256 domain bytes, SHAKE256 wire byte order
-and reader refresh condition each fail the corresponding Lean statement.
-The Rust standard library's slicing, iteration, copying and byte-conversion
-contracts are inputs to the lowering. SHAKE256's incremental input update
-remains a separate source-refinement obligation.
+The replay checks 24 theorems and recompiles seven Rust mutations. Lean
+rejects the altered domain bytes, wire byte order, refresh condition,
+copy bound and constructor lanes. The lowering rejects an `xof` mutation
+that finalizes a fresh context after updating another context. The replay
+trusts the Rust standard library's slicing, iteration, copying and byte
+conversion contracts.
 [Windows x64 wrapper receipt](wrapper-receipt-windows-x64.json)

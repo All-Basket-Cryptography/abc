@@ -44,14 +44,15 @@ example 5 using its published AES block outputs.
 
 Charon and Lean additionally check the portable Rust source for GHASH
 multiplication, block absorption, length packing and the final tag word.
-They check both APIs' length gate and the formation of each payload counter
-from the enumerated 16-byte chunks. The open gate compares the whole tag, returns
+They check both APIs' length gate and the complete CTR transform through the
+counter, nonce/counter serialization and per-byte XOR, under the AES block
+and Rust standard library contracts. The open gate compares the whole tag, returns
 `AuthenticationFailed` without decrypting a mismatched tag, and reaches
 payload decryption only after a match.
 The composition uses the Lean slice and padding model to supply the
 blocks, and AES block values to supply the hash key and tag mask.
 Source-level proofs for GHASH slice traversal and conversion, the concrete
-AES provider, counter block serialization and in-place CTR XOR remain open. Compiler
+AES provider and the full seal path remain open. Compiler
 timing, binary correspondence, key erasure, nonce allocation and
 cryptographic security games require separate evidence.
 [Rust source refinement and replay](../../../../../tools/verification/aes256-gcm/README.md)

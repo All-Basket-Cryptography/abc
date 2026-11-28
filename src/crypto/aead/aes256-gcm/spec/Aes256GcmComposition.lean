@@ -360,6 +360,29 @@ def counterBlock (nonce : Nonce) (counter : Nat) : Block :=
 def byteAt (block : Block) (index : Nat) : Byte :=
   (block >>> (8 * (15 - index))).truncate 8
 
+private theorem littleEndian_get (width value index : Nat) (inside : index < width) :
+    (littleEndian width value)[index]? = some (BitVec.ofNat 8 (value / 256^index)) := by
+  induction index generalizing width value with
+  | zero => cases width with
+    | zero => omega
+    | succ width => simp [littleEndian]
+  | succ index ih => cases width with
+    | zero => omega
+    | succ width =>
+      simp only [littleEndian, List.getElem?_cons_succ, ih width (value / 256) (by omega),
+        Nat.div_div_eq_div_mul, Nat.pow_succ']
+
+theorem asTag_byteAt (word : Block) (index : Nat) (inside : index < 16) :
+    (asTag word).toList[index]? = some (byteAt word index) := by
+  have width : (littleEndian 16 word.toNat).length = 16 := littleEndian_length _ _
+  simp only [asTag, Vector.toList_mk, bigEndian]
+  rw [List.getElem?_reverse (by omega), width, littleEndian_get _ _ _ (by omega)]
+  congr 1
+  apply BitVec.eq_of_toNat_eq
+  simp only [byteAt, BitVec.toNat_ofNat, BitVec.truncate_eq_setWidth, BitVec.toNat_setWidth,
+    BitVec.toNat_ushiftRight, Nat.shiftRight_eq_div_pow]
+  rw [show 256^(15 - index) = 2^(8 * (15 - index)) by exact (Nat.pow_mul 2 8 (15 - index)).symm]
+
 private def xorFrom (stream : Nat → Byte) (offset : Nat) : List Byte → List Byte
   | [] => []
   | byte :: tail => (byte ^^^ stream offset) :: xorFrom stream (offset + 1) tail
@@ -424,6 +447,34 @@ decreasing_by
   simp only [List.length_drop]
   have nonzero : data.length ≠ 0 := fun h => _empty (List.eq_nil_iff_length_eq_zero.mpr h)
   omega
+
+private theorem zipWith_xorFrom (stream : Nat → Byte) (offset : Nat) (data pads : List Byte)
+    (same : ∀ i, i < data.length → pads[i]? = some (stream (offset + i))) :
+    List.zipWith (· ^^^ ·) data pads = xorFrom stream offset data := by
+  induction data generalizing offset pads with
+  | nil => rfl
+  | cons byte tail ih =>
+    have first := same 0 (by simp)
+    cases pads with
+    | nil => simp at first
+    | cons pad pads =>
+      have head : pad = stream offset := by simpa using first
+      have rest (i : Nat) (inside : i < tail.length) : pads[i]? = some (stream (offset + 1 + i)) := by
+        rw [show offset + 1 + i = offset + (i + 1) by omega]
+        exact same (i + 1) (by simp; omega)
+      simp [xorFrom, head, ih _ _ rest]
+
+theorem gctrSource_chunk_bytes (encrypt : Block → Block) (nonce : Nonce) (counter : Nat)
+    (data : List Byte) (nonempty : data ≠ []) :
+    gctrSource encrypt nonce counter data =
+      List.zipWith (· ^^^ ·) (data.take 16) (asTag (encrypt (counterBlock nonce counter))).toList ++
+      gctrSource encrypt nonce (counter + 1) (data.drop 16) := by
+  have matchBytes (i : Nat) (inside : i < (data.take 16).length) :
+      (asTag (encrypt (counterBlock nonce counter))).toList[i]? =
+        some (byteAt (encrypt (counterBlock nonce counter)) (0 + i)) := by
+    simp only [Nat.zero_add]
+    exact asTag_byteAt _ _ (by simp at inside; omega)
+  rw [gctrSource.eq_def, dif_neg nonempty, zipWith_xorFrom _ 0 _ _ matchBytes]
 
 theorem gctrSource_refines_nist (encrypt : Block → Block) (nonce : Nonce) (counter : Nat)
     (data : List Byte) : gctrSource encrypt nonce counter data = gctr encrypt nonce counter data := by

@@ -219,15 +219,72 @@ theorem source_admitted_counter_safe (aad payload : BitVec 64) (offset : Nat)
   have domain := payload_counter_in_range payload.toNat offset bounded inside
   exact ⟨source_payload_counter_refines _ domain.2, domain⟩
 
+theorem source_counter_block_refines (nonce : Nonce) (counter : Nat) :
+    Ghash.counter_block nonce (BitVec.ofNat 32 counter) = counterBlock nonce counter := by
+  rfl
+
+theorem source_ctr_primitives_examples :
+    Ghash.counter_block 0x0102030405060708090a0b0c 0x0d0e0f10 =
+      0x0102030405060708090a0b0c0d0e0f10 ∧ Ghash.payload_byte 0x87 0x85 = 0x02 := by
+  decide +kernel
+
+theorem source_payload_byte_refines (byte pad : Byte) : Ghash.payload_byte byte pad = byte ^^^ pad := by
+  rfl
+
+def sourceCtrLoop (encrypt : Block → Block) (nonce : Nonce) (index : Nat) (data : List Byte) :
+    Option (List Byte) :=
+  if _empty : data = [] then some []
+  else do
+    let counter ← Ghash.payload_counter index
+    let stream := (asTag (encrypt (Ghash.counter_block nonce counter))).toList
+    let rest ← sourceCtrLoop encrypt nonce (index + 1) (data.drop 16)
+    pure (List.zipWith Ghash.payload_byte (data.take 16) stream ++ rest)
+termination_by data.length
+decreasing_by
+  simp only [List.length_drop]
+  have positive : data.length ≠ 0 := fun h => _empty (List.eq_nil_iff_length_eq_zero.mpr h)
+  omega
+
+theorem source_ctr_loop_refines (encrypt : Block → Block) (nonce : Nonce) (index : Nat)
+    (data : List Byte) (admitted : 16 * index + data.length ≤ payloadLimit) :
+    sourceCtrLoop encrypt nonce index data = some (gctrSource encrypt nonce (2 + index) data) := by
+  by_cases empty : data = []
+  · simp [empty, sourceCtrLoop.eq_def, gctrSource.eq_def]
+  · have nonzero : data.length ≠ 0 := fun h => empty (List.eq_nil_iff_length_eq_zero.mpr h)
+    have legal : 2 + index < 2^32 := by unfold payloadLimit at admitted; omega
+    have remaining : 16 * (index + 1) + (data.drop 16).length ≤ payloadLimit := by
+      simp only [List.length_drop]
+      unfold payloadLimit at *
+      omega
+    rw [sourceCtrLoop.eq_def, dif_neg empty, source_payload_counter_refines _ legal]
+    simp only [bind, Option.bind_some, source_counter_block_refines]
+    rw [source_ctr_loop_refines encrypt nonce (index + 1) _ remaining,
+      gctrSource_chunk_bytes _ _ _ _ empty]
+    have update : Ghash.payload_byte = fun byte pad => byte ^^^ pad := by
+      funext byte pad
+      exact source_payload_byte_refines byte pad
+    simp only [Option.bind_some, pure, update] <;> rfl
+termination_by data.length
+decreasing_by
+  simp only [List.length_drop]
+  omega
+
+theorem source_ctr_refines_nist (encrypt : Block → Block) (nonce : Nonce)
+    (data : List Byte) (admitted : data.length ≤ payloadLimit) :
+    sourceCtrLoop encrypt nonce 0 data = some (gctr encrypt nonce 2 data) := by
+  rw [source_ctr_loop_refines _ _ _ _ (by simpa using admitted), gctrSource_refines_nist]
+
 def sourceOpenWithModel (encrypt : Block → Block) (nonce : Nonce)
     (aad ciphertext : List Byte) (provided : Tag) : Option (Outcome Unit) :=
   match Ghash.check_lengths (BitVec.ofNat 64 aad.length) (BitVec.ofNat 64 ciphertext.length) with
   | .error .messageTooLong => some ⟨.error .messageTooLong, ciphertext⟩
   | .error .associatedDataTooLong => some ⟨.error .associatedDataTooLong, ciphertext⟩
-  | .ok () =>
-    (sourceTagWord (encrypt 0) (encrypt (counterBlock nonce 1)) aad ciphertext).map fun actual =>
-      let (valid, bytes) := Ghash.open_gate (gctr encrypt nonce 2) ciphertext actual (asBlock provided.toList)
-      ⟨if valid then .ok () else .error .authenticationFailed, bytes⟩
+  | .ok () => do
+    let actual ← sourceTagWord (encrypt 0) (encrypt (Ghash.counter_block nonce 1)) aad ciphertext
+    let (valid, bytes) := Ghash.open_gate (fun input => input.bind (sourceCtrLoop encrypt nonce 0))
+      (some ciphertext) actual (asBlock provided.toList)
+    let bytes ← bytes
+    pure ⟨if valid then .ok () else .error .authenticationFailed, bytes⟩
 
 theorem source_open_with_models_refines (encrypt : Encrypt) (key : Key) (nonce : Nonce)
     (aad ciphertext : List Byte) (provided : Tag)
@@ -243,12 +300,15 @@ theorem source_open_with_models_refines (encrypt : Encrypt) (key : Key) (nonce :
     · have aBits : 8 * aad.length < 2^64 := by unfold aadLimit at aadTooLong; omega
       have cBits : 8 * ciphertext.length < 2^64 := by unfold payloadLimit at payloadTooLong; omega
       rw [if_neg payloadTooLong, if_neg aadTooLong, if_neg payloadTooLong, if_neg aadTooLong]
-      simp only [source_tag_word_refines_nist _ _ _ _ aBits cBits, Option.map_some, source_open_gate_refines]
-      change (some (let (valid, bytes) :=
-          if authenticate (encrypt key) nonce aad ciphertext = provided then
-            (true, gctr (encrypt key) nonce 2 ciphertext) else (false, ciphertext)
-        ({ result := if valid then .ok () else .error .authenticationFailed, bytes } : Outcome Unit))) = _
-      by_cases correct : authenticate (encrypt key) nonce aad ciphertext = provided <;> simp [correct]
+      have block : Ghash.counter_block nonce 1 = counterBlock nonce 1 := source_counter_block_refines _ _
+      have ctr := source_ctr_refines_nist (encrypt key) nonce ciphertext (by omega)
+      rw [block, source_tag_word_refines_nist _ _ _ _ aBits cBits]
+      simp only [bind, Option.bind_some, source_open_gate_refines]
+      change (let (valid, bytes) := if authenticate (encrypt key) nonce aad ciphertext = provided then
+          (true, sourceCtrLoop (encrypt key) nonce 0 ciphertext) else (false, some ciphertext)
+        bytes.bind (fun data => some (⟨if valid then .ok () else .error .authenticationFailed,
+          data⟩ : Outcome Unit))) = _
+      by_cases correct : authenticate (encrypt key) nonce aad ciphertext = provided <;> simp [correct, ctr]
 
 #print axioms extracted_round_refines
 #print axioms extracted_loop_refines
@@ -271,6 +331,11 @@ theorem source_open_with_models_refines (encrypt : Encrypt) (key : Key) (nonce :
 #print axioms source_payload_counter_refines
 #print axioms source_payload_counter_edges
 #print axioms source_admitted_counter_safe
+#print axioms source_counter_block_refines
+#print axioms source_ctr_primitives_examples
+#print axioms source_payload_byte_refines
+#print axioms source_ctr_loop_refines
+#print axioms source_ctr_refines_nist
 #print axioms source_open_with_models_refines
 
 end Abc.Refine.Ghash

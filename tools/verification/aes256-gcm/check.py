@@ -9,7 +9,7 @@ import re
 import subprocess
 from tempfile import mkdtemp
 
-from translate import ScalarLoop, require, translate
+from translate import ScalarLoop, ident, meaningful, name_segments, require, translate
 
 
 HERE = Path(__file__).resolve().parent
@@ -46,6 +46,11 @@ THEOREMS = {
     "Abc.Refine.Ghash.source_payload_counter_refines",
     "Abc.Refine.Ghash.source_payload_counter_edges",
     "Abc.Refine.Ghash.source_admitted_counter_safe",
+    "Abc.Refine.Ghash.source_counter_block_refines",
+    "Abc.Refine.Ghash.source_ctr_primitives_examples",
+    "Abc.Refine.Ghash.source_payload_byte_refines",
+    "Abc.Refine.Ghash.source_ctr_loop_refines",
+    "Abc.Refine.Ghash.source_ctr_refines_nist",
     "Abc.Refine.Ghash.source_open_with_models_refines",
 }
 ALLOWED = {"propext", "Classical.choice", "Quot.sound"}
@@ -164,6 +169,7 @@ def check(options, run):
         return {"status": "rejected", "changed_model_sha256": digest(source), "log": f"reject-{label}.log"}
 
     negative = footer_negative = tag_negative = gate_negative = length_negative = counter_negative = None
+    serialization_negative = xor_negative = None
     if options.check_mutant:
         reduction = list(locate(llbc, ["U128", REDUCTION]))
         require(len(reduction) == 1, "Expected one extracted reduction literal")
@@ -217,6 +223,26 @@ def check(options, run):
         offset[0][1] = "1"
         counter_negative = test_negative("counter-mutant", "Tactic `decide` proved that the proposition",
                                          "source_payload_counter_edges")
+        offset[0][1] = "2"
+
+        encoders = [name_segments(fn) for fn in closure.functions.values()
+                    if name_segments(fn)[:2] == [ident("core"), ident("num")]
+                    and name_segments(fn)[-1] == ident("to_be_bytes")
+                    and closure.scalar_type(name_segments(fn)[2]["Impl"]["Ty"]["skip_binder"]) == 32]
+        (encoder,) = encoders
+        encoder[-1] = ident("to_le_bytes")
+        serialization_negative = test_negative("endianness-mutant", "Tactic `decide` proved that the proposition",
+                                               "source_ctr_primitives_examples")
+        encoder[-1] = ident("to_be_bytes")
+
+        (outer,) = [body for tag, body in meaningful(ctr["Structured"]["body"]) if tag == "Loop"]
+        (inner,) = [body for tag, body in meaningful(outer) if tag == "Loop"]
+        (update,) = [args[1]["BinaryOp"] for tag, args in meaningful(inner)
+                     if tag == "Assign" and "BinaryOp" in args[1]]
+        require(update[0] == "BitXor", "Expected the extracted payload-byte XOR")
+        update[0] = "BitOr"
+        xor_negative = test_negative("xor-mutant", "Tactic `decide` proved that the proposition",
+                                     "source_ctr_primitives_examples")
 
     return {
         "status": "source_llbc_refinement_checked", "target": target, "charon": charon,
@@ -226,6 +252,7 @@ def check(options, run):
         "footer_negative_check": footer_negative,
         "tag_negative_check": tag_negative, "gate_negative_check": gate_negative,
         "length_negative_check": length_negative, "counter_negative_check": counter_negative,
+        "serialization_negative_check": serialization_negative, "xor_negative_check": xor_negative,
     }
 
 
