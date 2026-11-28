@@ -14,12 +14,12 @@ and the [per-language runtime replay](../status/portfolio-replay.json).
 | --- | --- | --- |
 | SHA-512 | The source-derived byte API agrees with FIPS 180-4 for one-shot input and arbitrary finite x86-64 slice traces. Checked paths cover initialization, accepted byte/block updates, rejection without state changes, final padding, digest serialization and the public one-shot wrapper. Three recompiled Rust controls are rejected. [Source replay](../../tools/verification/sha512/README.md) · [FIPS 180-4](https://doi.org/10.6028/NIST.FIPS.180-4) | The restricted LLBC translation, standard-library operations and reviewed compression iterator driver are trusted. Compiled leakage and correspondence outside the portable x64 Rust path remain open. |
 | ChaCha20 | The extracted public Rust stream API terminates and agrees with the RFC byte model and the ABC exhaustion rule for every typed input. Five new Lean statements check the little-endian word XOR and partial-tail model used by JavaScript and TypeScript, including arithmetic and write bounds. [Rust replay](../../tools/verification/chacha20) · [Word-output model](../../src/crypto/cipher/chacha20/spec/ChaCha20WordOutput.lean) · [RFC 8439 § 2.4](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.4) | The word-output proof assumes the 32-bit and little-endian runtime primitives. ECMAScript source correspondence and compiled leakage remain open. |
-| SHA3-256 and SHAKE256 | Nine Lean statements verify the source-derived Rust Keccak-p[1600,24] permutation for all 1,600-bit inputs and the 136-byte block absorption for all states. The FIPS sponge composition adds the existing padding and output contracts. Three recompiled Rust controls fail their corresponding lemmas. [Source replay](../../tools/verification/keccak) · [Reader and composition proofs](../../src/crypto/hash/keccak-p1600/spec) · [FIPS 202](https://doi.org/10.6028/NIST.FIPS.202) | Rust wrapper buffering, padding writes and output drivers still use models. The restricted lowering, primitive semantics, other languages and compiled leakage have separate obligations. |
-| AES-256-GCM | Sixteen Lean statements cover Rust GHASH arithmetic and the extracted `open_in_place` tag gate. The full 128-bit comparison controls whether CTR is reached, and a mismatched tag preserves the ciphertext. Four intentional changes are rejected. The release check exercises all 128 single-bit tag changes. [Source replay](../../tools/verification/aes256-gcm) · [GCM composition](../../src/crypto/aead/aes256-gcm/spec) · [SP 800-38D](https://doi.org/10.6028/NIST.SP.800-38D) | The theorem assumes the standard byte-conversion and `black_box` contracts. Rust slice assembly, concrete AES, length validation, CTR mutation, full seal/open, and general compiled leakage remain open. |
+| SHA3-256 and SHAKE256 | The extracted Rust Keccak-p[1600,24] permutation and block absorption agree with FIPS 202. A separate replay checks SHA3-256's public byte digest through all 256 output bits. It checks the SHAKE256 finalizer and reads from finalized state for any finite partition of requests. [Source replay](../../tools/verification/keccak) · [FIPS 202](https://doi.org/10.6028/NIST.FIPS.202) | SHAKE256 incremental input and the full `xof` composition remain separate source obligations. The proofs trust the restricted lowering and standard primitive models. Other languages and compiled leakage retain separate obligations. |
+| AES-256-GCM | Twenty-two Lean statements cover the extracted Rust GHASH arithmetic, both public length gates, valid CTR indices and the `open_in_place` authentication gate. Invalid lengths and failed authentication preserve the payload in the checked control flow. Six altered extractions are rejected. [Source replay](../../tools/verification/aes256-gcm) · [GCM composition](../../src/crypto/aead/aes256-gcm/spec) · [SP 800-38D](https://doi.org/10.6028/NIST.SP.800-38D) | The composed opening uses contracts for GHASH assembly, AES and CTR payload operations. The GHASH slice walker, AES block implementation, CTR serialization and XOR, and target leakage still need source or target qualification. |
 | HMAC-SHA-256 | Lean proves the prepared inner and outer prefix state model preserves RFC 2104 outputs on arbitrary admissible chunk partitions and preserves the context after a rejected update. The one-shot function and reusable contexts share the pad normalization and tag logic in both JavaScript and TypeScript. [Prepared-state proof](../../src/crypto/mac/hmac-sha256/spec/HmacPrepared.lean) · [RFC 2104 § 4](https://www.rfc-editor.org/rfc/rfc2104.html#section-4) | The proof uses the byte-level SHA-256 state model. ECMAScript source refinement, JIT leakage and key-state erasure remain open. |
-| Poly1305 | Twenty Rust source-derived Lean statements cover byte decoding, clamp, block recurrence and the actual tag finalizer. The finalizer checks conditional subtraction, low-128 packing, pad addition and every output byte. Six additional Lean statements check the JavaScript and TypeScript coefficient cache, all partial sums and the empty-message tag model. [Rust source replay](../../tools/verification/poly1305) · [ECMAScript model](../../src/crypto/mac/poly1305/spec/Poly1305Window.lean) · [RFC 8439 § 2.5](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.5) | Rust public initialization and call choreography, chunk assembly and insertion of the partial marker remain open. C++ and ECMAScript source correspondence and compiled leakage have separate obligations. |
+| Poly1305 | The extracted Rust initializer maps the key to clamped `r` and the pad. The public finalizer matches the RFC recurrence and tag from a valid live state, including every partial-block length and arbitrary stale tail bytes. Earlier source theorems cover the block recurrence, reduction and tag packing. [Rust source replay](../../tools/verification/poly1305) · [ECMAScript model](../../src/crypto/mac/poly1305/spec/Poly1305Window.lean) · [RFC 8439 § 2.5](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.5) | Rust `update` must establish the live-state invariant, including chunk assembly. The one-shot source chain, other languages and target leakage still need proof. |
 | Common ECMAScript input boundary | Three Lean statements prove admission and exact byte footprint of fixed and tracking views in the ECMAScript slot model. The updated intrinsic handlers are exercised through all 20 JavaScript and TypeScript profiles. [Input model and tests](../../src/crypto/inputs) · [ECMAScript typed arrays](https://tc39.es/ecma262/multipage/indexed-collections.html#sec-typedarray-objects) | The model assumes the specified intrinsic behavior and synchronous storage stability. Direct ECMAScript source and runtime correspondence remain open. |
-| scrypt | The two ROMix passes agree with the RFC model for admitted power-of-two costs. Lean checks table row indexing and truncation followed by masking. The KDF composition uses explicit Salsa20/8 and PBKDF2 contracts. [ROMix and KDF proof](../../src/crypto/kdf/scrypt/spec) · [RFC 7914](https://www.rfc-editor.org/rfc/rfc7914.html#section-5) | Source extraction, provider correspondence, erasure and failure paths remain open. |
+| scrypt | Lean proves RFC ROMix table indexing, the truncated Integerify mask, and the two-buffer schedule. Each pass leaves the current value in the original lane for every admissible power-of-two cost. The construction composes with Salsa20/8 and PBKDF2 contracts. Seven portable implementations remove `2*N*p` full-lane copies. [ROMix and KDF proof](../../src/crypto/kdf/scrypt/spec) · [RFC 7914](https://www.rfc-editor.org/rfc/rfc7914.html#section-5) | Source extraction, provider correspondence, erasure and failure paths remain open. |
 | ML-KEM-768 | Lean checks integral rounding, decode bounds and recompression of every valid wire value. The sharp cyclic coefficient errors are 104 for 4-bit compression and 2 for 10-bit compression. [Coefficient proofs](../../src/crypto/agreement/ml-kem-768/spec) · [FIPS 203](https://doi.org/10.6028/NIST.FIPS.203) | Provider correspondence for coefficient operations and the full key encapsulation refinement remain open. |
 
 ## Earlier functional results
@@ -36,6 +36,16 @@ existing SHA-256, HMAC and HKDF source-refinement contracts continue to
 apply to their verified entry points and feature configuration. The
 full portfolio still requires per-source refinement and compiled
 side-channel qualification. [Original exact refinement evidence](../status/pr-1-qualification.md#formal-evidence) · [Linux SHA-256, HMAC and HKDF re-extraction](https://github.com/All-Basket-Cryptography/abc/actions/runs/46096767910/job/140829799978) · [Linux ChaCha20 composition verification](https://github.com/All-Basket-Cryptography/abc/actions/runs/46096767939/job/140829799821)
+
+The Linux replay checked 16 Rust SHA3-256 and SHAKE256 wrapper and reader
+theorems, 22 Rust AES-256-GCM theorems, and the scrypt buffer model on
+commit `52ce20e`. The SHA3/SHAKE check rejected four re-extracted Rust
+mutations. The GCM check rejected six changed extracted operations.
+[Linux replay](https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310509/job/140862830326)
+
+A second Linux job checked the 24 extracted Poly1305 theorems, including
+public initialization, stale-tail handling and finalization, after two
+identical pinned extractions. [Poly1305 Linux replay](https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310473/job/140862830147)
 
 ## Construction literature
 
@@ -55,6 +65,39 @@ listed above.
   the Poly1305-AES construction. RFC 8439 specifies the one-time authenticator
   and the ChaCha20-derived key used in this portfolio.
   [Original Poly1305 paper](https://cr.yp.to/mac/poly1305-20041101.pdf) · [RFC 8439 §§ 2.5–2.6](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.5)
+
+- Bertoni, Daemen, Peeters and Van Assche describe the sponge construction
+  and the random-permutation security model that underlies Keccak.
+  [Cryptographic sponge functions](https://keccak.team/sponge_duplex.html)
+- Percival motivates scrypt's ROMix with the sequential memory-hard
+  cost model. The buffer proof follows RFC 7914's two-pass procedure.
+  [Original scrypt paper](https://www.tarsnap.com/scrypt/scrypt.pdf) · [RFC 7914 § 5](https://www.rfc-editor.org/rfc/rfc7914.html#section-5)
+
+## ROMix buffer update
+
+The 220-cell compatibility replay combines 207 passing Windows x64 suite
+commands and 16 macOS arm64 jobs covering 20 Swift profiles. The Windows
+verifier rechecked the source inputs, commands and logs, including a
+negative control with a modified log. Node passed 164 ECMAScript test
+groups. The C and C++ scrypt runs each passed three RFC known answers,
+144 OpenSSL comparisons, workspace and aliasing checks with UBSan enabled.
+[Replay record](../status/portfolio-replay.json)
+
+For scrypt on the Windows x64 Intel Core i7-12700K, the paired portable
+latencies changed by −2.4% to +1.0% across four languages and three
+workloads. Negative figures indicate lower latency. Each entry is the
+median microseconds per derive over eleven alternating batches.
+
+| `N`, `r`, `p` | C baseline → current | C++ baseline → current | JavaScript baseline → current | TypeScript baseline → current |
+| --- | ---: | ---: | ---: | ---: |
+| `16`, `2`, `3` | 46.57 → 46.31 | 31.84 → 31.63 | 137.18 → 133.97 | 184.54 → 184.00 |
+| `1024`, `8`, `1` | 1,416.11 → 1,391.44 | 1,384.16 → 1,381.79 | 6,179.69 → 6,137.82 | 6,431.61 → 6,496.92 |
+| `512`, `32`, `2` | 5,526.10 → 5,395.94 | 5,319.98 → 5,340.21 | 24,299.35 → 24,155.10 | 25,485.82 → 25,748.20 |
+
+The runs used Clang 21.1.8 for C and C++ and Node 24.12.0 for both
+ECMAScript implementations. Direct OpenSSL was faster on all six
+ECMAScript workloads. The record includes the distinct OpenSSL versions,
+raw samples and source fingerprints. [Paired measurements](../status/scrypt-alternating-benchmark.json) · [Reproduction](../../tools/benchmarks/README.md#paired-scrypt-romix-measurements)
 
 ## Runtime evidence
 

@@ -1,10 +1,10 @@
 {
   "status": "poly1305_source_refinement_checked",
-  "extractionRevision": "ccb023a86b3d7610b303ba0448d39b79cce222c3",
+  "extractionRevision": "c5a7e9d0d450ac312b416f1069ccb08ca1f1835d",
   "target": "x86_64-unknown-linux-gnu",
   "model": {
-    "Abc/Poly1305/Extracted/Funs.lean": "68f7c628d9db5358db94d81390491e44822369c2ce199c80fbcc6ea1da75369a",
-    "Abc/Poly1305/Extracted/Types.lean": "7196eaedcf17ba0bb540bdfd2e505ec2da85c272035456cb397a4556c7ab858d"
+    "Abc/Poly1305/Extracted/Funs.lean": "48d331c3d1f21b0c7a5f46316239ef1d5c9c8858c6d1f50ab6770cafd229c1f1",
+    "Abc/Poly1305/Extracted/Types.lean": "89c5783f94c3bbf2d8ff0714f730e875e3204628ece89f9ef2f277277a374a19"
   },
   "theorems": [
     "Abc.Refine.Poly1305.Encoding.source_limbs_refines",
@@ -26,21 +26,26 @@
     "Abc.Refine.Poly1305.Bytes.source_absorb_padded_final_block_refines",
     "Abc.Refine.Poly1305.Final.source_add_pad_and_serialize_refines",
     "Abc.Refine.Poly1305.Final.source_finish_tag_refines",
-    "Abc.Refine.Poly1305.Final.source_finish_tag_value"
+    "Abc.Refine.Poly1305.Final.source_finish_tag_value",
+    "Abc.Refine.Poly1305.Api.source_split_key_refines",
+    "Abc.Refine.Poly1305.Api.source_new_refines",
+    "Abc.Refine.Poly1305.Api.source_encode_partial_refines",
+    "Abc.Refine.Poly1305.Api.source_finalize_refines"
   ],
   "proofFiles": {
     "Poly1305EncodingRefinement": "e60ae0dbe1ebc902b5ab826006adb161c2bd96fdf8aaefca98cdb099b0306685",
     "Poly1305SourceRefinement": "b4c580b6fb268ff84b44f54e8401190f191b963b588c90f02f8c4fd314a4b8e5",
     "Poly1305ByteRefinement": "0d36f77516e18120188b61b48e2f24aee44f86d2fc84760b81d0aa3ba309db44",
-    "Poly1305FinalRefinement": "c2c01c166fd259169274965bdddd756ab42c6ce1ebceb006c8a20826410816cd"
+    "Poly1305FinalRefinement": "c2c01c166fd259169274965bdddd756ab42c6ce1ebceb006c8a20826410816cd",
+    "Poly1305ApiRefinement": "de502097cce997b16b13b25ce9e252bc1644eae1f5e13d3a49e1bcac9379d741"
   },
   "extractionInputDigests": {
     "tools/verification/probe/toolchain-candidate.json": "6953b42492bff08a40479725fec7ce922002bfdbe715afcaedf4f817f7621249",
     "tools/build/rust/Cargo.toml": "9e8dd7579ad780836ce80f3a00639b171926d3435e15e3eb274c4fd67eb0d8f4",
     "tools/build/rust/Cargo.lock": "a3ee8405943bef38fef4f8127d96032013d10bc082ae0cb6ff9ccbd855178b5c",
-    "src/crypto/mac/poly1305/impl/rust/src/lib.rs": "d12fc051cc0d7d00fcda6fefa1cd8971f3dc9a376d105af13a9722d619703e0b",
+    "src/crypto/mac/poly1305/impl/rust/src/lib.rs": "fdbb969701b4d9c47fc2cbeb837f5ba32e605c0f5cdd795b00fed9c6969229cb",
     "src/crypto/mac/poly1305/impl/rust/Cargo.toml": "58c0d2fafe8cb28f8d873007c7257c72c35d407ff015457692a19cb509fd0ebc",
-    "tools/verification/poly1305/check.mjs": "25973007620202a6505845a3bf76b628cdf7f491c456808cc5ebdb04a1bd30fb"
+    "tools/verification/poly1305/check.mjs": "962046e84def33022d677bbdef8d730132f0856a925bdad2b0e1b9d56d100f1d"
   },
   "sourceProofAxioms": {
     "Abc.Refine.Poly1305.Encoding.source_limbs_refines": [
@@ -142,13 +147,33 @@
       "propext",
       "Classical.choice",
       "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Api.source_split_key_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Api.source_new_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Api.source_encode_partial_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Poly1305.Api.source_finalize_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
     ]
   },
   "otherReplayInputDigests": {
     "src/lean/Abc/Foundation/Encoding.lean": "1e4e51f3430cd6262cabedc9b6a7db80bb8e6f2a4f12af64a842f5e4ef7c32e9",
     "src/crypto/mac/poly1305/impl/go/Poly1305GoModel.lean": "cc896150363f5b5358117715127ecbff241d703a9c680682c4799b68c3fa7fa9",
-    "tools/verification/poly1305/replay.mjs": "674248b19917172e293c3fd46618b46689efdac8f6d455544b2530e5ad41ce77"
+    "tools/verification/poly1305/replay.mjs": "82faefa3f916684df0233466e0dca2423dd229d311c843320ac4b4be9de62b48"
   },
-  "lean": "Lean (version 4.31.0, x86_64-w64-windows-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)",
-  "extractionRun": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46104523132"
+  "lean": "Lean (version 4.31.0, x86_64-unknown-linux-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)",
+  "extractionRun": "https://github.com/All-Basket-Cryptography/abc/actions/runs/46107310473"
 }

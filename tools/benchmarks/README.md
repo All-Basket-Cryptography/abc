@@ -153,3 +153,28 @@ minimum and maximum of the baseline-to-candidate ratios across nine
 alternating batches. The fixture checks both implementations on 16 view
 offsets for each message size.
 [ECMAScript evidence](../../docs/status/poly1305-window-benchmark.json) · [C++ evidence](../../docs/status/poly1305-cpp-benchmark.json)
+
+## Paired scrypt ROMix measurements
+
+```sh
+mkdir -p .abc/scrypt-baseline
+git archive --format=tar --output=.abc/scrypt-baseline.tar cc7b2a2 src/crypto
+tar -xf .abc/scrypt-baseline.tar -C .abc/scrypt-baseline
+node tools/benchmarks/scrypt-alternating-ecmascript.mjs .abc/scrypt-baseline
+python -B tools/benchmarks/scrypt-alternating-native.py \
+  .abc/scrypt-baseline .abc/scrypt-native-samples
+```
+
+The runner checks both builds against Node's OpenSSL before timing. It uses
+three public parameter sets and offset password and salt views. ABC receives
+the exact workspace and output budget. Node/OpenSSL receives a 64 MiB cap.
+Eleven samples alternate the paired ABC order after warm-up. Each result
+records the raw timings, source digests, CPU, Node and OpenSSL versions.
+The timings include allocation, derivation and clearing along the public
+API path on the observed target.
+
+The native runner uses the same OpenSSL-checked parameters and eleven
+alternating batches. It builds each revision with the existing C/C++
+test builder and reuses a caller-allocated workspace. It records the
+build and source digests, and compares with Python's OpenSSL provider.
+[Recorded measurements](../../docs/status/scrypt-alternating-benchmark.json)
