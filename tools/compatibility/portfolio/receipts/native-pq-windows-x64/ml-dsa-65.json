@@ -1,0 +1,36 @@
+{
+  "status": "passed",
+  "checks": {
+    "acvp_keygen": 1,
+    "acvp_siggen": 1,
+    "acvp_sigver": 2,
+    "openssl_comparisons": 12,
+    "openssl": "OpenSSL 3.5.4 30 Sep 2025 (Library: OpenSSL 3.5.4 30 Sep 2025)"
+  },
+  "command": [
+    "C:\\Program Files\\LLVM\\bin\\clang-cl.exe",
+    "/std:c17",
+    "/MD",
+    "/LD",
+    "/O2",
+    "/W4",
+    "/WX",
+    "/DABC_MLDSA65_C_SHARED",
+    "/DABC_MLDSA65_C_BUILD",
+    "/DABC_MLDSA65_C_TEST_SUPPORT",
+    "/I<work>\\provider\\aws-lc-sys-0.44.0\\aws-lc",
+    "/I<work>\\provider\\aws-lc-sys-0.44.0\\aws-lc\\include",
+    "<repo>\\src\\crypto\\signature\\ml-dsa-65\\impl\\c\\abc_mldsa65_c.c",
+    "/Fo:<work>\\dsa\\wrapper.obj",
+    "/Fe:<work>\\dsa\\abc_mldsa65_c_test.dll",
+    "/link",
+    "<work>\\provider\\build\\crypto\\crypto.lib",
+    "bcrypt.lib",
+    "advapi32.lib",
+    "ws2_32.lib",
+    "crypt32.lib"
+  ],
+  "crypto_library_sha256": "8ff2173031f4309ebf3f36dbb07ec8a039b4230805a1e88edcb86e8ea0c991e3",
+  "fixture_sha256": "5bbbc60f0975c277b128f434cec8acd44f2b28b8c00df1d5295b13ffe52fed23",
+  "library_sha256": "767133d5129083e2d9075ac6cf55b425880d7691d7a1fc066596174c69b1b6f7"
+}

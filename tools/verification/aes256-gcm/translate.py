@@ -736,15 +736,17 @@ class ScalarLoop:
             return "nonce ++ counter"
         return "nonce ++ (counter.extractLsb' 0 8 ++ counter.extractLsb' 8 8 ++\n    counter.extractLsb' 16 8 ++ counter.extractLsb' 24 8)"
 
-    def open_gate(self):
-        """Check the straight-line open tail and its two-way result switch."""
-        body = self.local_function("open_in_place")["body"]["Structured"]
-        require(body["locals"]["arg_count"] == 5, "Wrong open arity")
+    def api_tail(self, name):
+        """Validate the shared API dataflow and each operation's result."""
+        sealing = name == "seal_in_place"
+        body = self.local_function(name)["body"]["Structured"]
+        arity = 4 if sealing else 5
+        require(body["locals"]["arg_count"] == arity, "Wrong AES-GCM API arity")
         local_ids = {local["index"] for local in body["locals"]["locals"]}
 
         def local(place):
             index = place["kind"]["Local"]
-            require(index in local_ids, "Unknown open local")
+            require(index in local_ids, "Unknown API local")
             return index
 
         def statements(block):
@@ -782,7 +784,7 @@ class ScalarLoop:
                 value = read(env, args[0])
             elif tag == "Ref":
                 target = lookup(env, args["place"])
-                if target in ("aad", "ciphertext"):
+                if target in ("aad", "plaintext", "ciphertext"):
                     metadata = args["ptr_metadata"]["Copy"]["kind"]["Projection"]
                     require(metadata[1] == "PtrMetadata" and lookup(env, metadata[0])[1] == target,
                             "Expected the complete input slice")
@@ -792,7 +794,7 @@ class ScalarLoop:
             else:
                 raise ValueError(f"Unsupported assignment in open gate: {tag}")
             index = local(destination)
-            require(index == 0 or index >= 6, "Gate clobbers an open argument")
+            require(index == 0 or index > arity, "Gate clobbers an API argument")
             env[index] = value
 
         def apply_assignments(env, items):
@@ -802,11 +804,11 @@ class ScalarLoop:
 
         def validate_call(env, item, expected_args):
             require([read(env, arg) for arg in item["call"]["args"]] == expected_args,
-                    "Unexpected open gate argument flow")
+                    "Unexpected AES-GCM API argument flow")
             require(list(statements(item["on_unwind"])) == [("UnwindResume", None)],
                     "Unexpected cleanup in the open gate")
             destination = local(item["call"]["dest"])
-            require(destination == 0 or destination >= 6, "Call clobbers an open argument")
+            require(destination == 0 or destination > arity, "Call clobbers an API argument")
             return destination
 
         def no_unique_slice_operand(operand):
@@ -821,7 +823,7 @@ class ScalarLoop:
                 if tag == "Assign":
                     place, rvalue = args
                     index = local(place)
-                    require(index == 0 or index >= 6, "Open prelude clobbers an argument")
+                    require(index == 0 or index > arity, "API prelude clobbers an argument")
                     kind, value = tagged(rvalue)
                     if kind == "Ref":
                         require(value["kind"] == "Shared", "Open prelude takes a mutable borrow")
@@ -831,7 +833,7 @@ class ScalarLoop:
                 elif tag == "Call":
                     call = args["call"]
                     index = local(call["dest"])
-                    require(index == 0 or index >= 6, "Open prelude call clobbers an argument")
+                    require(index == 0 or index > arity, "API prelude call clobbers an argument")
                     for operand in call["args"]:
                         no_unique_slice_operand(operand)
                     require(list(statements(args["on_unwind"])) == [("UnwindResume", None)],
@@ -848,16 +850,45 @@ class ScalarLoop:
         new_at, = [i for i, (tag, item) in enumerate(top[:auth]) if tag == "Call"
                    and name_segments(callee(item))[0] == ident("abc_aes256")
                    and name_segments(callee(item))[-1] == ident("new")]
-        check_read_only(top[:auth + 1])
-        aes = local(top[new_at][1]["call"]["dest"])
-        env = {2: ("Shared", "nonce"), 3: ("Shared", "aad"), 4: ("TwoPhaseMut", "ciphertext"),
-               5: ("Shared", "tag_bytes"), aes: "aes"}
-        apply_assignments(env, top[new_at + 1:auth])
+        check_read_only(top[:new_at + 1] if sealing else top[:auth + 1])
+        env = {1: ("Shared", "key"), 2: ("Shared", "nonce"), 3: ("Shared", "aad"),
+               4: ("TwoPhaseMut", "plaintext" if sealing else "ciphertext")}
+        if not sealing:
+            env[5] = ("Shared", "tag_bytes")
+        apply_assignments(env, top[new_at - 1:new_at])
+        aes = validate_call(env, top[new_at][1], [("Shared", "key")])
+        env[aes] = "aes"
+        before_auth = top[new_at + 1:auth]
+        if sealing:
+            apply_at, = [i for i, (tag, _) in enumerate(before_auth) if tag == "Call"]
+            apply_assignments(env, before_auth[:apply_at])
+            invocation = before_auth[apply_at][1]
+            require(callee(invocation) is self.local_function("apply_payload"), "Expected seal to transform plaintext")
+            destination = validate_call(env, invocation,
+                                        [("Shared", "aes"), ("Shared", "nonce"), ("TwoPhaseMut", "plaintext")])
+            env[destination] = ("unit",)
+            env[4] = ("TwoPhaseMut", "ciphertext")
+            before_auth = before_auth[apply_at + 1:]
+        apply_assignments(env, before_auth)
         authentication = top[auth][1]
         actual = validate_call(env, authentication, [("Shared", "aes"), ("Shared", "nonce"),
                                                      ("Shared", "aad"), ("Shared", "ciphertext")])
         env[actual] = "actual"
         leading = top[auth + 1:]
+        result = ("core", "result", "Result")
+        if sealing:
+            encode_at, = [i for i, (tag, _) in enumerate(leading) if tag == "Call"]
+            apply_assignments(env, leading[:encode_at])
+            encode = leading[encode_at][1]
+            encoder = name_segments(callee(encode))
+            require(encoder[:2] == [ident("core"), ident("num")] and encoder[-1] == ident("to_be_bytes")
+                    and self.scalar_type(encoder[2]["Impl"]["Ty"]["skip_binder"]) == 128,
+                    "Expected the u128 tag's big-endian serialization")
+            env[validate_call(env, encode, ["actual"])] = "encoded_tag"
+            require(leading[-1] == ("Return", None), "Expected the successful seal return")
+            apply_assignments(env, leading[encode_at + 1:-1])
+            require(env[0] == (result, "Ok", ("encoded_tag",)), "Seal must return the computed tag")
+            return None
         switch_at, = [i for i, (tag, _) in enumerate(leading) if tag == "Switch"]
         decode_at, compare_at = [i for i, (tag, _) in enumerate(leading[:switch_at]) if tag == "Call"]
         apply_assignments(env, leading[:decode_at])
@@ -881,7 +912,6 @@ class ScalarLoop:
         require(condition.ty == "Bool" and {explicit, fallback} == {0, 1} and len(switch["branches"]) == 2,
                 "Expected a two-way Boolean application gate")
 
-        result = ("core", "result", "Result")
         error = ("abc_aes256_gcm", "Error")
         # Both branches are checked before choosing the fallthrough direction.
         accept, = [i for i, block in enumerate(switch["branches"]) if not list(statements(block))]
@@ -974,7 +1004,8 @@ class ScalarLoop:
         self.wrapper_links()
         cutpoints = "\n\n".join(self.straight_line(name, *shape) for name, shape in self.CUTPOINTS.items())
         comparison = self.comparison()
-        accepted = self.open_gate()
+        accepted = self.api_tail("open_in_place")
+        self.api_tail("seal_in_place")
         length_check = self.length_check()
         for name in ("seal_in_place", "open_in_place"):
             self.api_length_gate(name)
@@ -1039,6 +1070,13 @@ def open_gate {{α : Type}} (applyPayload : α → α) (ciphertext : α)
     (actual expected : BitVec 128) : Bool × α :=
   if tags_match actual expected == {accepted} then (true, applyPayload ciphertext)
   else (false, ciphertext)
+
+-- The validated seal tail reborrows the same buffer after CTR returns.
+def seal_tail {{α β γ : Type}} (applyPayload : α → Option α) (authenticate : α → Option β)
+    (encode : β → γ) (plaintext : α) : Option (γ × α) := do
+  let ciphertext ← applyPayload plaintext
+  let tag ← authenticate ciphertext
+  pure (encode tag, ciphertext)
 
 end Abc.Extracted.Ghash
 """

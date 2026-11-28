@@ -1,9 +1,9 @@
 # Rust Poly1305 source refinement
 
-The pinned Charon and Aeneas tools translate the reachable bodies rooted at
-the public `Poly1305::new` and `Poly1305::finalize` methods, and the
-`crate::absorb_bytes` helper, from the portable Rust slice with default features
-disabled, targeting `x86_64-unknown-linux-gnu`. The
+The pinned Charon and Aeneas tools translate the public `authenticate`
+entry point and its reachable bodies, including `Poly1305::new`, `update`,
+and `finalize`. Extraction targets `x86_64-unknown-linux-gnu` with default
+features disabled. The
 extraction workflow runs the translation twice and publishes `result.json`,
 both generated models and the tool logs. The same workflow builds the
 pinned Lean backend, checks the theorems and publishes the replay receipt.
@@ -44,14 +44,21 @@ state whose key limbs, cache, accumulator and pending length satisfy the
 invariant. A nonempty tail of length `n < 16` contributes its first `n`
 bytes and the marker `256^n` to the recurrence. If the buffer is empty,
 finalization emits a tag directly from the existing accumulator.
+
+`Poly1305StreamRefinement.lean` proves the exact `update` loop processes
+every full block of the old buffered bytes followed by the new input and
+stores precisely the short suffix. It preserves the key, cache, pad, and
+ready-state invariant. `blocks_append` proves independence of the chunk
+boundaries, so the update theorem applies to arbitrary successive calls
+starting from `new`. The `source_authenticate_refines` theorem composes
+the extracted constructor, update and finalizer and proves that the tag
+bytes decode to the RFC integer for every 32-byte key and input slice.
 [RFC 8439 § 2.5.1](https://www.rfc-editor.org/rfc/rfc8439.html#section-2.5.1)
 
-The proof assumes the standard Lean model of the Rust integer operations
-used by Aeneas. Composition through the public `update` loop, including
-its chunk assembly and the connection from the input message to the
-constructor/finalizer invariant, still needs a source proof. That also
-leaves the one-shot `authenticate` entry point and compiled timing
-behavior outside the checked result.
+The proof relies on the Aeneas standard library models of Rust integer,
+array and slice operations and successful source translation. The generated
+program is checked for functional correctness. Compiled timing behavior
+and the host's memory handling are outside this result.
 
 ## Replay
 

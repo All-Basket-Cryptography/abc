@@ -1,7 +1,7 @@
 schema_version = 1
 id = "poly1305-source-verification"
 owned_paths = ["tools/verification/poly1305"]
-lean_sources = { Poly1305ApiRefinement = "tools/verification/poly1305", Poly1305ByteRefinement = "tools/verification/poly1305", Poly1305EncodingRefinement = "tools/verification/poly1305", Poly1305FinalRefinement = "tools/verification/poly1305", Poly1305SourceRefinement = "tools/verification/poly1305" }
+lean_sources = { Poly1305ApiRefinement = "tools/verification/poly1305", Poly1305ByteRefinement = "tools/verification/poly1305", Poly1305EncodingRefinement = "tools/verification/poly1305", Poly1305FinalRefinement = "tools/verification/poly1305", Poly1305SourceRefinement = "tools/verification/poly1305", Poly1305StreamRefinement = "tools/verification/poly1305" }
 lean_external_imports = { "Abc.Poly1305.Extracted" = "tools/verification/poly1305/check.mjs" }
 
 [tasks.runner-syntax]

@@ -48,11 +48,12 @@ They check both APIs' length gate and the complete CTR transform through the
 counter, nonce/counter serialization and per-byte XOR, under the AES block
 and Rust standard library contracts. The open gate compares the whole tag, returns
 `AuthenticationFailed` without decrypting a mismatched tag, and reaches
-payload decryption only after a match.
+payload decryption only after a match. The seal path authenticates the
+ciphertext written by CTR and returns its serialized tag.
 The composition uses the Lean slice and padding model to supply the
 blocks, and AES block values to supply the hash key and tag mask.
-Source-level proofs for GHASH slice traversal and conversion, the concrete
-AES provider and the full seal path remain open. Compiler
+Source-level proofs for GHASH slice traversal and conversion and the concrete
+AES provider remain open. Compiler
 timing, binary correspondence, key erasure, nonce allocation and
 cryptographic security games require separate evidence.
 [Rust source refinement and replay](../../../../../tools/verification/aes256-gcm/README.md)

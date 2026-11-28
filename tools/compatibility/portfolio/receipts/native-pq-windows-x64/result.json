@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "scope": "native_c_post_quantum_supplement",
+  "revision": "6bf6ecdbe83228ae4155e78b405ac95533c22fd6",
+  "input_provenance": "working_tree_sha256",
+  "target": "windows-x64",
+  "tools": {
+    "compiler": {
+      "version": "clang version 21.1.8",
+      "sha256": "812f6a0e80a5541108c0f4ae31121bcd5b692707041ac83a86e595f4729f5c8a"
+    },
+    "cmake": {
+      "version": "cmake version 3.31.6-msvc6",
+      "sha256": "b540efece9172930877dff0c9fedda7a69b0dd82446e0e8bba13372aac6c8ac8"
+    },
+    "ninja": {
+      "version": "1.12.1",
+      "sha256": "5020138b3757035df9dca9a2243624d5810ffa6ae24444bd95f752cbd1b89123"
+    },
+    "python": "3.13.14"
+  },
+  "sources": {
+    "tools/compatibility/portfolio/native_pq.py": "31788787d7c1a87a07998af702157dbe1b4e02623f38d736ecfbc07347d8299b",
+    "src/crypto/agreement/ml-kem-768/impl/c/build_provider.py": "42b8485c688fce0309a5071553ad37c244fdf50ae24cdcf52a71292e91330b54",
+    "src/crypto/agreement/ml-kem-768/impl/c/check.py": "537960901e2cfda9d5ed9df75c9141d31495ad81d9ae1409b5a75235ab0d10b8",
+    "src/crypto/agreement/ml-kem-768/impl/c/checks.c": "88c0025f059bb38791c17d46f7ec7d421e388c195e5e7fe5566ff4bd3b1eceae",
+    "src/crypto/agreement/ml-kem-768/impl/c/ml_kem_768.c": "55e44ecceeb9459028393cfb332d73a457fb300ce8c70d92a158db60d0e0db59",
+    "src/crypto/agreement/ml-kem-768/impl/c/ml_kem_768.h": "1b510ce67eb4590e4efa9435a935d7248c27045133f94513caaedf005bff5995",
+    "src/crypto/agreement/ml-kem-768/impl/c/openssl_oracle.py": "7e815dd0ca7f51b66c259c58c622baedb36a2900c2638a3960dfae37293287a2",
+    "src/crypto/agreement/ml-kem-768/impl/c/test_seeds.h": "52b682339e0ae462c55f8f2a1c78c0bd99e80ff244c79da7d1bc3c212b55cadb",
+    "src/crypto/agreement/ml-kem-768/spec/acvp.json": "a85efc2ed6418e268073448ce145cba764c046624092fc0b376629e4983fec7c",
+    "src/crypto/agreement/ml-kem-768/spec/fixtures.py": "34a809506a7719be638c745fcd1d649a878aa5842bec7597d54bbe19b2b1437a",
+    "src/crypto/signature/ml-dsa-65/impl/c/check.py": "eadd51c145f5e7f9be4cd8ea12cd992abfe5f052c82c1801bac115f3f74c364a",
+    "src/crypto/signature/ml-dsa-65/impl/c/abc_mldsa65_c.c": "7e659103e41fb4731b39ea1dce8ac57a2ebd07101e4a9427324e136ecbab71f4",
+    "src/crypto/signature/ml-dsa-65/impl/c/abc_mldsa65_c.h": "1f85c08ace39d254dbddbeb29547ce9afaee6316936df9ba4e16948eb1ebcb6a",
+    "src/crypto/signature/ml-dsa-65/spec/acvp-fips204-sample.json": "5bbbc60f0975c277b128f434cec8acd44f2b28b8c00df1d5295b13ffe52fed23"
+  },
+  "optional_nist_originals": {
+    "ML-KEM-keyGen-FIPS203-internalProjection.json": "d7a62a2c3476957f56dd8d24f9004ea6776ccfe995ffe71a65bb9506dc9c7b1b",
+    "ML-KEM-encapDecap-FIPS203-internalProjection.json": "a556952ce869bb89c3a3196a701dad89647c193a34c86eafb61a9d710d5b810f"
+  },
+  "aws_lc": {
+    "version": "5.5.0",
+    "crate_revision": "f464440d1fd3983ce9fb023e9eaf1698530919a2",
+    "source_archive_sha256": "f09fae7be8bb3174e05c6afdb34199e6dc0c7c04ba9fa237b1967adfbde27483",
+    "static_library_sha256": "8ff2173031f4309ebf3f36dbb07ec8a039b4230805a1e88edcb86e8ea0c991e3",
+    "cmake_flags": [
+      "-DCMAKE_TRY_COMPILE_CONFIGURATION=Release",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DBUILD_TESTING=OFF",
+      "-DBUILD_TOOL=OFF",
+      "-DBUILD_LIBSSL=OFF",
+      "-DBUILD_SHARED_LIBS=OFF",
+      "-DDISABLE_GO=ON",
+      "-DDISABLE_PERL=ON",
+      "-DOPENSSL_NO_ASM=ON",
+      "-DENABLE_SOURCE_MODIFICATION=OFF"
+    ]
+  },
+  "openssl_reference": {
+    "cli": {
+      "version": "OpenSSL 3.5.4 30 Sep 2025 (Library: OpenSSL 3.5.4 30 Sep 2025)",
+      "sha256": "060b787efc1e058068bfe4ff1c162fc40173df33fff8ceac6543d1ebaf340424"
+    },
+    "crypto_sha256": "9325e8486c61b3227abeacf635279a10b828a3b39bc1124a6b5159ae00174181",
+    "kem_version": "OpenSSL 3.5.4 30 Sep 2025"
+  },
+  "native_binaries_sha256": {
+    "ml-kem-768-public": "5206f1f67810ec855f29d21189edd781e2769049806e4e27011930b3d61dabdf",
+    "ml-kem-768-fixtures": "a84dc092340b1e948d14190309992ec85e012bef1231381f0f157bebf64e56f7",
+    "ml-dsa-65-fixtures": "767133d5129083e2d9075ac6cf55b425880d7691d7a1fc066596174c69b1b6f7"
+  },
+  "leaf_reports_sha256": {
+    "ml-kem-768": "386d31b5f492c537d19fb3d8414e7478fc654737e59592c0079d30305d490c62",
+    "ml-dsa-65": "3d9e05c766356e8a78d095da74b2d6ffbe545bca4b5b4546bc1a81b9d970f80b"
+  }
+}

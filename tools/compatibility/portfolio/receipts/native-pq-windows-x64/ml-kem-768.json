@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "compiler": "clang version 21.1.8",
+  "aws_lc": "5.5.0",
+  "source_archive_sha256": "f09fae7be8bb3174e05c6afdb34199e6dc0c7c04ba9fa237b1967adfbde27483",
+  "crypto_library_sha256": "8ff2173031f4309ebf3f36dbb07ec8a039b4230805a1e88edcb86e8ea0c991e3",
+  "openssl": "OpenSSL 3.5.4 30 Sep 2025",
+  "openssl_library_sha256": "9325e8486c61b3227abeacf635279a10b828a3b39bc1124a6b5159ae00174181",
+  "acvp_cases": 8,
+  "rfc_9935": "passed",
+  "independent_keygen_encap_decap_cases": 8,
+  "valid_length_implicit_rejection_cases": 8,
+  "randomized_public_api_roundtrips": 4,
+  "source_sha256": "55e44ecceeb9459028393cfb332d73a457fb300ce8c70d92a158db60d0e0db59",
+  "acvp_projection_sha256": "a85efc2ed6418e268073448ce145cba764c046624092fc0b376629e4983fec7c"
+}

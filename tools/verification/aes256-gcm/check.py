@@ -9,7 +9,7 @@ import re
 import subprocess
 from tempfile import mkdtemp
 
-from translate import ScalarLoop, ident, meaningful, name_segments, require, translate
+from translate import ScalarLoop, ident, local_operand, meaningful, name_segments, require, translate
 
 
 HERE = Path(__file__).resolve().parent
@@ -51,6 +51,8 @@ THEOREMS = {
     "Abc.Refine.Ghash.source_payload_byte_refines",
     "Abc.Refine.Ghash.source_ctr_loop_refines",
     "Abc.Refine.Ghash.source_ctr_refines_nist",
+    "Abc.Refine.Ghash.source_seal_tail_authenticates_ciphertext",
+    "Abc.Refine.Ghash.source_seal_with_models_refines",
     "Abc.Refine.Ghash.source_open_with_models_refines",
 }
 ALLOWED = {"propext", "Classical.choice", "Quot.sound"}
@@ -170,6 +172,7 @@ def check(options, run):
 
     negative = footer_negative = tag_negative = gate_negative = length_negative = counter_negative = None
     serialization_negative = xor_negative = None
+    seal_negative = None
     if options.check_mutant:
         reduction = list(locate(llbc, ["U128", REDUCTION]))
         require(len(reduction) == 1, "Expected one extracted reduction literal")
@@ -243,6 +246,25 @@ def check(options, run):
         update[0] = "BitOr"
         xor_negative = test_negative("xor-mutant", "Tactic `decide` proved that the proposition",
                                      "source_ctr_primitives_examples")
+        update[0] = "BitXor"
+
+        seal = closure.local_function("seal_in_place")["body"]["Structured"]["body"]
+        authenticate_id = closure.local_function("authenticate")["def_id"]
+        (auth_call,) = [args["call"] for tag, args in meaningful(seal) if tag == "Call"
+                        and args["call"]["func"]["Regular"]["kind"]["Fun"] == authenticate_id]
+        aad, ciphertext = map(local_operand, auth_call["args"][-2:])
+        aliases = {args[0]["kind"]["Local"]: args for tag, args in meaningful(seal) if tag == "Assign"}
+        require("Ref" in aliases[aad][1] and "Ref" in aliases[ciphertext][1],
+                "Expected separate AAD and ciphertext reborrows")
+        aliases[ciphertext][1] = aliases[aad][1]
+        try:
+            translate(llbc)
+        except ValueError as error:
+            require(str(error) == "Unexpected AES-GCM API argument flow", "Wrong seal mutation diagnostic")
+            log = run / "reject-seal-buffer-mutant.log"
+            log.write_text(str(error) + "\n", encoding="utf-8")
+            seal_negative = {"status": "rejected", "stage": "llbc_validation", "log": log.name}
+        require(seal_negative is not None, "The seal validator accepted authentication of the wrong buffer")
 
     return {
         "status": "source_llbc_refinement_checked", "target": target, "charon": charon,
@@ -253,6 +275,7 @@ def check(options, run):
         "tag_negative_check": tag_negative, "gate_negative_check": gate_negative,
         "length_negative_check": length_negative, "counter_negative_check": counter_negative,
         "serialization_negative_check": serialization_negative, "xor_negative_check": xor_negative,
+        "seal_negative_check": seal_negative,
     }
 
 

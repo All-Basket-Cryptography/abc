@@ -58,18 +58,20 @@ call. The failed branch returns `AuthenticationFailed` before that call.
 Lean proves that the extracted XOR/zero comparison is equivalent to byte
 equality on the entire tag. For any payload transformation, a mismatched
 tag preserves ciphertext and a matching tag reaches the transformation.
-The composed open theorem uses the extracted CTR and the GHASH block
-model to reach the NIST outcome. Lean checks 27 results with only
-`propext`, `Classical.choice` and `Quot.sound`.
+The seal-path validator follows the input key into AES setup, checks that
+CTR writes to the input buffer, and confirms that authentication reborrows
+those ciphertext bytes before serializing its computed tag. The composed
+seal and open theorems use the extracted CTR and the GHASH block model
+to reach the corresponding NIST outcomes. Lean checks 29 results with
+only `propext`, `Classical.choice` and `Quot.sound`.
 [Proof source](GhashSourceRefinement.lean)
 · [NIST SP 800-38D](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf)
 
 The tag gate relies on the standard library's functional contracts for
 `u128::from_be_bytes` and `black_box`. The byte-to-block bridge uses the
 Lean `sourceBlocks` model. Source proofs for GHASH slice traversal,
-padding and byte conversions, the concrete AES provider and the
-end-to-end source connection for seal remain open. Timing and compiler
-leakage require separate evidence.
+padding and byte conversions, and for the concrete AES provider, remain
+open. Timing and compiler leakage require separate evidence.
 [Rust `black_box`](https://doc.rust-lang.org/core/hint/fn.black_box.html)
 · [Rust slice `chunks_mut`](https://doc.rust-lang.org/std/primitive.slice.html#method.chunks_mut)
 · [Rust iterator `enumerate`](https://doc.rust-lang.org/core/iter/trait.Iterator.html#method.enumerate)
@@ -97,7 +99,9 @@ and 60-byte ciphertext in NIST GCM-AES256 example 5. Further controls
 reverse tag comparison, swap the open branch destinations, reject the
 largest valid payload length and start the CTR payload at the reserved
 tag counter. The CTR controls also reverse the counter byte order and
-replace the byte XOR with OR. The release test checks rejection and
+replace the byte XOR with OR. The seal dataflow control makes both
+authentication inputs refer to AAD. The LLBC validator rejects that
+source mutation. The release test checks rejection and
 ciphertext preservation for each of the 128 single-bit tag changes in
 example 5.
 [NIST AES-GCM examples](https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Standards-and-Guidelines/documents/examples/AES_GCM.pdf)

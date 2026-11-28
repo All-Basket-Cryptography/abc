@@ -27,31 +27,31 @@
     "tools/verification/keccak/check_source.py": "b0f7a015fc7d7511f25b0c0c2b2547aecef4b969c6b8cf4e473cdab12eb093ea",
     "tools/verification/keccak/wrapper_llbc.py": "217ab009f42ebefa71ec2d8e6b9c807673ae1ee889985628492a78b6ded24101",
     "tools/verification/keccak/reader_llbc.py": "ea4328442952a7484f433b0613cbba40f06ed701d9f87b5180b8bb3fbbab0cd2",
-    "tools/verification/keccak/absorb_llbc.py": "a45e88fe6df8fb5a4c8a0c0e2803225abafd38839401a0493eadf73d087e442f",
+    "tools/verification/keccak/absorb_llbc.py": "150af3dbfbf21334a8cb60a16fca29ea3741652bc3ce7f5d8da9017d5b85718f",
     "tools/verification/keccak/check_wrappers.py": "207009b906a5fac528a9909b5fd23b2e9a24cdd9dbcc77e3c970f2ddc1ddd3a9"
   },
   "extractions": {
     "keccak": {
-      "sha256": "053dc1b9e8614b5625905553398931508c26cac6bac4e4446c2a74fe381fb3bf",
+      "sha256": "648477b51f293b4c1bff5e430f33aa54d202d7ff0084eacb3e7ebc6e169c573d",
       "used_default_sysroot_fallback": true
     },
     "sha3-256": [
       {
-        "sha256": "a1a9faf65bbb7ceef61ac9724377d6a4a78ad354a31c307d11410c02e4cde460",
+        "sha256": "55908d6796ee875eba09e874b5c204a134c5389e3840d451956ac1a9af31f5eb",
         "used_default_sysroot_fallback": true
       },
       {
-        "sha256": "429f75dc2313d2b6207c6d75d5f7207609c2f8fd3634aeb10a1df132c762b9cc",
+        "sha256": "410cf7b0667ca05415083d639c6bee9dc362f1a877cb3f8a2f6ed25d8b0715cc",
         "used_default_sysroot_fallback": true
       }
     ],
     "shake256": [
       {
-        "sha256": "c17140c7370dbbfbe7edd258574948a58f24f02b29a04b98aebabf0243e36498",
+        "sha256": "1565925ce794354a5af485fa0855f409c3d49705b738215024cdb2c2a2acc7f8",
         "used_default_sysroot_fallback": true
       },
       {
-        "sha256": "bfaf2f557fb5b6585c90f6227a0dd3aa87f9d91bd24fe1b96d91b3ec890528e1",
+        "sha256": "43685a78ba27ef0f00db39c5cbf6ce8a6077b57528d8b6f8220ba579d9ad0a04",
         "used_default_sysroot_fallback": true
       }
     ]
@@ -161,43 +161,43 @@
   "negative_controls": {
     "sha3_domain": {
       "rust_sha256": "ebe78c89d839d444d4e98824ad2e52915365512ce572ee1106eb18ff8bc91936",
-      "llbc_sha256": "f8e197414e82b76b8185b80f06dca10c797db7f7f6b94b14108f10d228d4d6f5",
+      "llbc_sha256": "cf70592354057ab3c013048f456987bec87df41ab8e1890dba821c4ab8645df9",
       "lean_sha256": "80832260cd0fe4cde6dd1b9b4f67bb7187b514cd62cc16b233f70d9d5e3157b5",
       "rejected_theorem": "sourceSha3Padding_refines"
     },
     "shake_domain": {
       "rust_sha256": "17a1fbfbbed564cf50e3b747acd7c44d1106e223875501e39c2c809b0314dbad",
-      "llbc_sha256": "9a318f67ea5315debe14f693f5ad87b152d5803ae2769cdb5d0e2aa65ce31fd9",
+      "llbc_sha256": "5162918656bb53bfe853815ad6cf37974dc58f7ee22f4310e5599a89cd8a4932",
       "lean_sha256": "5fcc75bee0fdb3619ca64ee1856a46aba31e049e16bc97171c3de06cbf268665",
       "rejected_theorem": "sourceShakePadding_refines"
     },
     "shake_wire_endianness": {
       "rust_sha256": "78b78445a4d102de7f1c0623c33baaaed902dfaede570fdf12640a3c452df83b",
-      "llbc_sha256": "09356e78cd2b320d9b0bd6a72ca17b48fa66ec26eb9e75f85172e88edf1238a0",
+      "llbc_sha256": "916d68a8e4a6adad2151b9c498e2f9830c965c38211e4d58cef37ad5047532ff",
       "lean_sha256": "6ae01328aeb5fd15331bfb5205b1b83eb760b226985e7db07f56fcc29c279d98",
       "rejected_theorem": "sourceShakeWire_refines"
     },
     "shake_refresh": {
       "rust_sha256": "1c808ad9884fdb442bfc516b3841501f418087586dac6ed8b364507a6c963387",
-      "llbc_sha256": "9d1c6f61abb72b0bee9302194c6ff4c6cad644116158f58e0215234bd8c2b56d",
+      "llbc_sha256": "7d6793694d581e8acc7d03a56086c53ae058bb0d814b7f480d21fb002a5bb372",
       "lean_sha256": "5d5545d762ea266f28457883287620995fc73cd184de1d7bc90e1effaff9098e",
       "rejected_theorem": "sourceReadRefresh_refines"
     },
     "shake_copy_bound": {
       "rust_sha256": "41301c06aac594c89b8080f75975a8e238cbdea470e24112be2ec1aa386e1be9",
-      "llbc_sha256": "cfd7988c55e263f42edaa057d16dbfce15342c43f210873a3f910e6e8ee1c03c",
+      "llbc_sha256": "b2baed2e47d4e80f2ab0965b1f682eb795faa642023131c79b410719f9d1579c",
       "lean_sha256": "938948713c734fcecf42fcff50b07f8f7e75373607a8d0e0b0bace524b7243e8",
       "rejected_theorem": "sourceCopied_refines"
     },
     "shake_start_lane": {
       "rust_sha256": "b9a23bc4ef10024ae582811c0980d1373ad1e9fcd5fa423b8da08f5c48fd6959",
-      "llbc_sha256": "26b9cefb5b59dc0d62d5d5f2421e0595f9d744853a3d41e910e2d74787cd47a8",
+      "llbc_sha256": "70115250da199fe86aa64ffe51f0e52233fe7a272bc6a1c3a060de51fdcad29f",
       "lean_sha256": "0c99366a49a3123f47f77d39e7f66011541d3fccebd2cfe62720f4e6b2f09ab0",
       "rejected_theorem": "sourceNew_refines"
     },
     "shake_xof_context": {
       "rust_sha256": "0aba99ee468a7f1853d3097533fe02f8b9715c154649979f7dbf8e659cfc221f",
-      "llbc_sha256": "91044213be94d349ae7b556f9ad8ec59f7c9a2a5c9dbde0a91c975f98a22dc3a",
+      "llbc_sha256": "4ff3958d6df1409576f808c2dfd18838a7f947193917f74c01b40781899263f7",
       "rejected_by_lowering": "SHAKE256 xof did not compose new, update, finalize and read on the original input/output"
     }
   }

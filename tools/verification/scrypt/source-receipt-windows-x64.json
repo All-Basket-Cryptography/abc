@@ -1,0 +1,70 @@
+{
+  "status": "scrypt_salsa8_source_checked",
+  "target": "x86_64-pc-windows-msvc",
+  "charon": "0.1.254 (b104e24fea7d721b71e6c39fd70f26ff20bc0980)",
+  "charon_executable_sha256": "38ec811d2402a6ada748665486111192de9cfb5c3571d57aeb94f57b62b3ab02",
+  "rust": "rustc 1.100.0-nightly (8fa1c96cf 2026-08-17)\nbinary: rustc\ncommit-hash: 8fa1c96cfd489e4c27654c144ae871ce2c4db6c6\ncommit-date: 2026-08-17\nhost: x86_64-pc-windows-msvc\nrelease: 1.100.0-nightly\nLLVM version: 23.1.0",
+  "lean": "Lean (version 4.31.0, x86_64-w64-windows-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)",
+  "sources": {
+    "tools/verification/probe/toolchain-candidate.json": "6953b42492bff08a40479725fec7ce922002bfdbe715afcaedf4f817f7621249",
+    "src/lean/lean-toolchain": "efac0b94923b2d8b6840cd35be9177ad0fc5ab2332f4f4311c98712cee92fdee",
+    "src/crypto/kdf/scrypt/impl/rust/src/lib.rs": "049953eae2d5ea347bf5f2f4cd1f00aba63662964663f87fc382f5d2e6da0424",
+    "src/crypto/kdf/scrypt/impl/rust/Cargo.toml": "e560272cb4818326a56e7b6bfbbc9dadbb4b6be7ac143a2db98f47fd56745113",
+    "tools/build/rust/Cargo.toml": "9e8dd7579ad780836ce80f3a00639b171926d3435e15e3eb274c4fd67eb0d8f4",
+    "tools/build/rust/Cargo.lock": "a3ee8405943bef38fef4f8127d96032013d10bc082ae0cb6ff9ccbd855178b5c",
+    "tools/verification/keccak/llbc.py": "a71a02fd13ee906be1d484a334c5c3f82ff2eb32e9c03a5ed3343d0b3425a75f",
+    "tools/verification/scrypt/check.py": "f8502c480b3ed719a38daec303da430a9015b35e3e22841bb317e2b92b649849",
+    "tools/verification/scrypt/salsa_llbc.py": "86cfb0519fdafe48e7c8ccfa9e4c0ff431de736142f6950f949951240e40b5d8",
+    "src/crypto/kdf/scrypt/spec/ScryptFunctional.lean": "fd18091e8a130b7bb9dc6cd85329a3a0700e7ba19795c6ff382363ef4d3c2e80",
+    "src/crypto/kdf/scrypt/spec/ScryptAlternating.lean": "e3c08f810626b7b344b7b30c3cc2509ebc83a093b862f0b9a8b3863b8cc4b7ad",
+    "src/crypto/kdf/scrypt/spec/ScryptSalsaSource.lean": "8ea3741e4a810741be5672d258ab9342ed14068a8c1ce0cdc93fc025021f0615"
+  },
+  "extractions": [
+    {
+      "sha256": "eb901fbbed809c692cd0aa0a0019c68ad961632808969cd42c8ff3da62c1f1d0",
+      "used_default_sysroot_fallback": true
+    },
+    {
+      "sha256": "a9cf2b48bddefdc18ce7a025482852639053e7a9279b12db9e1ae8fc08b13d5f",
+      "used_default_sysroot_fallback": true
+    }
+  ],
+  "generated_lean_sha256": "ea087d9922c402eb0e7d212ad9cb3db2cf66b46517575f0b2aa3f34d73328f0f",
+  "audited_theorems": {
+    "sourceDoubleRound_refines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "sourceFeed_refines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "sourceSalsa8_refines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "sourceSalsaBytes_refines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "alternatingWithSourceSalsa_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "negative_controls": {
+    "rotation": {
+      "rust_sha256": "73d01f99461b00a25cad62c63dfa62fc0c7cd660b30bf984aaffaedb79ec4303",
+      "llbc_sha256": "af6edc670995b4725a58bf0708da834f6e0ae7bc97436d4202fae71834b17add",
+      "lean_sha256": "918aeadb74de562fc0f738d529da7300e269820b7e650a7b48b562fd20ae9363",
+      "rejected_theorem": "sourceDoubleRound_refines"
+    },
+    "round_count": {
+      "rust_sha256": "2492f3566da56b5beb2a59fcea300dec3e9340dc88f18ba2bd0219183b4514f0",
+      "llbc_sha256": "a29bb48814a49d8812b4d7360054834903c6f1ab6c73816c7d4b7ac91342ed9f",
+      "lean_sha256": "cd9760cc6ab378dcc0c666f4f7cc4640cdca610ffd427914e1326ab9114b2820",
+      "rejected_theorem": "sourceSalsa8_refines"
+    }
+  }
+}

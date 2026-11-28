@@ -274,6 +274,43 @@ theorem source_ctr_refines_nist (encrypt : Block → Block) (nonce : Nonce)
     sourceCtrLoop encrypt nonce 0 data = some (gctr encrypt nonce 2 data) := by
   rw [source_ctr_loop_refines _ _ _ _ (by simpa using admitted), gctrSource_refines_nist]
 
+theorem source_seal_tail_authenticates_ciphertext (applyPayload : α → Option α)
+    (authenticate : α → Option β) (encode : β → γ) (plaintext ciphertext : α) (tag : β)
+    (encrypted : applyPayload plaintext = some ciphertext) (authenticated : authenticate ciphertext = some tag) :
+    Ghash.seal_tail applyPayload authenticate encode plaintext = some (encode tag, ciphertext) := by
+  simp [Ghash.seal_tail, encrypted, authenticated]
+
+def sourceSealWithModel (encrypt : Block → Block) (nonce : Nonce)
+    (aad plaintext : List Byte) : Option (Outcome Tag) :=
+  match Ghash.check_lengths (BitVec.ofNat 64 aad.length) (BitVec.ofNat 64 plaintext.length) with
+  | .error .messageTooLong => some ⟨.error .messageTooLong, plaintext⟩
+  | .error .associatedDataTooLong => some ⟨.error .associatedDataTooLong, plaintext⟩
+  | .ok () => do
+    let (tag, ciphertext) ← Ghash.seal_tail (sourceCtrLoop encrypt nonce 0)
+      (sourceTagWord (encrypt 0) (encrypt (Ghash.counter_block nonce 1)) aad) asTag plaintext
+    pure ⟨.ok tag, ciphertext⟩
+
+theorem source_seal_with_models_refines (encrypt : Encrypt) (key : Key) (nonce : Nonce)
+    (aad plaintext : List Byte) (aadFits : aad.length < 2^64) (plainFits : plaintext.length < 2^64) :
+    sourceSealWithModel (encrypt key) nonce aad plaintext = some (sealReference encrypt key nonce aad plaintext) := by
+  simp only [sourceSealWithModel, source_length_limits_exact, BitVec.toNat_ofNat,
+    Nat.mod_eq_of_lt aadFits, Nat.mod_eq_of_lt plainFits, sealReference]
+  by_cases payloadTooLong : payloadLimit < plaintext.length
+  · simp [payloadTooLong]
+  · by_cases aadTooLong : aadLimit < aad.length
+    · simp [payloadTooLong, aadTooLong]
+    · have aBits : 8 * aad.length < 2^64 := by unfold aadLimit at aadTooLong; omega
+      have cBits : 8 * (gctr (encrypt key) nonce 2 plaintext).length < 2^64 := by
+        rw [gctr_length]
+        unfold payloadLimit at payloadTooLong
+        omega
+      have block : Ghash.counter_block nonce 1 = counterBlock nonce 1 := source_counter_block_refines _ _
+      have ctr := source_ctr_refines_nist (encrypt key) nonce plaintext (by omega)
+      rw [if_neg payloadTooLong, if_neg aadTooLong, if_neg payloadTooLong, if_neg aadTooLong, block,
+        source_seal_tail_authenticates_ciphertext _ _ _ _ _ _ ctr
+          (source_tag_word_refines_nist _ _ _ _ aBits cBits)]
+      rfl
+
 def sourceOpenWithModel (encrypt : Block → Block) (nonce : Nonce)
     (aad ciphertext : List Byte) (provided : Tag) : Option (Outcome Unit) :=
   match Ghash.check_lengths (BitVec.ofNat 64 aad.length) (BitVec.ofNat 64 ciphertext.length) with
@@ -336,6 +373,8 @@ theorem source_open_with_models_refines (encrypt : Encrypt) (key : Key) (nonce :
 #print axioms source_payload_byte_refines
 #print axioms source_ctr_loop_refines
 #print axioms source_ctr_refines_nist
+#print axioms source_seal_tail_authenticates_ciphertext
+#print axioms source_seal_with_models_refines
 #print axioms source_open_with_models_refines
 
 end Abc.Refine.Ghash

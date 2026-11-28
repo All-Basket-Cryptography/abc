@@ -68,3 +68,26 @@ tests. Traffic and elapsed time depend on the target and workload.
 Colin Percival, *Stronger Key Derivation via Sequential Memory-Hard
 Functions*, 2009, gives the motivation and formal cost model for ROMix.
 [Original paper](https://www.tarsnap.com/scrypt/scrypt.pdf)
+
+## Rust Salsa20/8 source refinement
+
+The pinned Charon replay extracts the active `salsa8` and `salsa_quarter`
+functions. The lowering checks the concrete range and array operations and
+emits the double round, number of iterations, and feed-forward operations
+from that extraction. Lean proves the equality with the RFC core for all
+16 input words, then applies it to every 64-byte input under the model's
+little-endian byte encoding. The construction theorem now supplies the
+Salsa20/8 contract from that proof. It continues to assume PBKDF2 and
+uses the alternating ROMix and BlockMix models. Rust's byte loads and
+stores in BlockMix and the public `derive` source remain to be verified.
+[RFC 7914 §§ 3–4](https://www.rfc-editor.org/rfc/rfc7914.html#section-3) · [The Salsa20 family](https://cr.yp.to/snuffle/salsafamily-20071225.pdf) · [Lean statements](ScryptSalsaSource.lean)
+
+```sh
+python -B -m tools.verification.scrypt.check --negative-controls
+```
+
+The runner expects the pinned x86-64 Charon and Lean toolchains and
+performs two extractions. Changing the rotation distance or reducing the
+number of rounds produces a recompiled Rust model that Lean rejects. The
+proof trusts the restricted LLBC lowering and the documented Rust
+primitive and iterator semantics. [Replay record](../../../../../tools/verification/scrypt/source-receipt-windows-x64.json)

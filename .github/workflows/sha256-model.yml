@@ -21,6 +21,8 @@ on:
       - 'src/crypto/cipher/chacha20/impl/java/*.lean'
       - 'src/crypto/kdf/pbkdf2-hmac-sha256/spec/**'
       - 'src/crypto/kdf/scrypt/spec/**'
+      - 'src/crypto/kdf/scrypt/impl/rust/**'
+      - 'tools/verification/scrypt/**'
       - 'src/crypto/kdf/argon2id/spec/**'
       - 'src/crypto/mac/poly1305/spec/**'
       - 'src/crypto/mac/poly1305/impl/java/*.lean'
@@ -131,7 +133,7 @@ jobs:
           lean src/crypto/kdf/argon2id/spec/Argon2idBounds.lean
           lean src/crypto/cipher/aes256/spec/Aes256Byte.lean
           lean src/crypto/aead/aes256-gcm/spec/Aes256GcmBounds.lean
-      - name: Replay source-derived SHA-512, Keccak and AES-GCM proofs
+      - name: Replay source-derived SHA-512, Keccak, AES-GCM and Salsa20/8 proofs
         run: |
           export ABC_CHARON="$ABC_AENEAS_ROOT/charon/bin/charon"
           python3 -B tools/verification/sha512/check_stream_source.py --negative-controls \
@@ -143,6 +145,8 @@ jobs:
           python3 -B tools/verification/keccak/check_wrappers.py --negative-controls \
             --output .abc/keccak-wrappers-llbc.json
           python3 -B tools/verification/aes256-gcm/check.py --check-mutant
+          python3 -B -m tools.verification.scrypt.check --negative-controls \
+            --output .abc/scrypt-salsa-llbc.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: ${{ always() }}
         with:
@@ -152,6 +156,7 @@ jobs:
             .abc/sha512-api-llbc.json
             .abc/keccak-source-llbc.json
             .abc/keccak-wrappers-llbc.json
+            .abc/scrypt-salsa-llbc.json
             .abc/aes256-gcm-extraction/run-*/result.json
             .abc/aes256-gcm-extraction/run-*/*.log
             .abc/aes256-gcm-extraction/run-*/*/GhashLlbc.lean

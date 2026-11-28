@@ -1,0 +1,11 @@
+schema_version = 1
+id = "scrypt-source-verification"
+owned_paths = ["tools/verification/scrypt"]
+shared_inputs = ["src/lean/lean-toolchain", "tools/verification/probe/toolchain-candidate.json", "tools/build/rust/Cargo.toml", "tools/build/rust/Cargo.lock", "tools/verification/keccak/llbc.py"]
+dependencies = [{ module = "scrypt-rust", type = "imports" }]
+
+[tasks.salsa-source-refinement]
+kind = "formal"
+command = ["python", "-B", "-m", "tools.verification.scrypt.check", "--negative-controls"]
+tools = ["python", "lean", "cargo", "rustup", "charon"]
+timeout_seconds = 240

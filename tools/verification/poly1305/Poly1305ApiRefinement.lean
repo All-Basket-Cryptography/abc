@@ -65,7 +65,7 @@ structure Ready (state : Poly1305) : Prop where
   accumulatorFits : live (columns state.h)
   pendingFits : state.buffered.val < 16
 
-private def clamp (bytes : List (BitVec 8)) : Nat :=
+def clamp (bytes : List (BitVec 8)) : Nat :=
   decodeLittleEndian bytes &&& 0x0ffffffc0ffffffc0ffffffc0fffffff
 
 /-- The actual public constructor binds the two key halves to the RFC
@@ -154,7 +154,7 @@ theorem source_encode_partial_refines (block : Block) (length : Usize) (fits : l
         simpa only [Nat.mul_one] using Nat.two_pow_add_eq_or_of_lt lo 1]
   rw [countValue, Nat.pow_mul, loaded, decode_prefix _ _ (by simp; omega), Nat.add_comm]
 
-private def finalResidue (state : Poly1305) : Nat :=
+def finalResidue (state : Poly1305) : Nat :=
   let h := value (columns state.h) % modulus
   let tail := (state.pending.val.map U8.bv).take state.buffered.val
   if state.buffered.val = 0 then h

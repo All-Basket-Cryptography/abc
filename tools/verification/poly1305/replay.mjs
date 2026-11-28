@@ -27,6 +27,8 @@ const audits = {
     .map((name) => `Abc.Refine.Poly1305.Final.${name}`),
   Poly1305ApiRefinement: ['source_split_key_refines', 'source_new_refines', 'source_encode_partial_refines', 'source_finalize_refines']
     .map((name) => `Abc.Refine.Poly1305.Api.${name}`),
+  Poly1305StreamRefinement: ['blocks_append', 'source_copy_pending_refines', 'source_absorb_blocks_refines',
+    'source_update_refines', 'source_authenticate_refines'].map((name) => `Abc.Refine.Poly1305.Stream.${name}`),
 };
 const permittedAxioms = new Set(['propext', 'Classical.choice', 'Quot.sound']);
 const digest = (file) => createHash('sha256').update(readFileSync(file)).digest('hex');
@@ -36,7 +38,7 @@ function runReplay(artifactPath) {
   if (!process.env.LEAN_PATH) throw new Error('Set LEAN_PATH to the built pinned Aeneas backend and package libraries');
   const artifact = resolve(artifactPath);
   const receipt = JSON.parse(readFileSync(join(artifact, 'result.json'), 'utf8'));
-  if (receipt.status !== 'poly1305_model_extracted' || receipt.scope !== 'poly1305_constructor_blocks_and_finalizer' ||
+  if (receipt.status !== 'poly1305_model_extracted' || receipt.scope !== 'poly1305_public_stream_and_authenticate' ||
       receipt.target !== 'x86_64-unknown-linux-gnu' || receipt.features?.length !== 0) {
     throw new Error('Expected a successful Poly1305 Linux extraction receipt');
   }
