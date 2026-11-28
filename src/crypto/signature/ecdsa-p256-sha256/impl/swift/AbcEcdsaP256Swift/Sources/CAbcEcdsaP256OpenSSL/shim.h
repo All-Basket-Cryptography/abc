@@ -42,10 +42,12 @@ static inline int abc_p256_sign_candidate(const uint8_t *scalar, const uint8_t *
     const BIGNUM *order = group ? EC_GROUP_get0_order(group) : NULL;
     BN_CTX *ctx = BN_CTX_secure_new();
     BIGNUM *k = BN_secure_new(), *inverse = BN_secure_new(), *r = BN_secure_new(), *x = BN_secure_new();
+    BIGNUM *exponent = order ? BN_dup(order) : NULL;
     EC_POINT *point = group ? EC_POINT_new(group) : NULL;
     ECDSA_SIG *sig = NULL;
     int status = 0;
-    if (!ctx || !k || !inverse || !r || !x || !point || !order || !BN_bin2bn(nonce, 32, k)) goto end;
+    if (!ctx || !k || !inverse || !r || !x || !point || !order || !exponent ||
+        !BN_bin2bn(nonce, 32, k) || !BN_sub_word(exponent, 2)) goto end;
     BN_set_flags(k, BN_FLG_CONSTTIME);
     BN_set_flags(inverse, BN_FLG_CONSTTIME);
     if (BN_is_zero(k) || BN_cmp(k, order) >= 0) {
@@ -59,7 +61,8 @@ static inline int abc_p256_sign_candidate(const uint8_t *scalar, const uint8_t *
         status = 2;
         goto end;
     }
-    if (!BN_mod_inverse(inverse, k, order, ctx)) goto end;
+    // The fixed prime order permits Fermat inversion with a public exponent.
+    if (BN_mod_exp_mont_consttime(inverse, k, exponent, order, ctx, NULL) != 1) goto end;
 
     /* The library reports s=0 explicitly when supplied with k's inverse and r. */
     int marked = ERR_set_mark();
@@ -82,6 +85,7 @@ static inline int abc_p256_sign_candidate(const uint8_t *scalar, const uint8_t *
 end:
     ECDSA_SIG_free(sig);
     EC_POINT_clear_free(point);
+    BN_free(exponent);
     BN_clear_free(x);
     BN_clear_free(r);
     BN_clear_free(inverse);
