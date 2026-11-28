@@ -4,9 +4,16 @@ owned_paths = [
   "src/crypto/agreement/ml-kem-768/impl/c",
   "src/crypto/agreement/ml-kem-768/spec",
 ]
+lean_sources = { MlKemCoefficient = "src/crypto/agreement/ml-kem-768/spec" }
 
 [tasks.fixture-integrity]
 kind = "test"
 command = ["python", "-B", "src/crypto/agreement/ml-kem-768/spec/fixtures.py"]
 tools = ["python"]
 timeout_seconds = 60
+
+[tasks.coefficient-model]
+kind = "formal"
+command = ["lean", "-DwarningAsError=true", "src/crypto/agreement/ml-kem-768/spec/MlKemCoefficient.lean"]
+tools = ["lean"]
+timeout_seconds = 120

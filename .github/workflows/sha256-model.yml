@@ -20,6 +20,7 @@ on:
       - 'src/crypto/mac/poly1305/spec/**'
       - 'src/crypto/mac/poly1305/impl/java/*.lean'
       - 'src/crypto/agreement/x25519/spec/**'
+      - 'src/crypto/agreement/ml-kem-768/spec/**'
       - 'src/crypto/hash/sha512/spec/**'
       - 'src/crypto/aead/chacha20-poly1305/spec/**'
       - 'src/crypto/cipher/aes256/spec/**'
@@ -115,6 +116,7 @@ jobs:
           lean src/crypto/aead/chacha20-poly1305/spec/ChaCha20Poly1305Lengths.lean
           lean -DwarningAsError=true src/crypto/aead/chacha20-poly1305/spec/ChaCha20Poly1305Rfc.lean
           lean -DwarningAsError=true src/crypto/aead/aes256-gcm/spec/Aes256GcmComposition.lean
+          lean -DwarningAsError=true src/crypto/agreement/ml-kem-768/spec/MlKemCoefficient.lean
           python3 -B tools/verification/sha512/check.py --negative-controls
           lean src/crypto/kdf/scrypt/spec/ScryptBounds.lean
           lean -DwarningAsError=true src/crypto/kdf/scrypt/spec/ScryptFunctional.lean

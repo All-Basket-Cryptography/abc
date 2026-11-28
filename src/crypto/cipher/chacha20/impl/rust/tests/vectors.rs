@@ -58,6 +58,18 @@ fn final_counter_and_rejection() {
     assert_ne!(message, [0xa6; 65]);
     apply_keystream(&key, &nonce, u32::MAX, &mut message[..64]).unwrap();
     assert_eq!(message, [0xa6; 65]);
+
+    let mut two_blocks = [0xa6; 129];
+    assert_eq!(
+        apply_keystream(&key, &nonce, u32::MAX - 1, &mut two_blocks),
+        Err(CounterExhausted)
+    );
+    assert_eq!(two_blocks, [0xa6; 129]);
+    let mut split = two_blocks;
+    apply_keystream(&key, &nonce, u32::MAX - 1, &mut two_blocks[..128]).unwrap();
+    apply_keystream(&key, &nonce, u32::MAX - 1, &mut split[..64]).unwrap();
+    apply_keystream(&key, &nonce, u32::MAX, &mut split[64..128]).unwrap();
+    assert_eq!(two_blocks, split);
 }
 
 #[test]

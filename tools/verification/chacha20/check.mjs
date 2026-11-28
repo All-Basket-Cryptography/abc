@@ -17,6 +17,7 @@ const counterSpecFile = 'ChaCha20Counter.lean';
 const streamSpecFile = 'ChaCha20Stream.lean';
 const proofFile = 'ChaCha20QuarterRoundRefinement.lean';
 const streamProofFile = 'ChaCha20StreamRefinement.lean';
+const sourceProofFile = 'ChaCha20SourceRefinement.lean';
 const theorems = ['quarter_round_refines', 'double_round_refines', 'rounds_20_refines',
   'block_words_refines', 'load_word_refines', 'initial_state_refines', 'serialize_refines',
   'block_refines', 'block_from_bytes_refines'].map((name) => `Abc.Refine.ChaCha20.${name}`);
@@ -25,6 +26,10 @@ const streamSpecTheorems = ['stream_position_exact', 'stream_counter_in_range', 
   'stream_involution'].map((name) => `Abc.Spec.ChaCha20.${name}`);
 const streamRefinementTheorems = ['extracted_block_provider_observes_result',
   'extracted_block_provider_refines', 'extracted_chunked_stream_refines']
+  .map((name) => `Abc.Refine.ChaCha20.${name}`);
+const sourceTheorems = ['source_counter_exhausted_refines', 'source_xor_byte_refines',
+  'source_xor_block_loop_refines', 'source_xor_block_refines', 'source_apply_keystream_loop_refines',
+  'source_apply_keystream_rejects', 'source_apply_keystream_accepts', 'source_apply_keystream_refines']
   .map((name) => `Abc.Refine.ChaCha20.${name}`);
 const allowedAxioms = new Set(['propext', 'Classical.choice', 'Quot.sound']);
 const target = 'x86_64-unknown-linux-gnu';
@@ -41,7 +46,7 @@ const sourceFiles = [
   `${scope}/impl/rust/src/lib.rs`, `${scope}/impl/rust/Cargo.toml`,
   `${scope}/spec/${specFile}`, `${scope}/spec/${counterSpecFile}`, `${scope}/spec/${streamSpecFile}`,
   `${scope}/impl/rust/formal/${proofFile}`, 'tools/verification/chacha20/check.mjs',
-  `tools/verification/chacha20/${streamProofFile}`,
+  `tools/verification/chacha20/${streamProofFile}`, `tools/verification/chacha20/${sourceProofFile}`,
 ];
 const hash = (file) => createHash('sha256').update(readFileSync(file)).digest('hex');
 const hashes = (root, files) => Object.fromEntries(files.map((file) => [file, hash(join(root, file))]));
@@ -146,14 +151,18 @@ function check(toolRoot) {
     compile(spec, counterSpecFile);
     const blockAudit = auditTheorems(compile(join(crate, 'formal'), proofFile), theorems);
     const streamSpecAudit = auditTheorems(compile(spec, streamSpecFile), streamSpecTheorems);
+    const proofRoot = dirname(fileURLToPath(import.meta.url));
     const streamRefinementAudit = auditTheorems(
-      compile(dirname(fileURLToPath(import.meta.url)), streamProofFile), streamRefinementTheorems);
+      compile(proofRoot, streamProofFile), streamRefinementTheorems);
+    const sourceAudit = auditTheorems(compile(proofRoot, sourceProofFile), sourceTheorems);
     if (!same(hashes(repo, sourceFiles), report.sources) || !same(hashes(model, modelFiles), report.first.files)) {
       throw new Error('Source or generated model changed during verification');
     }
     report.theorems = blockAudit;
     report.streamModel = { scope: 'logical_mutations_with_extracted_block',
       theorems: { ...streamSpecAudit, ...streamRefinementAudit } };
+    report.sourceStream = { status: 'exact_source_refinement_checked',
+      entryPoint: 'crate::apply_keystream', theorems: sourceAudit };
     report.status = 'block_from_bytes_refinement_checked';
   } catch (error) {
     report.error = error.message;

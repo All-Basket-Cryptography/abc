@@ -18,7 +18,7 @@
   "subject_ref": "abc:algorithm:chacha20",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "25f12618378ad2d23a13a30e2ef8c25a804b1866dca824e78f0cc2999b197632",
+  "source_sha256": "0326c54e1d2329f2b9a34864080799cdabda952488aa9033ea65853f6ff8a5cc",
   "path": "src/crypto/cipher/chacha20/impl/rust/src/lib.rs",
   "languages": [
     "rust"

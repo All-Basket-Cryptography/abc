@@ -45,6 +45,40 @@ The pinned provider archive includes the RFC 9935 Appendix C seed
 with the embedded SPKI and expanded PKCS#8 examples.
 [RFC 9935 Appendix C](https://www.rfc-editor.org/rfc/rfc9935.html#appendix-C)
 
+## Coefficient compression proof
+
+Lean models the coefficient arithmetic in FIPS 203 §4.2.1, equations
+(4.7) and (4.8). It proves that adding half the integer denominator
+before division implements nearest rounding with half ties upward.
+Compression with the odd modulus 3,329 has no half tie. At the
+ML-KEM-768 ciphertext widths 4 and 10, the sole decompression ties
+occur at codes 8 and 512, respectively. Both round to 1,665.
+[FIPS 203 §§2.3 and 4.2.1](https://nvlpubs.nist.gov/nistpubs/fips/nist.fips.203.pdf)
+
+For every legal width and compressed code, the decoded coefficient
+is canonical modulo 3,329. Recompressing and encoding it as a
+fixed-width word reproduces the original bits. The quantization
+theorem also handles wraparound at the modulus. If (s = 2^d), the
+least circular distance after compression and decompression is at
+most `(3329 / 2 + s / 2) / s` using integer division. The maximum
+is 104 at width 4 and 2 at width 10. The coefficients 104 and 5,
+respectively, attain the bounds.
+[Lean source](MlKemCoefficient.lean)
+
+The word-level result specifies the value delivered to the encoding
+layer. The separate key model checks the packing of canonical
+12-bit coefficients. Correspondence with provider source, polynomial
+arithmetic, KEM security and compiled leakage remain separate proof
+obligations.
+[Encapsulation-key encoding model](../../../providers/formal/MlKem768InputEncoding.lean)
+
+Lean 4.31.0 checks 16 named results. The axiom reports allow only
+`propext`, `Classical.choice` and `Quot.sound`.
+
+```sh
+lean -DwarningAsError=true src/crypto/agreement/ml-kem-768/spec/MlKemCoefficient.lean
+```
+
 ## Reproduce the checks
 
 Run in a Windows x64 developer shell with Python 3.13, CMake, Ninja,
