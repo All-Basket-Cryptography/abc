@@ -4,7 +4,7 @@ Charon extracts the portable Rust AES-256-GCM `seal_in_place` and
 `open_in_place` call graphs with evaluated Rust constants.
 The translator checks the local call sequence in `authenticate`, from the
 two padded updates to length packing, the tag-mask counter and final tag
-computation. It checks both call sites of the block operation in
+computation. It also checks the full and partial block paths in
 `hash_padded`. The locked Cargo workspace uses no default features.
 The runner performs two extractions and requires identical generated Lean
 modules. It records the source inputs and both raw LLBC digests separately.
@@ -25,9 +25,13 @@ includes Charon and the Rust-to-Lean semantics in the translator.
 The checked theorem `source_multiply_returns_nist` covers all pairs
 of 128-bit values. It proves the extracted loop terminates within the
 extracted 128-round bound, takes no panic branch and returns the
-SP 800-38D Algorithm 1 result. The checked composition folds the extracted
-block operation over the modeled AAD and ciphertext blocks. It includes
-the exact packed length word and final tag-mask XOR. For byte lengths in
+SP 800-38D Algorithm 1 result. The `hash_padded` validator traces the
+input slice into `as_chunks::<16>`, each full block into its big-endian
+decoder and state update, and the nonempty tail into the zero-filled
+partial block. It checks that both paths write the updated word to the
+same state. Lean proves the resulting block walk covers exactly the
+zero-padded NIST transcript and composes it with the packed length word
+and final tag-mask XOR. For byte lengths in
 the SP 800-38D bit-length domain, the resulting tag word agrees with the
 standard's padded transcript for every AAD, ciphertext, hash key and
 tag mask. A separate result supplies the two required AES block values and
@@ -61,19 +65,20 @@ tag preserves ciphertext and a matching tag reaches the transformation.
 The seal-path validator follows the input key into AES setup, checks that
 CTR writes to the input buffer, and confirms that authentication reborrows
 those ciphertext bytes before serializing its computed tag. The composed
-seal and open theorems use the extracted CTR and the GHASH block model
-to reach the corresponding NIST outcomes. Lean checks 29 results with
+seal and open theorems use the extracted CTR and GHASH block walk
+to reach the corresponding NIST outcomes. Lean checks 32 results with
 only `propext`, `Classical.choice` and `Quot.sound`.
 [Proof source](GhashSourceRefinement.lean)
 · [NIST SP 800-38D](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf)
 
-The tag gate relies on the standard library's functional contracts for
-`u128::from_be_bytes` and `black_box`. The byte-to-block bridge uses the
-Lean `sourceBlocks` model. Source proofs for GHASH slice traversal,
-padding and byte conversions, and for the concrete AES provider, remain
-open. Timing and compiler leakage require separate evidence.
+The checker uses the standard library's functional contracts for slice
+partitioning, iteration, copying, big-endian conversion and `black_box`.
+The concrete AES block provider and the dataflow inside `authenticate`
+beyond the checked ordered calls remain source-proof boundaries. Timing
+and compiler leakage require separate evidence.
 [Rust `black_box`](https://doc.rust-lang.org/core/hint/fn.black_box.html)
 · [Rust slice `chunks_mut`](https://doc.rust-lang.org/std/primitive.slice.html#method.chunks_mut)
+· [Rust slice `as_chunks`](https://doc.rust-lang.org/std/primitive.slice.html#method.as_chunks)
 · [Rust iterator `enumerate`](https://doc.rust-lang.org/core/iter/trait.Iterator.html#method.enumerate)
 [Composition model and scope](../../../src/crypto/aead/aes256-gcm/spec/README.md)
 
@@ -101,9 +106,10 @@ largest valid payload length and start the CTR payload at the reserved
 tag counter. The CTR controls also reverse the counter byte order and
 replace the byte XOR with OR. The seal dataflow control makes both
 authentication inputs refer to AAD. The LLBC validator rejects that
-source mutation. The release test checks rejection and
-ciphertext preservation for each of the 128 single-bit tag changes in
-example 5.
+source mutation. A separate GHASH control fills the unused tail bytes
+with `0x01` and Lean rejects the resulting partial block. The release
+test checks rejection and ciphertext preservation for each of the 128
+single-bit tag changes in example 5.
 [NIST AES-GCM examples](https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Standards-and-Guidelines/documents/examples/AES_GCM.pdf)
 [Recorded Windows x64 proof and source digests](source-receipt-windows-x64.json)
 

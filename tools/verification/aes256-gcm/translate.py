@@ -629,6 +629,142 @@ class ScalarLoop:
         scalar = (data[1] if tag == "Value" else self.types[data])["Scalar"]
         return scalar == "Bool" or scalar.get("Integer", {}).get("Unsigned") in ("Usize", "U8", "U32", "U64", "U128")
 
+    def hash_padded(self):
+        body = self.local_function("hash_padded")["body"]["Structured"]
+        require(body["locals"]["arg_count"] == 3, "Wrong padded GHASH arity")
+        top = iter(meaningful(body["body"]))
+
+        def take(cursor, tag):
+            actual, value = next(cursor)
+            require(actual == tag, f"Expected GHASH {tag}, got {actual}")
+            return value
+
+        def project(place, source, field):
+            parent, selected = place["kind"]["Projection"]
+            require(parent["kind"] == {"Local": source} and selected == field, "Wrong GHASH projection")
+
+        def assign(cursor, operation):
+            destination, value = take(cursor, "Assign")
+            return destination["kind"]["Local"], value[operation]
+
+        def transfer(cursor, operation, source, field=None):
+            destination, (value, initialized) = assign(cursor, "Use")
+            require(initialized == "Yes", "Unexpected GHASH move initialization")
+            if field is None:
+                require(value[operation]["kind"] == {"Local": source}, "Wrong GHASH source value")
+            else:
+                project(value[operation], source, field)
+            return destination
+
+        def borrow(cursor, mutability, source, *, deref=False, slice_=False):
+            destination, ref = assign(cursor, "Ref")
+            if deref:
+                project(ref["place"], source, "Deref")
+            else:
+                require(ref["place"]["kind"] == {"Local": source}, "Wrong GHASH reference")
+            require(ref["kind"] == mutability, "Wrong GHASH borrow kind")
+            if slice_:
+                project(ref["ptr_metadata"]["Copy"], source, "PtrMetadata")
+            else:
+                require("Const" in ref["ptr_metadata"], "Expected sized GHASH storage")
+            return destination
+
+        def invoke(cursor, prefix, method, expected, *, infallible=False):
+            item = take(cursor, "Call")
+            call = item["call"]
+            cleanup = [("Abort", "UndefinedBehavior")] if infallible else [("UnwindResume", None)]
+            require(meaningful(item["on_unwind"]) == cleanup, "Unexpected GHASH cleanup")
+            pointer = call["func"]["Regular"]
+            name = name_segments(self.functions[pointer["kind"]["Fun"]])
+            require(name[:len(prefix)] == list(map(ident, prefix)) and name[-1] == ident(method),
+                    f"Expected GHASH {method}")
+            if expected is not None:
+                require([local_operand(arg) for arg in call["args"]] == expected, "Wrong GHASH call arguments")
+            return call["dest"]["kind"]["Local"], pointer["generics"], name, call["args"]
+
+        def width(generics):
+            (size,) = generics["const_generics"]
+            require(self.constant(size) == Expression(f"16#{self.pointer_bits}", self.pointer_bits),
+                    "Wrong GHASH block width")
+
+        def unit(cursor):
+            destination, value = assign(cursor, "Aggregate")
+            require(destination == 0 and self.aggregate(value, local_operand) == ("unit",), "Expected GHASH unit")
+
+        def absorb(cursor, source, deref):
+            key = transfer(cursor, "Copy", 1)
+            incoming = transfer(cursor, "Copy", 2, "Deref")
+            block = transfer(cursor, "Copy", source, "Deref" if deref else None)
+            decoded, _, name, _ = invoke(cursor, ("core", "num"), "from_be_bytes", [block])
+            require(self.scalar_type(name[2]["Impl"]["Ty"]["skip_binder"]) == 128, "Wrong GHASH decode width")
+            result, _, _, _ = invoke(cursor, ("abc_aes256_gcm",), "hash_block", [key, incoming, decoded])
+            destination, value = take(cursor, "Assign")
+            project(destination, 2, "Deref")
+            operand, initializing = value["Use"]
+            require(initializing == "Yes" and local_operand(operand) == result, "Wrong GHASH state writeback")
+
+        unit(top)
+        input_ = borrow(top, "Shared", 3, deref=True, slice_=True)
+        split, generics, _, _ = invoke(top, ("core", "slice"), "as_chunks", [input_])
+        width(generics)
+        require([self.scalar_type(ty) for ty in generics["types"]] == [8], "Wrong GHASH byte type")
+        full = transfer(top, "Copy", split, {"Field": [None, 0]})
+        tail = transfer(top, "Copy", split, {"Field": [None, 1]})
+        blocks = transfer(top, "Copy", full)
+        iterator, _, _, _ = invoke(top, ("core", "slice", "iter"), "into_iter", [blocks])
+        live = transfer(top, "Move", iterator)
+        loop = iter(meaningful(take(top, "Loop")))
+        first = borrow(loop, "Mut", live)
+        next_ref = borrow(loop, "TwoPhaseMut", first, deref=True)
+        item, _, _, _ = invoke(loop, ("core", "slice", "iter"), "next", [next_ref])
+        switch = take(loop, "Switch")
+        control = switch["data"]
+        require(control["scrutinee"]["Discriminant"]["kind"] == {"Local": item} and control["fallback"] is None,
+                "GHASH loop must switch on the iterator result")
+        routes = {}
+        for pattern, branch in control["branches"]:
+            decl, variant = self.constant_data(pattern)[0]["Discriminant"]
+            path, value = self.enum_variant(decl, variant)
+            require(path == ("core", "option", "Option"), "Wrong GHASH iteration result")
+            routes[value["name"]] = variant, meaningful(switch["branches"][branch])
+        require(set(routes) == {"None", "Some"} and routes["None"][1] == [("Break", 0)] and not routes["Some"][1],
+                "Wrong GHASH full-block continuation")
+        block = transfer(loop, "Copy", item, {"Field": [routes["Some"][0], 0]})
+        absorb(loop, block, True)
+        require(list(loop) == [("Continue", 0)], "Unexpected GHASH full-block operations")
+
+        tail_ref = borrow(top, "Shared", tail, deref=True, slice_=True)
+        empty, _, _, _ = invoke(top, ("core", "slice"), "is_empty", [tail_ref])
+        switch = take(top, "Switch")
+        control = switch["data"]
+        ((case, nonempty),) = control["branches"]
+        require(local_operand(control["scrutinee"]["Value"]) == empty and self.constant(case) == Expression("false", "Bool")
+                and {nonempty, control["fallback"]} == {0, 1} and len(switch["branches"]) == 2
+                and not meaningful(switch["branches"][control["fallback"]]), "Wrong GHASH tail guard")
+        small = iter(meaningful(switch["branches"][nonempty]))
+        padded, generics, _, (fill,) = invoke(small, ("core", "array"), "repeat", None, infallible=True)
+        width(generics)
+        fill_byte = self.operand({}, fill)
+        require(fill_byte.ty == 8, "Wrong GHASH padding type")
+        pad_ref = borrow(small, "Mut", padded)
+        tail_ref = borrow(small, "Shared", tail, deref=True, slice_=True)
+        length, _, _, _ = invoke(small, ("core", "slice"), "len", [tail_ref])
+        bounds, (adt, (end,)) = assign(small, "Aggregate")
+        decl, variant, union = adt["Adt"]
+        require(variant is None and union is None and local_operand(end) == length
+                and name_segments(self.type_declarations[decl["id"]]) == list(map(ident, ("core", "ops", "range", "RangeTo"))),
+                "Wrong GHASH partial-block destination range")
+        dest, generics, _, _ = invoke(small, ("core", "array"), "index_mut", [pad_ref, bounds])
+        width(generics)
+        dest = borrow(small, "TwoPhaseMut", dest, deref=True, slice_=True)
+        tail_ref = borrow(small, "Shared", tail, deref=True, slice_=True)
+        invoke(small, ("core", "slice"), "copy_from_slice", [dest, tail_ref])
+        absorb(small, padded, False)
+        for route in (top, small):
+            unit(route)
+            require(list(route) == [("Return", None)], "Wrong GHASH padded return")
+        return fill_byte.code
+
     def counter_serialization(self):
         """Check the byte copies into the exact block consumed by the AES call."""
         function = self.local_function("encrypt_counter")
@@ -1011,6 +1147,7 @@ class ScalarLoop:
             self.api_length_gate(name)
         counter, byte_update = self.payload_counter()
         counter_serialization = self.counter_serialization()
+        ghash_fill = self.hash_padded()
         return f"""import Std
 
 namespace Abc.Extracted.Ghash
@@ -1064,6 +1201,14 @@ def counter_block (nonce : BitVec 96) (counter : BitVec 32) : BitVec 128 :=
 
 def payload_byte (byte pad : BitVec 8) : BitVec 8 :=
   {byte_update}
+
+def hash_walk (decode : List (BitVec 8) → BitVec 128) (input : List (BitVec 8)) : List (BitVec 128) :=
+  if _full : 16 ≤ input.length then
+    decode (input.take 16) :: hash_walk decode (input.drop 16)
+  else if input.isEmpty then []
+  else [decode (input ++ List.replicate (16 - input.length) {ghash_fill})]
+termination_by input.length
+decreasing_by simp only [List.length_drop]; omega
 
 -- The validator resolves both returns and the unique mutable payload call.
 def open_gate {{α : Type}} (applyPayload : α → α) (ciphertext : α)

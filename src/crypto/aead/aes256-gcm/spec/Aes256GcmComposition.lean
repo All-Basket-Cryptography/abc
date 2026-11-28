@@ -297,6 +297,28 @@ private theorem blockWords_exact_block (wire : List Byte) (width : wire.length =
   rw [← width, List.take_length, List.drop_length]
   simp [blockWords.eq_def []]
 
+theorem blockWords_padded_full (input : List Byte) (full : 16 ≤ input.length) :
+    blockWords (padded input) = asBlock (input.take 16) :: blockWords (padded (input.drop 16)) := by
+  have first : (input.take 16).length = 16 := by simp [List.length_take, full]
+  calc
+    blockWords (padded input) = blockWords (padded (input.take 16 ++ input.drop 16)) := by
+      rw [List.take_append_drop]
+    _ = asBlock (input.take 16) :: blockWords (padded (input.drop 16)) := by
+      have aligned : (input.take 16).length % 16 = 0 := by rw [first]
+      rw [padded_append_of_aligned _ _ aligned, blockWords_append_of_aligned _ _ aligned,
+        blockWords_exact_block _ first]
+      rfl
+
+theorem blockWords_padded_partial (input : List Byte) (nonempty : input ≠ []) (short : input.length < 16) :
+    blockWords (padded input) = [asBlock (input ++ List.replicate (16 - input.length) 0)] := by
+  have nonzero : input.length ≠ 0 := fun h => nonempty (List.eq_nil_iff_length_eq_zero.mpr h)
+  have fills : 16 - input.length < 16 := by omega
+  have right : padded input = input ++ List.replicate (16 - input.length) 0 := by
+    simp [padded, padding, Nat.mod_eq_of_lt short, Nat.mod_eq_of_lt fills]
+  rw [right, blockWords_exact_block]
+  simp only [List.length_append, List.length_replicate]
+  omega
+
 def sourceBlocks (bytes : List Byte) : List Block :=
   let boundary := bytes.length / 16 * 16
   let tail := bytes.drop boundary

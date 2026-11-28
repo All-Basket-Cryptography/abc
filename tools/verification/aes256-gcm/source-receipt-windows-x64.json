@@ -23,22 +23,22 @@
   ],
   "source_digests": {
     "tools/verification/probe/toolchain-candidate.json": "6953b42492bff08a40479725fec7ce922002bfdbe715afcaedf4f817f7621249",
-    "src/crypto/aead/aes256-gcm/spec/Aes256GcmComposition.lean": "59d1f822941067a2ca78b3328b0cf23539cbd558ea347d2c5dbf1177105cb58d",
-    "tools/verification/aes256-gcm/GhashSourceRefinement.lean": "a1fd2d1d038b80bd1251ba9f61dedc29cd66d7255312c14b615e74341ce8febe",
-    "tools/verification/aes256-gcm/translate.py": "916cee4b1e0727f802d0988b79acf0396a77e222fc5bc6409f9914408b499bf2",
-    "tools/verification/aes256-gcm/check.py": "d6fa55f97a39479b23f0a1b5ea451081a8ddbf807fb163da059da35e5dbd0f8b",
+    "src/crypto/aead/aes256-gcm/spec/Aes256GcmComposition.lean": "3e18e00ef63f79996efd2751cca4d27c1a0ee292ac983bb3f9d94f840ac3b9fd",
+    "tools/verification/aes256-gcm/GhashSourceRefinement.lean": "c8e61004f8f85d117798977cd3ad2b302b43e9715d083ecb4e5b9e8600372408",
+    "tools/verification/aes256-gcm/translate.py": "311cdf9c612ca95c787fd35126f744073e44e8c2a6630d007879f430ca0a56e4",
+    "tools/verification/aes256-gcm/check.py": "9b4ca455f10f426bc5b87d1453da3ed1b5ac0eec59baab651e919d20015212b7",
     "tools/build/rust/Cargo.toml": "9e8dd7579ad780836ce80f3a00639b171926d3435e15e3eb274c4fd67eb0d8f4",
     "tools/build/rust/Cargo.lock": "a3ee8405943bef38fef4f8127d96032013d10bc082ae0cb6ff9ccbd855178b5c",
     "src/crypto/aead/aes256-gcm/impl/rust/Cargo.toml": "bccad3abefdf7faa1d969bc42399af0ed20cb1e7dc83857cdfc8f798342f09a6",
     "src/crypto/aead/aes256-gcm/impl/rust/src/lib.rs": "9f99dc4ce2bdc4a8627b2bef8b7c3fc23c75cceda6c1478e8f779de452d8af6b"
   },
   "first": {
-    "llbc_sha256": "a61d8866e2331dedf09f762d3c56a0a3661f6d1392223e7adfd3a88487f468ca",
-    "lean_model_sha256": "aa9844f8b019ded0bba62c8c556dbf6c7b4fb2603768443b38b2284b6c9c3e70"
+    "llbc_sha256": "f9f4548ef8f7346b4e82393916bebda425302da349903e2f24a2df3d32e46262",
+    "lean_model_sha256": "a23868043d13a4f45b1b1727311d6d89f383127716b035d0b497180233f5b58e"
   },
   "second": {
-    "llbc_sha256": "a4f7f740186931c91822c179f77aae3831dab2d7dea2b60b14942a8b069885c2",
-    "lean_model_sha256": "aa9844f8b019ded0bba62c8c556dbf6c7b4fb2603768443b38b2284b6c9c3e70"
+    "llbc_sha256": "7a940395716431e89ae5280f99d9f7784ec28d320254fd84783aa9d576418f22",
+    "lean_model_sha256": "a23868043d13a4f45b1b1727311d6d89f383127716b035d0b497180233f5b58e"
   },
   "theorems": {
     "Abc.Refine.Ghash.extracted_round_refines": [
@@ -81,6 +81,19 @@
       "Quot.sound"
     ],
     "Abc.Refine.Ghash.source_hash_words_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.source_hash_walk_padded": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.source_hash_tail_example": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Abc.Refine.Ghash.source_hash_padded_refines": [
       "propext",
       "Classical.choice",
       "Quot.sound"
@@ -171,47 +184,52 @@
   },
   "negative_check": {
     "status": "rejected",
-    "changed_model_sha256": "5f159048c3dbe6d67f080a3e0e5d0dbb109a0eb4290261b440f9413a76a6ba99",
+    "changed_model_sha256": "709f2ebc8496d43ff0574073f780d5a5dc1a65c85f388acf2fb2fc05916f3bcc",
     "log": "reject-mutant.log"
   },
   "footer_negative_check": {
     "status": "rejected",
-    "changed_model_sha256": "6f02e27a90b093f3e236d2da048f246e608ad9f7429eda1694ef60ffe2446b4c",
+    "changed_model_sha256": "6da98f4e0a0dbec3d36231f06a3b75640cd90bdeb11c6ff21343d59ab489778b",
     "log": "reject-footer-mutant.log"
   },
   "tag_negative_check": {
     "status": "rejected",
-    "changed_model_sha256": "a08c7d685de5ca0b1d77429cd27795c5c31f406e01779304e89a5ec61841a711",
+    "changed_model_sha256": "aa991acb3e43704013ff26bdd54f0d4df509bc3bfb8ab8639caf7b8d7672068d",
     "log": "reject-tag-mutant.log"
   },
   "gate_negative_check": {
     "status": "rejected",
-    "changed_model_sha256": "e52724b0dc16d940662a976a10c308b1f2caa34047f1e0fb2ebcc5d76eae043e",
+    "changed_model_sha256": "7f38d42c1863caf3a27d2c076c19537343d983f07a3a156f70d9c51adc5d4f05",
     "log": "reject-gate-mutant.log"
   },
   "length_negative_check": {
     "status": "rejected",
-    "changed_model_sha256": "61793e1ea0d38681b81d0cddf3d2f2ade456a6e6aed594a78691d87a1e57a04a",
+    "changed_model_sha256": "2f1e71b4fa3d6d8e60be2bbcd6d5efe9e487797dbfee289219053cc8889ee011",
     "log": "reject-length-mutant.log"
   },
   "counter_negative_check": {
     "status": "rejected",
-    "changed_model_sha256": "4a102bfc1be1aba15c6d3cda0b90ee0751cdd4e59a99f49d46ec7784523978f2",
+    "changed_model_sha256": "09bb00144cd0125d9969a3ff28f64abc07e538213c2d4708c78247f8f6ce6681",
     "log": "reject-counter-mutant.log"
   },
   "serialization_negative_check": {
     "status": "rejected",
-    "changed_model_sha256": "831fd754719e593bab27ed32e6e444c20d6c9eb8d6dc25a3405eeb3003243ad2",
+    "changed_model_sha256": "174e6435481126f975f15f95c6820557e90b1a35b3aeb82b252edda6cbe021e2",
     "log": "reject-endianness-mutant.log"
   },
   "xor_negative_check": {
     "status": "rejected",
-    "changed_model_sha256": "f3400aaa58f8e9a1ef57ac1f6c102e063d5f0d5796e0562e0810f2a7a2112588",
+    "changed_model_sha256": "9a01ae303a39cd09096fac0d98573c3a25c5a371022bcf2694a862eb2277e928",
     "log": "reject-xor-mutant.log"
   },
   "seal_negative_check": {
     "status": "rejected",
     "stage": "llbc_validation",
     "log": "reject-seal-buffer-mutant.log"
+  },
+  "hash_tail_negative_check": {
+    "status": "rejected",
+    "changed_model_sha256": "7ed41954765fbcb1d4dad7c7326d25de0c5c0a559fd89866f263b985d29933d4",
+    "log": "reject-ghash-tail-mutant.log"
   }
 }

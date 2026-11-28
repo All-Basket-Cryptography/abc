@@ -34,6 +34,9 @@ THEOREMS = {
     "Abc.Refine.Ghash.source_length_word_matches_nist_bytes",
     "Abc.Refine.Ghash.source_finish_tag_refines",
     "Abc.Refine.Ghash.source_hash_words_refines",
+    "Abc.Refine.Ghash.source_hash_walk_padded",
+    "Abc.Refine.Ghash.source_hash_tail_example",
+    "Abc.Refine.Ghash.source_hash_padded_refines",
     "Abc.Refine.Ghash.source_tag_word_refines_nist",
     "Abc.Refine.Ghash.source_tag_bytes_under_aes_contract",
     "Abc.Refine.Ghash.source_tags_match_iff",
@@ -173,6 +176,7 @@ def check(options, run):
     negative = footer_negative = tag_negative = gate_negative = length_negative = counter_negative = None
     serialization_negative = xor_negative = None
     seal_negative = None
+    hash_tail_negative = None
     if options.check_mutant:
         reduction = list(locate(llbc, ["U128", REDUCTION]))
         require(len(reduction) == 1, "Expected one extracted reduction literal")
@@ -256,6 +260,7 @@ def check(options, run):
         aliases = {args[0]["kind"]["Local"]: args for tag, args in meaningful(seal) if tag == "Assign"}
         require("Ref" in aliases[aad][1] and "Ref" in aliases[ciphertext][1],
                 "Expected separate AAD and ciphertext reborrows")
+        original = aliases[ciphertext][1]
         aliases[ciphertext][1] = aliases[aad][1]
         try:
             translate(llbc)
@@ -265,6 +270,19 @@ def check(options, run):
             log.write_text(str(error) + "\n", encoding="utf-8")
             seal_negative = {"status": "rejected", "stage": "llbc_validation", "log": log.name}
         require(seal_negative is not None, "The seal validator accepted authentication of the wrong buffer")
+        aliases[ciphertext][1] = original
+
+        padded = closure.local_function("hash_padded")["body"]["Structured"]["body"]
+        (tail,) = [switch for tag, switch in meaningful(padded) if tag == "Switch"]
+        (fill,) = [args["call"]["args"] for branch in tail["branches"] for tag, args in meaningful(branch)
+                   if tag == "Call" and name_segments(closure.functions[args["call"]["func"]["Regular"]["kind"]["Fun"]])
+                   == list(map(ident, ("core", "array", "repeat")))]
+        (fill_operand,) = fill
+        original, ty = closure.constant_data(fill_operand["Const"])
+        require(original == {"Integer": {"Unsigned": ["U8", "0"]}}, "Expected a zero-filled GHASH partial block")
+        fill[0] = {"Const": {"Value": [max(closure.constants) + 1, [{"Integer": {"Unsigned": ["U8", "1"]}}, ty]]}}
+        hash_tail_negative = test_negative("ghash-tail-mutant", "Tactic `decide` proved that the proposition",
+                                           "source_hash_tail_example")
 
     return {
         "status": "source_llbc_refinement_checked", "target": target, "charon": charon,
@@ -276,6 +294,7 @@ def check(options, run):
         "length_negative_check": length_negative, "counter_negative_check": counter_negative,
         "serialization_negative_check": serialization_negative, "xor_negative_check": xor_negative,
         "seal_negative_check": seal_negative,
+        "hash_tail_negative_check": hash_tail_negative,
     }
 
 

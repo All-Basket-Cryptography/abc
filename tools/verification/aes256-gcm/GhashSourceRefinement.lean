@@ -117,10 +117,29 @@ theorem source_hash_words_refines (key state : Block) (words : List Block) :
   | cons word words ih =>
     simp only [hashWords, source_hash_block_refines, List.foldl_cons, bind, Option.bind_some, ih]
 
--- The byte-to-block bridge is the already verified source-shaped chunking and padding model.
+theorem source_hash_walk_padded (bytes : List Byte) :
+    Ghash.hash_walk asBlock bytes = blockWords (padded bytes) := by
+  by_cases full : 16 ≤ bytes.length
+  · rw [Ghash.hash_walk.eq_def, dif_pos full, blockWords_padded_full _ full, source_hash_walk_padded]
+  · by_cases empty : bytes = []
+    · simp [empty, Ghash.hash_walk.eq_def, padded, padding, blockWords.eq_def]
+    · rw [Ghash.hash_walk.eq_def, dif_neg full, blockWords_padded_partial _ empty (by omega)]
+      simp [List.isEmpty_iff, empty]
+termination_by bytes.length
+decreasing_by simp only [List.length_drop]; omega
+
+theorem source_hash_tail_example : Ghash.hash_walk asBlock [0xa5] =
+    [0xa5000000000000000000000000000000] := by
+  rw [Ghash.hash_walk.eq_def] <;> decide +kernel
+
+theorem source_hash_padded_refines (key state : Block) (bytes : List Byte) :
+    hashWords key state (Ghash.hash_walk asBlock bytes) =
+      some ((sourceBlocks bytes).foldl (fun acc word => multiplyMask (acc ^^^ word) key) state) := by
+  rw [source_hash_walk_padded, ← sourceBlocks_refines_padded, source_hash_words_refines]
+
 def sourceTagWord (key mask : Block) (aad ciphertext : List Byte) : Option Block := do
-  let aadState ← hashWords key 0 (sourceBlocks aad)
-  let cipherState ← hashWords key aadState (sourceBlocks ciphertext)
+  let aadState ← hashWords key 0 (Ghash.hash_walk asBlock aad)
+  let cipherState ← hashWords key aadState (Ghash.hash_walk asBlock ciphertext)
   let lengths ← Ghash.pack_lengths (BitVec.ofNat 64 aad.length) (BitVec.ofNat 64 ciphertext.length)
   Ghash.finish_tag key cipherState lengths mask
 
@@ -129,7 +148,7 @@ theorem source_tag_word_refines_nist (key mask : Block) (aad ciphertext : List B
     sourceTagWord key mask aad ciphertext = some (ghash key (transcript aad ciphertext) ^^^ mask) := by
   have lengthValue (n : Nat) (fits : 8 * n < 2^64) : (BitVec.ofNat 64 n).toNat = n := by
     rw [BitVec.toNat_ofNat, Nat.mod_eq_of_lt (by omega)]
-  simp only [sourceTagWord, source_hash_words_refines, bind, Option.bind_some, source_length_word_refines,
+  simp only [sourceTagWord, source_hash_padded_refines, bind, Option.bind_some, source_length_word_refines,
     lengthValue _ aadFits, lengthValue _ cipherFits, source_finish_tag_refines]
   change some (ghashSource key aad ciphertext ^^^ mask) = _
   rw [ghashSource_refines_nist _ _ _ aadFits cipherFits]
@@ -356,6 +375,9 @@ theorem source_open_with_models_refines (encrypt : Encrypt) (key : Key) (nonce :
 #print axioms source_length_word_matches_nist_bytes
 #print axioms source_finish_tag_refines
 #print axioms source_hash_words_refines
+#print axioms source_hash_walk_padded
+#print axioms source_hash_tail_example
+#print axioms source_hash_padded_refines
 #print axioms source_tag_word_refines_nist
 #print axioms source_tag_bytes_under_aes_contract
 #print axioms source_tags_match_iff
