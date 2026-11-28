@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ed25519-c-provider",
+  "record_type": "implementation",
+  "name": "Ed25519 in C (OpenSSL 3.5.4)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ed25519/impl/c/abc_ed25519_c.c"
+    },
+    {
+      "path": "src/crypto/signature/ed25519/impl/c/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ed25519",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "6bf81e61cceb412de4f8f91df0e87e4063e82a64eb43f34ed3a8daa5ddf7c5a5",
+  "path": "src/crypto/signature/ed25519/impl/c",
+  "languages": [
+    "c"
+  ],
+  "features": [],
+  "external_calls": [
+    "OpenSSL 3.5.4"
+  ],
+  "target_refs": [],
+  "provider": "OpenSSL 3.5.4",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

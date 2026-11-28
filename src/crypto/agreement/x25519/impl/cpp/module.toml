@@ -1,0 +1,12 @@
+schema_version = 1
+id = "x25519-cpp-openssl"
+owned_paths = ["src/crypto/agreement/x25519/impl/cpp"]
+shared_inputs = ["src/crypto/kdf/argon2id/impl/c/openssl_support.py", "src/crypto/agreement/x25519/impl/c/check.py", "src/crypto/agreement/x25519/impl/java/check.py"]
+dependencies = [{ module = "x25519-rust", type = "implements" }]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/agreement/x25519/impl/c/check.py", "--language", "cpp"]
+tools = ["python", "clang", "llvm-dlltool", "node"]
+target = "windows-x64-openssl"
+timeout_seconds = 180

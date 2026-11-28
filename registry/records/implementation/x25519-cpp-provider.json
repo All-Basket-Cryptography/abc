@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:x25519-cpp-provider",
+  "record_type": "implementation",
+  "name": "X25519 in C++ (OpenSSL 3.5.4)",
+  "sources": [
+    {
+      "path": "src/crypto/agreement/x25519/impl/cpp/x25519.cpp"
+    },
+    {
+      "path": "src/crypto/agreement/x25519/impl/cpp/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:x25519",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "ea652002f256a9ca9f1c634892147d355d39e0463194a30f7442e7f48df07b5f",
+  "path": "src/crypto/agreement/x25519/impl/cpp",
+  "languages": [
+    "cpp"
+  ],
+  "features": [],
+  "external_calls": [
+    "OpenSSL 3.5.4"
+  ],
+  "target_refs": [],
+  "provider": "OpenSSL 3.5.4",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

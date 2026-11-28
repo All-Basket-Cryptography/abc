@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ml-kem-768-cpp-provider",
+  "record_type": "implementation",
+  "name": "ML-KEM-768 in C++ (OpenSSL 3.5.4)",
+  "sources": [
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/cpp/ml_kem_768.cpp"
+    },
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/cpp/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-kem",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "2e18bcff099d46be11a415e2042e9498d9583d898f1566bf4f2397ca317b1db5",
+  "path": "src/crypto/agreement/ml-kem-768/impl/cpp",
+  "languages": [
+    "cpp"
+  ],
+  "features": [],
+  "external_calls": [
+    "OpenSSL 3.5.4"
+  ],
+  "target_refs": [],
+  "provider": "OpenSSL 3.5.4",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

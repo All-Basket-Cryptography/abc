@@ -1,0 +1,10 @@
+schema_version = 1
+id = "ml-dsa-65-python-provider"
+owned_paths = ["src/crypto/signature/ml-dsa-65/impl/python"]
+dependencies = [{ module = "crypto-providers-python", type = "imports" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "-m", "unittest", "discover", "-s", "src/crypto/signature/ml-dsa-65/impl/python"]
+tools = ["python"]
+timeout_seconds = 120

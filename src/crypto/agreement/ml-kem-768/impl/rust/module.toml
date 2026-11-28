@@ -1,0 +1,10 @@
+schema_version = 1
+id = "ml-kem-768-rust-rustcrypto"
+owned_paths = ["src/crypto/agreement/ml-kem-768/impl/rust"]
+cargo_manifests = ["src/crypto/agreement/ml-kem-768/impl/rust/Cargo.toml"]
+
+[tasks.test]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--locked", "--release", "--manifest-path", "src/crypto/agreement/ml-kem-768/impl/rust/Cargo.toml"]
+tools = ["cargo", "rustc", "rustup"]
+timeout_seconds = 120

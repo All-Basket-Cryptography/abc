@@ -1,0 +1,14 @@
+schema_version = 1
+id = "argon2id-javascript-provider"
+owned_paths = ["src/crypto/kdf/argon2id/impl/javascript"]
+dependencies = [
+  { module = "crypto-byte-views-ecmascript", type = "calls" },
+  { module = "crypto-providers-ecmascript", type = "calls" },
+]
+
+[tasks.test]
+kind = "test"
+command = ["node", "--test", "src/crypto/kdf/argon2id/impl/javascript/argon2id.test.mjs"]
+tools = ["node", "cargo", "rustc", "rustup"]
+target = "node24"
+timeout_seconds = 120

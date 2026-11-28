@@ -1,0 +1,11 @@
+schema_version = 1
+id = "ed25519-c-openssl-strict"
+owned_paths = ["src/crypto/signature/ed25519/impl/c"]
+shared_inputs = ["src/crypto/kdf/argon2id/impl/c/openssl_support.py"]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/signature/ed25519/impl/c/check.py"]
+tools = ["python", "clang", "llvm-dlltool", "node"]
+target = "windows-x64-openssl"
+timeout_seconds = 180

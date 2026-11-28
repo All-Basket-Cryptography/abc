@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ml-kem-768-typescript-provider",
+  "record_type": "implementation",
+  "name": "ML-KEM-768 in TypeScript (Noble post-quantum 0.7.1)",
+  "sources": [
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/typescript/ml_kem_768.mts"
+    },
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/typescript/README.md"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/package-lock.json"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/node-crypto.mjs"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/noble.mts"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-kem",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "845bd2643fcc39e3daa7f13f92807cf45f489a3c04b3100cb42bca771539281e",
+  "path": "src/crypto/agreement/ml-kem-768/impl/typescript",
+  "languages": [
+    "typescript"
+  ],
+  "features": [],
+  "external_calls": [
+    "Noble post-quantum 0.7.1"
+  ],
+  "target_refs": [],
+  "provider": "Noble post-quantum 0.7.1",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

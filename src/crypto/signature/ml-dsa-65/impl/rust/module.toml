@@ -1,0 +1,10 @@
+schema_version = 1
+id = "ml-dsa-65-rust-rustcrypto"
+owned_paths = ["src/crypto/signature/ml-dsa-65/impl/rust"]
+cargo_manifests = ["src/crypto/signature/ml-dsa-65/impl/rust/Cargo.toml"]
+
+[tasks.test]
+kind = "test"
+command = ["cargo", "+1.92.0", "test", "--locked", "--release", "--manifest-path", "src/crypto/signature/ml-dsa-65/impl/rust/Cargo.toml"]
+tools = ["cargo", "rustc", "rustup"]
+timeout_seconds = 120

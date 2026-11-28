@@ -1,0 +1,10 @@
+schema_version = 1
+id = "argon2id-python-provider"
+owned_paths = ["src/crypto/kdf/argon2id/impl/python"]
+dependencies = [{ module = "crypto-providers-python", type = "imports" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "-m", "unittest", "discover", "-s", "src/crypto/kdf/argon2id/impl/python"]
+tools = ["python"]
+timeout_seconds = 120

@@ -1,0 +1,12 @@
+schema_version = 1
+id = "argon2id-cpp-openssl"
+owned_paths = ["src/crypto/kdf/argon2id/impl/cpp"]
+shared_inputs = ["src/crypto/kdf/argon2id/impl/c/openssl_support.py", "src/crypto/kdf/argon2id/impl/c/check.py"]
+dependencies = [{ module = "argon2id-rust", type = "implements" }]
+
+[tasks.conformance]
+kind = "test"
+command = ["python", "-B", "src/crypto/kdf/argon2id/impl/c/check.py", "--language", "cpp"]
+tools = ["python", "clang", "llvm-dlltool", "node"]
+target = "windows-x64-openssl"
+timeout_seconds = 180

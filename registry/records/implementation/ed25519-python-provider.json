@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ed25519-python-provider",
+  "record_type": "implementation",
+  "name": "Ed25519 in Python (cryptography 50.0.2 with OpenSSL 4.0.3)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ed25519/impl/python/abc_ed25519.py"
+    },
+    {
+      "path": "src/crypto/signature/ed25519/impl/python/README.md"
+    },
+    {
+      "path": "src/crypto/providers/python/requirements-windows-x64.txt"
+    },
+    {
+      "path": "src/crypto/providers/python/bytes_input.py"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ed25519",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "0de750f4e4d827282d9acb3e4a6a98067d367965b8bc6697848b088c3b9b27f8",
+  "path": "src/crypto/signature/ed25519/impl/python",
+  "languages": [
+    "python"
+  ],
+  "features": [],
+  "external_calls": [
+    "cryptography 50.0.2 with OpenSSL 4.0.3"
+  ],
+  "target_refs": [],
+  "provider": "cryptography 50.0.2 with OpenSSL 4.0.3",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

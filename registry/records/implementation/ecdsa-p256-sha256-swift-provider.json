@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ecdsa-p256-sha256-swift-provider",
+  "record_type": "implementation",
+  "name": "ECDSA P-256 in Swift (OpenSSL 3.5.9)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/swift/AbcEcdsaP256Swift/Sources/AbcEcdsaP256Swift/EcdsaP256Sha256.swift"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/swift/README.md"
+    },
+    {
+      "path": "src/crypto/signature/ecdsa-p256-sha256/impl/swift/AbcEcdsaP256Swift/Sources/CAbcEcdsaP256OpenSSL/shim.h"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ecdsa-p256-sha256",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "4d49f89cb81be92a8ea7c4241c3c9783f22849ac7d3f3836e6f835ae43f23c35",
+  "path": "src/crypto/signature/ecdsa-p256-sha256/impl/swift",
+  "languages": [
+    "swift"
+  ],
+  "features": [],
+  "external_calls": [
+    "OpenSSL 3.5.9"
+  ],
+  "target_refs": [],
+  "provider": "OpenSSL 3.5.9",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:argon2id-c-provider",
+  "record_type": "implementation",
+  "name": "Argon2id in C (OpenSSL 3.5.4)",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/argon2id/impl/c/abc_argon2id_c.c"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/c/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:argon2id",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "c95051aeef59f29f4bc8ded3c8926fe6177ed120070a69dc08178552d024f0c8",
+  "path": "src/crypto/kdf/argon2id/impl/c",
+  "languages": [
+    "c"
+  ],
+  "features": [],
+  "external_calls": [
+    "OpenSSL 3.5.4"
+  ],
+  "target_refs": [],
+  "provider": "OpenSSL 3.5.4",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

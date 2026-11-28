@@ -1,0 +1,10 @@
+schema_version = 1
+id = "ecdsa-p256-sha256-python-provider"
+owned_paths = ["src/crypto/signature/ecdsa-p256-sha256/impl/python"]
+dependencies = [{ module = "crypto-providers-python", type = "imports" }]
+
+[tasks.test]
+kind = "test"
+command = ["python", "-B", "-m", "unittest", "discover", "-s", "src/crypto/signature/ecdsa-p256-sha256/impl/python"]
+tools = ["python"]
+timeout_seconds = 120

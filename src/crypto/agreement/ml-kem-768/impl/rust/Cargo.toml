@@ -1,0 +1,16 @@
+[package]
+name = "abc-ml-kem-768"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.92"
+publish = false
+
+[workspace]
+
+[dependencies]
+getrandom = "=0.4.3"
+ml-kem = { version = "=0.3.4", features = ["hazmat", "zeroize"] }
+zeroize = "=1.9.2"
+
+[dev-dependencies]
+shake = "=0.1.0"

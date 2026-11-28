@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:argon2id-python-provider",
+  "record_type": "implementation",
+  "name": "Argon2id in Python (cryptography 50.0.2 with OpenSSL 4.0.3)",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/argon2id/impl/python/abc_argon2id.py"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/python/README.md"
+    },
+    {
+      "path": "src/crypto/providers/python/requirements-windows-x64.txt"
+    },
+    {
+      "path": "src/crypto/providers/python/bytes_input.py"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:argon2id",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "a8d70c7d9a09614d0cbd633cc2428565f88de399a289095cd3b6bfcbda6ba935",
+  "path": "src/crypto/kdf/argon2id/impl/python",
+  "languages": [
+    "python"
+  ],
+  "features": [],
+  "external_calls": [
+    "cryptography 50.0.2 with OpenSSL 4.0.3"
+  ],
+  "target_refs": [],
+  "provider": "cryptography 50.0.2 with OpenSSL 4.0.3",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

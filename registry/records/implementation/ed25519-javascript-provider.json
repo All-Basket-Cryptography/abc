@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ed25519-javascript-provider",
+  "record_type": "implementation",
+  "name": "Ed25519 in JavaScript (Node 24.12.0 OpenSSL 3.5.4 and Noble curves 2.4.0)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ed25519/impl/javascript/ed25519.mjs"
+    },
+    {
+      "path": "src/crypto/signature/ed25519/impl/javascript/README.md"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/package-lock.json"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/node-crypto.mjs"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/noble.mjs"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ed25519",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "9d6864252e7ffe2099c464a0507a62389544d22bb9eb8716fbff416bf9431545",
+  "path": "src/crypto/signature/ed25519/impl/javascript",
+  "languages": [
+    "javascript"
+  ],
+  "features": [],
+  "external_calls": [
+    "Node 24.12.0 OpenSSL 3.5.4 and Noble curves 2.4.0"
+  ],
+  "target_refs": [],
+  "provider": "Node 24.12.0 OpenSSL 3.5.4 and Noble curves 2.4.0",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

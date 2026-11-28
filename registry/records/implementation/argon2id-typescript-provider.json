@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:argon2id-typescript-provider",
+  "record_type": "implementation",
+  "name": "Argon2id in TypeScript (Node 24.12.0 OpenSSL 3.5.4)",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/argon2id/impl/typescript/argon2id.mts"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/typescript/README.md"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/package-lock.json"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/node-crypto.mjs"
+    },
+    {
+      "path": "src/crypto/providers/ecmascript/noble.mts"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:argon2id",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "34f828161821fb2fc67cd64e794175f40c6410366a0f834a77505de2e00e9acb",
+  "path": "src/crypto/kdf/argon2id/impl/typescript",
+  "languages": [
+    "typescript"
+  ],
+  "features": [],
+  "external_calls": [
+    "Node 24.12.0 OpenSSL 3.5.4"
+  ],
+  "target_refs": [],
+  "provider": "Node 24.12.0 OpenSSL 3.5.4",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

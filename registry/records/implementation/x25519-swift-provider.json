@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:x25519-swift-provider",
+  "record_type": "implementation",
+  "name": "X25519 in Swift (Apple CryptoKit)",
+  "sources": [
+    {
+      "path": "src/crypto/agreement/x25519/impl/swift/AbcX25519Swift/Sources/AbcX25519Swift/X25519.swift"
+    },
+    {
+      "path": "src/crypto/agreement/x25519/impl/swift/README.md"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:x25519",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "9dd19b562f68c0b5e1c3878c142ce01e077a99ca5df3ad2055195d90d66690e9",
+  "path": "src/crypto/agreement/x25519/impl/swift",
+  "languages": [
+    "swift"
+  ],
+  "features": [],
+  "external_calls": [
+    "Apple CryptoKit"
+  ],
+  "target_refs": [],
+  "provider": "Apple CryptoKit",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

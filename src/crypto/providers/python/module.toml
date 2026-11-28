@@ -1,0 +1,9 @@
+schema_version = 1
+id = "crypto-providers-python"
+owned_paths = ["src/crypto/providers/python"]
+
+[tasks.syntax]
+kind = "lint"
+command = ["python", "-B", "-c", "from src.crypto.providers.python.bytes_input import fixed; assert fixed(b'bytes', 5) == b'bytes'"]
+tools = ["python"]
+timeout_seconds = 60

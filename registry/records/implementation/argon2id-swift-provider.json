@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:argon2id-swift-provider",
+  "record_type": "implementation",
+  "name": "Argon2id in Swift (OpenSSL 3.5.9)",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/argon2id/impl/swift/AbcArgon2idSwift/Sources/AbcArgon2idSwift/Argon2id.swift"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/swift/README.md"
+    },
+    {
+      "path": "src/crypto/kdf/argon2id/impl/swift/AbcArgon2idSwift/Sources/CAbcArgon2idOpenSSL/shim.h"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:argon2id",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "5b1bfc3692244fa51419b41d05ce1d1da5a93b3b852ded6d8569bbfc6175b996",
+  "path": "src/crypto/kdf/argon2id/impl/swift",
+  "languages": [
+    "swift"
+  ],
+  "features": [],
+  "external_calls": [
+    "OpenSSL 3.5.9"
+  ],
+  "target_refs": [],
+  "provider": "OpenSSL 3.5.9",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

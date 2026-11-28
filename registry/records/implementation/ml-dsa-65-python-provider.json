@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ml-dsa-65-python-provider",
+  "record_type": "implementation",
+  "name": "ML-DSA-65 in Python (cryptography 50.0.2 with OpenSSL 4.0.3 and OpenSSL 3.5.4 deterministic signing)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/python/abc_ml_dsa_65.py"
+    },
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/python/README.md"
+    },
+    {
+      "path": "src/crypto/providers/python/requirements-windows-x64.txt"
+    },
+    {
+      "path": "src/crypto/providers/python/bytes_input.py"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-dsa",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "d830ceed973cb1b7740bb50d808d2971fc1eafd8be200ef711392a962c4f2be6",
+  "path": "src/crypto/signature/ml-dsa-65/impl/python",
+  "languages": [
+    "python"
+  ],
+  "features": [],
+  "external_calls": [
+    "cryptography 50.0.2 with OpenSSL 4.0.3 and OpenSSL 3.5.4 deterministic signing"
+  ],
+  "target_refs": [],
+  "provider": "cryptography 50.0.2 with OpenSSL 4.0.3 and OpenSSL 3.5.4 deterministic signing",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

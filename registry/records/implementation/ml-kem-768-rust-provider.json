@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ml-kem-768-rust-provider",
+  "record_type": "implementation",
+  "name": "ML-KEM-768 in Rust (RustCrypto ml-kem/0.3.4)",
+  "sources": [
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/rust/src/lib.rs"
+    },
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/rust/README.md"
+    },
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/rust/Cargo.lock"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-kem",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "774c6a97c6b1de4d38237af9ee175fef442ed42926de053dfc2e2473d71e3cb6",
+  "path": "src/crypto/agreement/ml-kem-768/impl/rust",
+  "languages": [
+    "rust"
+  ],
+  "features": [],
+  "external_calls": [
+    "RustCrypto ml-kem/0.3.4"
+  ],
+  "target_refs": [],
+  "provider": "RustCrypto ml-kem/0.3.4",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

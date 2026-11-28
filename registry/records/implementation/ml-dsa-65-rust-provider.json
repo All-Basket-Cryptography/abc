@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ml-dsa-65-rust-provider",
+  "record_type": "implementation",
+  "name": "ML-DSA-65 in Rust (RustCrypto ml-dsa/0.1.2)",
+  "sources": [
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/rust/src/lib.rs"
+    },
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/rust/README.md"
+    },
+    {
+      "path": "src/crypto/signature/ml-dsa-65/impl/rust/Cargo.lock"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-dsa",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "3f1b9c228160eb4462d8ce6271f6f71b1dea1ba91f1cb0f71814e472802fbc60",
+  "path": "src/crypto/signature/ml-dsa-65/impl/rust",
+  "languages": [
+    "rust"
+  ],
+  "features": [],
+  "external_calls": [
+    "RustCrypto ml-dsa/0.1.2"
+  ],
+  "target_refs": [],
+  "provider": "RustCrypto ml-dsa/0.1.2",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:ml-kem-768-python-provider",
+  "record_type": "implementation",
+  "name": "ML-KEM-768 in Python (cryptography 50.0.2 with OpenSSL 4.0.3)",
+  "sources": [
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/python/abc_ml_kem_768.py"
+    },
+    {
+      "path": "src/crypto/agreement/ml-kem-768/impl/python/README.md"
+    },
+    {
+      "path": "src/crypto/providers/python/requirements-windows-x64.txt"
+    },
+    {
+      "path": "src/crypto/providers/python/bytes_input.py"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:algorithm:ml-kem",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "d4f8cb384a0fddb1a31e054276863b7f6223d11c221864c6fa17c512a9a93e80",
+  "path": "src/crypto/agreement/ml-kem-768/impl/python",
+  "languages": [
+    "python"
+  ],
+  "features": [],
+  "external_calls": [
+    "cryptography 50.0.2 with OpenSSL 4.0.3"
+  ],
+  "target_refs": [],
+  "provider": "cryptography 50.0.2 with OpenSSL 4.0.3",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}
