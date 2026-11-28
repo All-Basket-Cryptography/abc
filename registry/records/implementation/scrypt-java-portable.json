@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "abc:implementation:scrypt-java-portable",
+  "record_type": "implementation",
+  "name": "scrypt in Java (ABC Java research core)",
+  "sources": [
+    {
+      "path": "src/crypto/kdf/scrypt/impl/java/src/org/allbasket/abc/kdf/scrypt/Scrypt.java"
+    },
+    {
+      "path": "src/crypto/kdf/scrypt/impl/java/README.md"
+    },
+    {
+      "path": "src/crypto/kdf/pbkdf2-hmac-sha256/impl/java/src/org/allbasket/abc/kdf/pbkdf2sha256/Pbkdf2Sha256.java"
+    }
+  ],
+  "owner": {
+    "state": "unassigned",
+    "contacts": []
+  },
+  "subject_ref": "abc:construction:scrypt",
+  "origin": "first-party",
+  "revision": "0.1.0-research",
+  "source_sha256": "bc1fd1b9a38376f866d2fcd2cb6e8cf3c09555257f98b5790377319b0127fd41",
+  "path": "src/crypto/kdf/scrypt/impl/java",
+  "languages": [
+    "java"
+  ],
+  "features": [],
+  "external_calls": [
+    "ABC Java PBKDF2-HMAC-SHA-256"
+  ],
+  "target_refs": [],
+  "provider": "ABC Java research core",
+  "maintenance": {
+    "state": "unknown"
+  },
+  "license": "Pending project license decision"
+}

@@ -20,7 +20,7 @@ function layout(cost: number, blockSize: number, parallel: number) {
     throw new RangeError('scrypt requires positive integer parameters and N > 1');
   }
   const n = BigInt(cost);
-  if ((n & (n - 1n)) !== 0n || Math.log2(cost) >= 16 * blockSize) {
+  if ((n & (n - 1n)) !== 0n || n.toString(2).length - 1 >= 16 * blockSize) {
     throw new RangeError('scrypt requires N to be a power of two below 2^(16r)');
   }
   const stride = 128n * BigInt(blockSize);

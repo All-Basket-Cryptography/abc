@@ -78,9 +78,10 @@ def seal_detached(key, nonce, plaintext, aad=b"") -> tuple[bytes, bytes]:
 
 def open_detached(key, nonce, ciphertext, tag, aad=b"") -> bytes:
     """Authenticate an immutable ciphertext snapshot before decrypting it."""
-    tag = bytes(_readable(tag))
-    if len(tag) != TAG_BYTES:
+    wire = _readable(tag)
+    if len(wire) != TAG_BYTES:
         raise InvalidTag("AES-256-GCM authentication failed")
+    tag = bytes(wire)
     key, nonce, aad, ciphertext = _inputs(key, nonce, aad, ciphertext)
     aes = Aes256(key)
     if not compare_digest(_tag(aes, nonce, aad, ciphertext), tag):

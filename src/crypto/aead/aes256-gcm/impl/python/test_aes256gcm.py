@@ -74,3 +74,15 @@ class GcmTests(unittest.TestCase):
         self.assertEqual(mutable, ciphertext)
         with self.assertRaises(ValueError):
             gcm.seal_detached(key, bytes(11), message, aad)
+
+    def test_tag_length_is_checked_before_snapshot(self):
+        class InvalidTagView:
+            def __len__(self):
+                return 17
+
+            def __bytes__(self):
+                raise AssertionError("invalid tag snapshot")
+
+        with patch.object(gcm, "_readable", return_value=InvalidTagView()):
+            with self.assertRaises(gcm.InvalidTag):
+                gcm.open_detached(bytes(32), bytes(12), b"", bytearray(17))

@@ -24,7 +24,7 @@
   "subject_ref": "abc:construction:scrypt",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "b32faac9338bbf856936f7294e08e2c64566072ae6e8f96384d8440122083c9e",
+  "source_sha256": "4547a61599e2b015a80dea61cf93dc57848f6c521edf8eb7f1aea1cd4d1bd6db",
   "path": "src/crypto/kdf/scrypt/impl/typescript",
   "languages": [
     "typescript"

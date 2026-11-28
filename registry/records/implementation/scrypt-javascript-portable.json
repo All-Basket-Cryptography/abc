@@ -24,7 +24,7 @@
   "subject_ref": "abc:construction:scrypt",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "37c9d6ff7be88596dacccc710de6c576a23d3d580b2b462167dd8860418d779a",
+  "source_sha256": "d2412549117a534e3f8b7d9b08d32c8e5f074d0c0e09d34aa46b9e004e4b064f",
   "path": "src/crypto/kdf/scrypt/impl/javascript",
   "languages": [
     "javascript"

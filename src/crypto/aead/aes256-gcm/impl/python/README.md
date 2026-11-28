@@ -14,6 +14,7 @@ reduction conditions. Python's whole composition, integer timing and
 target behavior still need proof.
 
 - [SP 800-38D](https://csrc.nist.gov/pubs/sp/800/38/d/final)
+- [NIST GCM worked examples](https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Standards-and-Guidelines/documents/examples/AES_GCM.pdf)
 - [NIST GCM vectors](https://csrc.nist.gov/Projects/cryptographic-algorithm-validation-program/cavp-testing-block-cipher-modes)
 
 Run from the repository root with Python 3 and Node.js 24.

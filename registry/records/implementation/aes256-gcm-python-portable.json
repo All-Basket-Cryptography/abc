@@ -21,7 +21,7 @@
   "subject_ref": "abc:construction:aes-256-gcm",
   "origin": "first-party",
   "revision": "0.1.0-research",
-  "source_sha256": "156aa4ba51dfc93fa35feae6eaaae30c33b90e1bcabb694a44fecc79d1241b34",
+  "source_sha256": "19e9ea71e4662baaab5d61de56b4cdc51ce73e15da8ccf790d1c37cc9d9e9d1d",
   "path": "src/crypto/aead/aes256-gcm/impl/python",
   "languages": [
     "python"
