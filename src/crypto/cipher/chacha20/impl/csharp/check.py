@@ -98,6 +98,8 @@ def check(dotnet, openssl, selected, output, benchmark):
         if found != SDK:
             raise ValueError(f"Expected .NET SDK {SDK}, got {found}")
 
+        build_flags = ("--disable-build-servers", "-m:1")
+
         def copy(file):
             destination = work / file.relative_to(ROOT)
             destination.parent.mkdir(parents=True, exist_ok=True)
@@ -111,8 +113,9 @@ def check(dotnet, openssl, selected, output, benchmark):
             copy(leaf / source)
             package_name = f"Abc.Cryptography.{name}"
             project = copy(leaf / f"{package_name}.csproj")
-            sdk("restore", str(project), "--configfile", str(config), "--source", str(feed))
-            sdk("pack", str(project), "--no-restore", "--configuration", "Release", "--output", str(feed))
+            sdk("restore", str(project), "--configfile", str(config), "--source", str(feed), *build_flags)
+            sdk("pack", str(project), "--no-restore", "--configuration", "Release", "--output", str(feed),
+                *build_flags)
             package = feed / f"{package_name}.{VERSION}.nupkg"
             with ZipFile(package) as archive:
                 files = [name for name in archive.namelist() if name.endswith((".dll", ".so", ".dylib"))]
@@ -128,9 +131,10 @@ def check(dotnet, openssl, selected, output, benchmark):
             tests = CRYPTO / algorithm / "impl/csharp/tests"
             copy(tests / "Program.cs")
             consumer = copy(tests / f"{name}.Tests.csproj")
-            sdk("restore", str(consumer), "--configfile", str(config), "--source", str(feed))
+            sdk("restore", str(consumer), "--configfile", str(config), "--source", str(feed), *build_flags)
             binary_dir = work / f"binary-{profile}"
-            sdk("build", str(consumer), "--no-restore", "--configuration", "Release", "--output", str(binary_dir))
+            sdk("build", str(consumer), "--no-restore", "--configuration", "Release", "--output", str(binary_dir),
+                *build_flags)
             executable = str(binary_dir / f"{name}.Tests.dll")
             if profile == "chacha20":
                 fixtures = chacha_cases()

@@ -1,0 +1,96 @@
+{
+  "status": "sha512_functional_model_checked",
+  "lean": "Lean (version 4.31.0, x86_64-w64-windows-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)",
+  "sources": {
+    "src/crypto/hash/sha512/impl/rust/src/lib.rs": "f714292a3e778f4c1c01397f303183fbf1a3dcfbb78ad40ef6949c7850a005d9",
+    "src/lean/lean-toolchain": "efac0b94923b2d8b6840cd35be9177ad0fc5ab2332f4f4311c98712cee92fdee",
+    "src/lean/Abc/Foundation/Encoding.lean": "1e4e51f3430cd6262cabedc9b6a7db80bb8e6f2a4f12af64a842f5e4ef7c32e9",
+    "src/crypto/hash/sha512/spec/Sha512Spec.lean": "7bafda0adb4584c465bef6c9d5fcf0fcf09024bbb06e448be748a4e89ec3c6bf",
+    "src/crypto/hash/sha512/spec/Sha512Compression.lean": "b9a094c309f3cf4205c165449921918f5a62154e3813b4d3451c2aa41eac6e5a",
+    "src/crypto/hash/sha512/spec/Sha512Streaming.lean": "213d36165361b03b6d2778054169afdfcc6439ba9f3dd4b30552ae354b28af91",
+    "tools/verification/sha512/check.py": "bb727ef102e94f69cec7c3caed026bd8a64d171bc58868b9cf8a3ecebfc85794"
+  },
+  "rust_compression_body_sha256": "cfa3bc06e545ceb32ba2fc20268e7839cbb27256b37da29f01a58dee320623c2",
+  "rust_production_source_sha256": "5788f93a602cc0736d92c88f80d1fb5f5cb634ec5ae75e7d0c387d83cceb4724",
+  "generated_constants_sha256": "93e7f483105b4070e866c2be98822e61cc93d7ce72bb5727756d0359223763c4",
+  "theorems": {
+    "loadWord_refines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "schedule_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "rounds_refine": [
+      "propext",
+      "Quot.sound"
+    ],
+    "constantTable_refines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "compress_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Streaming.checkedLength_matches_domain": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Streaming.finalBlocks_bytes": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Streaming.update_rejects_without_mutation": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Streaming.foldCompress_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Streaming.digestView_refines": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Streaming.finalizeTrace_refines_accepted": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Streaming.finalizeTrace_refines_concat": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "source_block_contract": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "source_digest_contract": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "source_trace_contract": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "negative_controls": [
+    "rust_rotation_rejected",
+    "rust_constant_rejected",
+    "lean_round_equality_rejected",
+    "rust_padding_rejected",
+    "lean_padding_equality_rejected"
+  ]
+}

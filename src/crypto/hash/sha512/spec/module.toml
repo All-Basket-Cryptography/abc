@@ -1,7 +1,8 @@
 schema_version = 1
 id = "sha512-spec"
 owned_paths = ["src/crypto/hash/sha512/spec"]
-lean_sources = { Sha512Length = "src/crypto/hash/sha512/spec", Sha512Ring = "src/crypto/hash/sha512/spec", Sha512SplitWord = "src/crypto/hash/sha512/spec" }
+lean_sources = { Sha512Length = "src/crypto/hash/sha512/spec", Sha512Ring = "src/crypto/hash/sha512/spec", Sha512SplitWord = "src/crypto/hash/sha512/spec", Sha512Spec = "src/crypto/hash/sha512/spec", Sha512Compression = "src/crypto/hash/sha512/spec", Sha512Streaming = "src/crypto/hash/sha512/spec" }
+lean_external_imports = { Sha512RustConstants = "src/crypto/hash/sha512/impl/rust/src/lib.rs" }
 
 [tasks.check]
 kind = "formal"

@@ -25,6 +25,7 @@ on:
       - 'src/crypto/aead/aes256-gcm/spec/**'
       - 'tools/verification/probe/toolchain-candidate.json'
       - 'tools/verification/hmac-hkdf/**'
+      - 'tools/verification/sha512/**'
       - 'src/crypto/mac/hmac-sha256/impl/rust/**'
       - 'src/crypto/mac/hmac-sha256/spec/**'
       - 'src/crypto/kdf/hkdf-sha256/impl/rust/**'
@@ -110,6 +111,8 @@ jobs:
           lean src/crypto/mac/poly1305/impl/go/Poly1305GoModel.lean
           lean src/crypto/cipher/aes256/impl/go/Aes256GoSquare.lean
           lean src/crypto/aead/chacha20-poly1305/spec/ChaCha20Poly1305Lengths.lean
+          lean -DwarningAsError=true src/crypto/aead/chacha20-poly1305/spec/ChaCha20Poly1305Rfc.lean
+          python3 -B tools/verification/sha512/check.py --negative-controls
           lean src/crypto/kdf/scrypt/spec/ScryptBounds.lean
           lean src/crypto/kdf/argon2id/spec/Argon2idBounds.lean
           lean src/crypto/cipher/aes256/spec/Aes256Byte.lean

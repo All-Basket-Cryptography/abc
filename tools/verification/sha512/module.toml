@@ -1,0 +1,14 @@
+schema_version = 1
+id = "sha512-functional-verification"
+owned_paths = ["tools/verification/sha512"]
+shared_inputs = ["src/lean/lean-toolchain", "src/lean/Abc/Foundation/Encoding.lean"]
+dependencies = [
+  { module = "sha512-spec", type = "imports" },
+  { module = "sha512-rust", type = "imports" },
+]
+
+[tasks.functional-refinement]
+kind = "formal"
+command = ["python", "-B", "tools/verification/sha512/check.py", "--negative-controls"]
+tools = ["python", "lean"]
+timeout_seconds = 120

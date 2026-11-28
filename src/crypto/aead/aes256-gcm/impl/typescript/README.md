@@ -8,10 +8,18 @@ same 32-byte key. The module uses same-language table-free AES and GHASH
 with four unsigned 32-bit words. Shared and detached backing stores fail
 validation.
 
-The test checks published vectors and 216 bidirectional cases against
-Node/OpenSSL. The shared Lean models cover counter constraints and the
-tag-reduction condition. Complete composition and target timing proofs
-remain open.
+For Node.js, import [`node.mts`](node.mts) to use the same synchronous
+detached-tag API backed by Node's native AES-GCM provider. The portable
+entry remains available for browsers. The Node entry was qualified on
+Node 24.12.0 with OpenSSL 3.5.4. It releases plaintext only after successful
+authentication, wipes temporary plaintext returned by the provider, and
+propagates distinct provider errors. [Node authenticated decryption](https://nodejs.org/download/release/v24.12.0/docs/api/crypto.html#decipherfinaloutputencoding)
+
+Both entries pass published vectors and 216 interoperability cases. Tests
+exercise changed ciphertext, AAD and tags, offset views, validation, and
+the Node entry's plaintext cleanup and error handling. The shared Lean
+models cover counter constraints and the tag-reduction condition. Provider
+source refinement, complete composition and target timing proofs remain open.
 
 - [NIST SP 800-38D](https://csrc.nist.gov/pubs/sp/800/38/d/final)
 - [NIST GCM worked examples](https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Standards-and-Guidelines/documents/examples/AES_GCM.pdf)

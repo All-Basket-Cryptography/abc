@@ -13,9 +13,14 @@ The Lean length lemmas cover the mathematical admission condition, the
 padded length, the one-to-two-block padding boundary and the conversion
 from a two-word byte count to a 128-bit bit count. Lean proves that the
 16-word schedule used by Go preserves the last 16 reference schedule words
-at each expansion step. Source refinement of the compression rounds and
-streaming APIs is still open.
-[Length lemmas](Sha512Length.lean) · [Schedule model](Sha512Ring.lean)
+at each expansion step. The portable Rust functional model matches the
+separate FIPS model for every block, one-shot byte list and admitted finite
+stream partition. It checks both padding branches and models rejection as
+preservation of the stream view. The runner records the reviewed Rust
+source, independently derives the constants and audits the Lean statements
+and axioms. Formal translation of Rust semantics and the other languages'
+source refinements remain open.
+[Length lemmas](Sha512Length.lean) · [Schedule model](Sha512Ring.lean) · [FIPS model](Sha512Spec.lean) · [Compression theorem](Sha512Compression.lean) · [Stream theorems](Sha512Streaming.lean) · [Reproduction and receipt](../../../../../tools/verification/sha512/README.md)
 
 The Rust tests check empty and `abc` known answers, failed updates, and
 all split points against independent CPython `hashlib.sha512` digests for

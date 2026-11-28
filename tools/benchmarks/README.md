@@ -44,3 +44,21 @@ OpenSSL 3.5.4, the 4,096-byte medians were as follows.
 | SHA-512 | 178.161 µs | 180.391 µs | 5.360 µs |
 | SHA3-256 | 157.648 µs | 158.080 µs | 7.098 µs |
 | SHAKE256 | 152.824 µs | 152.724 µs | 6.946 µs |
+## Profile portfolio benchmark
+
+The Node 24.12.0 benchmark runs one public workload for each of the 20
+SDK profiles. It calls the JavaScript and TypeScript APIs and uses the
+corresponding direct Node OpenSSL operation when the runtime exposes it.
+For each workload, the runner compares the results before timing and
+alternates method order across seven samples. It reports microseconds
+per operation, the median and range, sample call counts, CPU and runtime.
+
+```sh
+npm ci --ignore-scripts --no-audit --prefix src/crypto/providers/ecmascript
+node tools/benchmarks/portfolio.mjs
+```
+
+The benchmark uses public fixtures, including fixed post-quantum seeds.
+It measures the selected one-shot workloads and runtime on one host.
+The qualification evidence records the source, target and security scope.
+[Qualification evidence](../../docs/plan/portfolio-verification.md)
